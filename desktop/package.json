@@ -1,0 +1,11 @@
+{
+	"name": "CryptoShare",
+	"version": "1.0.0",
+	"description": "A tool that allows you to manage nearly every facet of your finances with an open-source web, mobile, and desktop application, along with a self-hosted RESTful GraphQL API.",
+	"main": "server.js",
+	"scripts": {
+	"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC"
+}
