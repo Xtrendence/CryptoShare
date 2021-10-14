@@ -85,3 +85,16 @@ CREATE TABLE Watchlist (
 	PRIMARY KEY (watchlistID),
 	FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
 );
+
+CREATE VIEW UserLogin
+AS 
+SELECT 
+	userID, 
+	username, 
+	loginID, 
+	loginToken,
+	loginDate
+FROM
+	Login
+INNER JOIN
+	User USING (userID);
