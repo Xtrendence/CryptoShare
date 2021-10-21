@@ -11,4 +11,5 @@ type Query {
 type Mutation {
 	createUser(username: String!, password: String!, key: String!): String
 	updateUser(token: String!, username: String!, password: String!, key: String!): String
+	deleteUser(token: String!, username: String!): String
 }

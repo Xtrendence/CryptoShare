@@ -1,10 +1,11 @@
 import Utils from "../../utils/Utils";
-import { createUser, readUser, updateUser } from "./user";
+import { createUser, readUser, updateUser, deleteUser } from "./user";
 
 let resolvers = {
 	createUser,
 	readUser,
-	updateUser
+	updateUser,
+	deleteUser
 };
 
 export default resolvers;
