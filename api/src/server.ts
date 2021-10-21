@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import DB from "./utils/DB";
@@ -14,6 +15,8 @@ const app: express.Application = express();
 const port: number = 1999;
 
 const db = new DB().initialize();
+
+app.use(cors());
 
 app.use("/graphql", graphqlHTTP({ 
 	schema: schema,
