@@ -23,6 +23,7 @@ export default class DB {
 		this.createSettingTable();
 		this.createStockTable();
 		this.createWatchlistTable();
+		this.createMessageTable();
 		this.createUserLoginView();
 	}
 
@@ -165,6 +166,23 @@ export default class DB {
 					assetID BLOB NOT NULL,
 					assetSymbol BLOB NOT NULL,
 					assetType BLOB NOT NULL,
+					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+				);
+			`);
+
+			this.db?.run(statement);
+		});
+	}
+
+	createMessageTable() {
+		this.db?.serialize(() => {
+			let statement = (`
+				CREATE TABLE IF NOT EXISTS Message (
+					messageID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+					userID INTEGER NOT NULL,
+					userMessage BLOB NOT NULL,
+					botMessage BLOB NOT NULL,
+					messageDate DATETIME NOT NULL,
 					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
 				);
 			`);
