@@ -1,8 +1,7 @@
-import fs, { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
 import path from "path";
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import sqlite3, { Database } from "@louislam/sqlite3";
 import DB from "./DB";
 
 export default class Utils {

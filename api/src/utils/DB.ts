@@ -1,5 +1,4 @@
 import sqlite3, { Database } from "@louislam/sqlite3";
-import fs, { existsSync } from "fs";
 import path from "path";
 
 export default class DB {
