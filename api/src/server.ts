@@ -1,9 +1,9 @@
 import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
-import DB from "./db";
-import resolvers from "./resolvers";
-import Utils from "./utils";
+import DB from "./utils/DB";
+import resolvers from "./graphql/resolvers";
+import Utils from "./utils/Utils";
 
 const utils = new Utils();
 utils.checkFiles();
@@ -22,7 +22,7 @@ app.use("/graphql", graphqlHTTP({
 }));
 
 app.listen(port, () => {
-	console.log(`GraphQL API Listening On Port ${port}`)
+	console.log(`GraphQL API Listening At http://localhost:${port}/graphql`)
 });
 
 console.log("Starting Server... ", new Date().toTimeString().split(" ")[0]);

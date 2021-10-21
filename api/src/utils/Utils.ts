@@ -22,6 +22,6 @@ export default class Utils {
 	}
 
 	getSchema() {
-		return readFileSync(path.join(__dirname, "./schema.graphql"), { encoding:"utf-8" });
+		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
 }

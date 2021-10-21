@@ -11,34 +11,31 @@ export default class DB {
 	}
 
 	initialize() {
-		let exists = existsSync(this.file);
-
 		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
 			if(error) {
 				console.log(error);
 			}
 		});
 
-		if(!exists) {
-			this.createUserTable();
-			this.createActivityTable();
-			this.createHoldingTable();
-			this.createCoinTable();
-			this.createLoginTable();
-			this.createSettingTable();
-			this.createStockTable();
-			this.createWatchlistTable();
-			this.createUserLoginView();
-		}
+		this.createUserTable();
+		this.createActivityTable();
+		this.createHoldingTable();
+		this.createCoinTable();
+		this.createLoginTable();
+		this.createSettingTable();
+		this.createStockTable();
+		this.createWatchlistTable();
+		this.createUserLoginView();
 	}
 
 	createUserTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE User (
+				CREATE TABLE IF NOT EXISTS User (
 					userID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					username VARCHAR(32) UNIQUE NOT NULL,
-					password BLOB NOT NULL
+					password BLOB NOT NULL,
+					key BLOB NOT NULL
 				);
 			`);
 
@@ -49,7 +46,7 @@ export default class DB {
 	createActivityTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Activity (
+				CREATE TABLE IF NOT EXISTS Activity (
 					activityID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					userID INTEGER NOT NULL,
 					activityTransactionID VARCHAR(32) UNIQUE NOT NULL,
@@ -77,7 +74,7 @@ export default class DB {
 	createHoldingTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Holding (
+				CREATE TABLE IF NOT EXISTS Holding (
 					holdingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					userID INTEGER NOT NULL,
 					holdingAssetID BLOB NOT NULL,
@@ -95,7 +92,7 @@ export default class DB {
 	createCoinTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Coin (
+				CREATE TABLE IF NOT EXISTS Coin (
 					coinID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					assetID VARCHAR(64) NOT NULL,
 					assetSymbol VARCHAR(16) NOT NULL
@@ -109,7 +106,7 @@ export default class DB {
 	createLoginTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Login (
+				CREATE TABLE IF NOT EXISTS Login (
 					loginID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					userID INTEGER NOT NULL,
 					loginToken VARCHAR(64) NOT NULL UNIQUE,
@@ -125,7 +122,7 @@ export default class DB {
 	createSettingTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Setting (
+				CREATE TABLE IF NOT EXISTS Setting (
 					settingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					userID INTEGER NOT NULL UNIQUE,
 					userSettings BLOB NOT NULL,
@@ -140,7 +137,7 @@ export default class DB {
 	createStockTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Stock (
+				CREATE TABLE IF NOT EXISTS Stock (
 					stockID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					assetID VARCHAR(64) NOT NULL,
 					assetSymbol VARCHAR(16) NOT NULL
@@ -154,7 +151,7 @@ export default class DB {
 	createWatchlistTable() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE TABLE Watchlist (
+				CREATE TABLE IF NOT EXISTS Watchlist (
 					watchlistID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 					userID INTEGER NOT NULL,
 					assetID BLOB NOT NULL,
@@ -171,7 +168,7 @@ export default class DB {
 	createUserLoginView() {
 		this.db?.serialize(() => {
 			let statement = (`
-				CREATE VIEW UserLogin
+				CREATE VIEW IF NOT EXISTS UserLogin
 				AS 
 				SELECT 
 					userID, 

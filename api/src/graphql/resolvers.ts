@@ -1,4 +1,4 @@
-import Utils from "./utils";
+import Utils from "../utils/Utils";
 
 const utils = new Utils();
 
