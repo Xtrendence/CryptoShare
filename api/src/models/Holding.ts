@@ -1,4 +1,4 @@
-class Holding {
+export default class Holding {
 	holdingID: number | undefined;
 	userID: number;
 	holdingAssetID: string;

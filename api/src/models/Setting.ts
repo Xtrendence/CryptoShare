@@ -1,4 +1,4 @@
-class Setting {
+export default class Setting {
 	settingID: number | undefined;
 	userID: number;
 	userSettings: string;

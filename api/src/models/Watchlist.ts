@@ -1,4 +1,4 @@
-class Watchlist {
+export default class Watchlist {
 	watchlistID: string | undefined;
 	userID: number;
 	assetID: string;

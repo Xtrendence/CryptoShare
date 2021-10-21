@@ -1,5 +1,5 @@
-class User {
-	userID: string | undefined;
+export default class User {
+	userID: number | undefined;
 	username: string;
 	password: string;
 	key: string;
