@@ -8,7 +8,14 @@ export default class Utils {
 		this.dataFolder = "./data/";
 	}
 
-	initialize() {
+	verifyToken(token: string) {
+		if(token === "testing") {
+			return true;
+		}
+		return false;
+	}
+
+	checkFiles() {
 		if(!existsSync(this.dataFolder)) {
 			mkdirSync(this.dataFolder);
 		}

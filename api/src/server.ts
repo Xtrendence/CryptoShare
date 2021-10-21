@@ -6,7 +6,7 @@ import resolvers from "./resolvers";
 import Utils from "./utils";
 
 const utils = new Utils();
-utils.initialize();
+utils.checkFiles();
 
 const schema = buildSchema(utils.getSchema());
 

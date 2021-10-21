@@ -4,5 +4,5 @@ type User {
 }
 
 type Query {
-	getUsers: [User]
+	getUsers(token: String!): [User]
 }

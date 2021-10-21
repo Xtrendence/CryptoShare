@@ -1,6 +1,16 @@
+import Utils from "./utils";
+
+const utils = new Utils();
+
 let resolvers = {
-	getUsers: () => {
-		return [];
+	getUsers: ({token}: any) => {
+		let valid = utils.verifyToken(token);
+
+		if(valid) {
+			return [];
+		}
+
+		throw new Error("Unauthorized");
 	}
 };
 
