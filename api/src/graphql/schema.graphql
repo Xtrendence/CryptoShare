@@ -1,8 +1,14 @@
 type User {
 	userID: Int!,
-	username: String!
+	username: String!,
+	key: String!
 }
 
 type Query {
-	getUsers(token: String!): [User]
+	readUser(token: String!, username: String!): User
+}
+
+type Mutation {
+	createUser(username: String!, password: String!, key: String!): String
+	updateUser(token: String!, username: String!, password: String!, key: String!): String
 }

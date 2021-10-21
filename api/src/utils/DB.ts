@@ -6,17 +6,16 @@ export default class DB {
 	db: sqlite3.Database | undefined;
 	file: string;
 
-	constructor(file: string) {
-		this.file = path.join("./data/", file);
-	}
-
-	initialize() {
+	constructor() {
+		this.file = path.join("./data/", "data.db");
 		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
 			if(error) {
 				console.log(error);
 			}
 		});
+	}
 
+	initialize() {
 		this.createUserTable();
 		this.createActivityTable();
 		this.createHoldingTable();
@@ -26,6 +25,16 @@ export default class DB {
 		this.createStockTable();
 		this.createWatchlistTable();
 		this.createUserLoginView();
+	}
+
+	runQuery(query: string, args: any) {
+		return this.db?.serialize(() => {
+			return this.db?.run(query, args, (error) => {
+				if(error) {
+					console.log(error);
+				}
+			});
+		});
 	}
 
 	createUserTable() {
