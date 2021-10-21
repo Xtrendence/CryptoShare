@@ -13,4 +13,8 @@ export default class Utils {
 			mkdirSync(this.dataFolder);
 		}
 	}
+
+	getSchema() {
+		return readFileSync(path.join(__dirname, "./schema.graphql"), { encoding:"utf-8" });
+	}
 }
