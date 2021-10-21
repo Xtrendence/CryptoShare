@@ -5,11 +5,11 @@ type User {
 }
 
 type Query {
-	readUser(token: String!, username: String!): User
+	readUser(token: String!, userID: Int!): User
 }
 
 type Mutation {
 	createUser(username: String!, password: String!, key: String!): String
-	updateUser(token: String!, username: String!, password: String!, key: String!): String
-	deleteUser(token: String!, username: String!): String
+	updateUser(token: String!, userID: Int!, password: String!, key: String!): String
+	deleteUser(token: String!, userID: Int!): String
 }

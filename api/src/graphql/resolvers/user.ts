@@ -12,14 +12,15 @@ export function createUser(user: User) {
 	db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
 }
 
-export function readUser({ token, username }: any) {
-	return new Promise((resolve, reject) => {
-		let valid = utils.verifyToken(token);
+export async function readUser({ token, userID }: any) {
+	return new Promise(async (resolve, reject) => {
+		let valid = await utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
+			db.db?.get("SELECT * FROM User WHERE userID = ?", [userID], (error, row) => {
 				if(error) {
 					console.log(error);
+					reject();
 				} else {
 					if(row === undefined) {
 						reject("!User Not Found!");
@@ -37,23 +38,23 @@ export function readUser({ token, username }: any) {
 	});
 }
 
-export function updateUser({ token, username, password, key }: any) {
-	let valid = utils.verifyToken(token);
+export async function updateUser({ token, userID, password, key }: any) {
+	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
 		let hashedPassword = bcrypt.hashSync(password, 10);
-		db.runQuery("UPDATE User SET password = ?, key = ? WHERE username = ?", [hashedPassword, key, username]);
+		db.runQuery("UPDATE User SET password = ?, key = ? WHERE userID = ?", [hashedPassword, key, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
 	}
 }
 
-export function deleteUser({ token, username }: any) {
-	let valid = utils.verifyToken(token);
+export async function deleteUser({ token, userID }: any) {
+	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("DELETE FROM User WHERE username = ?", [username]);
+		db.runQuery("DELETE FROM User WHERE userID = ?", [userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
