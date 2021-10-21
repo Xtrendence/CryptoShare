@@ -1,11 +1,27 @@
 {
-  "name": "api",
-  "version": "1.0.0",
-  "description": "CryptoShare GraphQL API.",
-  "main": "server.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC"
+	"name": "api",
+	"version": "1.0.0",
+	"description": "CryptoShare GraphQL API.",
+	"main": "./build/server.js",
+	"scripts": {
+		"tsc": "tsc",
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "npm run tsc && node ./build/server.js"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"@louislam/sqlite3": "^6.0.0",
+		"@types/express": "^4.17.13",
+		"@types/express-graphql": "^0.9.0",
+		"@types/graphql": "^14.5.0",
+		"@types/louislam__sqlite3": "npm:@types/sqlite3@^3.1.7",
+		"express": "^4.17.1",
+		"express-graphql": "^0.12.0",
+		"graphql": "^15.6.1",
+		"graphql-tools": "^8.2.0"
+	},
+	"devDependencies": {
+		"typescript": "^4.4.4"
+	}
 }
