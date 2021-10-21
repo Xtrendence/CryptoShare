@@ -15,6 +15,12 @@ export default class Utils {
 
 	async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
+			if(!this.verifyTokenTime(token)) {
+				this.db?.runQuery("DELETE FROM Login WHERE userID = ? AND loginToken = ?", [userID, token]);
+				reject();
+				return;
+			}
+
 			this.db?.db?.get("SELECT * FROM Login WHERE userID = ? AND loginToken = ?", [userID, token], (error, row) => {
 				if(error) {
 					console.log(error);
@@ -46,6 +52,15 @@ export default class Utils {
 				}
 			});
 		});
+	}
+
+	verifyTokenTime(token: string) {
+		let now = new Date().getTime() / 1000;
+		let time = parseInt(token.split("-")[0]);
+		if(now - time > 2629746) {
+			return true;
+		}
+		return false;
 	}
 
 	async login(username: string, password: string) {
