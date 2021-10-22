@@ -3,10 +3,10 @@ export default class Holding {
 	userID: number;
 	holdingAssetID: string;
 	holdingAssetSymbol: string;
-	holdingAssetAmount: number;
+	holdingAssetAmount: string;
 	holdingAssetType: string;
 
-	constructor(userID: number, holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: number, holdingAssetType: string) {
+	constructor(userID: number, holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: string, holdingAssetType: string) {
 		this.userID = userID;
 		this.holdingAssetID = holdingAssetID;
 		this.holdingAssetSymbol = holdingAssetSymbol;

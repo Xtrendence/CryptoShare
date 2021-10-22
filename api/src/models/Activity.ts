@@ -7,16 +7,16 @@ export default class Activity {
 	activityAssetType: string;
 	activityDate: string;
 	activityType: string;
-	activityAssetAmount: number;
-	activityFee: number;
+	activityAssetAmount: string;
+	activityFee: string;
 	activityNotes: string;
 	activityExchange: string;
 	activityPair: string;
-	activityPrice: number;
+	activityPrice: string;
 	activityFrom: string;
 	activityTo: string;
 
-	constructor(userID: number, activityTransactionID: string, activityAssetID: string, activityAssetSymbol: string, activityAssetType: string, activityDate: string, activityType: string, activityAssetAmount: number, activityFee: number, activityNotes: string, activityExchange: string, activityPair: string, activityPrice: number, activityFrom: string, activityTo: string) {
+	constructor(userID: number, activityTransactionID: string, activityAssetID: string, activityAssetSymbol: string, activityAssetType: string, activityDate: string, activityType: string, activityAssetAmount: string, activityFee: string, activityNotes: string, activityExchange: string, activityPair: string, activityPrice: string, activityFrom: string, activityTo: string) {
 		this.userID = userID;
 		this.activityTransactionID = activityTransactionID;
 		this.activityAssetID = activityAssetID;
