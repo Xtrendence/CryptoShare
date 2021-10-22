@@ -10,11 +10,20 @@ type Coin {
 	assetSymbol: String!
 }
 
+type Stock {
+	stockID: Int!,
+	assetID: String!,
+	assetSymbol: String!
+}
+
 type Query {
 	readUser(token: String!, userID: Int!): User
 
-	readCoinByID(token: String!, userID: Int!, assetID: String!)
-	readCoinBySymbol(token: String!, userID: Int!, assetSymbol: String!)
+	readCoinByID(token: String!, userID: Int!, assetID: String!): Coin
+	readCoinBySymbol(token: String!, userID: Int!, assetSymbol: String!): Coin
+
+	readStockByID(token: String!, userID: Int!, assetID: String!): Stock
+	readStockBySymbol(token: String!, userID: Int!, assetSymbol: String!): Stock
 }
 
 type Mutation {
@@ -25,4 +34,8 @@ type Mutation {
 	createCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
 	updateCoin(token: String!, userID: Int!, coinID: Int!, assetID: String!, assetSymbol: String!): String
 	deleteCoin(token: String!, userID: Int!, coinID: Int!): String
+
+	createStock(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
+	updateStock(token: String!, userID: Int!, stockID: Int!, assetID: String!, assetSymbol: String!): String
+	deleteStock(token: String!, userID: Int!, stockID: Int!): String
 }
