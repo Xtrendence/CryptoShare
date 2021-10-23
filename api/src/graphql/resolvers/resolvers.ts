@@ -1,4 +1,5 @@
 import { createUser, readUser, updateUser, deleteUser } from "./user";
+import { createActivity, readActivity, updateActivity, deleteActivity } from "./activity";
 import { createSetting, readSetting, updateSetting, deleteSetting } from "./setting";
 import { createHolding, readHolding, updateHolding, deleteHolding } from "./holding";
 import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
@@ -7,6 +8,7 @@ import { createStock, readStockByID, readStockBySymbol, updateStock, deleteStock
 
 let resolvers = {
 	createUser, readUser, updateUser, deleteUser,
+	createActivity, readActivity, updateActivity, deleteActivity,
 	createSetting, readSetting, updateSetting, deleteSetting,
 	createHolding, readHolding, updateHolding, deleteHolding,
 	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,

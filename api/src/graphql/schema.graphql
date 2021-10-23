@@ -4,6 +4,25 @@ type User {
 	key: String!
 }
 
+type Activity {
+	activityID: Int!,
+	userID: Int!,
+	activityTransactionID: String!, 
+	activityAssetID: String!, 
+	activityAssetSymbol: String!, 
+	activityAssetType: String!, 
+	activityDate: String!, 
+	activityType: String!, 
+	activityAssetAmount: String!, 
+	activityFee: String!, 
+	activityNotes: String!, 
+	activityExchange: String!, 
+	activityPair: String!, 
+	activityPrice: String!, 
+	activityFrom: String!, 
+	activityTo: String!
+}
+
 type Setting {
 	settingID: Int!,
 	userID: Int!, 
@@ -42,6 +61,8 @@ type Stock {
 type Query {
 	readUser(token: String!, userID: Int!): User
 
+	readActivity(token: String!, userID: Int!): Activity
+
 	readSetting(token: String!, userID: Int!): Setting
 
 	readHolding(token: String!, userID: Int!): Holding
@@ -59,6 +80,10 @@ type Mutation {
 	createUser(username: String!, password: String!, key: String!): String
 	updateUser(token: String!, userID: Int!, password: String!, key: String!): String
 	deleteUser(token: String!, userID: Int!): String
+
+	createActivity(token: String!, userID: Int!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
+	updateActivity(token: String!, userID: Int!, activityID: Int!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
+	deleteActivity(token: String!, userID: Int!, activityID: Int!): String
 
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
 	updateSetting(token: String!, userID: Int!, settingID: Int!, userSettings: String!): String
