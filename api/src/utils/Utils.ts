@@ -62,6 +62,28 @@ export default class Utils {
 		return false;
 	}
 
+	verifyDataOwnership(userID: number, table: string, column: string, rowID: number) {
+		return new Promise((resolve, reject) => {
+			this.db?.db?.get(`SELECT * FROM ${table} WHERE ${column} = ?`, [rowID], (error, row) => {
+				if(error) {
+					console.log(error);
+					reject(false);
+				} else {
+					if(row === undefined) {
+						reject(false);
+						return;
+					}
+
+					if(row.userID === userID) {
+						resolve(true);
+					} else {
+						reject(false);
+					}
+				}
+			});
+		});
+	}
+
 	async login(username: string, password: string) {
 		return new Promise(async (resolve, reject) => {
 			this.db?.db?.get("SELECT * FROM User WHERE username = ?", [username], async (error, row) => {

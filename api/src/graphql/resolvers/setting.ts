@@ -46,7 +46,7 @@ export async function updateSetting({ token, userID, settingID, userSettings }: 
 	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("UPDATE Setting SET userSettings = ? WHERE settingID = ?", [userSettings, settingID]);
+		db.runQuery("UPDATE Setting SET userSettings = ? WHERE settingID = ? AND userID = ?", [userSettings, settingID, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
@@ -57,7 +57,7 @@ export async function deleteSetting({ token, userID, settingID }: any) {
 	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("DELETE FROM Setting WHERE settingID = ?", [settingID]);
+		db.runQuery("DELETE FROM Setting WHERE settingID = ? AND userID = ?", [settingID, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";

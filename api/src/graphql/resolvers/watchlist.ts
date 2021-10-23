@@ -46,7 +46,7 @@ export async function updateWatchlist({ token, userID, watchlistID, assetID, ass
 	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("UPDATE Watchlist SET assetID = ?, assetSymbol = ?, assetType = ? WHERE watchlistID = ?", [assetID, assetSymbol, assetType, watchlistID]);
+		db.runQuery("UPDATE Watchlist SET assetID = ?, assetSymbol = ?, assetType = ? WHERE watchlistID = ? AND userID = ?", [assetID, assetSymbol, assetType, watchlistID, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
@@ -57,7 +57,7 @@ export async function deleteWatchlist({ token, userID, watchlistID }: any) {
 	let valid = await utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("DELETE FROM Watchlist WHERE watchlistID = ?", [watchlistID]);
+		db.runQuery("DELETE FROM Watchlist WHERE watchlistID = ? AND userID = ?", [watchlistID, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
