@@ -10,6 +10,14 @@ type Setting {
 	userSettings: String!
 }
 
+type Watchlist {
+	watchlistID: Int!, 
+	userID: Int!, 
+	assetID: String!,
+	assetSymbol: String!,
+	assetType: String!
+}
+
 type Coin {
 	coinID: Int!,
 	assetID: String!,
@@ -27,6 +35,8 @@ type Query {
 
 	readSetting(token: String!, userID: Int!): Setting
 
+	readWatchlist(token: String!, userID: Int!): Watchlist
+
 	readCoinByID(token: String!, userID: Int!, assetID: String!): Coin
 	readCoinBySymbol(token: String!, userID: Int!, assetSymbol: String!): Coin
 
@@ -42,6 +52,10 @@ type Mutation {
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
 	updateSetting(token: String!, userID: Int!, settingID: Int!, userSettings: String!): String
 	deleteSetting(token: String!, userID: Int!, settingID: Int!): String
+
+	createWatchlist(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
+	updateWatchlist(token: String!, userID: Int!, watchlistID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
+	deleteWatchlist(token: String!, userID: Int!, watchlistID: Int!): String
 
 	createCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
 	updateCoin(token: String!, userID: Int!, coinID: Int!, assetID: String!, assetSymbol: String!): String
