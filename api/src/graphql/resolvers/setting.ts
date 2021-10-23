@@ -1,0 +1,65 @@
+import Utils from "../../utils/Utils";
+import DB from "../../utils/DB";
+import Setting from "../../models/Setting";
+
+const utils = new Utils();
+const db = new DB();
+
+export async function createSetting({ token, userID, userSettings }: any) {
+	let valid = await utils.verifyToken(userID, token);
+
+	if(valid) {
+		db.runQuery("INSERT INTO Setting (userID, userSettings) VALUES (?, ?)", [userID, userSettings]);
+		return "Done";
+	} else {
+		return "Unauthorized";
+	}
+}
+
+export async function readSetting({ token, userID }: any) {
+	return new Promise(async (resolve, reject) => {
+		let valid = await utils.verifyToken(userID, token);
+
+		if(valid) {
+			db.db?.get("SELECT * FROM Setting WHERE userID = ?", [userID], (error, row) => {
+				if(error) {
+					console.log(error);
+					reject();
+				} else {
+					if(row === undefined) {
+						reject("!Setting Not Found!");
+						return;
+					}
+
+					let setting = new Setting(userID, row.userSettings);
+					setting.settingID = row.settingID;
+					resolve(setting);
+				}
+			});
+		} else {
+			reject("!Unauthorized!");
+		}
+	});
+}
+
+export async function updateSetting({ token, userID, settingID, userSettings }: any) {
+	let valid = await utils.verifyToken(userID, token);
+
+	if(valid) {
+		db.runQuery("UPDATE Setting SET userSettings = ? WHERE settingID = ?", [userSettings, settingID]);
+		return "Done";
+	} else {
+		return "Unauthorized";
+	}
+}
+
+export async function deleteSetting({ token, userID, settingID }: any) {
+	let valid = await utils.verifyToken(userID, token);
+
+	if(valid) {
+		db.runQuery("DELETE FROM Setting WHERE settingID = ?", [settingID]);
+		return "Done";
+	} else {
+		return "Unauthorized";
+	}
+}

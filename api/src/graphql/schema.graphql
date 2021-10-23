@@ -4,6 +4,12 @@ type User {
 	key: String!
 }
 
+type Setting {
+	settingID: Int!,
+	userID: Int!, 
+	userSettings: String!
+}
+
 type Coin {
 	coinID: Int!,
 	assetID: String!,
@@ -19,6 +25,8 @@ type Stock {
 type Query {
 	readUser(token: String!, userID: Int!): User
 
+	readSetting(token: String!, userID: Int!): Setting
+
 	readCoinByID(token: String!, userID: Int!, assetID: String!): Coin
 	readCoinBySymbol(token: String!, userID: Int!, assetSymbol: String!): Coin
 
@@ -30,6 +38,10 @@ type Mutation {
 	createUser(username: String!, password: String!, key: String!): String
 	updateUser(token: String!, userID: Int!, password: String!, key: String!): String
 	deleteUser(token: String!, userID: Int!): String
+
+	createSetting(token: String!, userID: Int!, userSettings: String!): String
+	updateSetting(token: String!, userID: Int!, settingID: Int!, userSettings: String!): String
+	deleteSetting(token: String!, userID: Int!, settingID: Int!): String
 
 	createCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
 	updateCoin(token: String!, userID: Int!, coinID: Int!, assetID: String!, assetSymbol: String!): String
