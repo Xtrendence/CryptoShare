@@ -1,6 +1,6 @@
-import Utils from "../../utils/Utils";
-import DB from "../../utils/DB";
 import Setting from "../../models/Setting";
+import DB from "../../utils/DB";
+import Utils from "../../utils/Utils";
 
 const db = new DB();
 

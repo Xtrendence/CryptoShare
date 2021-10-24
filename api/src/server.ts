@@ -1,13 +1,13 @@
-import express from "express";
 import cors from "cors";
-import { createServer } from "http";
-import { Server } from "socket.io";
+import express from "express";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
-import DB from "./utils/DB";
-import resolvers from "./graphql/resolvers/resolvers";
-import Utils from "./utils/Utils";
+import { createServer } from "http";
+import { Server } from "socket.io";
 import addEvents from "./bot/events";
+import resolvers from "./graphql/resolvers/resolvers";
+import DB from "./utils/DB";
+import Utils from "./utils/Utils";
 
 const portAPI = 1999;
 const portBot = 2000;

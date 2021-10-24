@@ -1,6 +1,6 @@
-import Utils from "../../utils/Utils";
-import DB from "../../utils/DB";
 import Watchlist from "../../models/Watchlist";
+import DB from "../../utils/DB";
+import Utils from "../../utils/Utils";
 
 const db = new DB();
 

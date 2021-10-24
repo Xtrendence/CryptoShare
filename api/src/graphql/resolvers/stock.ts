@@ -1,6 +1,6 @@
-import Utils from "../../utils/Utils";
-import DB from "../../utils/DB";
 import Stock from "../../models/Stock";
+import DB from "../../utils/DB";
+import Utils from "../../utils/Utils";
 
 const db = new DB();
 

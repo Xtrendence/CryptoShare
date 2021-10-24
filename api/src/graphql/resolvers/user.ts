@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
-import Utils from "../../utils/Utils";
-import DB from "../../utils/DB";
 import User from "../../models/User";
+import DB from "../../utils/DB";
+import Utils from "../../utils/Utils";
 
 const db = new DB();
 
