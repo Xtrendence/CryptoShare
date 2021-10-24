@@ -2,11 +2,10 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Message from "../../models/Message";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createMessage({ token, userID, userMessage, botMessage }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("INSERT INTO Message (userID, userMessage, botMessage, messageDate) VALUES (?, ?, ?, TIME())", [userID, userMessage, botMessage]);
@@ -18,7 +17,7 @@ export async function createMessage({ token, userID, userMessage, botMessage }: 
 
 export async function readMessage({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Message WHERE userID = ?", [userID], (error, row) => {
@@ -43,7 +42,7 @@ export async function readMessage({ token, userID }: any) {
 }
 
 export async function updateMessage({ token, userID, messageID, userMessage, botMessage }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Message SET userMessage = ?, botMessage = ? WHERE messageID = ? AND userID = ?", [userMessage, botMessage, messageID, userID]);
@@ -54,7 +53,7 @@ export async function updateMessage({ token, userID, messageID, userMessage, bot
 }
 
 export async function deleteMessage({ token, userID, messageID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Message WHERE messageID = ? AND userID = ?", [messageID, userID]);

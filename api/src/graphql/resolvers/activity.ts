@@ -2,14 +2,13 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Activity from "../../models/Activity";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createActivity({ token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
-		let activityTransactionID = "tx-" + await utils.generateToken();
+		let activityTransactionID = "tx-" + await Utils.generateToken();
 
 		db.runQuery("INSERT INTO Activity (userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo]);
 		return "Done";
@@ -20,7 +19,7 @@ export async function createActivity({ token, userID, activityAssetID, activityA
 
 export async function readActivity({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Activity WHERE userID = ?", [userID], (error, row) => {
@@ -45,7 +44,7 @@ export async function readActivity({ token, userID }: any) {
 }
 
 export async function updateActivity({ token, userID, activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Activity SET activityAssetID = ?, activityAssetSymbol = ?, activityAssetType = ?, activityDate = ?, activityType = ?, activityAssetAmount = ?, activityFee = ?, activityNotes = ?, activityExchange = ?, activityPair = ?, activityPrice = ?, activityFrom = ?, activityTo = ? WHERE activityID = ? AND userID = ?", [activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo, activityID, userID]);
@@ -56,7 +55,7 @@ export async function updateActivity({ token, userID, activityID, activityAssetI
 }
 
 export async function deleteActivity({ token, userID, activityID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Activity WHERE activityID = ? AND userID = ?", [activityID, userID]);

@@ -2,11 +2,10 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Stock from "../../models/Stock";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createStock({ token, userID, assetID, assetSymbol }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("INSERT INTO Stock (assetID, assetSymbol) VALUES (?, ?)", [assetID, assetSymbol]);
@@ -18,7 +17,7 @@ export async function createStock({ token, userID, assetID, assetSymbol }: any) 
 
 export async function readStockByID({ token, userID, assetID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Stock WHERE assetID = ?", [assetID], (error, row) => {
@@ -44,7 +43,7 @@ export async function readStockByID({ token, userID, assetID }: any) {
 
 export async function readStockBySymbol({ token, userID, assetSymbol }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Stock WHERE assetSymbol = ?", [assetSymbol], (error, row) => {
@@ -69,7 +68,7 @@ export async function readStockBySymbol({ token, userID, assetSymbol }: any) {
 }
 
 export async function updateStock({ token, userID, stockID, assetID, assetSymbol }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Stock SET assetID = ?, assetSymbol = ? WHERE stockID = ?", [assetID, assetSymbol, stockID]);
@@ -80,7 +79,7 @@ export async function updateStock({ token, userID, stockID, assetID, assetSymbol
 }
 
 export async function deleteStock({ token, userID, stockID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Stock WHERE stockID = ?", [stockID]);

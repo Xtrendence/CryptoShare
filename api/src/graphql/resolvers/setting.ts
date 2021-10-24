@@ -2,11 +2,10 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Setting from "../../models/Setting";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createSetting({ token, userID, userSettings }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("INSERT INTO Setting (userID, userSettings) VALUES (?, ?)", [userID, userSettings]);
@@ -18,7 +17,7 @@ export async function createSetting({ token, userID, userSettings }: any) {
 
 export async function readSetting({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Setting WHERE userID = ?", [userID], (error, row) => {
@@ -43,7 +42,7 @@ export async function readSetting({ token, userID }: any) {
 }
 
 export async function updateSetting({ token, userID, settingID, userSettings }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Setting SET userSettings = ? WHERE settingID = ? AND userID = ?", [userSettings, settingID, userID]);
@@ -54,7 +53,7 @@ export async function updateSetting({ token, userID, settingID, userSettings }: 
 }
 
 export async function deleteSetting({ token, userID, settingID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Setting WHERE settingID = ? AND userID = ?", [settingID, userID]);

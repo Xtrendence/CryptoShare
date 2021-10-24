@@ -2,11 +2,10 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Coin from "../../models/Coin";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createCoin({ token, userID, assetID, assetSymbol }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("INSERT INTO Coin (assetID, assetSymbol) VALUES (?, ?)", [assetID, assetSymbol]);
@@ -18,7 +17,7 @@ export async function createCoin({ token, userID, assetID, assetSymbol }: any) {
 
 export async function readCoinByID({ token, userID, assetID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Coin WHERE assetID = ?", [assetID], (error, row) => {
@@ -44,7 +43,7 @@ export async function readCoinByID({ token, userID, assetID }: any) {
 
 export async function readCoinBySymbol({ token, userID, assetSymbol }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Coin WHERE assetSymbol = ?", [assetSymbol], (error, row) => {
@@ -69,7 +68,7 @@ export async function readCoinBySymbol({ token, userID, assetSymbol }: any) {
 }
 
 export async function updateCoin({ token, userID, coinID, assetID, assetSymbol }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Coin SET assetID = ?, assetSymbol = ? WHERE coinID = ?", [assetID, assetSymbol, coinID]);
@@ -80,7 +79,7 @@ export async function updateCoin({ token, userID, coinID, assetID, assetSymbol }
 }
 
 export async function deleteCoin({ token, userID, coinID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Coin WHERE coinID = ?", [coinID]);

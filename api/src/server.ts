@@ -12,10 +12,9 @@ import addEvents from "./bot/events";
 const portAPI = 1999;
 const portBot = 2000;
 
-const utils = new Utils();
-utils.checkFiles();
+Utils.checkFiles();
 
-const schema = buildSchema(utils.getSchema());
+const schema = buildSchema(Utils.getSchema());
 
 const app = express();
 
@@ -27,7 +26,7 @@ addEvents(io);
 const db = new DB();
 db.initialize();
 
-utils.db = db;
+Utils.db = db;
 
 app.use(cors());
 app.use(express.urlencoded({ extended:true }));
@@ -49,13 +48,13 @@ app.listen(portAPI, () => {
 app.post("/login", async (request, response) => {
 	let username = request.body.username;
 	let password = request.body.password;
-	response.send(await utils.login(username, password));
+	response.send(await Utils.login(username, password));
 });
 
 app.post("/verifyToken", async (request, response) => {
 	let userID = request.body.userID;
 	let token = request.body.token;
-	response.send(await utils.verifyToken(userID, token));
+	response.send(await Utils.verifyToken(userID, token));
 });
 
 httpServer.listen(portBot, () => {

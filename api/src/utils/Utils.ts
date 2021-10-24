@@ -5,14 +5,10 @@ import crypto from "crypto";
 import DB from "./DB";
 
 export default class Utils {
-	db: DB | undefined;
-	dataFolder: string;
+	static db: DB | undefined;
+	static dataFolder: string = "./data/";
 
-	constructor() {
-		this.dataFolder = "./data/";
-	}
-
-	async verifyToken(userID: number, token: string) {
+	static async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
 			if(!this.verifyTokenTime(token)) {
 				this.db?.runQuery("DELETE FROM Login WHERE userID = ? AND loginToken = ?", [userID, token]);
@@ -53,7 +49,7 @@ export default class Utils {
 		});
 	}
 
-	verifyTokenTime(token: string) {
+	static verifyTokenTime(token: string) {
 		let now = new Date().getTime() / 1000;
 		let time = parseInt(token.split("-")[0]);
 		if(now - time > 2629746) {
@@ -62,7 +58,7 @@ export default class Utils {
 		return false;
 	}
 
-	verifyDataOwnership(userID: number, table: string, column: string, rowID: number) {
+	static verifyDataOwnership(userID: number, table: string, column: string, rowID: number) {
 		return new Promise((resolve, reject) => {
 			this.db?.db?.get(`SELECT * FROM ${table} WHERE ${column} = ?`, [rowID], (error, row) => {
 				if(error) {
@@ -84,7 +80,7 @@ export default class Utils {
 		});
 	}
 
-	async login(username: string, password: string) {
+	static async login(username: string, password: string) {
 		return new Promise(async (resolve, reject) => {
 			this.db?.db?.get("SELECT * FROM User WHERE username = ?", [username], async (error, row) => {
 				if(error) {
@@ -116,7 +112,7 @@ export default class Utils {
 		});
 	}
 
-	async generateToken() {
+	static async generateToken() {
 		return new Promise((resolve, reject) => {
 			crypto.randomBytes(32, (error, buffer) => {
 				if(error) {
@@ -128,13 +124,13 @@ export default class Utils {
 		});
 	}
 
-	checkFiles() {
+	static checkFiles() {
 		if(!existsSync(this.dataFolder)) {
 			mkdirSync(this.dataFolder);
 		}
 	}
 
-	getSchema() {
+	static getSchema() {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
 }

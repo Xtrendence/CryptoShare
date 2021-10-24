@@ -3,7 +3,6 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import User from "../../models/User";
 
-const utils = new Utils();
 const db = new DB();
 
 export function createUser(user: User) {
@@ -13,7 +12,7 @@ export function createUser(user: User) {
 
 export async function readUser({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM User WHERE userID = ?", [userID], (error, row) => {
@@ -38,7 +37,7 @@ export async function readUser({ token, userID }: any) {
 }
 
 export async function updateUser({ token, userID, password, key }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		let hashedPassword = bcrypt.hashSync(password, 10);
@@ -50,7 +49,7 @@ export async function updateUser({ token, userID, password, key }: any) {
 }
 
 export async function deleteUser({ token, userID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM User WHERE userID = ?", [userID]);

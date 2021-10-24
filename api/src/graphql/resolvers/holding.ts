@@ -2,11 +2,10 @@ import Utils from "../../utils/Utils";
 import DB from "../../utils/DB";
 import Holding from "../../models/Holding";
 
-const utils = new Utils();
 const db = new DB();
 
 export async function createHolding({ token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("INSERT INTO Holding (userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) VALUES (?, ?, ?, ?, ?)", [userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType]);
@@ -18,7 +17,7 @@ export async function createHolding({ token, userID, holdingAssetID, holdingAsse
 
 export async function readHolding({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await utils.verifyToken(userID, token);
+		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
 			db.db?.get("SELECT * FROM Holding WHERE userID = ?", [userID], (error, row) => {
@@ -43,7 +42,7 @@ export async function readHolding({ token, userID }: any) {
 }
 
 export async function updateHolding({ token, userID, holdingID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("UPDATE Holding SET holdingAssetID = ?, holdingAssetSymbol = ?, holdingAssetAmount = ?, holdingAssetType = ? WHERE holdingID = ? AND userID = ?", [holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType, holdingID, userID]);
@@ -54,7 +53,7 @@ export async function updateHolding({ token, userID, holdingID, holdingAssetID, 
 }
 
 export async function deleteHolding({ token, userID, holdingID }: any) {
-	let valid = await utils.verifyToken(userID, token);
+	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
 		db.runQuery("DELETE FROM Holding WHERE holdingID = ? AND userID = ?", [holdingID, userID]);
