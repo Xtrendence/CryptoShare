@@ -133,4 +133,16 @@ export default class Utils {
 	static getSchema() {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
+
+	static empty(value: any) {
+		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
+			return true;
+		}
+		
+		if(value === null || typeof value === "undefined" || value.toString().trim() === "") {
+			return true;
+		}
+
+		return false;
+	}
 }

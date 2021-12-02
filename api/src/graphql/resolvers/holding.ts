@@ -20,19 +20,25 @@ export async function readHolding({ token, userID }: any) {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.db?.get("SELECT * FROM Holding WHERE userID = ?", [userID], (error, row) => {
+			db.db?.all("SELECT * FROM Holding WHERE userID = ?", [userID], (error, rows) => {
 				if(error) {
 					console.log(error);
 					reject();
 				} else {
-					if(row === undefined) {
-						reject("!Holding Not Found!");
+					if(rows === undefined) {
+						reject("!Holdings Not Found!");
 						return;
 					}
 
-					let holding = new Holding(userID, row.holdingAssetID, row.holdingAssetSymbol, row.holdingAssetAmount, row.holdingAssetType);
-					holding.holdingID = row.holdingID;
-					resolve(holding);
+					let holdings: Array<Holding> = [];
+
+					rows.map(row => {
+						let holding = new Holding(userID, row.holdingAssetID, row.holdingAssetSymbol, row.holdingAssetAmount, row.holdingAssetType);
+						holding.holdingID = row.holdingID;
+						holdings.push(holding);
+					});
+					
+					resolve(holdings);
 				}
 			});
 		} else {
@@ -86,7 +92,7 @@ export async function importHolding({ token, userID, rows }: any) {
 						if(row === undefined) {
 							createHolding({ token:token, userID:userID, holdingAssetID:holdingAssetID, holdingAssetSymbol:holdingAssetSymbol, holdingAssetAmount:holdingAssetAmount, holdingAssetType:holdingAssetType });
 						} else {
-							updateHolding({ token:token, userID:userID, holdingID:row.holdingID, holdingAssetID:holdingAssetID, holdingAssetSymbol:holdingAssetSymbol, holdingAssetAmount:holdingAssetAmount, holdingAssetType:holdingAssetType })
+							updateHolding({ token:token, userID:userID, holdingID:row.holdingID, holdingAssetID:holdingAssetID, holdingAssetSymbol:holdingAssetSymbol, holdingAssetAmount:holdingAssetAmount, holdingAssetType:holdingAssetType });
 						}
 					}
 
