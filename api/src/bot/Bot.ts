@@ -1,6 +1,11 @@
 import { NlpManager } from "node-nlp";
 import Message from "../models/Message";
+import { createActivity } from "../graphql/resolvers/activity";
+import { createHolding, readHolding } from "../graphql/resolvers/holding";
+import { createWatchlist, readWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
 import { createMessage, readMessage, updateMessage, deleteMessage } from "../graphql/resolvers/message";
+import { readCoinByID, readCoinBySymbol } from "../graphql/resolvers/coin";
+import { readStockByID, readStockBySymbol } from "../graphql/resolvers/stock";
 import Utils from "../utils/Utils";
 
 export default class Bot {
@@ -18,8 +23,6 @@ export default class Bot {
 		try {
 			let processed = await this.manager.process(message);
 			let entities = processed.sourceEntities;
-			let numberOfEntities = entities.length;
-			let lastEntity = entities[numberOfEntities - 1];
 
 			let intent = this.determineIntent(processed);
 
@@ -32,45 +35,7 @@ export default class Bot {
 
 			switch(intent.category) {
 				case "activity":
-					let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
-					if(intent.action === "transfer") {
-						regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
-					}
-
-					let match = intent.utterance.match(regex);
-
-					let asset = match[0];
-					if(intent.action === "transfer") {
-						asset = match[0].split(" ").pop();
-
-						if(intent.utterance.includes("from")) {
-							let from = intent.utterance.match(/(from )+[A-Z]*/gi)[0].split(" ")[1];
-							details["from"] = Utils.capitalizeFirstLetter(from);
-							details["to"] = "Me";
-						} else if(intent.utterance.includes("to")) {
-							let to = intent.utterance.match(/(to )+[A-Z]*/gi)[0].split(" ")[1];
-							details["from"] = "Me";
-							details["to"] = Utils.capitalizeFirstLetter(to);
-						}
-					}
-					
-					details["amount"] = parseFloat(entities[0].resolution.value);
-					details["asset"] = asset;
-
-					if(entities[1]?.typeName.includes("number")) {
-						details["price"] = parseFloat(entities[1].resolution.value);
-
-						if(!Utils.empty(lastEntity) && lastEntity?.typeName.includes("date")) {
-							details["date"] = lastEntity.resolution.values[0].value;
-						}
-					} else if(entities[1]?.typeName.includes("date")) {
-						details["date"] = entities[1].resolution.values[0].value;
-					}
-
-					if(!("date" in details)) {
-						details["date"] = new Date().toISOString().split("T")[0]
-					}
-					
+					details = this.processActivity(entities, intent);
 					break;
 				case "holding":
 					break;
@@ -115,5 +80,53 @@ export default class Bot {
 		} catch(error) {
 			return { error:error };
 		}
+	}
+
+	processActivity(entities: any, intent: any) {
+		let numberOfEntities = entities.length;
+		let lastEntity = entities[numberOfEntities - 1];
+
+		let details: any = {};
+
+		let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
+		if(intent.action === "transfer") {
+			regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
+		}
+
+		let match = intent.utterance.match(regex);
+
+		let asset = match[0];
+		if(intent.action === "transfer") {
+			asset = match[0].split(" ").pop();
+
+			if(intent.utterance.includes("from")) {
+				let from = intent.utterance.match(/(from )+[A-Z]*/gi)[0].split(" ")[1];
+				details["from"] = Utils.capitalizeFirstLetter(from);
+				details["to"] = "Me";
+			} else if(intent.utterance.includes("to")) {
+				let to = intent.utterance.match(/(to )+[A-Z]*/gi)[0].split(" ")[1];
+				details["from"] = "Me";
+				details["to"] = Utils.capitalizeFirstLetter(to);
+			}
+		}
+					
+		details["amount"] = parseFloat(entities[0].resolution.value);
+		details["asset"] = asset;
+
+		if(entities[1]?.typeName.includes("number")) {
+			details["price"] = parseFloat(entities[1].resolution.value);
+
+			if(!Utils.empty(lastEntity) && lastEntity?.typeName.includes("date")) {
+				details["date"] = lastEntity.resolution.values[0].value;
+			}
+		} else if(entities[1]?.typeName.includes("date")) {
+			details["date"] = entities[1].resolution.values[0].value;
+		}
+
+		if(!("date" in details)) {
+			details["date"] = new Date().toISOString().split("T")[0]
+		}
+
+		return details;
 	}
 }
