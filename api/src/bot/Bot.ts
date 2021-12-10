@@ -1,7 +1,7 @@
 import { NlpManager } from "node-nlp";
 import Message from "../models/Message";
 import { createActivity } from "../graphql/resolvers/activity";
-import { createHolding, readHolding } from "../graphql/resolvers/holding";
+import { createHolding, readHolding, deleteHolding } from "../graphql/resolvers/holding";
 import { createWatchlist, readWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
 import { createMessage, readMessage, updateMessage, deleteMessage } from "../graphql/resolvers/message";
 import { readCoinByID, readCoinBySymbol } from "../graphql/resolvers/coin";
@@ -31,16 +31,18 @@ export default class Bot {
 			}
 
 			let details: any = {};
+			details["category"] = intent.category;
 			details["action"] = intent.action;
 
 			switch(intent.category) {
 				case "activity":
-					details = this.processActivity(entities, intent);
+					details = this.processActivity(entities, intent, details);
 					break;
 				case "holding":
-					details = this.processHolding(entities, intent);
+					details = this.processHolding(entities, intent, details);
 					break;
 				case "watchlist":
+					details = this.processWatchlist(intent, details);
 					break;
 			}
 
@@ -68,7 +70,7 @@ export default class Bot {
 				action = "transfer";
 			} else if(utterance.match("(holding|amount)")) {
 				category = "holding";
-				action = "modify";
+				action = "update";
 			} else if(utterance.includes("watch") && utterance.match("(start|add)")) {
 				category = "watchlist";
 				action = "add";
@@ -83,11 +85,9 @@ export default class Bot {
 		}
 	}
 
-	processActivity(entities: any, intent: any) {
+	processActivity(entities: any, intent: any, details: any) {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
-
-		let details: any = {};
 
 		let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
 		if(intent.action === "transfer") {
@@ -131,20 +131,37 @@ export default class Bot {
 		return details;
 	}
 
-	processHolding(entities: any, intent: any) {
+	processHolding(entities: any, intent: any, details: any) {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
 
-		let details: any = {};
+		let match;
 
-		let regex = /\w+(?=\s+((holdings)))/;
-
-		let match = intent.utterance.match(regex);
+		if(intent.utterance.match("(set)")) {
+			match = intent.utterance.match(/\w+(?=\s+((holding)))/gi);
+			details["amount"] = parseFloat(lastEntity.resolution.value);
+		} else if(intent.utterance.match("(remove|delete)")) {
+			match = intent.utterance.match(/\w+(?=\s+((from )))/);
+			details["amount"] = 0;
+		}
 
 		let asset = match[0];
-		
 		details["asset"] = asset;
-		details["amount"] = parseFloat(lastEntity.resolution.value);
+
+		return details;
+	}
+
+	processWatchlist(intent: any, details: any) {
+		let match;
+
+		if(intent.utterance.match("(add|set)")) {
+			match = intent.utterance.match(/\w+(?=\s+((to )))/gi);
+		} else if(intent.utterance.match("(remove|delete)")) {
+			match = intent.utterance.match(/\w+(?=\s+((from )))/gi);
+		}
+
+		let asset = match[0];
+		details["asset"] = asset;
 
 		return details;
 	}
