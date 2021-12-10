@@ -1,9 +1,7 @@
 import { NlpManager } from "node-nlp";
-import Message from "../models/Message";
 import { createActivity } from "../graphql/resolvers/activity";
-import { createHolding, readHolding, deleteHolding, updateHolding } from "../graphql/resolvers/holding";
-import { createWatchlist, readWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
-import { createMessage, readMessage, updateMessage, deleteMessage } from "../graphql/resolvers/message";
+import { createHolding, deleteHolding, updateHolding } from "../graphql/resolvers/holding";
+import { createWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
 import { readCoinBySymbol } from "../graphql/resolvers/coin";
 import { readStockBySymbol } from "../graphql/resolvers/stock";
 import Utils from "../utils/Utils";
