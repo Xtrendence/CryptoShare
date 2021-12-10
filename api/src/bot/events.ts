@@ -1,10 +1,15 @@
 import { Server } from "socket.io";
-import Client from "socket.io-client";
 import Message from "../models/Message";
+import Bot from "./Bot";
 
-export default function addEvents(io: Server) {
-	io.on("message", (message: Message) => {
+export default async function addEvents(io: Server) {
+	const bot = new Bot();
+	bot.initialize();
 
+	io.on("connection", (socket) => {
+		socket.on("message", (message) => {
+			bot.generateResponse(message.userMessage);
+		});
 	});
 
 	return io;

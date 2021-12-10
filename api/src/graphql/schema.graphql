@@ -58,14 +58,6 @@ type Stock {
 	assetSymbol: String!
 }
 
-type Message {
-	messageID: Int!,
-	userID: Int!,
-	userMessage: String!,
-	botMessage: String,
-	messageDate: String!
-}
-
 type Query {
 	readUser(token: String!, userID: Int!): User
 
@@ -82,8 +74,6 @@ type Query {
 
 	readStockByID(token: String!, userID: Int!, assetID: String!): Stock
 	readStockBySymbol(token: String!, userID: Int!, assetSymbol: String!): Stock
-
-	readMessage(token: String!, userID: Int!): Message
 }
 
 type Mutation {
@@ -116,8 +106,4 @@ type Mutation {
 	createStock(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
 	updateStock(token: String!, userID: Int!, stockID: Int!, assetID: String!, assetSymbol: String!): String
 	deleteStock(token: String!, userID: Int!, stockID: Int!): String
-
-	createMessage(token: String!, userID: Int!, userMessage: String!, botMessage: String): String
-	updateMessage(token: String!, userID: Int!, messageID: Int!, userMessage: String!, botMessage: String): String
-	deleteMessage(token: String!, userID: Int!, messageID: Int!): String
 }

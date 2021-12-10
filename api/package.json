@@ -6,8 +6,10 @@
 	"scripts": {
 		"tsc": "tsc",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "npm run tsc && node ./build/server.js",
-		"nodemon": "nodemon ./src/server.ts"
+		"start": "npm run tsc && node build/server.js",
+		"nodemon": "nodemon src/server.ts",
+		"ts-node": "ts-node --files src/server.ts",
+		"dev": "ts-node-dev --files src/server.ts"
 	},
 	"author": "",
 	"license": "ISC",
@@ -17,12 +19,14 @@
 		"@types/express-graphql": "^0.9.0",
 		"@types/graphql": "^14.5.0",
 		"@types/louislam__sqlite3": "npm:@types/sqlite3@^3.1.7",
+		"@types/socket.io-client": "^3.0.0",
 		"bcrypt": "^5.0.1",
 		"cors": "^2.8.5",
 		"express": "^4.17.1",
 		"express-graphql": "^0.12.0",
 		"graphql": "^15.6.1",
 		"jest": "^27.4.3",
+		"node-nlp": "^4.22.1",
 		"socket.io": "^4.3.1",
 		"socket.io-client": "^4.4.0",
 		"supertest": "^6.1.6"
@@ -31,7 +35,7 @@
 		"@types/bcrypt": "^5.0.0",
 		"@types/cors": "^2.8.12",
 		"nodemon": "^2.0.14",
-		"ts-node": "^10.3.0",
+		"ts-node": "^10.4.0",
 		"typescript": "^4.4.4"
 	}
 }

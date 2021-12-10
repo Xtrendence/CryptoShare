@@ -4,6 +4,8 @@ import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { io as client } from "socket.io-client";
+import Message from "./models/Message";
 import addEvents from "./bot/events";
 import resolvers from "./graphql/resolvers/resolvers";
 import DB from "./utils/DB";
@@ -20,10 +22,10 @@ const app = express();
 
 const httpServer = createServer();
 
-const io = new Server(httpServer);
-addEvents(io);
-
 (async () => {
+	const io = new Server(httpServer);
+	await addEvents(io);
+
 	const db = new DB();
 	await db.initialize();
 
@@ -63,6 +65,14 @@ addEvents(io);
 	httpServer.listen(portBot, () => {
 		console.log(`Bot Server Listening At http://localhost:${portBot}`);
 	});
+
+	let socket = client("http://localhost:3191");
+	socket.emit("message", { userMessage:"I bought two BTC @ $50000 today." });
+	socket.emit("message", { userMessage:"I sold a hundred ADA @ $1.5 today." });
+	socket.emit("message", { userMessage:"I sent 50 LRC to Michael yesterday." });
+	socket.emit("message", { userMessage:"Set my BTC holdings to 1." });
+	socket.emit("message", { userMessage:"Add LRC to my watchlist." });
+	socket.emit("message", { userMessage:"Remove ETH from my watchlist." });
 
 	console.log("Starting Server... ", new Date().toTimeString().split(" ")[0]);
 })();

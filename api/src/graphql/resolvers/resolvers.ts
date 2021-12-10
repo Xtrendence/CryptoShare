@@ -5,7 +5,6 @@ import { createHolding, readHolding, updateHolding, deleteHolding, importHolding
 import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
 import { createCoin, readCoinByID, readCoinBySymbol, updateCoin, deleteCoin } from "./coin";
 import { createStock, readStockByID, readStockBySymbol, updateStock, deleteStock } from "./stock";
-import { createMessage, readMessage, updateMessage, deleteMessage } from "./message";
 
 let resolvers = {
 	createUser, readUser, updateUser, deleteUser,
@@ -14,8 +13,7 @@ let resolvers = {
 	createHolding, readHolding, updateHolding, deleteHolding, importHolding,
 	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,
 	createCoin, readCoinByID, readCoinBySymbol, updateCoin, deleteCoin,
-	createStock, readStockByID, readStockBySymbol, updateStock, deleteStock,
-	createMessage, readMessage, updateMessage, deleteMessage
+	createStock, readStockByID, readStockBySymbol, updateStock, deleteStock
 };
 
 export default resolvers;
