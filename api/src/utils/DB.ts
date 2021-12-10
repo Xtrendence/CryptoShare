@@ -1,5 +1,6 @@
 import sqlite3, { Database } from "@louislam/sqlite3";
 import path from "path";
+import fs from "fs";
 
 export default class DB {
 	db: sqlite3.Database | undefined;
@@ -7,24 +8,25 @@ export default class DB {
 
 	constructor() {
 		this.file = path.join("./data/", "data.db");
+		let exists = fs.existsSync(this.file);
 		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
-			if(error) {
+			if(error && (!exists && !error.message.includes("SQLITE_CANTOPEN"))) {
 				console.log(error);
 			}
 		});
 	}
 
-	initialize() {
-		this.createUserTable();
-		this.createActivityTable();
-		this.createHoldingTable();
-		this.createCoinTable();
-		this.createLoginTable();
-		this.createSettingTable();
-		this.createStockTable();
-		this.createWatchlistTable();
-		this.createMessageTable();
-		this.createUserLoginView();
+	async initialize() {
+		await this.createUserTable();
+		await this.createActivityTable();
+		await this.createHoldingTable();
+		await this.createCoinTable();
+		await this.createLoginTable();
+		await this.createSettingTable();
+		await this.createStockTable();
+		await this.createWatchlistTable();
+		await this.createMessageTable();
+		await this.createUserLoginView();
 	}
 
 	runQuery(query: string, args: any) {
@@ -37,178 +39,218 @@ export default class DB {
 		});
 	}
 
-	createUserTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS User (
-					userID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					username VARCHAR(32) UNIQUE NOT NULL,
-					password BLOB NOT NULL,
-					key BLOB NOT NULL
-				);
-			`);
+	async createUserTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS User (
+						userID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						username VARCHAR(32) UNIQUE NOT NULL,
+						password BLOB NOT NULL,
+						key BLOB NOT NULL
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createActivityTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Activity (
-					activityID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL,
-					activityTransactionID VARCHAR(32) UNIQUE NOT NULL,
-					activityAssetID BLOB NOT NULL,
-					activityAssetSymbol BLOB NOT NULL,
-					activityAssetType BLOB NOT NULL,
-					activityDate BLOB NOT NULL,
-					activityType BLOB NOT NULL,
-					activityAssetAmount BLOB NOT NULL,
-					activityFee BLOB NOT NULL,
-					activityNotes BLOB NOT NULL,
-					activityExchange BLOB NOT NULL,
-					activityPair BLOB NOT NULL,
-					activityPrice BLOB NOT NULL,
-					activityFrom BLOB NOT NULL,
-					activityTo BLOB NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createActivityTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Activity (
+						activityID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						activityTransactionID VARCHAR(32) UNIQUE NOT NULL,
+						activityAssetID BLOB NOT NULL,
+						activityAssetSymbol BLOB NOT NULL,
+						activityAssetType BLOB NOT NULL,
+						activityDate BLOB NOT NULL,
+						activityType BLOB NOT NULL,
+						activityAssetAmount BLOB NOT NULL,
+						activityFee BLOB NOT NULL,
+						activityNotes BLOB NOT NULL,
+						activityExchange BLOB NOT NULL,
+						activityPair BLOB NOT NULL,
+						activityPrice BLOB NOT NULL,
+						activityFrom BLOB NOT NULL,
+						activityTo BLOB NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createHoldingTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Holding (
-					holdingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL,
-					holdingAssetID BLOB NOT NULL,
-					holdingAssetSymbol BLOB NOT NULL,
-					holdingAssetAmount BLOB NOT NULL,
-					holdingAssetType BLOB NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createHoldingTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Holding (
+						holdingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						holdingAssetID BLOB NOT NULL,
+						holdingAssetSymbol BLOB NOT NULL,
+						holdingAssetAmount BLOB NOT NULL,
+						holdingAssetType BLOB NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createCoinTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Coin (
-					coinID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					assetID VARCHAR(64) NOT NULL,
-					assetSymbol VARCHAR(16) NOT NULL
-				);
-			`);
+	async createCoinTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Coin (
+						coinID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						assetID VARCHAR(64) NOT NULL,
+						assetSymbol VARCHAR(16) NOT NULL
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createLoginTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Login (
-					loginID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL,
-					loginToken VARCHAR(64) NOT NULL UNIQUE,
-					loginDate DATETIME NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createLoginTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Login (
+						loginID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						loginToken VARCHAR(64) NOT NULL UNIQUE,
+						loginDate DATETIME NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createSettingTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Setting (
-					settingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL UNIQUE,
-					userSettings BLOB NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createSettingTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Setting (
+						settingID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL UNIQUE,
+						userSettings BLOB NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createStockTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Stock (
-					stockID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					assetID VARCHAR(64) NOT NULL,
-					assetSymbol VARCHAR(16) NOT NULL
-				);
-			`);
+	async createStockTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Stock (
+						stockID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						assetID VARCHAR(64) NOT NULL,
+						assetSymbol VARCHAR(16) NOT NULL
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createWatchlistTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Watchlist (
-					watchlistID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL,
-					assetID BLOB NOT NULL,
-					assetSymbol BLOB NOT NULL,
-					assetType BLOB NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createWatchlistTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Watchlist (
+						watchlistID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						assetID BLOB NOT NULL,
+						assetSymbol BLOB NOT NULL,
+						assetType BLOB NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createMessageTable() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE TABLE IF NOT EXISTS Message (
-					messageID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-					userID INTEGER NOT NULL,
-					userMessage BLOB NOT NULL,
-					botMessage BLOB,
-					messageDate DATETIME NOT NULL,
-					FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
-				);
-			`);
+	async createMessageTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Message (
+						messageID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						userMessage BLOB NOT NULL,
+						botMessage BLOB,
+						messageDate DATETIME NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 
-	createUserLoginView() {
-		this.db?.serialize(() => {
-			let statement = (`
-				CREATE VIEW IF NOT EXISTS UserLogin
-				AS 
-				SELECT 
-					userID, 
-					username, 
-					loginID, 
-					loginToken,
-					loginDate
-				FROM
-					Login
-				INNER JOIN
-					User USING (userID);
-			`);
+	async createUserLoginView() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE VIEW IF NOT EXISTS UserLogin
+					AS 
+					SELECT 
+						userID, 
+						username, 
+						loginID, 
+						loginToken,
+						loginDate
+					FROM
+						Login
+					INNER JOIN
+						User USING (userID);
+				`);
 
-			this.db?.run(statement);
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
 		});
 	}
 }

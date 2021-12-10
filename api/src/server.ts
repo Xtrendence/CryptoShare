@@ -9,8 +9,8 @@ import resolvers from "./graphql/resolvers/resolvers";
 import DB from "./utils/DB";
 import Utils from "./utils/Utils";
 
-const portAPI = 1999;
-const portBot = 2000;
+const portAPI = 3190;
+const portBot = 3191;
 
 Utils.checkFiles();
 
@@ -23,42 +23,46 @@ const httpServer = createServer();
 const io = new Server(httpServer);
 addEvents(io);
 
-const db = new DB();
-db.initialize();
+(async () => {
+	const db = new DB();
+	await db.initialize();
 
-Utils.db = db;
+	Utils.db = db;
 
-app.use(cors());
-app.use(express.urlencoded({ extended:true }));
-app.use(express.json());
+	app.use(cors());
+	app.use(express.urlencoded({ extended:true }));
+	app.use(express.json());
 
-app.use("/graphql", graphqlHTTP({ 
-	schema: schema,
-	rootValue: resolvers,
-	graphiql: true,
-	customFormatErrorFn: (error): any => {
-		return error.message.split("!")[1];
-	}
-}));
+	app.use("/graphql", graphqlHTTP({ 
+		schema: schema,
+		rootValue: resolvers,
+		graphiql: true,
+		customFormatErrorFn: (error): any => {
+			return error.message.split("!")[1];
+		}
+	}));
 
-app.listen(portAPI, () => {
-	console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
-});
+	app.listen(portAPI, () => {
+		console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
+	});
 
-app.post("/login", async (request, response) => {
-	let username = request.body.username;
-	let password = request.body.password;
-	response.send(await Utils.login(username, password));
-});
+	app.post("/login", async (request, response) => {
+		let username = request.body.username;
+		let password = request.body.password;
 
-app.post("/verifyToken", async (request, response) => {
-	let userID = request.body.userID;
-	let token = request.body.token;
-	response.send(await Utils.verifyToken(userID, token));
-});
+		response.send(await Utils.login(username, password));
+	});
 
-httpServer.listen(portBot, () => {
-	console.log(`Bot Server Listening At http://localhost:${portBot}`);
-});
+	app.post("/verifyToken", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
 
-console.log("Starting Server... ", new Date().toTimeString().split(" ")[0]);
+		response.send(await Utils.verifyToken(userID, token));
+	});
+
+	httpServer.listen(portBot, () => {
+		console.log(`Bot Server Listening At http://localhost:${portBot}`);
+	});
+
+	console.log("Starting Server... ", new Date().toTimeString().split(" ")[0]);
+})();
