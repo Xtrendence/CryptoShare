@@ -67,14 +67,14 @@ const httpServer = createServer();
 	});
 
 	let socket = client("http://localhost:3191");
-	socket.emit("message", { userMessage:"I bought two BTC @ $50000 today." });
-	socket.emit("message", { userMessage:"I sold a hundred ADA @ $1.5 today." });
-	socket.emit("message", { userMessage:"I sold five hundred ETH at $4000 on the 5th of December." });
-	socket.emit("message", { userMessage:"I sent 50 LRC to Michael yesterday." });
-	socket.emit("message", { userMessage:"I transferred 2 DOT to Rachel." });
-	socket.emit("message", { userMessage:"I received 3 ALGO from staking yesterday." });
-	socket.emit("message", { userMessage:"Set my BTC holdings to 1." });
-	socket.emit("message", { userMessage:"Set my ETH holdings to five." });
+	// socket.emit("message", { userMessage:"I bought two BTC @ $50000 today." });
+	// socket.emit("message", { userMessage:"I sold a hundred ADA @ $1.5 today." });
+	// socket.emit("message", { userMessage:"I sold five hundred ETH at $4000 on the 5th of December." });
+	// socket.emit("message", { userMessage:"I sent 50 LRC to Michael yesterday." });
+	// socket.emit("message", { userMessage:"I transferred 2 DOT to Rachel." });
+	// socket.emit("message", { userMessage:"I received 3 ALGO from staking yesterday." });
+	// socket.emit("message", { userMessage:"Set my BTC holdings to 1." });
+	// socket.emit("message", { userMessage:"Set my ETH holdings to five." });
 	socket.emit("message", { userMessage:"Add LRC to my watchlist." });
 	socket.emit("message", { userMessage:"Remove ETH from my watchlist." });
 

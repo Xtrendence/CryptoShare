@@ -38,6 +38,7 @@ export default class Bot {
 					details = this.processActivity(entities, intent);
 					break;
 				case "holding":
+					details = this.processHolding(entities, intent);
 					break;
 				case "watchlist":
 					break;
@@ -126,6 +127,24 @@ export default class Bot {
 		if(!("date" in details)) {
 			details["date"] = new Date().toISOString().split("T")[0]
 		}
+
+		return details;
+	}
+
+	processHolding(entities: any, intent: any) {
+		let numberOfEntities = entities.length;
+		let lastEntity = entities[numberOfEntities - 1];
+
+		let details: any = {};
+
+		let regex = /\w+(?=\s+((holdings)))/;
+
+		let match = intent.utterance.match(regex);
+
+		let asset = match[0];
+		
+		details["asset"] = asset;
+		details["amount"] = parseFloat(lastEntity.resolution.value);
 
 		return details;
 	}
