@@ -9,7 +9,7 @@
 		"start": "npm run tsc && node build/server.js",
 		"nodemon": "nodemon src/server.ts",
 		"ts-node": "ts-node --files src/server.ts",
-		"dev": "ts-node-dev --files src/server.ts"
+		"dev": "ts-node-dev --files --rs src/server.ts"
 	},
 	"author": "",
 	"license": "ISC",

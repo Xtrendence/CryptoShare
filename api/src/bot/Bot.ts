@@ -1,56 +1,190 @@
 import { NlpManager } from "node-nlp";
 import Message from "../models/Message";
 import { createActivity } from "../graphql/resolvers/activity";
-import { createHolding, readHolding, deleteHolding } from "../graphql/resolvers/holding";
+import { createHolding, readHolding, deleteHolding, updateHolding } from "../graphql/resolvers/holding";
 import { createWatchlist, readWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
 import { createMessage, readMessage, updateMessage, deleteMessage } from "../graphql/resolvers/message";
-import { readCoinByID, readCoinBySymbol } from "../graphql/resolvers/coin";
-import { readStockByID, readStockBySymbol } from "../graphql/resolvers/stock";
+import { readCoinBySymbol } from "../graphql/resolvers/coin";
+import { readStockBySymbol } from "../graphql/resolvers/stock";
 import Utils from "../utils/Utils";
 
 export default class Bot {
 	manager: typeof NlpManager;
+	queue: Array<any>;
 
 	constructor() {
 		this.manager = new NlpManager({ languages: ['en'], forceNER: true });
-	}
-
-	async initialize() {
-
+		this.queue = [];
 	}
 
 	async generateResponse(message: string) {
-		try {
-			let processed = await this.manager.process(message);
-			let entities = processed.sourceEntities;
+		return new Promise(async (resolve, reject) => {
+			try {
+				let processed = await this.manager.process(message);
+				let entities = processed.sourceEntities;
 
-			let intent = this.determineIntent(processed);
+				let intent = this.determineIntent(processed);
 
-			if("error" in intent) {
-				return { error:intent.error };
+				if("error" in intent) {
+					return { error:intent.error };
+				}
+
+				let details: any = {};
+				details["category"] = intent.category;
+				details["action"] = intent.action;
+				details["type"] = null;
+
+				switch(intent.category) {
+					case "activity":
+						details = this.processActivity(entities, intent, details);
+						break;
+					case "holding":
+						details = this.processHolding(entities, intent, details);
+						break;
+					case "watchlist":
+						details = this.processWatchlist(intent, details);
+						break;
+				}
+
+				this.queue.push(details);
+
+				resolve({ index:this.queue.indexOf(details), category:intent.category });
+			} catch(error) {
+				console.log(error);
+				reject({ error:error });
 			}
+		});
+	}
 
-			let details: any = {};
-			details["category"] = intent.category;
-			details["action"] = intent.action;
+	async processType(userID: number, token: string, index: number, type: string, rowID: number) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				if(!["coin", "stock"].includes(type)) {
+					reject({ error:"Invalid Type." });
+				}
 
-			switch(intent.category) {
-				case "activity":
-					details = this.processActivity(entities, intent, details);
-					break;
-				case "holding":
-					details = this.processHolding(entities, intent, details);
-					break;
-				case "watchlist":
-					details = this.processWatchlist(intent, details);
-					break;
+				let response: any = {};
+
+				let details = this.queue[index];
+				details["type"] = type;
+
+				let assetID = type === "stock" ? await readStockBySymbol(details.asset) : await readCoinBySymbol(details.asset);
+
+				// TODO: Encrypt Data
+				switch(details.category) {
+					case "activity":
+						let create = await createActivity({
+							token: token, 
+							userID: userID, 
+							activityAssetID: assetID, 
+							activityAssetSymbol: details.asset, 
+							activityAssetType: type, 
+							activityDate: details.date, 
+							activityType: details.action, 
+							activityAssetAmount: details.amount, 
+							activityFee: 0, 
+							activityNotes: "-", 
+							activityExchange: "-", 
+							activityPair: "-", 
+							activityPrice: details?.price, 
+							activityFrom: details?.from, 
+							activityTo: details?.to
+						});
+
+						if(create === "Done") {
+							resolve({ response:"Done" });
+						} else {
+							reject({ error:"Error" });
+						}
+
+						break;
+					case "holding":
+						if(details.action === "update") {
+							if(Utils.empty(rowID)) {
+								let create = await createHolding({
+									token: token,
+									userID: userID,
+									holdingAssetID: assetID, 
+									holdingAssetSymbol: details.asset,
+									holdingAssetAmount: details.amount,
+									holdingAssetType: type
+								});
+
+								if(create === "Done") {
+									resolve({ response:"Done" });
+								} else {
+									reject({ error:"Error" });
+								}
+							} else {
+								let update = await updateHolding({
+									token: token,
+									userID: userID,
+									holdingID: rowID,
+									holdingAssetID: assetID,
+									holdingAssetSymbol: details.asset,
+									holdingAssetAmount: details.amount,
+									holdingAssetType: type
+								});
+
+								if(update === "Done") {
+									resolve({ response:"Done" });
+								} else {
+									reject({ error:"Error" });
+								}
+							}
+						} else if(details.action === "delete") {
+							let remove = await deleteHolding({ 
+								token: token,
+								userID: userID,
+								holdingID: rowID
+							});
+
+							if(remove === "Done") {
+								resolve({ response:"Done" });
+							} else {
+								reject({ error:"Error" });
+							}
+						}
+
+						break;
+					case "watchlist":
+						if(details.action === "create") {
+							let create = await createWatchlist({
+								token: token,
+								userID: userID,
+								assetID: assetID,
+								assetSymbol: details.asset,
+								assetType: type
+							});
+
+							if(create === "Done") {
+								resolve({ response:"Done" });
+							} else {
+								reject({ error:"Error" });
+							}
+						} else if(details.action === "delete") {
+							let remove = await deleteWatchlist({
+								token: token,
+								userID: userID,
+								watchlistID: rowID
+							});
+
+							if(remove === "Done") {
+								resolve({ response:"Done" });
+							} else {
+								reject({ error:"Error" });
+							}
+						}
+
+						break;
+				}
+
+				resolve(response);
+			} catch(error) {
+				console.log(error);
+				reject({ error:error });
 			}
-
-			console.log(details);
-		} catch(error) {
-			console.log(error);
-			return { error:error };
-		}
+		});
 	}
 
 	determineIntent(processed: any) {
@@ -73,10 +207,10 @@ export default class Bot {
 				action = "update";
 			} else if(utterance.includes("watch") && utterance.match("(start|add)")) {
 				category = "watchlist";
-				action = "add";
+				action = "create";
 			} else if(utterance.includes("watch") && utterance.match("(stop|remove|delete)")) {
 				category = "watchlist";
-				action = "remove";
+				action = "delete";
 			}
 
 			return { category:category, action:action, utterance:utterance };
@@ -110,7 +244,7 @@ export default class Bot {
 				details["to"] = Utils.capitalizeFirstLetter(to);
 			}
 		}
-					
+
 		details["amount"] = parseFloat(entities[0].resolution.value);
 		details["asset"] = asset;
 
@@ -142,7 +276,7 @@ export default class Bot {
 			details["amount"] = parseFloat(lastEntity.resolution.value);
 		} else if(intent.utterance.match("(remove|delete)")) {
 			match = intent.utterance.match(/\w+(?=\s+((from )))/);
-			details["amount"] = 0;
+			details["action"] = "delete";
 		}
 
 		let asset = match[0];
