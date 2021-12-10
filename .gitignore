@@ -4,3 +4,4 @@ node_modules
 mobile/key.txt
 desktop/dist
 api/data/*
+.DS_Store
