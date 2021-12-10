@@ -134,6 +134,10 @@ export default class Utils {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
 
+	static capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
 	static empty(value: any) {
 		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 			return true;

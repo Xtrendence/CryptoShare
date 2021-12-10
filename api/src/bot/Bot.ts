@@ -33,19 +33,42 @@ export default class Bot {
 			switch(intent.category) {
 				case "activity":
 					let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
-					let asset = intent.utterance.match(regex)[0];
+					if(intent.action === "transfer") {
+						regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
+					}
+
+					let match = intent.utterance.match(regex);
+
+					let asset = match[0];
+					if(intent.action === "transfer") {
+						asset = match[0].split(" ").pop();
+
+						if(intent.utterance.includes("from")) {
+							let from = intent.utterance.match(/(from )+[A-Z]*/gi)[0].split(" ")[1];
+							details["from"] = Utils.capitalizeFirstLetter(from);
+							details["to"] = "Me";
+						} else if(intent.utterance.includes("to")) {
+							let to = intent.utterance.match(/(to )+[A-Z]*/gi)[0].split(" ")[1];
+							details["from"] = "Me";
+							details["to"] = Utils.capitalizeFirstLetter(to);
+						}
+					}
 					
 					details["amount"] = parseFloat(entities[0].resolution.value);
 					details["asset"] = asset;
 
-					if(entities[1].typeName.includes("number")) {
+					if(entities[1]?.typeName.includes("number")) {
 						details["price"] = parseFloat(entities[1].resolution.value);
 
-						if(!Utils.empty(lastEntity) && lastEntity.typeName.includes("date")) {
+						if(!Utils.empty(lastEntity) && lastEntity?.typeName.includes("date")) {
 							details["date"] = lastEntity.resolution.values[0].value;
 						}
-					} else if(entities[1].typeName.includes("date")) {
+					} else if(entities[1]?.typeName.includes("date")) {
 						details["date"] = entities[1].resolution.values[0].value;
+					}
+
+					if(!("date" in details)) {
+						details["date"] = new Date().toISOString().split("T")[0]
 					}
 					
 					break;
@@ -57,6 +80,7 @@ export default class Bot {
 
 			console.log(details);
 		} catch(error) {
+			console.log(error);
 			return { error:error };
 		}
 	}
@@ -67,13 +91,13 @@ export default class Bot {
 			let category;
 			let action;
 
-			if(utterance.includes("bought")) {
+			if(utterance.match("(bought|buy)")) {
 				category = "activity";
 				action = "buy";
-			} else if(utterance.includes("sold")) {
+			} else if(utterance.match("(sold|sell)")) {
 				category = "activity";
-				action = "sold";
-			} else if(utterance.match("(transfer|sent|received)")) {
+				action = "sell";
+			} else if(utterance.match("(transfer|transferred|sent|send|received)")) {
 				category = "activity";
 				action = "transfer";
 			} else if(utterance.match("(holding|amount)")) {
