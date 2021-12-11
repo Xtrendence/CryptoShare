@@ -221,7 +221,15 @@ export default class Bot {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
 
+		let valueGiven = false;
+
 		let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
+
+		if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && intent.utterance.match("(for)")) {
+			regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+			valueGiven = true;
+		}
+
 		if(intent.action === "transfer") {
 			regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
 		}
@@ -247,7 +255,11 @@ export default class Bot {
 		details["asset"] = asset;
 
 		if(entities[1]?.typeName.includes("number")) {
-			details["price"] = parseFloat(entities[1].resolution.value);
+			if(valueGiven) {
+				details["price"] = parseFloat(entities[1].resolution.value) / details.amount;
+			} else {
+				details["price"] = parseFloat(entities[1].resolution.value);
+			}
 
 			if(!Utils.empty(lastEntity) && lastEntity?.typeName.includes("date")) {
 				details["date"] = lastEntity.resolution.values[0].value;
