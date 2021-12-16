@@ -1,4 +1,4 @@
-let particlesConfigDark = {
+let particlesConfigLight = {
 	"particles": {
 		"number": {
 			"value": 65,
@@ -109,7 +109,7 @@ let particlesConfigDark = {
 	"retina_detect": true
 };
 
-let particlesConfigLight = {
+let particlesConfigDark = {
 	"particles": {
 		"number": {
 			"value": 60,
