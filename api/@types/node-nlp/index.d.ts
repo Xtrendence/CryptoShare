@@ -1,1 +1,1 @@
-declare module 'node-nlp';
+declare module "node-nlp";

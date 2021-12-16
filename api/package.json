@@ -6,7 +6,7 @@
 	"scripts": {
 		"tsc": "tsc",
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"start": "npm run tsc && node build/server.js",
+		"start": "npm run ts-node",
 		"nodemon": "nodemon src/server.ts",
 		"ts-node": "ts-node --files src/server.ts",
 		"dev": "ts-node-dev --files --rs src/server.ts"

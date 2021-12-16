@@ -11,7 +11,7 @@ export default class Bot {
 	queue: Array<any>;
 
 	constructor() {
-		this.manager = new NlpManager({ languages: ['en'], forceNER: true });
+		this.manager = new NlpManager({ languages: ["en"], forceNER: true });
 		this.queue = [];
 	}
 

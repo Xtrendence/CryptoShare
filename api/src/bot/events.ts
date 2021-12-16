@@ -16,12 +16,13 @@ export default async function addEvents(io: Server) {
 
 		// TODO: Verify Credentials
 		socket.on("message", async (message) => {
-			let response = await bot.generateResponse(message.userMessage);
+			let response: any = await bot.generateResponse(message.userMessage);
+			console.log(JSON.stringify(bot.queue[response.index], null, 4));
 		});
 
 		// TODO: Verify Credentials
 		socket.on("provide-type", async (data) => {
-			let response = await bot.processType(user.userID, user.token, data.index, data.type, data.rowID);
+			let response: any = await bot.processType(user.userID, user.token, data.index, data.type, data.rowID);
 		});
 	});
 
