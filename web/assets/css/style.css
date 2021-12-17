@@ -10,6 +10,7 @@ body {
 }
 
 #background {
+	pointer-events:none;
 	transform:scaleX(-1);
 	position:absolute;
 	top:0;
