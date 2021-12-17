@@ -7,6 +7,60 @@ html, body, input, textarea {
 body {
 	margin:0;
 	background:var(--main-first);
+	color:var(--main-contrast);
+	padding:0;
+	font-size:0;
+	overflow:hidden;
+}
+input, button {
+	outline:none;
+	border:none;
+}
+button {
+	cursor:pointer;
+	transition:background 0.25s;
+}
+a {
+	text-decoration:none;
+}
+.noselect {
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+	outline:none;
+}
+.hidden {
+	display:none;
+	visibility:hidden;
+	position:absolute;
+	z-index:-1;
+}
+
+::-webkit-scrollbar, div::-webkit-scrollbar {
+	display:block;
+	width:4px;
+	height:10px;
+	background:var(--main-second);
+}
+::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
+	border-radius:5px;
+	background:var(--main-fifth);
+}
+::-webkit-scrollbar-thumb:hover, div::-webkit-scrollbar-thumb:hover {
+	background:var(--main-fourth);
+}
+::-webkit-scrollbar-track, div::-webkit-scrollbar-track { 
+	background:var(--main-second);
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	-webkit-appearance:none;
+	margin:0;
+}
+input[type=number] {
+	-moz-appearance:textfield;
 }
 
 #background {
@@ -26,7 +80,7 @@ body {
 .login-title-wrapper {
 	z-index:2;
 	position:absolute;
-	top:calc(50% - 60px / 2 - 165px - 20px);
+	top:calc(50% - 60px / 2 - 160px - 20px);
 	left:calc(50% - 300px / 2);
 	height:60px;
 	width:300px;
@@ -50,22 +104,23 @@ body {
 	z-index:2;
 	position:absolute;
 	width:300px;
-	height:270px;
+	height:260px;
 	left:calc(50% - 300px / 2);
-	top:calc(50% - 270px / 2);
+	top:calc(50% - 260px / 2);
 	background:var(--main-second-transparent);
 	backdrop-filter:blur(2px);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
 .login-wrapper input {
-	width:calc(100% - 40px - 20px);
+	width:calc(100% - 40px);
 	display:block;
 	padding:0 10px 0 10px;
 	height:40px;
 	font-size:18px;
 	background:none;
 	outline:none;
+	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
 	border-color:var(--accent-first);
@@ -84,7 +139,7 @@ body {
 	color:var(--main-contrast);
 }
 .login-wrapper button {
-	width:calc(100% - 40px + 4px);
+	width:calc(100% - 40px);
 	display:block;
 	padding:0 10px 0 10px;
 	height:40px;
@@ -99,7 +154,7 @@ body {
 	color:var(--accent-contrast);
 	transition:background 0.25s;
 }
-.login-wrapper button:hover {
+#desktop .login-wrapper button:hover {
 	background:var(--accent-second);
 }
 
@@ -153,7 +208,7 @@ body {
 .login-page .toggle-wrapper {
 	position:absolute;
 	z-index:2;
-	bottom:calc(50% - 40px / 2 - 155px - 20px);
+	bottom:calc(50% - 40px / 2 - 150px - 20px);
 	left:calc(50% - 80px / 2);
 	width:80px;
 	height:40px;
@@ -161,4 +216,108 @@ body {
 }
 html.light .login-page .toggle-container {
 	background:var(--main-second);
+}
+
+.popup-overlay {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:49;
+	backdrop-filter:blur(4px);
+	background:rgba(0,0,0,0.5);
+}
+.popup-wrapper {
+	position:absolute;
+	z-index:50;
+	border-radius:var(--border-radius);
+	backdrop-filter:blur(4px);
+	background:var(--main-first-transparent);
+	overflow:hidden auto;
+}
+.popup-wrapper .top {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:30px;
+	background:var(--accent-first);
+}
+.popup-wrapper .top button {
+	padding:0;
+	width:30px;
+	height:30px;
+	background:var(--accent-second);
+}
+#desktop .popup-wrapper .top button:hover {
+	background:var(--accent-third);
+}
+.popup-wrapper .top button svg {
+	width:20px;
+	height:20px;
+	fill:var(--accent-contrast);
+	pointer-events:none;
+}
+.popup-wrapper .top .title {
+	font-size:16px;
+	font-weight:bold;
+	color:var(--accent-contrast);
+	vertical-align:top;
+	padding-left:10px;
+	line-height:30px;
+}
+.popup-wrapper .bottom {
+	position:absolute;
+	top:30px;
+	left:0;
+	width:calc(100% - 40px);
+	height:calc(100% - 30px - 40px);
+	padding:20px;
+	text-align:left;
+}
+.popup-wrapper .bottom span {
+	display:block;
+	font-size:16px;
+	padding:10px;
+	background:var(--main-second);
+	border-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+}
+.popup-wrapper .bottom .popup-button-wrapper {
+	width:100%;
+	height:40px;
+	text-align:center;
+	display:block;
+	margin-top:20px;
+}
+.popup-wrapper .bottom .popup-button-wrapper button {
+	height:100%;
+	width:calc(50% - 10px);
+	font-size:18px;
+	font-weight:bold;
+	color:var(--accent-contrast);
+	border-radius:var(--border-radius);
+	background:var(--accent-first);
+}
+.popup-wrapper .bottom button.button-cancel {
+	margin-right:10px;
+	background:var(--main-fourth);
+	color:var(--main-contrast-darker);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+}
+.popup-wrapper .bottom button.button-confirm {
+	margin-left:10px;
+}
+#desktop .popup-wrapper .bottom button.button-cancel:hover {
+	background:var(--main-fifth);
+}
+#desktop .popup-wrapper .bottom button.button-confirm:hover {
+	background:var(--accent-second);
 }

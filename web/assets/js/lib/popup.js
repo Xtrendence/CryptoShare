@@ -4,9 +4,10 @@
 * GitHub: https://www.github.com/Xtrendence
 */
 class Popup {
-	constructor(width, height, html, options) {
+	constructor(width, height, title, html, options = {}) {
 		this.width = width;
 		this.height = height;
+		this.title = title;
 		this.html = html;
 		this.options = options;
 		this.events = {};
@@ -48,13 +49,17 @@ class Popup {
 		this.element.style.top = `calc(50% - ${this.height / 2}px)`;
 		
 		this.top = document.createElement("div");
-		this.top.setAttribute("class", "bottom");
+		this.top.setAttribute("class", "top");
+
+		let spanTitle = document.createElement("span");
+		spanTitle.setAttribute("class", "title noselect");
+		spanTitle.textContent = this.title;
 		
 		let buttonClose = document.createElement("button");
 		buttonClose.id = "popup-button-close";
 		buttonClose.setAttribute("class", "icon-close");
 		buttonClose.innerHTML = '<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1490 1322q0 40-28 68l-136 136q-28 28-68 28t-68-28l-294-294-294 294q-28 28-68 28t-68-28l-136-136q-28-28-28-68t28-68l294-294-294-294q-28-28-28-68t28-68l136-136q28-28 68-28t68 28l294 294 294-294q28-28 68-28t68 28l136 136q28 28 28 68t-28 68l-294 294 294 294q28 28 28 68z"/></svg>';
-		buttonClose.addEventListener("click", () => {
+		buttonClose.addEventListener("click", () => {			
 			if(this.hasEvent("close")) {
 				this.events["close"]();
 			}
@@ -63,22 +68,42 @@ class Popup {
 		});
 
 		this.top.appendChild(buttonClose);
+		this.top.appendChild(spanTitle);
 		this.element.appendChild(this.top);
 
 		this.bottom = document.createElement("div");
-		this.bottom.id = this.id;
 		this.bottom.setAttribute("class", "bottom");
 		this.bottom.innerHTML = this.html;
 		this.bottom = this.addButtons(this.bottom);
 
-		document.body.appendChild(this.bottom);
+		this.element.id = this.id;
+		this.element.appendChild(this.bottom);
+
+		this.overlay = document.createElement("div");
+		this.overlay.setAttribute("class", "popup-overlay");
+		this.overlay.addEventListener("click", () => {
+			buttonClose.click();
+		});
+
+		document.body.appendChild(this.overlay);
+		document.body.appendChild(this.element);
+
+		if(this.height === "auto") {
+			let height = this.element.scrollHeight + 20;
+			this.element.style.height =  height + "px";
+			this.element.style.top = `calc(50% - ${height / 2}px)`;
+		}
 	}
 
 	hide() {
-		document.getElementById(this.id).remove();
+		this.overlay.remove();
+		this.element.remove();
 	}
 
 	addButtons(bottom) {
+		let div = document.createElement("div");
+		div.setAttribute("class", "popup-button-wrapper");
+
 		let buttonCancel = document.createElement("button");
 		buttonCancel.id = "popup-button-cancel";
 		buttonCancel.setAttribute("class", "button-cancel");
@@ -86,7 +111,9 @@ class Popup {
 		buttonCancel.addEventListener("click", () => {
 			if(this.hasEvent("cancel")) {
 				this.events["cancel"]();
+				return;
 			}
+			this.hide();
 		});
 
 		let buttonConfirm = document.createElement("button");
@@ -96,11 +123,15 @@ class Popup {
 		buttonConfirm.addEventListener("click", () => {
 			if(this.hasEvent("confirm")) {
 				this.events["confirm"]();
+				return;
 			}
+			this.hide();
 		});
 
-		bottom.appendChild(buttonCancel);
-		bottom.appendChild(buttonConfirm);
+		div.appendChild(buttonCancel);
+		div.appendChild(buttonConfirm);
+
+		bottom.appendChild(div);
 
 		return bottom;
 	}
@@ -116,6 +147,10 @@ class Popup {
 			if(!this.empty(this.bottom)) {
 				this.bottom.innerHTML = html;
 				this.bottom = this.addButtons(this.bottom);
+
+				let current = document.getElementById(this.id);
+				current.getElementsByClassName("bottom")[0].remove();
+				current.appendChild(this.bottom);
 			}
 		} catch(error) {
 			console.log(error);

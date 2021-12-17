@@ -2,6 +2,7 @@ html.dark {
 	--shadow-smooth:0 1px 1px rgba(0,0,0,0.08), 0 2px 2px rgba(0,0,0,0.05), 0 4px 4px rgba(0,0,0,0.06), 0 8px 8px rgba(0,0,0,0.1);
 	
 	--main-first:rgb(20,20,20);
+	--main-first-transparent:rgba(20,20,20,0.6);
 	--main-second:rgb(40,40,40);
 	--main-second-transparent:rgba(40,40,40,0.3);
 	--main-third:rgb(50,50,50);
@@ -9,8 +10,10 @@ html.dark {
 	--main-fifth:rgb(75,75,75);
 	--main-contrast:rgb(255,255,255);
 	--main-contrast-dark:rgb(230,230,230);
+	--main-contrast-darker:rgb(200,200,200);
 
 	--accent-first:#d2af8c;
 	--accent-second:#a3805e;
+	--accent-third:#866849;
 	--accent-contrast:rgb(255,255,255);
 }
