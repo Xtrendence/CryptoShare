@@ -59,6 +59,7 @@ type Stock {
 }
 
 type Query {
+	userExists(username: String!): String
 	readUser(token: String!, userID: Int!): User
 
 	readActivity(token: String!, userID: Int!): [Activity]

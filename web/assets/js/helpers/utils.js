@@ -9,3 +9,14 @@ function empty(value) {
 
 	return false;
 }
+
+function validJSON(json) {
+	try {
+		let object = JSON.parse(json);
+		if(object && typeof object === "object") {
+			return true;
+		}
+	}
+	catch(e) { }
+	return false;
+}

@@ -5,9 +5,33 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
-export function createUser(user: User) {
-	let hashedPassword = bcrypt.hashSync(user.password, 10);
-	db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
+export function userExists({ username }: any) {
+	return new Promise(async (resolve, reject) => {
+		db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
+			if(error) {
+				console.log(error);
+				reject();
+			} else {
+				if(row === undefined) {
+					reject("!User Not Found!");
+					return;
+				}
+
+				resolve(username);
+			}
+		});
+	});
+}
+
+export async function createUser(user: User) {
+	let exists = await userExists(user.username);
+	if(!exists) {
+		let hashedPassword = bcrypt.hashSync(user.password, 10);
+		db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
+		return "Done";
+	} else {
+		return "User Already Exists";
+	}
 }
 
 export async function readUser({ token, userID }: any) {

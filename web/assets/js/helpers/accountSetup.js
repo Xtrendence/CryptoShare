@@ -1,5 +1,20 @@
-function accountSetup() {
-	let popup = new Popup(300, "auto", "Account Creation", `<span>Would you like to create your new account, ${inputCreateUsername.value}?</span>`);
+async function accountSetup() {
+	let username = inputCreateUsername.value;
+	let exists = await userExists(username);
+
+	if(exists) {
+		Notify.error({
+			title: "Username Taken",
+			description: "A user with that username already exists.",
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+
+		return;
+	}
+
+	let popup = new Popup(300, "auto", "Account Creation", `<span>Would you like to create your new account, ${username}?</span>`);
 	popup.show();
 
 	DOMCache.innerHTML = `<div id="cache-content"><img class="hidden" src="./assets/img/BG-White-Gold.png"><img class="hidden" src="./assets/img/BG-Black-Gold.png"></div>`;
