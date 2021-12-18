@@ -146,11 +146,9 @@ class Popup {
 		}
 	}
 
-	setOptions(options) {
-		this.options = options;
-	}
-
 	setSize(width, height) {
+		this.width = width;
+		this.height = height;
 		this.element.style.width = width + "px";
 		this.element.style.height = height + "px";
 		this.element.style.left = `calc(50% - ${width / 2}px)`;
@@ -180,6 +178,20 @@ class Popup {
 			}
 		} catch(error) {
 			console.log(error);
+		}
+	}
+
+	setOptions(options = {}) {
+		this.options = options;
+	}
+
+	updateButtons() {
+		if("cancelText" in this.options) {
+			this.element.getElementsByClassName("button-cancel")[0].textContent = this.options.cancelText;
+		}
+
+		if("confirmText" in this.options) {
+			this.element.getElementsByClassName("button-confirm")[0].textContent = this.options.confirmText;
 		}
 	}
 

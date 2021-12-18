@@ -1,6 +1,12 @@
 let Notify = new Notifier("TopRight");
 
-let theme = empty(localStorage.getItem("theme")) ? "dark" : localStorage.getItem("theme");
+let DOMCache = document.getElementById("dom-cache");
+
+let applicationTheme = empty(localStorage.getItem("theme")) ? "dark" : localStorage.getItem("theme");
+let applicationBackground = empty(localStorage.getItem("background")) ? "animated" : localStorage.getItem("background");
+
+let divAnimatedBackground = document.getElementById("animated-background");
+let divStaticBackground = document.getElementById("static-background");
 
 let divPageLogin = document.getElementById("login-page");
 

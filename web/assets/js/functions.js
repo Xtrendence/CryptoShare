@@ -1,22 +1,59 @@
 function setTheme(theme) {
+	applicationTheme = theme;
+
+	let themeToggles = document.getElementsByClassName("toggle-wrapper theme");
+	let favicons = document.getElementsByClassName("favicon");
+	let browserTheme = document.getElementsByClassName("browser-theme")[0];
+
 	if(theme === "light") {
-		loginToggleTheme.classList.add("active");
+		browserTheme.setAttribute("content", "#ffffff");
+
+		for(let i = 0; i < favicons.length; i++) {
+			favicons[i].href = favicons[i].href.replace("dark", "light");
+		}
+
+		for(let i = 0; i < themeToggles.length; i++) {
+			themeToggles[i].classList.add("active");
+		}
 
 		localStorage.setItem("theme", "light");
 
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
 
-		particlesJS("background", particlesConfig.light);
+		setBackground(applicationBackground, theme);
 	} else {
-		loginToggleTheme.classList.remove("active");
+		browserTheme.setAttribute("content", "#000000");
+
+		for(let i = 0; i < favicons.length; i++) {
+			favicons[i].href = favicons[i].href.replace("light", "dark");
+		}
+
+		for(let i = 0; i < themeToggles.length; i++) {
+			themeToggles[i].classList.remove("active");
+		}
 
 		localStorage.setItem("theme", "dark");
 
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
 
-		particlesJS("background", particlesConfig.dark);
+		setBackground(applicationBackground, theme);
+	}
+}
+
+function setBackground(background, theme) {
+	if(background === "animated") {
+		localStorage.setItem("background", "animated");
+		divAnimatedBackground.classList.remove("hidden");
+		divStaticBackground.classList.add("hidden");
+		particlesJS("animated-background", particlesConfig[theme]);
+	} else {
+		localStorage.setItem("background", "static");
+		divAnimatedBackground.innerHTML = "";
+		divAnimatedBackground.classList.add("hidden");
+		divStaticBackground.classList.remove("hidden");
+		divStaticBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White-Gold.png")` : `url("./assets/img/BG-Black-Gold.png")`;
 	}
 }
 

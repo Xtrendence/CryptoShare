@@ -26,6 +26,9 @@ html, body, textarea, input, div {
 a {
 	text-decoration:none;
 }
+.clickable {
+	cursor:pointer;
+}
 .noselect {
 	-webkit-user-select:none;
 	-khtml-user-select:none;
@@ -66,7 +69,7 @@ input[type=number] {
 	-moz-appearance:textfield;
 }
 
-#background {
+#animated-background, #static-background {
 	pointer-events:none;
 	transform:scaleX(-1);
 	position:absolute;
@@ -316,12 +319,27 @@ html.light .login-page .toggle-container {
 	display:block;
 	font-size:16px;
 	padding:10px;
+	line-height:25px;
 	background:var(--main-second);
 	border-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
 	border-color:var(--accent-first);
+}
+.popup-wrapper .bottom .choice {
+	height:40px;
+	width:calc(50% - 10px);
+	font-size:18px;
+	font-weight:bold;
+	color:var(--accent-contrast);
+	border-radius:var(--border-radius);
+	background:var(--accent-second);
+	opacity:0.7;
+	transition:background 0.25s, opacity 0.25s;
+}
+.popup-wrapper .bottom .choice.active {
+	opacity:1;
 }
 .popup-wrapper .bottom .popup-button-wrapper {
 	width:100%;
@@ -330,6 +348,12 @@ html.light .login-page .toggle-container {
 	display:block;
 	margin-top:20px;
 }
+.popup-wrapper .bottom .popup-button-wrapper button:first-of-type {
+	margin-right:10px;
+}
+.popup-wrapper .bottom .popup-button-wrapper button:last-of-type {
+	margin-left:10px;
+}
 .popup-wrapper .bottom .popup-button-wrapper button {
 	height:100%;
 	width:calc(50% - 10px);
@@ -337,10 +361,15 @@ html.light .login-page .toggle-container {
 	font-weight:bold;
 	color:var(--accent-contrast);
 	border-radius:var(--border-radius);
+	background:var(--accent-third);
+}
+#desktop .popup-wrapper .bottom button:hover {
+	background:var(--accent-second);
+}
+.popup-wrapper .bottom button.button-confirm {
 	background:var(--accent-first);
 }
 .popup-wrapper .bottom button.button-cancel {
-	margin-right:10px;
 	background:var(--main-fourth);
 	color:var(--main-contrast-darker);
 	box-sizing:border-box;
@@ -348,12 +377,28 @@ html.light .login-page .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 }
-.popup-wrapper .bottom button.button-confirm {
-	margin-left:10px;
-}
 #desktop .popup-wrapper .bottom button.button-cancel:hover {
 	background:var(--main-fifth);
 }
-#desktop .popup-wrapper .bottom button.button-confirm:hover {
-	background:var(--accent-second);
+.popup-wrapper .bottom img {
+	display:block;
+	width:100%;
+	margin-top:20px;
+	border-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+	transition:border-color 0.25s;
+}
+.popup-wrapper .bottom img.active {
+	border-width:4px;
+	border-color:var(--accent-second);
+}
+.popup-wrapper .bottom .toggle-wrapper {
+	width:80px;
+	height:40px;
+	border-radius:20px;
+	margin:20px auto 0 auto;
+	display:block;
 }

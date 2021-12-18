@@ -2,7 +2,7 @@ let resizeTimeout;
 window.addEventListener("resize", () => {
 	clearTimeout(resizeTimeout);
 	resizeTimeout = setTimeout(() => {
-		particlesJS("background", particlesConfig[theme]);
+		particlesJS("background", particlesConfig[applicationTheme]);
 	}, 250);
 });
 
@@ -21,8 +21,7 @@ buttonExistingAccount.addEventListener("click", () => {
 });
 
 buttonCreateAccount.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Account Creation", '<span>Would you like to create your new account?</span>');
-	popup.show();
+	accountSetup();
 });
 
 loginToggleTheme.addEventListener("click", () => {
