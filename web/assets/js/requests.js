@@ -19,7 +19,11 @@ function userExists(username) {
 						resolve(true);
 					}
 				} else {
-					reject("Invalid JSON.");
+					if(empty(xhr.responseText)) {
+						reject("Server Error.");
+					} else {
+						reject("Invalid JSON.");
+					}
 				}
 			}
 		});
