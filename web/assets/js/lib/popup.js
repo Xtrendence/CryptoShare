@@ -43,10 +43,7 @@ class Popup {
 
 		this.element = document.createElement("div");
 		this.element.setAttribute("class", "popup-wrapper");
-		this.element.style.width = this.width + "px";
-		this.element.style.height = this.height + "px";
-		this.element.style.left = `calc(50% - ${this.width / 2}px)`;
-		this.element.style.top = `calc(50% - ${this.height / 2}px)`;
+		this.setSize(this.width, this.height);
 		
 		this.top = document.createElement("div");
 		this.top.setAttribute("class", "top");
@@ -73,8 +70,13 @@ class Popup {
 
 		this.bottom = document.createElement("div");
 		this.bottom.setAttribute("class", "bottom");
-		this.bottom.innerHTML = this.html;
-		this.bottom = this.addButtons(this.bottom);
+
+		this.content = document.createElement("div");
+		this.content.setAttribute("class", "content");
+		this.content.innerHTML = this.html;
+		this.content = this.addButtons(this.content);
+
+		this.bottom.appendChild(this.content);
 
 		this.element.id = this.id;
 		this.element.appendChild(this.bottom);
@@ -88,11 +90,7 @@ class Popup {
 		document.body.appendChild(this.overlay);
 		document.body.appendChild(this.element);
 
-		if(this.height === "auto") {
-			let height = this.element.scrollHeight + 20;
-			this.element.style.height =  height + "px";
-			this.element.style.top = `calc(50% - ${height / 2}px)`;
-		}
+		this.updateHeight();
 	}
 
 	hide() {
@@ -100,7 +98,7 @@ class Popup {
 		this.element.remove();
 	}
 
-	addButtons(bottom) {
+	addButtons(content) {
 		let div = document.createElement("div");
 		div.setAttribute("class", "popup-button-wrapper");
 
@@ -131,26 +129,54 @@ class Popup {
 		div.appendChild(buttonCancel);
 		div.appendChild(buttonConfirm);
 
-		bottom.appendChild(div);
+		content.appendChild(div);
 
-		return bottom;
+		return content;
+	}
+
+	updateHeight() {
+		if(this.height === "auto") {
+			let top = this.element.getElementsByClassName("top")[0];
+			let content = this.element.getElementsByClassName("content")[0];
+
+			let height = top.scrollHeight + content.scrollHeight + 40;
+
+			this.element.style.height =  height + "px";
+			this.element.style.top = `calc(50% - ${height / 2}px)`;
+		}
 	}
 
 	setOptions(options) {
 		this.options = options;
 	}
 
+	setSize(width, height) {
+		this.element.style.width = width + "px";
+		this.element.style.height = height + "px";
+		this.element.style.left = `calc(50% - ${width / 2}px)`;
+		this.element.style.top = `calc(50% - ${height / 2}px)`;
+	}
+
+	setTitle(title) {
+		try {
+			this.element.getElementsByClassName("title")[0].textContent = title;
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
 	setHTML(html) {
 		this.html = html;
 		
 		try {
-			if(!this.empty(this.bottom)) {
-				this.bottom.innerHTML = html;
-				this.bottom = this.addButtons(this.bottom);
+			if(!this.empty(this.content.innerHTML)) {
+				this.content.innerHTML = html;
+				this.content = this.addButtons(this.content);
 
-				let current = document.getElementById(this.id);
-				current.getElementsByClassName("bottom")[0].remove();
-				current.appendChild(this.bottom);
+				this.element.getElementsByClassName("content")[0].remove();
+				this.element.getElementsByClassName("bottom")[0].appendChild(this.content);
+
+				this.updateHeight();
 			}
 		} catch(error) {
 			console.log(error);

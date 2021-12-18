@@ -20,6 +20,9 @@ button {
 	cursor:pointer;
 	transition:background 0.25s;
 }
+html, body, textarea, input, div {
+	transition:background 0.25s;
+}
 a {
 	text-decoration:none;
 }
@@ -90,6 +93,9 @@ input[type=number] {
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
+.login-page.create .login-title-wrapper {
+	top:calc(50% - 60px / 2 - 160px - 20px - 30px);
+}
 .login-title-wrapper span {
 	padding-top:4px;
 	line-height:60px;
@@ -111,6 +117,22 @@ input[type=number] {
 	backdrop-filter:blur(2px);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
+}
+.login-page.create .login-wrapper {
+	height:320px;
+	top:calc(50% - 320px / 2);
+}
+.login-page.login .login-container {
+	display:block;
+}
+.login-page.login .create-container {
+	display:none;
+}
+.login-page.create .login-container {
+	display:none;
+}
+.login-page.create .create-container {
+	display:block;
 }
 .login-wrapper input {
 	width:calc(100% - 40px);
@@ -156,6 +178,17 @@ input[type=number] {
 }
 #desktop .login-wrapper button:hover {
 	background:var(--accent-second);
+}
+.login-wrapper button:first-of-type {
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+	background:var(--main-third);
+	color:var(--main-contrast-darker);
+}
+#desktop .login-wrapper button:first-of-type:hover {
+	background:var(--main-fifth);
 }
 
 .toggle-wrapper {
@@ -213,6 +246,9 @@ input[type=number] {
 	width:80px;
 	height:40px;
 	border-radius:20px;
+}
+.login-page.create .toggle-wrapper {
+	bottom:calc(50% - 40px / 2 - 150px - 20px - 30px);
 }
 html.light .login-page .toggle-container {
 	background:var(--main-second);

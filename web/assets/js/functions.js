@@ -7,7 +7,7 @@ function setTheme(theme) {
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
 
-		particlesJS("background", particlesConfigLight);
+		particlesJS("background", particlesConfig.light);
 	} else {
 		loginToggleTheme.classList.remove("active");
 
@@ -16,7 +16,7 @@ function setTheme(theme) {
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
 
-		particlesJS("background", particlesConfigDark);
+		particlesJS("background", particlesConfig.dark);
 	}
 }
 
