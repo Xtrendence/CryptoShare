@@ -255,10 +255,12 @@ export default class Bot {
 		details["asset"] = asset;
 
 		if(entities[1]?.typeName.includes("number")) {
-			if(valueGiven) {
-				details["price"] = parseFloat(entities[1].resolution.value) / details.amount;
-			} else {
-				details["price"] = parseFloat(entities[1].resolution.value);
+			if(intent.action !== "transfer") {
+				if(valueGiven) {
+					details["price"] = parseFloat(entities[1].resolution.value) / details.amount;
+				} else {
+					details["price"] = parseFloat(entities[1].resolution.value);
+				}
 			}
 
 			if(!Utils.empty(lastEntity) && lastEntity?.typeName.includes("date")) {
