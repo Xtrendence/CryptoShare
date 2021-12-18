@@ -14,8 +14,8 @@ Contrived for investors and the financially diligent, who lack the ability to ma
 
 - API - Node.js, TypeScript, GraphQL
 
-- Website - HTML, CSS, TypeScript
+- Website - HTML, CSS, JavaScript
 
-- Desktop App - NeutralinoJS, EJS, HTML, CSS, TypeScript
+- Desktop App - NeutralinoJS, EJS, HTML, CSS, JavaScript
 
 - Mobile App - React Native, TypeScript
