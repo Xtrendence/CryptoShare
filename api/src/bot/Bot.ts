@@ -58,7 +58,7 @@ export default class Bot {
 		return new Promise(async (resolve, reject) => {
 			try {
 				if(!["coin", "stock"].includes(type)) {
-					reject({ error:"Invalid Type." });
+					reject({ error:"Invalid type." });
 				}
 
 				let response: any = {};

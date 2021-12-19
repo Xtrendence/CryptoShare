@@ -26,7 +26,7 @@ export async function readStockByID({ token, userID, assetID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Stock Not Found!");
+						reject("!Stock not found.!");
 						return;
 					}
 
@@ -52,7 +52,7 @@ export async function readStockBySymbol({ token, userID, assetSymbol }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Stock Not Found!");
+						reject("!Stock not found.!");
 						return;
 					}
 

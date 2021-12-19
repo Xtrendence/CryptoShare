@@ -26,7 +26,7 @@ export async function readSetting({ token, userID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Setting Not Found!");
+						reject("!Setting not found.!");
 						return;
 					}
 

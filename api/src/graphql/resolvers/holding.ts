@@ -26,7 +26,7 @@ export async function readHolding({ token, userID }: any) {
 					reject();
 				} else {
 					if(rows === undefined) {
-						reject("!Holdings Not Found!");
+						reject("!Holdings not found.!");
 						return;
 					}
 

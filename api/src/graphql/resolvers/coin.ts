@@ -26,7 +26,7 @@ export async function readCoinByID({ token, userID, assetID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Coin Not Found!");
+						reject("!Coin not found.!");
 						return;
 					}
 
@@ -52,7 +52,7 @@ export async function readCoinBySymbol({ token, userID, assetSymbol }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Coin Not Found!");
+						reject("!Coin not found.!");
 						return;
 					}
 

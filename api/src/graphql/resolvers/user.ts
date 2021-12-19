@@ -13,7 +13,7 @@ export function userExists({ username }: any) {
 				reject();
 			} else {
 				if(row === undefined) {
-					reject("!User Not Found!");
+					resolve("Not found.");
 					return;
 				}
 
@@ -23,19 +23,22 @@ export function userExists({ username }: any) {
 	});
 }
 
-export async function createUser(user: User) {
-	let exists = await userExists(user.username);
-	if(!exists) {
-		if(Utils.validUsername(user.username) && Utils.xssValid(user.username)) {
-			let hashedPassword = bcrypt.hashSync(user.password, 10);
-			db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
-			return "Done";
-		} else {
-			return "Invalid Username";
+export async function createUser({ username, password, key }: any) {
+	return userExists({ username:username }).then((result) => {
+		if(result === "Not found.") {
+			if(Utils.validUsername(username) && Utils.xssValid(username)) {
+				let hashedPassword = bcrypt.hashSync(password, 10);
+				db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [username, hashedPassword, key]);
+				return "Done";
+			} else {
+				return "Invalid Username";
+			}
 		}
-	} else {
-		return "User Already Exists";
-	}
+
+		return "User already exists.";
+	}).catch(error => {
+		return error;
+	});
 }
 
 export async function readUser({ token, userID }: any) {
@@ -49,7 +52,7 @@ export async function readUser({ token, userID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!User Not Found!");
+						reject("!User not found.!");
 						return;
 					}
 

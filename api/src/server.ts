@@ -52,14 +52,22 @@ const httpServer = createServer();
 		let username = request.body.username;
 		let password = request.body.password;
 
-		response.send(await Utils.login(username, password));
+		try {
+			response.send(await Utils.login(username, password));
+		} catch(error) {
+			response.send({ error:error });
+		}
 	});
 
 	app.post("/verifyToken", async (request, response) => {
 		let userID = request.body.userID;
 		let token = request.body.token;
 
-		response.send(await Utils.verifyToken(userID, token));
+		try {
+			response.send(await Utils.verifyToken(userID, token));
+		} catch(error) {
+			response.send({ error:error });
+		}
 	});
 
 	httpServer.listen(portBot, () => {

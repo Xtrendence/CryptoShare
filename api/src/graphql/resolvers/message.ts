@@ -26,7 +26,7 @@ export async function readMessage({ token, userID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Message Not Found!");
+						reject("!Message not found.!");
 						return;
 					}
 

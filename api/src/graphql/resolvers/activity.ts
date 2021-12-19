@@ -28,7 +28,7 @@ export async function readActivity({ token, userID }: any) {
 					reject();
 				} else {
 					if(rows === undefined) {
-						reject("!Activities Not Found!");
+						reject("!Activities not found.!");
 						return;
 					}
 
@@ -44,7 +44,7 @@ export async function readActivity({ token, userID }: any) {
 				}
 			});
 		} else {
-			reject("!Unauthorized!");
+			reject("!Unauthorized.!");
 		}
 	});
 }
@@ -114,7 +114,7 @@ export async function importActivity({ token, userID, rows }: any) {
 				});
 			}
 		} else {
-			reject("!Unauthorized!");
+			reject("!Unauthorized.!");
 		}
 	});
 }

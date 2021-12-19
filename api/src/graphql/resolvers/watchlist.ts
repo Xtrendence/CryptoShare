@@ -26,7 +26,7 @@ export async function readWatchlist({ token, userID }: any) {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!Watchlist Not Found!");
+						reject("!Watchlist not found.!");
 						return;
 					}
 

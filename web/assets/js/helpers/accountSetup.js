@@ -3,7 +3,7 @@ async function accountSetup() {
 		let username = inputCreateUsername.value;
 		let exists = await userExists(username);
 
-		if(exists) {
+		if(exists.data.userExists !== "Not found.") {
 			Notify.error({
 				title: "Username Taken",
 				description: "A user with that username already exists.",
@@ -109,7 +109,40 @@ async function accountSetup() {
 					count++;
 					break;
 				case 5:
-					popup.hide();
+					createAccount(username, inputCreatePassword.value).then(result => {
+						if(result.data.createUser === "Done") {
+							popup.hide();
+
+							buttonExistingAccount.click();
+
+							inputLoginUsername.value = username;
+							inputLoginPassword.value = inputCreatePassword.value;
+
+							Notify.success({
+								title: "Account Created",
+								description: "You can now log in.",
+								duration: 5000,
+								background: "var(--accent-second)",
+								color: "var(--accent-contrast)"
+							});
+						} else {
+							Notify.error({
+								title: "Error",
+								description: "Something went wrong...",
+								duration: 5000,
+								background: "var(--accent-second)",
+								color: "var(--accent-contrast)"
+							});
+						}
+					}).catch(error => {
+						Notify.error({
+							title: "Error",
+							description: error,
+							duration: 5000,
+							background: "var(--accent-second)",
+							color: "var(--accent-contrast)"
+						});
+					});
 					break;
 			}
 		});

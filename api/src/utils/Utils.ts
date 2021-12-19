@@ -22,7 +22,7 @@ export default class Utils {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("Invalid Token");
+						reject("Invalid token.");
 						return;
 					}
 
@@ -32,7 +32,7 @@ export default class Utils {
 							reject();
 						} else {
 							if(row === undefined) {
-								reject("User Not Found");
+								reject("User not found.");
 								return;
 							}
 
@@ -88,7 +88,7 @@ export default class Utils {
 					reject();
 				} else {
 					if(row === undefined) {
-						reject("!User Not Found!");
+						reject("!User not found.!");
 						return;
 					}
 
@@ -105,7 +105,7 @@ export default class Utils {
 							token: token
 						}));
 					} else {
-						reject("!Incorrect Password!");
+						reject("!Incorrect password.!");
 					}
 				}
 			});
