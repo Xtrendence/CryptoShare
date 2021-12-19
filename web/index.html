@@ -22,7 +22,7 @@
 	<body>
 		<div id="animated-background"></div>
 		<div id="static-background"></div>
-		<div class="login-page create" id="login-page">
+		<div class="login-page login" id="login-page">
 			<div class="login-title-wrapper">
 				<span>CryptoShare</span>
 			</div>
@@ -30,16 +30,22 @@
 			<div class="login-wrapper">
 				<div class="login-container">
 					<input id="input-login-username" placeholder="Username..." value="Admin" type="text">
-					<input id="input-login-password" placeholder="Password..." value="admin" type="password">
-					<button id="button-new-account">Need An Account?</button>
-					<button id="button-login-account">Login</button>
+					<div class="input-password-wrapper">
+						<input id="input-login-password" placeholder="Password..." value="admin" type="password">
+					</div>
+					<button class="action" id="button-new-account">Need An Account?</button>
+					<button class="action" id="button-login-account">Login</button>
 				</div>
 				<div class="create-container">
 					<input id="input-create-username" placeholder="Username..." value="Admin" type="text">
-					<input id="input-create-password" placeholder="Password..." value="admin" type="password">
-					<input id="input-create-repeat-password" placeholder="Confirm Password..." value="admin" type="password">
-					<button id="button-existing-account">Got An Account?</button>
-					<button id="button-create-account">Create Account</button>
+					<div class="input-password-wrapper">
+						<input id="input-create-password" placeholder="Password..." value="admin" type="password">
+					</div>
+					<div class="input-password-wrapper">
+						<input id="input-create-repeat-password" placeholder="Confirm Password..." value="admin" type="password">
+					</div>
+					<button class="action" id="button-existing-account">Got An Account?</button>
+					<button class="action" id="button-create-account">Create Account</button>
 				</div>
 			</div>
 			<div class="toggle-wrapper theme" id="login-toggle-theme">

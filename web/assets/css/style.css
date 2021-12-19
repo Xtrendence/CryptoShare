@@ -83,6 +83,38 @@ input[type=number] {
 	z-index:1;
 }
 
+.input-password-wrapper {
+	position:relative;
+}
+.button-hide-password {
+	position:absolute;
+	top:0;
+	right:20px;
+	width:40px;
+	height:100%;
+	padding:0;
+	margin:0;
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:0 0 0 2px;
+	border-color:var(--accent-first);
+	border-top-left-radius:0;
+	border-top-right-radius:var(--border-radius);
+	border-bottom-left-radius:0;
+	border-bottom-right-radius:var(--border-radius);
+	background:none;
+}
+#desktop .button-hide-password:hover, .button-hide-password.active {
+	background:var(--accent-first);
+}
+.button-hide-password svg {
+	width:20px;
+	height:20px;
+	padding:5px;
+	margin:2px 2px 0 0;
+	fill:var(--accent-contrast);
+}
+
 .login-title-wrapper {
 	z-index:2;
 	position:absolute;
@@ -163,7 +195,7 @@ input[type=number] {
 .login-wrapper input:focus::placeholder {
 	color:var(--main-contrast);
 }
-.login-wrapper button {
+.login-wrapper button.action {
 	width:calc(100% - 40px);
 	display:block;
 	padding:0 10px 0 10px;
@@ -179,10 +211,10 @@ input[type=number] {
 	color:var(--accent-contrast);
 	transition:background 0.25s;
 }
-#desktop .login-wrapper button:hover {
+#desktop .login-wrapper button.action:hover {
 	background:var(--accent-second);
 }
-.login-wrapper button:first-of-type {
+.login-wrapper button.action:first-of-type {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
@@ -190,7 +222,7 @@ input[type=number] {
 	background:var(--main-third);
 	color:var(--main-contrast-darker);
 }
-#desktop .login-wrapper button:first-of-type:hover {
+#desktop .login-wrapper button.action:first-of-type:hover {
 	background:var(--main-fifth);
 }
 
