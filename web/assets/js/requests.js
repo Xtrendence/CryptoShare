@@ -1,12 +1,40 @@
+let urlAPI = "http://localhost:3190/graphql";
+
 function userExists(username) {
+	let query = {
+		query: `{ 
+			userExists(username: "${username}") 
+		}`
+	};
+
+	return request("POST", urlAPI, query);
+}
+
+function createAccount(username, password) {
+	
+}
+
+function login(username, password) {
+	let body = {
+		username: username,
+		password: password
+	};
+
+	return request("POST", urlAPI.replace("graphql", "login"), body);
+}
+
+function verifyToken(userID, token) {
+	let body = {
+		userID: userID,
+		token: token
+	};
+
+	return request("POST", urlAPI.replace("graphql", "verifyToken"), body);
+}
+
+function request(method, url, body) {
 	return new Promise((resolve, reject) => {
 		let xhr = new XMLHttpRequest();
-
-		let query = {
-			query: `{ 
-				userExists(username: "${username}") 
-			}`
-		};
 
 		xhr.addEventListener("readystatechange", () => {
 			if(xhr.readyState === xhr.DONE) {
@@ -32,8 +60,8 @@ function userExists(username) {
 			reject(error);
 		});
 
-		xhr.open("POST", "http://localhost:3190/graphql", true);
+		xhr.open(method, url, true);
 		xhr.setRequestHeader("Content-Type", "application/json");
-		xhr.send(JSON.stringify(query));
+		xhr.send(JSON.stringify(body));
 	});
 }

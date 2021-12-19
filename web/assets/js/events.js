@@ -12,7 +12,17 @@ buttonNewAccount.addEventListener("click", () => {
 });
 
 buttonLoginAccount.addEventListener("click", () => {
-
+	login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
+		// TODO: Handle login.
+	}).catch(error => {
+		Notify.error({
+			title: "Error",
+			description: error,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+	});
 });
 
 buttonExistingAccount.addEventListener("click", () => {

@@ -15,6 +15,18 @@ async function accountSetup() {
 			return;
 		}
 
+		if(inputCreatePassword.value !== inputCreateRepeatPassword.value) {
+			Notify.error({
+				title: "Error",
+				description: "Passwords don't match.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+
+			return;
+		}
+
 		let popup = new Popup(300, "auto", "Account Creation", `<span>Would you like to create your new account, ${username}?</span>`);
 		popup.show();
 
@@ -27,11 +39,14 @@ async function accountSetup() {
 				case 0:
 					popup.setOptions({ confirmText:"Continue" });
 					popup.setHTML(`<span>Before your account can be created, you'll need to complete a short setup process.</span>`);
+					count++;
 					break;
 				case 1:
 					popup.setSize(700, "auto");
 					popup.setOptions({ cancelText:"Disagree", confirmText:"Agree" });
 					popup.setHTML(`<span>By using CryptoShare, you understand that third-party APIs are used to get the prices and details of stocks and cryptoassets. This data may be incorrect or inaccurate at any given time, and basing your trading activity on it is your own responsibility. You understand that trading can be a high-risk activity, and that you may lose all your money. You understand that CryptoShare does not provide any trading services, and does not manage or access your actual financial accounts. While steps have been taken to ensure the integrity of your data and the software working as intended, you understand that bugs may be present, and that the developer of the application cannot be held responsible for any loss of data or otherwise. You understand that all your data is stored on the device hosting the CryptoShare server, and is never sent to any third-party servers or service providers. You understand that, in order to function, data sent to and received from the chat bot is not encrypted on the client-side (a compromised CryptoShare server could read/store it). You understand that the tax, mortgage, and other related data are exclusively based on UK law, and may not be accurate.</span>`);
+
+					count++;
 
 					break;
 				case 2:
@@ -62,6 +77,8 @@ async function accountSetup() {
 						});
 					}
 
+					count++;
+
 					break;
 				case 3:
 					popup.setSize(400, "auto");
@@ -83,18 +100,18 @@ async function accountSetup() {
 						}
 					});
 
+					count++;
+
 					break;
 				case 4:
 					popup.setOptions({ confirmText:"Finish" });
 					popup.setHTML(`<span>If you aren't hosting CryptoShare yourself, please be aware that whoever is hosting it can modify the code to steal your financial data, so make sure you trust them.</span>`);
+					count++;
 					break;
 				case 5:
-					// TODO: Account creation.
 					popup.hide();
 					break;
 			}
-
-			count++;
 		});
 	} catch(error) {
 		Notify.error({
