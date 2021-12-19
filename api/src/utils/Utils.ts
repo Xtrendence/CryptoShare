@@ -124,6 +124,30 @@ export default class Utils {
 		});
 	}
 
+	static validUsername(username: string) {
+		try {
+			if(username.length > 16) {
+				return false;
+			}
+			
+			return (/^[A-Za-z0-9]+$/.test(username));
+		} catch(error) {
+			console.log(error);
+			return false;
+		}
+	}
+
+	static xssValid(string: string) {
+		try {
+			if(string.includes("<") || string.includes(">")) {
+				return false;
+			}
+			return true;
+		} catch(error) {
+			return false;
+		}
+	}
+
 	static checkFiles() {
 		if(!existsSync(this.dataFolder)) {
 			mkdirSync(this.dataFolder);

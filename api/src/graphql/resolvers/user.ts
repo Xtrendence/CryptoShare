@@ -26,9 +26,13 @@ export function userExists({ username }: any) {
 export async function createUser(user: User) {
 	let exists = await userExists(user.username);
 	if(!exists) {
-		let hashedPassword = bcrypt.hashSync(user.password, 10);
-		db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
-		return "Done";
+		if(Utils.validUsername(user.username) && Utils.xssValid(user.username)) {
+			let hashedPassword = bcrypt.hashSync(user.password, 10);
+			db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [user.username, hashedPassword, user.key]);
+			return "Done";
+		} else {
+			return "Invalid Username";
+		}
 	} else {
 		return "User Already Exists";
 	}
