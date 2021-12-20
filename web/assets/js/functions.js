@@ -43,12 +43,22 @@ function setTheme(theme) {
 }
 
 function setBackground(background, theme) {
+	let backgroundToggles = document.getElementsByClassName("toggle-wrapper background");
+
 	if(background === "animated") {
+		for(let i = 0; i < backgroundToggles.length; i++) {
+			backgroundToggles[i].classList.add("active");
+		}
+
 		localStorage.setItem("background", "animated");
 		divAnimatedBackground.classList.remove("hidden");
 		divStaticBackground.classList.add("hidden");
 		particlesJS("animated-background", particlesConfig[theme]);
 	} else {
+		for(let i = 0; i < backgroundToggles.length; i++) {
+			backgroundToggles[i].classList.remove("active");
+		}
+
 		localStorage.setItem("background", "static");
 		divAnimatedBackground.innerHTML = "";
 		divAnimatedBackground.classList.add("hidden");
@@ -149,9 +159,8 @@ function addNavbarEvents() {
 		let item = items[i];
 
 		item.addEventListener("click", () => {
-			clearActiveNavbarItem();
 			let page = item.id.replace("navbar-", "");
-			switchPage(page);
+			setPage(page);
 		});
 	}
 }
@@ -163,9 +172,19 @@ function clearActiveNavbarItem() {
 	}
 }
 
-function switchPage(page) {
+function clearActivePage() {
+	let pages = divPageApp.getElementsByClassName("page");
+	for(let i = 0; i < pages.length; i++) {
+		pages[i].classList.add("hidden");
+	}
+}
+
+function setPage(page) {
+	clearActiveNavbarItem();
+	clearActivePage();
+
 	document.getElementById(`navbar-${page}`).classList.add("active");
-	document.getElementById(`page-${page}`).classList.remove("hidden");
+	document.getElementById(`${page}-page`).classList.remove("hidden");
 
 	switch(page) {
 		case "chatbot":
@@ -181,6 +200,41 @@ function switchPage(page) {
 		case "settings":
 			break;
 	}
+}
+
+function addSettingsNavbarEvents() {
+	let items = divSettingsNavbar.getElementsByClassName("item");
+	
+	for(let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		item.addEventListener("click", () => {
+			let page = item.id.replace("settings-navbar-", "");
+			setSettingsPage(page);
+		});
+	}
+}
+
+function clearActiveSettingsNavbarItem() {
+	let items = divSettingsNavbar.getElementsByClassName("item");
+	for(let i = 0; i < items.length; i++) {
+		items[i].classList.remove("active");
+	}
+}
+
+function clearActiveSettingsPage() {
+	let pages = divPageSettings.getElementsByClassName("page");
+	for(let i = 0; i < pages.length; i++) {
+		pages[i].classList.add("hidden");
+	}
+}
+
+function setSettingsPage(page) {
+	clearActiveSettingsNavbarItem();
+	clearActiveSettingsPage();
+
+	document.getElementById(`settings-navbar-${page}`).classList.add("active");
+	document.getElementById(`settings-page-${page}`).classList.remove("hidden");
 }
 
 function showLoading(limit, text = "") {

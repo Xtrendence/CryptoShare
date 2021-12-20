@@ -6,6 +6,11 @@ window.addEventListener("resize", () => {
 	}, 250);
 });
 
+// TODO: Remove after development.
+document.addEventListener("click", (event) => {
+	// console.log(event.target);
+});
+
 buttonNewAccount.addEventListener("click", () => {
 	divPageLogin.classList.remove("login");
 	divPageLogin.classList.add("create");
@@ -50,5 +55,21 @@ loginToggleTheme.addEventListener("click", () => {
 		setTheme("dark");
 	} else {
 		setTheme("light");
+	}
+});
+
+settingsToggleTheme.addEventListener("click", () => {
+	if(settingsToggleTheme.classList.contains("active")) {
+		setTheme("dark");
+	} else {
+		setTheme("light");
+	}
+});
+
+settingsToggleBackground.addEventListener("click", () => {
+	if(settingsToggleBackground.classList.contains("active")) {
+		setBackground("static", applicationTheme);
+	} else {
+		setBackground("animated", applicationTheme);
 	}
 });

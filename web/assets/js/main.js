@@ -7,3 +7,7 @@ updatePasswordFields();
 attemptLogin();
 
 addNavbarEvents();
+
+addSettingsNavbarEvents();
+
+setPage("settings");

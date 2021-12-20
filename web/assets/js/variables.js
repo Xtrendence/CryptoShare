@@ -28,3 +28,9 @@ let loginToggleTheme = document.getElementById("login-toggle-theme");
 
 let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
+
+let divSettingsNavbar = document.getElementById("settings-navbar");
+let divPageSettings = document.getElementById("settings-page");
+
+let settingsToggleTheme = document.getElementById("settings-toggle-theme");
+let settingsToggleBackground = document.getElementById("settings-toggle-background");

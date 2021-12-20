@@ -579,6 +579,12 @@ html.light .login-page .toggle-container {
 	border-color:var(--accent-second);
 	background:var(--accent-second);
 }
+.navbar .item.active span {
+	color:var(--accent-contrast);
+}
+.navbar .item.active svg {
+	fill:var(--accent-contrast);
+}
 .navbar .item svg {
 	width:26px;
 	height:26px;
@@ -595,4 +601,107 @@ html.light .login-page .toggle-container {
 	font-size:14px;
 	font-weight:bold;
 	color:var(--main-contrast);
+}
+
+.page-container {
+	position:absolute;
+	z-index:12;
+	background:var(--main-second-transparent);
+	backdrop-filter:blur(2px);
+	border-radius:var(--border-radius);
+	box-shadow:var(--shadow-smooth);
+	overflow:hidden auto;
+}
+.page-container.full {
+	width:calc(100% - 40px);
+	height:calc(100% - 140px - 20px);
+	top:140px;
+	left:20px;
+}
+.page-container.half.left {
+
+}
+.page-container.half.right {
+
+}
+.page-container.half.top {
+
+}
+.page-container.half.bottom {
+
+}
+
+.page-container.settings {
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+}
+.settings-navbar {
+	position:absolute;
+	top:0;
+	left:0;
+	width:160px;
+	height:100%;
+	border-top-left-radius:var(--border-radius);
+	border-bottom-left-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:0 2px 0 0;
+	border-color:var(--accent-first);
+}
+.settings-navbar .item {
+	width:100%;
+	cursor:pointer;
+	padding:20px 0 20px 20px;
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:0 0 2px 0;
+	border-color:var(--accent-first);
+}
+.settings-navbar .item.active, #desktop .settings-navbar .item:hover {
+	background:var(--accent-first);
+}
+.settings-navbar .item.active span {
+	color:var(--accent-contrast);
+}
+.settings-navbar .item.active svg {
+	fill:var(--accent-contrast);
+}
+.settings-navbar .item span {
+	font-size:16px;
+	font-weight:bold;
+	color:var(--main-contrast);
+}
+.settings-page {
+	z-index:13;
+	position:absolute;
+	top:0;
+	left:160px;
+	width:calc(100% - 160px - 40px);
+	height:calc(100% - 40px);
+	padding:20px;
+	overflow:hidden auto;
+}
+.settings-section {
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+	display:inline-block;
+	padding:10px;
+	border-radius:var(--border-radius);
+	margin-right:20px;
+}
+.settings-section .title {
+	font-size:18px;
+	font-weight:bold;
+	vertical-align:middle;
+	margin-right:20px;
+}
+.settings-section .toggle-wrapper {
+	width:70px;
+	height:35px;
+	border-radius:17.5px;
+	vertical-align:middle;
 }
