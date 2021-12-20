@@ -34,3 +34,5 @@ let divPageSettings = document.getElementById("settings-page");
 
 let settingsToggleTheme = document.getElementById("settings-toggle-theme");
 let settingsToggleBackground = document.getElementById("settings-toggle-background");
+
+let buttonSettingsLogout = document.getElementById("button-settings-logout");

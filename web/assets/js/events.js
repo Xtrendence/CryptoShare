@@ -75,3 +75,8 @@ settingsToggleBackground.addEventListener("click", () => {
 		setBackground("animated", applicationTheme);
 	}
 });
+
+// TODO: Add logout functionality.
+buttonSettingsLogout.addEventListener("click", () => {
+
+});

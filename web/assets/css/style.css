@@ -281,7 +281,6 @@ input[type=number] {
 	height:40px;
 	font-size:18px;
 	background:none;
-	outline:none;
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
@@ -307,9 +306,6 @@ input[type=number] {
 	height:40px;
 	font-size:18px;
 	background:var(--accent-first);
-	cursor:pointer;
-	outline:none;
-	border:none;
 	border-radius:var(--border-radius);
 	margin:20px auto 0 auto;
 	font-weight:bold;
@@ -477,6 +473,7 @@ html.light .toggle-container {
 }
 .popup-wrapper .bottom .choice.active {
 	opacity:1;
+	pointer-events:none;
 }
 .popup-wrapper .bottom .popup-button-wrapper {
 	width:100%;
@@ -531,6 +528,7 @@ html.light .toggle-container {
 .popup-wrapper .bottom img.active {
 	border-width:4px;
 	border-color:var(--accent-second);
+	pointer-events:none;
 }
 .popup-wrapper .bottom .toggle-wrapper {
 	width:80px;
@@ -575,7 +573,12 @@ html.light .toggle-container {
 	padding:10px;
 	border-radius:var(--border-radius);
 }
-.navbar .item.active, #desktop .navbar .item:hover {
+.navbar .item.active {
+	border-color:var(--accent-second);
+	background:var(--accent-second);
+	pointer-events:none;
+}
+#desktop .navbar .item:hover {
 	border-color:var(--accent-second);
 	background:var(--accent-second);
 }
@@ -635,7 +638,7 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
-	border-color:var(--accent-first);
+	border-color:var(--accent-second);
 }
 .settings-navbar {
 	position:absolute;
@@ -648,7 +651,7 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:0 2px 0 0;
-	border-color:var(--accent-first);
+	border-color:var(--accent-second);
 }
 .settings-navbar .item {
 	width:100%;
@@ -657,10 +660,14 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:0 0 2px 0;
-	border-color:var(--accent-first);
+	border-color:var(--accent-second);
 }
-.settings-navbar .item.active, #desktop .settings-navbar .item:hover {
-	background:var(--accent-first);
+.settings-navbar .item.active {
+	pointer-events:none;
+	background:var(--accent-second);
+}
+#desktop .settings-navbar .item:hover {
+	background:var(--accent-second);
 }
 .settings-navbar .item.active span {
 	color:var(--accent-contrast);
@@ -687,7 +694,7 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
-	border-color:var(--accent-first);
+	border-color:var(--accent-second);
 	display:inline-block;
 	padding:10px;
 	border-radius:var(--border-radius);
@@ -704,4 +711,19 @@ html.light .toggle-container {
 	height:35px;
 	border-radius:17.5px;
 	vertical-align:middle;
+}
+.settings-section .action-button {
+	display:inline-block;
+	vertical-align:middle;
+	padding:0 10px 0 10px;
+	height:40px;
+	font-size:18px;
+	background:var(--accent-first);
+	border-radius:var(--border-radius);
+	font-weight:bold;
+	color:var(--accent-contrast);
+	transition:background 0.25s;
+}
+#desktop .settings-section .action-button:hover {
+	background:var(--accent-second);
 }
