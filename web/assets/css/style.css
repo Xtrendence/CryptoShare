@@ -540,14 +540,53 @@ html.light .login-page .toggle-container {
 	display:block;
 }
 
-.navbar {
+.navbar-wrapper {
+	height:140px;
+	width:100%;
+	top:0;
+	left:0;
+	z-index:20;
 	position:absolute;
-	top:20px;
-	left:20px;
-	width:calc(100% - 40px);
-	height:40px;
-	z-index:10;
+}
+.navbar {
+	display:block;
+	margin:20px auto 0 auto;
+	width:calc((120px + 20px) * 6 + 10px);
+	height:100px;
 	border-radius:var(--border-radius);
-	background:var(--main-first-transparent);
+	background:var(--main-second-transparent);
 	backdrop-filter:blur(2px);
+	text-align:center;
+	box-shadow:var(--shadow-smooth);
+}
+.navbar .item {
+	cursor:pointer;
+	width:120px;
+	height:80px;
+	vertical-align:top;
+	display:inline-block;
+	margin:10px 10px 0 10px;
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+	padding:10px;
+	border-radius:var(--border-radius);
+}
+.navbar .item.active, #desktop .navbar .item:hover {
+	border-color:var(--accent-second);
+	background:var(--accent-second);
+}
+.navbar .item svg {
+	width:26px;
+	height:26px;
+	padding:2px;
+	fill:var(--main-contrast);
+}
+.navbar .item span {
+	margin-top:5px;
+	display:block;
+	font-size:16px;
+	font-weight:bold;
+	color:var(--main-contrast);
 }

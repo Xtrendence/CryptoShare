@@ -142,6 +142,46 @@ function showApp() {
 	divPageApp.classList.remove("hidden");
 }
 
+function addNavbarEvents() {
+	let items = divNavbar.getElementsByClassName("item");
+	
+	for(let i = 0; i < items.length; i++) {
+		let item = items[i];
+
+		item.addEventListener("click", () => {
+			clearActiveNavbarItem();
+			let page = item.id.replace("navbar-", "");
+			switchPage(page);
+		});
+	}
+}
+
+function clearActiveNavbarItem() {
+	let items = divNavbar.getElementsByClassName("item");
+	for(let i = 0; i < items.length; i++) {
+		items[i].classList.remove("active");
+	}
+}
+
+function switchPage(page) {
+	document.getElementById(`navbar-${page}`).classList.add("active");
+	
+	switch(page) {
+		case "chatbot":
+			break;
+		case "dashboard":
+			break;
+		case "market":
+			break;
+		case "holdings":
+			break;
+		case "activity":
+			break;
+		case "settings":
+			break;
+	}
+}
+
 function showLoading(limit, text = "") {
 	hideLoading();
 

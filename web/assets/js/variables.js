@@ -25,3 +25,6 @@ let buttonExistingAccount = document.getElementById("button-existing-account");
 let buttonCreateAccount = document.getElementById("button-create-account");
 
 let loginToggleTheme = document.getElementById("login-toggle-theme");
+
+let divNavbarWrapper = document.getElementById("navbar-wrapper");
+let divNavbar = document.getElementById("navbar");

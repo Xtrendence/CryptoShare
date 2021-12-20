@@ -5,3 +5,5 @@ setTheme(applicationTheme);
 updatePasswordFields();
 
 attemptLogin();
+
+addNavbarEvents();
