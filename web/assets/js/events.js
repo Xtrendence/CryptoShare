@@ -107,25 +107,32 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");
 
-	logoutEverywhere(userID, token).then(result => {
-		if("error" in result) {
+	let popup = new Popup(300, "auto", "Logout Everywhere", `<span>Are you sure you want to log out from every active session?</span>`);
+	popup.show();
+
+	popup.on("confirm", () => {
+		popup.hide();
+		
+		logoutEverywhere(userID, token).then(result => {
+			if("error" in result) {
+				Notify.error({
+					title: "Error",
+					description: result.error,
+					duration: 5000,
+					background: "var(--accent-second)",
+					color: "var(--accent-contrast)"
+				});
+			} else {
+				finishLogout();
+			}
+		}).catch(error => {
 			Notify.error({
 				title: "Error",
-				description: result.error,
+				description: error,
 				duration: 5000,
 				background: "var(--accent-second)",
 				color: "var(--accent-contrast)"
 			});
-		} else {
-			finishLogout();
-		}
-	}).catch(error => {
-		Notify.error({
-			title: "Error",
-			description: error,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
 		});
 	});
 });
