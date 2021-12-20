@@ -78,5 +78,41 @@ settingsToggleBackground.addEventListener("click", () => {
 
 // TODO: Add logout functionality.
 buttonSettingsLogout.addEventListener("click", () => {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
 
+	logout(userID, token).then(result => {
+		if("error" in result) {
+			Notify.error({
+				title: "Error",
+				description: result.error,
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+		} else {
+			clearLogin();
+			clearApp();
+
+			removeAccountInfo();
+
+			showLogin();
+
+			Notify.success({
+				title: "Logged Out",
+				description: "You've been logged out of your account.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+		}
+	}).catch(error => {
+		Notify.error({
+			title: "Error",
+			description: error,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+	});
 });

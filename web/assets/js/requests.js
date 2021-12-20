@@ -35,6 +35,15 @@ function login(username, password) {
 	return request("POST", urlAPI.replace("graphql", "login"), body);
 }
 
+function logout(userID, token) {
+	let body = {
+		userID: userID,
+		token: token
+	};
+
+	return request("POST", urlAPI.replace("graphql", "logout"), body);
+}
+
 function verifyToken(userID, token) {
 	let body = {
 		userID: userID,

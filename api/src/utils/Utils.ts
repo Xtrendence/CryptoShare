@@ -112,6 +112,16 @@ export default class Utils {
 		});
 	}
 
+	static async logout(userID: number, token: string) {
+		return new Promise(async (resolve, reject) => {
+			if(!this.verifyTokenTime(token) || await this.verifyToken(userID, token)) {
+				this.db?.runQuery("DELETE FROM Login WHERE userID = ? AND loginToken = ?", [userID, token]);
+				resolve("Done");
+				return;
+			}
+		});
+	}
+
 	static async generateToken() {
 		return new Promise((resolve, reject) => {
 			crypto.randomBytes(32, (error, buffer) => {

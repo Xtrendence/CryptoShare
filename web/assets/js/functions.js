@@ -111,6 +111,14 @@ function attemptLogin() {
 				setAccountInfo(result);
 				showApp();
 			}
+		}).catch(error => {
+			Notify.error({
+				title: "Error",
+				description: error,
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
 		});
 	} else {
 		divLoading.classList.add("hidden");
@@ -123,6 +131,13 @@ function setAccountInfo(info) {
 	localStorage.setItem("username", info.username);
 	localStorage.setItem("token", info.token);
 	localStorage.setItem("key", info.key);
+}
+
+function removeAccountInfo() {
+	localStorage.removeItem("userID");
+	localStorage.removeItem("username");
+	localStorage.removeItem("token");
+	localStorage.removeItem("key");
 }
 
 function clearLogin() {
