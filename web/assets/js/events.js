@@ -68,8 +68,10 @@ settingsToggleTheme.addEventListener("click", () => {
 
 settingsToggleBackground.addEventListener("click", () => {
 	if(settingsToggleBackground.classList.contains("active")) {
+		applicationBackground = "static";
 		setBackground("static", applicationTheme);
 	} else {
+		applicationBackground = "animated";
 		setBackground("animated", applicationTheme);
 	}
 });

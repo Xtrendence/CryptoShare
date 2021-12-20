@@ -223,7 +223,7 @@ function clearActiveSettingsNavbarItem() {
 }
 
 function clearActiveSettingsPage() {
-	let pages = divPageSettings.getElementsByClassName("page");
+	let pages = divPageSettings.getElementsByClassName("settings-page");
 	for(let i = 0; i < pages.length; i++) {
 		pages[i].classList.add("hidden");
 	}

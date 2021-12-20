@@ -355,6 +355,9 @@ input[type=number] {
 	top:0;
 	position:absolute;
 }
+html.light .toggle-container {
+	background:var(--main-second);
+}
 .toggle-wrapper.active .toggle-container {
 	left:50%;
 	background:var(--main-fourth);
@@ -389,9 +392,6 @@ input[type=number] {
 }
 .login-page.create .toggle-wrapper {
 	bottom:calc(50% - 40px / 2 - 150px - 20px - 30px);
-}
-html.light .login-page .toggle-container {
-	background:var(--main-second);
 }
 
 .popup-overlay {

@@ -92,9 +92,11 @@ async function accountSetup() {
 
 					toggle.addEventListener("click", () => {
 						if(toggle.classList.contains("active")) {
+							applicationBackground = "static";
 							toggle.classList.remove("active");
 							setBackground("static", applicationTheme);
 						} else {
+							applicationBackground = "animated";
 							toggle.classList.add("active");
 							setBackground("animated", applicationTheme);
 						}
