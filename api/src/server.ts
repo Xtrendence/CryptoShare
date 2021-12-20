@@ -1,5 +1,6 @@
 import cors from "cors";
 import express from "express";
+import path from "path";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import { createServer } from "http";
@@ -13,6 +14,9 @@ import Utils from "./utils/Utils";
 
 const portAPI = 3190;
 const portBot = 3191;
+
+const webFolder = path.join(__dirname, "../../web");
+const indexFile = path.join(webFolder, "index.html");
 
 Utils.checkFiles();
 
@@ -34,6 +38,7 @@ const httpServer = createServer();
 	app.use(cors());
 	app.use(express.urlencoded({ extended:true }));
 	app.use(express.json());
+	app.use(express.static(webFolder));
 
 	app.use("/graphql", graphqlHTTP({ 
 		schema: schema,
@@ -46,6 +51,14 @@ const httpServer = createServer();
 
 	app.listen(portAPI, () => {
 		console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
+	});
+
+	app.get("/", (request, response) => {
+		try {
+			response.sendFile(indexFile);
+		} catch(error) {
+			console.log(error);
+		}
 	});
 
 	app.post("/login", async (request, response) => {
