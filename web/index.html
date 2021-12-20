@@ -22,6 +22,7 @@
 	<body>
 		<div id="animated-background"></div>
 		<div id="static-background"></div>
+		<div class="loading-overlay active noselect" id="loading-overlay"><div class="loading-icon"><div></div><div></div></div></div>
 		<div class="login-page login" id="login-page">
 			<div class="login-title-wrapper">
 				<span>CryptoShare</span>
@@ -55,11 +56,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="setup-page">
-			
-		</div>
-		<div class="app-page">
-
+		<div class="app-page hidden" id="app-page">
+			<div class="navbar"></div>
 		</div>
 		<div id="dom-cache"></div>
 		<!-- DOM-Dependent JS Imports -->

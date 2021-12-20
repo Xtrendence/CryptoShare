@@ -12,7 +12,7 @@ export default class Utils {
 		return new Promise((resolve, reject) => {
 			if(!this.verifyTokenTime(token)) {
 				this.db?.runQuery("DELETE FROM Login WHERE userID = ? AND loginToken = ?", [userID, token]);
-				reject();
+				reject("Expired token.");
 				return;
 			}
 
@@ -26,20 +26,20 @@ export default class Utils {
 						return;
 					}
 
-					this.db?.db?.get("SELECT * FROM User WHERE userID = ?", [userID], async (error, row) => {
+					this.db?.db?.get("SELECT * FROM User WHERE userID = ?", [userID], async (error, user) => {
 						if(error) {
 							console.log(error);
 							reject();
 						} else {
-							if(row === undefined) {
+							if(user === undefined) {
 								reject("User not found.");
 								return;
 							}
 
 							resolve(JSON.stringify({
-								userID: row.userID,
-								username: row.username,
-								key: row.key,
+								userID: user.userID,
+								username: user.username,
+								key: user.key,
 								token: token
 							}));
 						}
@@ -50,12 +50,12 @@ export default class Utils {
 	}
 
 	static verifyTokenTime(token: string) {
-		let now = new Date().getTime() / 1000;
+		let now = Math.floor(new Date().getTime() / 1000);
 		let time = parseInt(token.split("-")[0]);
 		if(now - time > 2629746) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	static verifyDataOwnership(userID: number, table: string, column: string, rowID: number) {

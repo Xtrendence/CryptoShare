@@ -8,7 +8,10 @@ let applicationBackground = empty(localStorage.getItem("background")) ? "animate
 let divAnimatedBackground = document.getElementById("animated-background");
 let divStaticBackground = document.getElementById("static-background");
 
+let divLoading = document.getElementById("loading-overlay");
+
 let divPageLogin = document.getElementById("login-page");
+let divPageApp = document.getElementById("app-page");
 
 let inputLoginUsername = document.getElementById("input-login-username");
 let inputLoginPassword = document.getElementById("input-login-password");

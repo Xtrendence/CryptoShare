@@ -13,7 +13,6 @@ buttonNewAccount.addEventListener("click", () => {
 
 buttonLoginAccount.addEventListener("click", () => {
 	login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
-		// TODO: Handle login.
 		if("error" in result) {
 			Notify.error({
 				title: "Error",
@@ -23,7 +22,8 @@ buttonLoginAccount.addEventListener("click", () => {
 				color: "var(--accent-contrast)"
 			});
 		} else {
-			
+			setAccountInfo(result);
+			showApp();
 		}
 	}).catch(error => {
 		Notify.error({
