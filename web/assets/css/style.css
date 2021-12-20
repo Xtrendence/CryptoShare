@@ -212,12 +212,15 @@ input[type=number] {
 #desktop .button-hide-password:hover, .button-hide-password.active {
 	background:var(--accent-first);
 }
+#desktop .button-hide-password:hover svg, .button-hide-password.active svg {
+	fill:var(--accent-contrast);
+}
 .button-hide-password svg {
 	width:20px;
 	height:20px;
 	padding:5px;
 	margin:2px 2px 0 0;
-	fill:var(--accent-contrast);
+	fill:var(--main-contrast);
 }
 
 .login-title-wrapper {
@@ -582,10 +585,10 @@ html.light .toggle-container {
 	border-color:var(--accent-second);
 	background:var(--accent-second);
 }
-.navbar .item.active span {
+#desktop .navbar .item:hover span, .navbar .item.active span {
 	color:var(--accent-contrast);
 }
-.navbar .item.active svg {
+#desktop .navbar .item:hover svg, .navbar .item.active svg {
 	fill:var(--accent-contrast);
 }
 .navbar .item svg {
@@ -669,10 +672,10 @@ html.light .toggle-container {
 #desktop .settings-navbar .item:hover {
 	background:var(--accent-second);
 }
-.settings-navbar .item.active span {
+#desktop .settings-navbar .item:hover span, .settings-navbar .item.active span {
 	color:var(--accent-contrast);
 }
-.settings-navbar .item.active svg {
+#desktop .settings-navbar .item:hover svg, .settings-navbar .item.active svg {
 	fill:var(--accent-contrast);
 }
 .settings-navbar .item span {
