@@ -44,6 +44,15 @@ function logout(userID, token) {
 	return request("POST", urlAPI.replace("graphql", "logout"), body);
 }
 
+function logoutEverywhere(userID, token) {
+	let body = {
+		userID: userID,
+		token: token
+	};
+
+	return request("POST", urlAPI.replace("graphql", "logoutEverywhere"), body);
+}
+
 function verifyToken(userID, token) {
 	let body = {
 		userID: userID,

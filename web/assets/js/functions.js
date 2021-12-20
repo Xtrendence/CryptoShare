@@ -125,6 +125,23 @@ function attemptLogin() {
 	}
 }
 
+function finishLogout() {
+	clearLogin();
+	clearApp();
+
+	removeAccountInfo();
+
+	showLogin();
+
+	Notify.success({
+		title: "Logged Out",
+		description: "You've been logged out of your account.",
+		duration: 5000,
+		background: "var(--accent-second)",
+		color: "var(--accent-contrast)"
+	});
+}
+
 // TODO: Decrypt key.
 function setAccountInfo(info) {
 	localStorage.setItem("userID", info.userID);

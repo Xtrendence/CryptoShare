@@ -76,7 +76,6 @@ settingsToggleBackground.addEventListener("click", () => {
 	}
 });
 
-// TODO: Add logout functionality.
 buttonSettingsLogout.addEventListener("click", () => {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");
@@ -91,20 +90,34 @@ buttonSettingsLogout.addEventListener("click", () => {
 				color: "var(--accent-contrast)"
 			});
 		} else {
-			clearLogin();
-			clearApp();
+			finishLogout();
+		}
+	}).catch(error => {
+		Notify.error({
+			title: "Error",
+			description: error,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+	});
+});
 
-			removeAccountInfo();
+buttonSettingsLogoutEverywhere.addEventListener("click", () => {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
 
-			showLogin();
-
-			Notify.success({
-				title: "Logged Out",
-				description: "You've been logged out of your account.",
+	logoutEverywhere(userID, token).then(result => {
+		if("error" in result) {
+			Notify.error({
+				title: "Error",
+				description: result.error,
 				duration: 5000,
 				background: "var(--accent-second)",
 				color: "var(--accent-contrast)"
 			});
+		} else {
+			finishLogout();
 		}
 	}).catch(error => {
 		Notify.error({

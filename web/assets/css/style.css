@@ -698,10 +698,13 @@ html.light .toggle-container {
 	border-style:solid;
 	border-width:2px;
 	border-color:var(--accent-second);
-	display:inline-block;
+	display:inline-flex;
+	justify-content:center;
+	align-items:center;
 	padding:10px;
 	border-radius:var(--border-radius);
 	margin-right:20px;
+	min-height:64px;
 }
 .settings-section .title {
 	font-size:18px;
@@ -721,11 +724,15 @@ html.light .toggle-container {
 	padding:0 10px 0 10px;
 	height:40px;
 	font-size:18px;
+	margin-left:10px;
 	background:var(--accent-first);
 	border-radius:var(--border-radius);
 	font-weight:bold;
 	color:var(--accent-contrast);
 	transition:background 0.25s;
+}
+.settings-section .action-button:first-of-type {
+	margin-left:0;
 }
 #desktop .settings-section .action-button:hover {
 	background:var(--accent-second);

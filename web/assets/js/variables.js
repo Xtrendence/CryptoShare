@@ -36,3 +36,4 @@ let settingsToggleTheme = document.getElementById("settings-toggle-theme");
 let settingsToggleBackground = document.getElementById("settings-toggle-background");
 
 let buttonSettingsLogout = document.getElementById("button-settings-logout");
+let buttonSettingsLogoutEverywhere = document.getElementById("button-settings-logout-everywhere");

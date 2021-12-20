@@ -83,6 +83,17 @@ const httpServer = createServer();
 		}
 	});
 
+	app.post("/logoutEverywhere", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
+
+		try {
+			response.send({ response:await Utils.logoutEverywhere(userID, token) });
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
+
 	app.post("/verifyToken", async (request, response) => {
 		let userID = request.body.userID;
 		let token = request.body.token;
