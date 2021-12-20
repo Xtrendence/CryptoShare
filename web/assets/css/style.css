@@ -546,13 +546,15 @@ html.light .login-page .toggle-container {
 	top:0;
 	left:0;
 	z-index:20;
+	text-align:center;
 	position:absolute;
 }
 .navbar {
-	display:block;
+	display:inline-block;
 	margin:20px auto 0 auto;
-	width:calc((120px + 20px) * 6 + 10px);
-	height:100px;
+	width:auto;
+	height:auto;
+	padding-bottom:10px;
 	border-radius:var(--border-radius);
 	background:var(--main-second-transparent);
 	backdrop-filter:blur(2px);
@@ -561,8 +563,8 @@ html.light .login-page .toggle-container {
 }
 .navbar .item {
 	cursor:pointer;
-	width:120px;
-	height:80px;
+	width:104px;
+	height:74px;
 	vertical-align:top;
 	display:inline-block;
 	margin:10px 10px 0 10px;
@@ -584,9 +586,13 @@ html.light .login-page .toggle-container {
 	fill:var(--main-contrast);
 }
 .navbar .item span {
+	width:100%;
+	overflow:hidden;
+	white-space:nowrap;
+	text-overflow:ellipsis;
 	margin-top:5px;
 	display:block;
-	font-size:16px;
+	font-size:14px;
 	font-weight:bold;
 	color:var(--main-contrast);
 }

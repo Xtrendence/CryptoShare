@@ -165,7 +165,8 @@ function clearActiveNavbarItem() {
 
 function switchPage(page) {
 	document.getElementById(`navbar-${page}`).classList.add("active");
-	
+	document.getElementById(`page-${page}`).classList.remove("hidden");
+
 	switch(page) {
 		case "chatbot":
 			break;
