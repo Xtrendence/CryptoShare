@@ -577,13 +577,13 @@ html.light .toggle-container {
 	border-radius:var(--border-radius);
 }
 .navbar .item.active {
-	border-color:var(--accent-second);
-	background:var(--accent-second);
+	border-color:var(--accent-first);
+	background:var(--accent-first);
 	pointer-events:none;
 }
 #desktop .navbar .item:hover {
-	border-color:var(--accent-second);
-	background:var(--accent-second);
+	border-color:var(--accent-first);
+	background:var(--accent-first);
 }
 #desktop .navbar .item:hover span, .navbar .item.active span {
 	color:var(--accent-contrast);

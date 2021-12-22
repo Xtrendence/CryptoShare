@@ -100,6 +100,9 @@ function attemptLogin() {
 			divLoading.classList.add("hidden");
 
 			if("error" in result) {
+				if(result.error.includes("Invalid")) {
+					removeAccountInfo();
+				}
 				Notify.error({
 					title: "Error",
 					description: result.error,
