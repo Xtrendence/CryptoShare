@@ -71,8 +71,7 @@ export async function updateUser({ token, userID, password, key }: any) {
 	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
-		let hashedPassword = bcrypt.hashSync(password, 10);
-		db.runQuery("UPDATE User SET password = ?, key = ? WHERE userID = ?", [hashedPassword, key, userID]);
+		db.runQuery("UPDATE User SET key = ? WHERE userID = ?", [key, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
