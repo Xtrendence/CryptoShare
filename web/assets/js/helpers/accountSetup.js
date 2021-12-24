@@ -84,20 +84,18 @@ async function accountSetup() {
 					popup.setSize(400, "auto");
 					popup.setHTML(`<span>Would you like the background to be animated? This uses more system resources, and may reduce battery life if your device runs on a battery.</span><div class="toggle-wrapper" id="popup-toggle-background"><div class="toggle-container"></div></div>`);
 
-					let toggle = document.getElementById("popup-toggle-background");
+					let toggleBackground = document.getElementById("popup-toggle-background");
 
 					if(applicationBackground === "animated") {
-						toggle.classList.add("active");
+						toggleBackground.classList.add("active");
 					}
 
-					toggle.addEventListener("click", () => {
-						if(toggle.classList.contains("active")) {
-							applicationBackground = "static";
-							toggle.classList.remove("active");
+					toggleBackground.addEventListener("click", () => {
+						if(toggleBackground.classList.contains("active")) {
+							toggleBackground.classList.remove("active");
 							setBackground("static", applicationTheme);
 						} else {
-							applicationBackground = "animated";
-							toggle.classList.add("active");
+							toggleBackground.classList.add("active");
 							setBackground("animated", applicationTheme);
 						}
 					});
@@ -106,11 +104,36 @@ async function accountSetup() {
 
 					break;
 				case 4:
+					popup.setSize(400, "auto");
+					popup.setHTML(`<span>Would you like to enable sound effects that play when you interact with the application?</span><div class="toggle-wrapper" id="popup-toggle-sounds"><div class="toggle-container"></div></div>`);
+
+					let toggleSounds = document.getElementById("popup-toggle-sounds");
+
+					if(applicationSounds === "enabled") {
+						toggleSounds.classList.add("active");
+					}
+
+					toggleSounds.addEventListener("click", () => {
+						if(toggleSounds.classList.contains("active")) {
+							toggleSounds.classList.remove("active");
+							setTimeout(() => {
+								setSounds("disabled");
+							}, 50);
+						} else {
+							toggleSounds.classList.add("active");
+							setSounds("enabled");
+						}
+					});
+
+					count++;
+
+					break;
+				case 5:
 					popup.setOptions({ confirmText:"Finish" });
 					popup.setHTML(`<span>If you aren't hosting CryptoShare yourself, please be aware that whoever is hosting it can modify the code to steal your financial data, so make sure you trust them.</span>`);
 					count++;
 					break;
-				case 5:
+				case 6:
 					createAccount(username, inputCreatePassword.value).then(result => {
 						if(result.data.createUser === "Done") {
 							popup.hide();

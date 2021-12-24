@@ -8,7 +8,20 @@ window.addEventListener("resize", () => {
 
 // TODO: Remove after development.
 document.addEventListener("click", (event) => {
-	// console.log(event.target);
+	let audible = audibleElement(event.target);
+	if(applicationSounds === "enabled" && audioPlayable && audible.audible) {
+		if(audible.type === "switch") {
+			audioSwitch.currentTime = 0;
+			audioSwitch.play();
+		} else {
+			audioPop.currentTime = 0;
+			audioPop.play();
+		}
+	}
+});
+
+audioPop.addEventListener("canplay", () => {
+	audioPlayable = true;
 });
 
 buttonNewAccount.addEventListener("click", () => {
@@ -68,11 +81,19 @@ settingsToggleTheme.addEventListener("click", () => {
 
 settingsToggleBackground.addEventListener("click", () => {
 	if(settingsToggleBackground.classList.contains("active")) {
-		applicationBackground = "static";
 		setBackground("static", applicationTheme);
 	} else {
-		applicationBackground = "animated";
 		setBackground("animated", applicationTheme);
+	}
+});
+
+settingsToggleSounds.addEventListener("click", () => {
+	if(settingsToggleSounds.classList.contains("active")) {
+		setTimeout(() => {
+			setSounds("disabled");
+		}, 50);
+	} else {
+		setSounds("enabled");
 	}
 });
 

@@ -19,3 +19,11 @@ Contrived for investors and the financially diligent, who lack the ability to ma
 - Desktop App - NeutralinoJS, EJS, HTML, CSS, JavaScript
 
 - Mobile App - React Native, TypeScript
+
+### Attributions
+
+BG Jar: https://bgjar.com/
+
+Pop Sound: https://freesound.org/people/InspectorJ/sounds/411639/
+
+Switch Sound: https://freesound.org/people/patchytherat/sounds/531391/

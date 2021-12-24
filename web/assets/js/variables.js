@@ -4,6 +4,11 @@ let DOMCache = document.getElementById("dom-cache");
 
 let applicationTheme = empty(localStorage.getItem("theme")) ? "dark" : localStorage.getItem("theme");
 let applicationBackground = empty(localStorage.getItem("background")) ? "animated" : localStorage.getItem("background");
+let applicationSounds = empty(localStorage.getItem("sounds")) ? "enabled" : localStorage.getItem("sounds");
+
+let audioPlayable = false;
+let audioPop = document.getElementById("audio-pop");
+let audioSwitch = document.getElementById("audio-switch");
 
 let divAnimatedBackground = document.getElementById("animated-background");
 let divStaticBackground = document.getElementById("static-background");
@@ -34,6 +39,7 @@ let divPageSettings = document.getElementById("settings-page");
 
 let settingsToggleTheme = document.getElementById("settings-toggle-theme");
 let settingsToggleBackground = document.getElementById("settings-toggle-background");
+let settingsToggleSounds = document.getElementById("settings-toggle-sounds");
 
 let buttonSettingsLogout = document.getElementById("button-settings-logout");
 let buttonSettingsLogoutEverywhere = document.getElementById("button-settings-logout-everywhere");
