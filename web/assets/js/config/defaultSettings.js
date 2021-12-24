@@ -6,5 +6,5 @@ let defaultSettings = {
 
 let defaultChoices = {
 	"default-page": "market",
-	"default-settings-page": "appearance"
+	"default-settings-page": "behavior"
 };

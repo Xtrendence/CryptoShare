@@ -757,6 +757,11 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 	background:none;
+	color:var(--accent-first);
+}
+html.light .settings-section .choice-button {
+	color:var(--main-contrast-darker);
+	border-color:var(--main-contrast-darker);
 }
 .settings-section .action-button:first-of-type, .settings-section .choice-button:first-of-type {
 	margin-left:0;
@@ -764,10 +769,11 @@ html.light .toggle-container {
 #desktop .settings-section .action-button:hover {
 	background:var(--accent-second);
 }
-#desktop .settings-section .choice-button:hover, .settings-section .choice-button.active {
+#desktop .settings-section .choice-button:hover, .settings-section .choice-button.active, html.light .settings-section .choice-button.active {
 	background:var(--accent-first);
+	border-color:var(--accent-first);
+	color:var(--accent-contrast);
 }
 .settings-section .choice-button.active {
 	pointer-events:none;
-	background:var(--accent-first);
 }

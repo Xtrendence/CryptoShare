@@ -36,3 +36,4 @@ let settingsToggleSounds = document.getElementById("settings-toggle-sounds");
 
 let buttonSettingsLogout = document.getElementById("button-settings-logout");
 let buttonSettingsLogoutEverywhere = document.getElementById("button-settings-logout-everywhere");
+let buttonSettingsReset = document.getElementById("button-settings-reset");

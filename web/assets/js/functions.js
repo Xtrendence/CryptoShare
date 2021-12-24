@@ -380,6 +380,19 @@ function setSettingsPage(page) {
 	document.getElementById(`settings-page-${page}`).classList.remove("hidden");
 }
 
+function resetSettings() {
+	showLoading(4000, "Resetting Settings...");
+	
+	localStorage.removeItem("theme");
+	localStorage.removeItem("background");
+	localStorage.removeItem("sounds");
+	localStorage.removeItem("choices");
+
+	setTimeout(() => {
+		window.location.reload();
+	}, 3500);
+}
+
 function showLoading(limit, text = "") {
 	hideLoading();
 

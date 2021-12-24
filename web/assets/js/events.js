@@ -157,3 +157,13 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 		});
 	});
 });
+
+buttonSettingsReset.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`);
+	popup.show();
+
+	popup.on("confirm", () => {
+		popup.hide();
+		resetSettings();
+	});
+});
