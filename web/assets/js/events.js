@@ -2,14 +2,14 @@ let resizeTimeout;
 window.addEventListener("resize", () => {
 	clearTimeout(resizeTimeout);
 	resizeTimeout = setTimeout(() => {
-		particlesJS("animated-background", particlesConfig[applicationTheme]);
+		particlesJS("animated-background", particlesConfig[applicationSettings.theme]);
 	}, 250);
 });
 
 // TODO: Remove after development.
 document.addEventListener("click", (event) => {
 	let audible = audibleElement(event.target);
-	if(applicationSounds === "enabled" && audioPlayable && audible.audible) {
+	if(applicationSettings.sounds === "enabled" && audioPlayable && audible.audible) {
 		if(audible.type === "switch") {
 			audioSwitch.currentTime = 0;
 			audioSwitch.play();
@@ -81,9 +81,9 @@ settingsToggleTheme.addEventListener("click", () => {
 
 settingsToggleBackground.addEventListener("click", () => {
 	if(settingsToggleBackground.classList.contains("active")) {
-		setBackground("static", applicationTheme);
+		setBackground("static", applicationSettings.theme);
 	} else {
-		setBackground("animated", applicationTheme);
+		setBackground("animated", applicationSettings.theme);
 	}
 });
 

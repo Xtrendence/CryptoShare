@@ -1,8 +1,10 @@
 detectMobile() ? document.body.id = "mobile" : document.body.id = "desktop";
 
-setTheme(applicationTheme);
+setTheme(applicationSettings.theme);
 
-setSounds(applicationSounds);
+setSounds(applicationSettings.sounds);
+
+setSettingsChoices(applicationChoices);
 
 updatePasswordFields();
 
@@ -12,4 +14,8 @@ addNavbarEvents();
 
 addSettingsNavbarEvents();
 
-setPage("settings");
+addSettingsChoiceEvents();
+
+setPage(applicationChoices["default-page"]);
+
+setSettingsPage(applicationChoices["default-settings-page"]);

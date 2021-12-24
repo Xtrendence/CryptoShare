@@ -58,7 +58,7 @@ async function accountSetup() {
 
 					let images = popup.element.getElementsByTagName("img");
 					for(let i = 0; i < images.length; i++) {
-						if(images[i].id.includes(applicationTheme)) {
+						if(images[i].id.includes(applicationSettings.theme)) {
 							images[i].classList.add("active");
 						}
 
@@ -86,17 +86,17 @@ async function accountSetup() {
 
 					let toggleBackground = document.getElementById("popup-toggle-background");
 
-					if(applicationBackground === "animated") {
+					if(applicationSettings.background === "animated") {
 						toggleBackground.classList.add("active");
 					}
 
 					toggleBackground.addEventListener("click", () => {
 						if(toggleBackground.classList.contains("active")) {
 							toggleBackground.classList.remove("active");
-							setBackground("static", applicationTheme);
+							setBackground("static", applicationSettings.theme);
 						} else {
 							toggleBackground.classList.add("active");
-							setBackground("animated", applicationTheme);
+							setBackground("animated", applicationSettings.theme);
 						}
 					});
 
@@ -109,7 +109,7 @@ async function accountSetup() {
 
 					let toggleSounds = document.getElementById("popup-toggle-sounds");
 
-					if(applicationSounds === "enabled") {
+					if(applicationSettings.sounds === "enabled") {
 						toggleSounds.classList.add("active");
 					}
 

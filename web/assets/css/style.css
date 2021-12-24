@@ -44,6 +44,10 @@ a {
 	z-index:-1;
 }
 
+#web .app-only {
+	display:none;
+}
+
 ::-webkit-scrollbar, div::-webkit-scrollbar {
 	display:block;
 	width:4px;
@@ -699,18 +703,29 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-second);
 	display:inline-flex;
+	flex-direction:column;
 	justify-content:center;
 	align-items:center;
 	padding:10px;
 	border-radius:var(--border-radius);
-	margin-right:20px;
+	margin:0 20px 20px 0;
 	min-height:64px;
 }
 .settings-section .title {
 	font-size:18px;
 	font-weight:bold;
-	vertical-align:middle;
-	margin-right:20px;
+	display:block;
+	margin:0 auto 10px auto;
+}
+.settings-section .content {
+	max-width:240px;
+}
+.settings-section .content.block .action-button, .settings-section .content.block .choice-button {
+	display:block;
+	margin:0 auto 10px auto;
+}
+.settings-section .content.block .action-button:last-of-type, .settings-section .content.block .choice-button:last-of-type {
+	margin-bottom:0;
 }
 .settings-section .toggle-wrapper {
 	width:70px;
@@ -718,7 +733,7 @@ html.light .toggle-container {
 	border-radius:17.5px;
 	vertical-align:middle;
 }
-.settings-section .action-button {
+.settings-section .action-button, .settings-section .choice-button {
 	display:inline-block;
 	vertical-align:middle;
 	padding:0 10px 0 10px;
@@ -731,9 +746,23 @@ html.light .toggle-container {
 	color:var(--accent-contrast);
 	transition:background 0.25s;
 }
-.settings-section .action-button:first-of-type {
+.settings-section .choice-button {
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+	background:none;
+}
+.settings-section .action-button:first-of-type, .settings-section .choice-button:first-of-type {
 	margin-left:0;
 }
 #desktop .settings-section .action-button:hover {
 	background:var(--accent-second);
+}
+#desktop .settings-section .choice-button:hover, .settings-section .choice-button.active {
+	background:var(--accent-first);
+}
+.settings-section .choice-button.active {
+	pointer-events:none;
+	background:var(--accent-first);
 }

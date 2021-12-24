@@ -1,5 +1,5 @@
 function setTheme(theme) {
-	applicationTheme = theme;
+	applicationSettings.theme = theme;
 
 	let themeToggles = document.getElementsByClassName("toggle-wrapper theme");
 	let favicons = document.getElementsByClassName("favicon");
@@ -21,7 +21,7 @@ function setTheme(theme) {
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
 
-		setBackground(applicationBackground, theme);
+		setBackground(applicationSettings.background, theme);
 	} else {
 		browserTheme.setAttribute("content", "#000000");
 
@@ -38,7 +38,7 @@ function setTheme(theme) {
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
 
-		setBackground(applicationBackground, theme);
+		setBackground(applicationSettings.background, theme);
 	}
 }
 
@@ -46,7 +46,7 @@ function setBackground(background, theme) {
 	let backgroundToggles = document.getElementsByClassName("toggle-wrapper background");
 
 	if(background === "animated") {
-		applicationBackground = "animated";
+		applicationSettings.background = "animated";
 
 		for(let i = 0; i < backgroundToggles.length; i++) {
 			backgroundToggles[i].classList.add("active");
@@ -57,7 +57,7 @@ function setBackground(background, theme) {
 		divStaticBackground.classList.add("hidden");
 		particlesJS("animated-background", particlesConfig[theme]);
 	} else {
-		applicationBackground = "static";
+		applicationSettings.background = "static";
 
 		for(let i = 0; i < backgroundToggles.length; i++) {
 			backgroundToggles[i].classList.remove("active");
@@ -75,7 +75,7 @@ function setSounds(sounds) {
 	let soundToggles = document.getElementsByClassName("toggle-wrapper sounds");
 
 	if(sounds === "enabled") {
-		applicationSounds = "enabled";
+		applicationSettings.sounds = "enabled";
 
 		for(let i = 0; i < soundToggles.length; i++) {
 			soundToggles[i].classList.add("active");
@@ -83,7 +83,7 @@ function setSounds(sounds) {
 
 		localStorage.setItem("sounds", "enabled");
 	} else {
-		applicationSounds = "disabled";
+		applicationSettings.sounds = "disabled";
 
 		for(let i = 0; i < soundToggles.length; i++) {
 			soundToggles[i].classList.remove("active");
@@ -290,6 +290,88 @@ function clearActiveSettingsPage() {
 	}
 }
 
+function addSettingsChoiceEvents() {
+	let buttons = divPageSettings.getElementsByClassName("choice-button");
+	for(let i = 0; i < buttons.length; i++) {
+		let button = buttons[i];
+
+		button.addEventListener("click", () => {
+			let key = button.parentElement.parentElement.getAttribute("data-key");
+			let value = button.getAttribute("data-value");
+			setChoice(key, value);
+			setSettingsChoices(getSettingsChoices());
+		});
+	}
+}
+
+function setChoice(key, value) {
+	let choicesJSON = localStorage.getItem("choices");
+	let choices = defaultChoices;
+
+	if(!empty(choicesJSON) && validJSON(choicesJSON)) {
+		let parsed = JSON.parse(choicesJSON);
+
+		Object.keys(parsed).map(choice => {
+			choices[choice] = parsed[choice];
+		});
+	}
+	
+	choices[key] = value;
+
+	localStorage.setItem("choices", JSON.stringify(choices));
+}
+
+function getSettings() {
+	let settings = {};
+
+	settings["theme"] = empty(localStorage.getItem("theme")) ? defaultSettings.theme : localStorage.getItem("theme");
+	settings["background"] = empty(localStorage.getItem("background")) ? defaultSettings.background : localStorage.getItem("background");
+	settings["sounds"] = empty(localStorage.getItem("sounds")) ? defaultSettings.sounds : localStorage.getItem("sounds");
+
+	return settings;
+}
+
+function getSettingsChoices() {
+	let choicesJSON = localStorage.getItem("choices");
+
+	if(empty(choicesJSON) || !validJSON(choicesJSON)) {
+		return defaultChoices;
+	} else {
+		let choices = {};
+
+		let parsed = JSON.parse(choicesJSON);
+
+		let keys = Object.keys(parsed);
+
+		keys.map(key => {
+			choices[key] = parsed[key];
+		});
+
+		return choices;
+	}
+}
+
+function setSettingsChoices(choices) {
+	let sections = divPageSettings.getElementsByClassName("settings-section");
+
+	for(let i = 0; i < sections.length; i++) {
+		let section = sections[i];
+		let key = section.getAttribute("data-key");
+		let buttons = section.getElementsByClassName("choice-button");
+
+		for(let j = 0; j < buttons.length; j++) {
+			let button = buttons[j];
+			let value = button.getAttribute("data-value");
+			
+			button.classList.remove("active");
+
+			if(value === choices[key]) {
+				button.classList.add("active");
+			}
+		}
+	}
+}
+
 function setSettingsPage(page) {
 	clearActiveSettingsNavbarItem();
 	clearActiveSettingsPage();
@@ -318,27 +400,31 @@ function hideLoading() {
 }
 
 function audibleElement(element) {
-	let tags = ["svg", "path", "button"];
-	let popType = ["item", "audible-pop"];
-	let switchType = ["toggle-wrapper", "toggle-container", "audible-switch"];
+	try {
+		let tags = ["svg", "path", "button"];
+		let popType = ["item", "audible-pop"];
+		let switchType = ["toggle-wrapper", "toggle-container", "audible-switch"];
 
-	for(let i = 0; i < popType.length; i++) {
-		if(element.classList.contains(popType[i]) || element.parentElement.classList.contains(popType[i])) {
-			return { audible:true, type:"pop" };
+		for(let i = 0; i < popType.length; i++) {
+			if(element.classList.contains(popType[i]) || element.parentElement.classList.contains(popType[i])) {
+				return { audible:true, type:"pop" };
+			}
 		}
-	}
 
-	for(let i = 0; i < switchType.length; i++) {
-		if(element.classList.contains(switchType[i]) || element.parentElement.classList.contains(switchType[i])) {
-			return { audible:true, type:"switch" };
+		for(let i = 0; i < switchType.length; i++) {
+			if(element.classList.contains(switchType[i]) || element.parentElement.classList.contains(switchType[i])) {
+				return { audible:true, type:"switch" };
+			}
 		}
-	}
-	
-	for(let i = 0; i < tags.length; i++) {
-		if(element.tagName.toLowerCase() === tags[i] || element.parentElement.tagName.toLowerCase() === tags[i]) {
-			return { audible:true, type:"pop" };
+		
+		for(let i = 0; i < tags.length; i++) {
+			if(element.tagName.toLowerCase() === tags[i] || element.parentElement.tagName.toLowerCase() === tags[i]) {
+				return { audible:true, type:"pop" };
+			}
 		}
-	}
 
-	return { audible:false };
+		return { audible:false };
+	} catch(error) {
+		return { audible:false, error:error };
+	}
 }

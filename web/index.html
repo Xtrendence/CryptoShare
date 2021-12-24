@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="web">
 	<head>
 		<script src="./assets/js/lib/jquery.js"></script>
 		<script src="./assets/js/lib/crypto-js.js"></script>
@@ -128,37 +128,73 @@
 					<div class="settings-page appearance" id="settings-page-appearance">
 						<div class="settings-section noselect">
 							<span class="title">Theme</span>
-							<div class="toggle-wrapper theme" id="settings-toggle-theme">
-								<div class="toggle-container">
-									<svg class="moon-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1390 1303q-54 9-110 9-182 0-337-90t-245-245-90-337q0-192 104-357-201 60-328.5 229t-127.5 384q0 130 51 248.5t136.5 204 204 136.5 248.5 51q144 0 273.5-61.5t220.5-171.5zm203-85q-94 203-283.5 324.5t-413.5 121.5q-156 0-298-61t-245-164-164-245-61-298q0-153 57.5-292.5t156-241.5 235.5-164.5 290-68.5q44-2 61 39 18 41-15 72-86 78-131.5 181.5t-45.5 218.5q0 148 73 273t198 198 273 73q118 0 228-51 41-18 72 13 14 14 17.5 34t-4.5 38z"/></svg>
-									<svg class="sun-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1472 896q0-117-45.5-223.5t-123-184-184-123-223.5-45.5-223.5 45.5-184 123-123 184-45.5 223.5 45.5 223.5 123 184 184 123 223.5 45.5 223.5-45.5 184-123 123-184 45.5-223.5zm276 277q-4 15-20 20l-292 96v306q0 16-13 26-15 10-29 4l-292-94-180 248q-10 13-26 13t-26-13l-180-248-292 94q-14 6-29-4-13-10-13-26v-306l-292-96q-16-5-20-20-5-17 4-29l180-248-180-248q-9-13-4-29 4-15 20-20l292-96v-306q0-16 13-26 15-10 29-4l292 94 180-248q9-12 26-12t26 12l180 248 292-94q14-6 29 4 13 10 13 26v306l292 96q16 5 20 20 5 16-4 29l-180 248 180 248q9 12 4 29z"/></svg>
+							<div class="content">
+								<div class="toggle-wrapper theme" id="settings-toggle-theme">
+									<div class="toggle-container">
+										<svg class="moon-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1390 1303q-54 9-110 9-182 0-337-90t-245-245-90-337q0-192 104-357-201 60-328.5 229t-127.5 384q0 130 51 248.5t136.5 204 204 136.5 248.5 51q144 0 273.5-61.5t220.5-171.5zm203-85q-94 203-283.5 324.5t-413.5 121.5q-156 0-298-61t-245-164-164-245-61-298q0-153 57.5-292.5t156-241.5 235.5-164.5 290-68.5q44-2 61 39 18 41-15 72-86 78-131.5 181.5t-45.5 218.5q0 148 73 273t198 198 273 73q118 0 228-51 41-18 72 13 14 14 17.5 34t-4.5 38z"/></svg>
+										<svg class="sun-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1472 896q0-117-45.5-223.5t-123-184-184-123-223.5-45.5-223.5 45.5-184 123-123 184-45.5 223.5 45.5 223.5 123 184 184 123 223.5 45.5 223.5-45.5 184-123 123-184 45.5-223.5zm276 277q-4 15-20 20l-292 96v306q0 16-13 26-15 10-29 4l-292-94-180 248q-10 13-26 13t-26-13l-180-248-292 94q-14 6-29-4-13-10-13-26v-306l-292-96q-16-5-20-20-5-17 4-29l180-248-180-248q-9-13-4-29 4-15 20-20l292-96v-306q0-16 13-26 15-10 29-4l292 94 180-248q9-12 26-12t26 12l180 248 292-94q14-6 29 4 13 10 13 26v306l292 96q16 5 20 20 5 16-4 29l-180 248 180 248q9 12 4 29z"/></svg>
+									</div>
 								</div>
 							</div>
 						</div>
 						<div class="settings-section noselect">
 							<span class="title">Animated Background</span>
-							<div class="toggle-wrapper background" id="settings-toggle-background">
-								<div class="toggle-container"></div>
+							<div class="content">
+								<div class="toggle-wrapper background" id="settings-toggle-background">
+									<div class="toggle-container"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="settings-page behavior hidden" id="settings-page-behavior">
+						<div class="settings-section noselect" data-key="default-page">
+							<span class="title">Default Page</span>
+							<div class="content block">
+								<button class="choice-button" data-value="chatbot">Chat Bot</button>
+								<button class="choice-button" data-value="dashboard">Dashboard</button>
+								<button class="choice-button" data-value="market">Market</button>
+								<button class="choice-button" data-value="holdings">Holdings</button>
+								<button class="choice-button" data-value="activity">Activity</button>
+								<button class="choice-button" data-value="settings">Settings</button>
+							</div>
+						</div>
+						<div class="settings-section noselect" data-key="default-settings-page">
+							<span class="title">Default Settings Page</span>
+							<div class="content block">
+								<button class="choice-button" data-value="appearance">Appearance</button>
+								<button class="choice-button" data-value="behavior">Behavior</button>
+								<button class="choice-button" data-value="account">Account</button>
+								<button class="choice-button" data-value="data">Data</button>
+								<button class="choice-button" data-value="other">Other</button>
+							</div>
+						</div>
 						<div class="settings-section noselect">
 							<span class="title">Sound Effects</span>
-							<div class="toggle-wrapper sounds" id="settings-toggle-sounds">
-								<div class="toggle-container"></div>
+							<div class="content">
+								<div class="toggle-wrapper sounds" id="settings-toggle-sounds">
+									<div class="toggle-container"></div>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="settings-page account hidden" id="settings-page-account">
 						<div class="settings-section noselect">
 							<span class="title">Account</span>
-							<button class="action-button" id="button-settings-logout">Logout</button>
-							<button class="action-button" id="button-settings-logout-everywhere">Logout Everywhere</button>
+							<div class="content block">
+								<button class="action-button" id="button-settings-logout">Logout</button>
+								<button class="action-button" id="button-settings-logout-everywhere">Logout Everywhere</button>
+							</div>
 						</div>
 					</div>
 					<div class="settings-page data hidden" id="settings-page-data"></div>
-					<div class="settings-page other hidden" id="settings-page-other"></div>
+					<div class="settings-page other hidden" id="settings-page-other">
+						<div class="settings-section noselect app-only">
+							<span class="title">API</span>
+							<div class="content">
+								<button class="action-button" id="button-settings-api-url">Set URL</button>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -173,10 +209,12 @@
 			</div>
 		</noscript>
 		<!-- DOM-Dependent JS Imports -->
+		<script src="./assets/js/config/defaultSettings.js"></script>
 		<script src="./assets/js/config/particlesConfig.js"></script>
-		<script src="./assets/js/variables.js"></script>
+		<script src="./assets/js/elements.js"></script>
 		<script src="./assets/js/requests.js"></script>
 		<script src="./assets/js/functions.js"></script>
+		<script src="./assets/js/variables.js"></script>
 		<script src="./assets/js/helpers/accountSetup.js"></script>
 		<script src="./assets/js/events.js"></script>
 		<script src="./assets/js/main.js"></script>
