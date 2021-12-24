@@ -40,87 +40,91 @@ const httpServer = createServer();
 	app.use(express.json());
 	app.use(express.static(webFolder));
 
-	app.use("/graphql", graphqlHTTP({ 
-		schema: schema,
-		rootValue: resolvers,
-		graphiql: true,
-		customFormatErrorFn: (error): any => {
-			return error.message.split("!")[1];
-		}
-	}));
+	console.log(`Starting Server... (${new Date().toTimeString().split(" ")[0]})`);
 
-	app.listen(portAPI, () => {
-		console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
-	});
+	setTimeout(() => {
+		app.use("/graphql", graphqlHTTP({ 
+			schema: schema,
+			rootValue: resolvers,
+			graphiql: true,
+			customFormatErrorFn: (error): any => {
+				return error.message.split("!")[1];
+			}
+		}));
 
-	app.get("/", (request, response) => {
-		try {
-			response.sendFile(indexFile);
-		} catch(error) {
-			console.log(error);
-		}
-	});
+		app.listen(portAPI, () => {
+			console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
+		});
 
-	app.post("/login", async (request, response) => {
-		let username = request.body.username;
-		let password = request.body.password;
+		app.get("/", (request, response) => {
+			try {
+				response.sendFile(indexFile);
+			} catch(error) {
+				console.log(error);
+			}
+		});
 
-		try {
-			response.send(await Utils.login(username, password));
-		} catch(error) {
-			response.send({ error:error });
-		}
-	});
+		app.post("/login", async (request, response) => {
+			let username = request.body.username;
+			let password = request.body.password;
 
-	app.post("/logout", async (request, response) => {
-		let userID = request.body.userID;
-		let token = request.body.token;
+			try {
+				response.send(await Utils.login(username, password));
+			} catch(error) {
+				response.send({ error:error });
+			}
+		});
 
-		try {
-			response.send({ response:await Utils.logout(userID, token) });
-		} catch(error) {
-			response.send({ error:error });
-		}
-	});
+		app.post("/logout", async (request, response) => {
+			let userID = request.body.userID;
+			let token = request.body.token;
 
-	app.post("/logoutEverywhere", async (request, response) => {
-		let userID = request.body.userID;
-		let token = request.body.token;
+			try {
+				response.send({ response:await Utils.logout(userID, token) });
+			} catch(error) {
+				response.send({ error:error });
+			}
+		});
 
-		try {
-			response.send({ response:await Utils.logoutEverywhere(userID, token) });
-		} catch(error) {
-			response.send({ error:error });
-		}
-	});
+		app.post("/logoutEverywhere", async (request, response) => {
+			let userID = request.body.userID;
+			let token = request.body.token;
 
-	app.post("/changePassword", async (request, response) => {
-		let userID = request.body.userID;
-		let token = request.body.token;
-		let currentPassword = request.body.currentPassword;
-		let newPassword = request.body.newPassword;
+			try {
+				response.send({ response:await Utils.logoutEverywhere(userID, token) });
+			} catch(error) {
+				response.send({ error:error });
+			}
+		});
 
-		try {
-			response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
-		} catch(error) {
-			response.send({ error:error });
-		}
-	});
+		app.post("/changePassword", async (request, response) => {
+			let userID = request.body.userID;
+			let token = request.body.token;
+			let currentPassword = request.body.currentPassword;
+			let newPassword = request.body.newPassword;
 
-	app.post("/verifyToken", async (request, response) => {
-		let userID = request.body.userID;
-		let token = request.body.token;
+			try {
+				response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
+			} catch(error) {
+				response.send({ error:error });
+			}
+		});
 
-		try {
-			response.send(await Utils.verifyToken(userID, token));
-		} catch(error) {
-			response.send({ error:error });
-		}
-	});
+		app.post("/verifyToken", async (request, response) => {
+			let userID = request.body.userID;
+			let token = request.body.token;
 
-	httpServer.listen(portBot, () => {
-		console.log(`Bot Server Listening At http://localhost:${portBot}`);
-	});
+			try {
+				response.send(await Utils.verifyToken(userID, token));
+			} catch(error) {
+				response.send({ error:error });
+			}
+		});
 
-	console.log("Starting Server... ", new Date().toTimeString().split(" ")[0]);
+		httpServer.listen(portBot, () => {
+			console.log(`Bot Server Listening At http://localhost:${portBot}`);
+		});
+
+		console.log(`Started Server (${new Date().toTimeString().split(" ")[0]})`);
+	}, 1500);
 })();
