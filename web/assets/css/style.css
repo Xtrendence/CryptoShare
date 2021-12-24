@@ -716,6 +716,9 @@ html.light .toggle-container {
 	font-weight:bold;
 	display:block;
 	margin:0 auto 10px auto;
+	padding:10px;
+	border-radius:var(--border-radius);
+	background:var(--main-fourth);
 }
 .settings-section .content {
 	max-width:240px;
@@ -732,6 +735,8 @@ html.light .toggle-container {
 	height:35px;
 	border-radius:17.5px;
 	vertical-align:middle;
+	margin-top:5px;
+	margin-bottom:5px;
 }
 .settings-section .action-button, .settings-section .choice-button {
 	display:inline-block;
