@@ -158,6 +158,62 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsPassword.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Change Password", `<input type="password" id="popup-input-current-password" placeholder="Current Password..."><input type="password" id="popup-input-new-password" placeholder="New Password..."><input type="password" id="popup-input-repeat-password" placeholder="Repeat Password...">`);
+	popup.show();
+
+	popup.on("confirm", () => {
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let currentPassword = document.getElementById("popup-input-current-password").value;
+		let newPassword = document.getElementById("popup-input-new-password").value;
+		let repeatPassword = document.getElementById("popup-input-repeat-password").value;
+
+		if(newPassword === repeatPassword) {
+			changePassword(userID, token, currentPassword, newPassword).then(response => {
+				if("error" in response) {
+					Notify.error({
+						title: "Error",
+						description: response.error,
+						duration: 5000,
+						background: "var(--accent-second)",
+						color: "var(--accent-contrast)"
+					});
+				} else {
+					if("username" in response) {
+						Notify.success({
+							title: "Password Changed",
+							description: "Your password has been changed.",
+							duration: 5000,
+							background: "var(--accent-second)",
+							color: "var(--accent-contrast)"
+						});
+
+						popup.hide();
+					}
+				}
+			}).catch(error => {
+				Notify.error({
+					title: "Error",
+					description: error,
+					duration: 5000,
+					background: "var(--accent-second)",
+					color: "var(--accent-contrast)"
+				});
+			});
+		} else {
+			Notify.error({
+				title: "Error",
+				description: "Passwords don't match.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+		}
+	});
+});
+
 buttonSettingsReset.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`);
 	popup.show();

@@ -62,6 +62,17 @@ function verifyToken(userID, token) {
 	return request("POST", urlAPI.replace("graphql", "verifyToken"), body);
 }
 
+function changePassword(userID, token, currentPassword, newPassword) {
+	let body = {
+		userID: userID,
+		token: token,
+		currentPassword: currentPassword,
+		newPassword: newPassword
+	};
+
+	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
+}
+
 function request(method, url, body) {
 	return new Promise((resolve, reject) => {
 		try {

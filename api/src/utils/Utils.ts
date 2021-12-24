@@ -49,6 +49,43 @@ export default class Utils {
 		});
 	}
 
+	static async changePassword(userID: number, token: string, currentPassword: string, newPassword: string) {
+		return new Promise(async (resolve, reject) => {
+			if(await this.verifyToken(userID, token)) {
+				this.db?.db?.get("SELECT * FROM User WHERE userID = ?", [userID], async (error, row) => {
+					if(error) {
+						console.log(error);
+						reject();
+					} else {
+						if(row === undefined) {
+							reject("User not found.");
+							return;
+						}
+
+						let valid = await bcrypt.compare(currentPassword, row.password);
+
+						if(valid) {
+							let hashedPassword = bcrypt.hashSync(newPassword, 10);
+							
+							this.db?.runQuery("UPDATE User SET password = ? WHERE userID = ?", [hashedPassword, userID]);
+
+							resolve(JSON.stringify({
+								userID: row.userID,
+								username: row.username,
+								key: row.key,
+								token: token
+							}));
+						} else {
+							reject("Incorrect password.");
+						}
+					}
+				});
+			} else {
+				reject("Invalid token.");
+			}
+		});
+	}
+
 	static verifyTokenTime(token: string) {
 		let now = Math.floor(new Date().getTime() / 1000);
 		let time = parseInt(token.split("-")[0]);

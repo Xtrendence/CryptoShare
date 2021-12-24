@@ -236,7 +236,7 @@ input[type=number] {
 	width:300px;
 	text-align:center;
 	background:var(--main-second-transparent);
-	backdrop-filter:blur(2px);
+	backdrop-filter:var(--blur);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
@@ -261,7 +261,7 @@ input[type=number] {
 	left:calc(50% - 300px / 2);
 	top:calc(50% - 260px / 2);
 	background:var(--main-second-transparent);
-	backdrop-filter:blur(2px);
+	backdrop-filter:var(--blur);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
@@ -281,13 +281,13 @@ input[type=number] {
 .login-page.create .create-container {
 	display:block;
 }
-.login-wrapper input {
+.login-wrapper input, .popup-wrapper input {
 	width:calc(100% - 40px);
 	display:block;
 	padding:0 10px 0 10px;
 	height:40px;
 	font-size:18px;
-	background:none;
+	background:var(--main-first);
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
@@ -297,13 +297,13 @@ input[type=number] {
 	margin:20px auto 0 auto;
 	font-weight:bold;
 }
-.login-wrapper input::placeholder {
+.login-wrapper input::placeholder, .popup-wrapper input::placeholder {
 	color:var(--accent-first);
 }
-.login-wrapper input:focus {
+.login-wrapper input:focus, .popup-wrapper input:focus {
 	border-color:var(--main-contrast);
 }
-.login-wrapper input:focus::placeholder {
+.login-wrapper input:focus::placeholder, .popup-wrapper input:focus::placeholder {
 	color:var(--main-contrast);
 }
 .login-wrapper button.action {
@@ -544,6 +544,11 @@ html.light .toggle-container {
 	margin:20px auto 0 auto;
 	display:block;
 }
+.popup-wrapper .bottom input {
+	margin:0;
+	width:100%;
+	margin-bottom:20px;
+}
 
 .navbar-wrapper {
 	height:140px;
@@ -562,7 +567,7 @@ html.light .toggle-container {
 	padding-bottom:10px;
 	border-radius:var(--border-radius);
 	background:var(--main-second-transparent);
-	backdrop-filter:blur(2px);
+	backdrop-filter:var(--blur);
 	text-align:center;
 	box-shadow:var(--shadow-smooth);
 }
@@ -617,7 +622,7 @@ html.light .toggle-container {
 	position:absolute;
 	z-index:12;
 	background:var(--main-second-transparent);
-	backdrop-filter:blur(2px);
+	backdrop-filter:var(--blur);
 	border-radius:var(--border-radius);
 	box-shadow:var(--shadow-smooth);
 	overflow:hidden auto;

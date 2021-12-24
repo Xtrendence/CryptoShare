@@ -94,6 +94,19 @@ const httpServer = createServer();
 		}
 	});
 
+	app.post("/changePassword", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
+		let currentPassword = request.body.currentPassword;
+		let newPassword = request.body.newPassword;
+
+		try {
+			response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
+
 	app.post("/verifyToken", async (request, response) => {
 		let userID = request.body.userID;
 		let token = request.body.token;
