@@ -1,25 +1,111 @@
 import { StyleSheet } from "react-native";
 import { Colors, GlobalStyle } from "./Global";
 
-export default StyleSheet.create({
+export default StyleSheet.create<any>({
 	area: {
 		width: "100%",
 		height: "100%",
 		justifyContent: "center",
 		alignItems: "center"
 	},
+	wrapper: {
+		overflow: "hidden",
+		borderRadius: GlobalStyle.borderRadius,
+		marginBottom: 20,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+		backgroundColor: Colors.Dark.mainSecond
+	},
+	wrapperLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	titleContainer: {
+		height: 50,
+		paddingRight: 10,
+		paddingLeft: 10,
+		justifyContent: "center",
+		alignItems: "center",
+		marginBottom: 3,
+	},
+	title: {
+		marginTop: 5,
+		fontSize: 30,
+		fontFamily: "Arkhip",
+		color: Colors.Dark.accentFirst,
+		textAlign: "center"
+	},
+	loginContainer: {
+		width: 220,
+		padding: 20,
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	input: {
+		width: 180,
+		borderColor: Colors.Dark.accentFirst,
+		borderWidth: 2,
+		borderRadius: GlobalStyle.borderRadius,
+		paddingLeft: 10,
+		paddingRight: 10,
+		height: 40,
+		marginBottom: 20,
+	},
+	button: {
+		width: 180,
+		justifyContent: "center",
+		alignItems: "center",
+		height: 40,
+		paddingBottom: 2,
+		borderRadius: GlobalStyle.borderRadius,
+	},
+	mainText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.mainContrast,
+	},
+	mainTextLight: {
+		color: Colors.Light.mainContrast,
+	},
+	accentText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.accentContrast,
+	},
+	accentTextLight: {
+		color: Colors.Light.accentContrast,
+	},
+	mainButton: {
+		borderColor: Colors.Dark.accentFirst,
+		borderWidth: 2,
+		marginBottom: 20,
+	},
+	mainButtonLight: {
+		borderColor: Colors.Light.accentFirst,
+	},
+	accentButton: {
+		backgroundColor: Colors.Dark.accentFirst
+	},
+	accentButtonLight: {
+		backgroundColor: Colors.Light.accentFirst
+	},
+	inputLight: {
+		borderColor: Colors.Light.accentFirst
+	},
 	trackBar: {
-		activeBackgroundColor: Colors.light.accentFirst,
-		inActiveBackgroundColor: Colors.dark.mainSecond,
-		borderActiveColor: Colors.light.accentFirst,
-		borderInActiveColor: Colors.dark.accentFirst,
+		activeBackgroundColor: Colors.Light.accentFirst,
+		inActiveBackgroundColor: Colors.Dark.mainSecond,
+		borderActiveColor: Colors.Light.accentFirst,
+		borderInActiveColor: Colors.Dark.accentFirst,
 		borderWidth: 0,
 		width: 100,
 		height: 45
 	},
 	thumbButton: {
-		activeBackgroundColor: Colors.light.mainThird,
-		inActiveBackgroundColor: Colors.dark.mainThird,
+		activeBackgroundColor: Colors.Light.mainThird,
+		inActiveBackgroundColor: Colors.Dark.mainThird,
 		height: 50,
 		width: 52,
 		radius: 25,

@@ -1,9 +1,9 @@
 export const Colors: any = {
-	light: {
+	Light: {
 		mainFirst: "rgb(255,255,255)",
 		mainFirstTransparent: "rgba(255,255,255,0.9)",
 		mainSecond: "rgb(240,240,240)",
-		mainSecondTransparent: "rgba(240,240,240,0.4)",
+		mainSecondTransparent: "rgba(240,240,240,0.7)",
 		mainThird: "rgb(230,230,230)",
 		mainFourth: "rgb(220,220,220)",
 		mainFifth: "rgb(210,210,210)",
@@ -18,7 +18,7 @@ export const Colors: any = {
 	
 		accentContrast: "rgb(255,255,255)",
 	},
-	dark: {
+	Dark: {
 		mainFirst: "rgb(20,20,20)",
 		mainFirstTransparent: "rgba(20,20,20,0.6)",
 		mainSecond: "rgb(40,40,40)",

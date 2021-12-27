@@ -1,7 +1,7 @@
 export default class Utils {
 	static getBackground(theme: string, type: string) {
 		switch(theme) {
-			case "light":
+			case "Light":
 				switch(type) {
 					case "static":
 						return require("../assets/img/BG-White-Gold.png");
@@ -9,7 +9,7 @@ export default class Utils {
 						return require("../assets/img/BG-White.png");
 				}
 				break;
-			case "dark":
+			case "Dark":
 				switch(type) {
 					case "static":
 						return require("../assets/img/BG-Black-Gold.png");

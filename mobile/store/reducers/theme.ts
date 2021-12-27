@@ -4,15 +4,15 @@ import { createSlice } from "@reduxjs/toolkit";
 export const themeSlice = createSlice({
 	name: "theme",
 	initialState: {
-		theme: "dark"
+		theme: "Dark"
 	},
 	reducers: {
 		switchTheme: (state) => {
-			if(state.theme === "dark") {
-				state.theme = "light";
+			if(state.theme === "Dark") {
+				state.theme = "Light";
 				TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content");
 			} else {
-				state.theme = "dark";
+				state.theme = "Dark";
 				TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
 			}
 		}
