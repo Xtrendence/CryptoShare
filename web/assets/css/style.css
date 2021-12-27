@@ -654,7 +654,7 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
-	border-color:var(--accent-second);
+	border-color:var(--accent-first);
 }
 .settings-navbar {
 	position:absolute;
@@ -667,7 +667,7 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:0 2px 0 0;
-	border-color:var(--accent-second);
+	border-color:var(--accent-first);
 }
 .settings-navbar .item {
 	width:100%;
@@ -676,14 +676,14 @@ html.light .toggle-container {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:0 0 2px 0;
-	border-color:var(--accent-second);
+	border-color:var(--accent-first);
 }
 .settings-navbar .item.active {
 	pointer-events:none;
-	background:var(--accent-second);
+	background:var(--accent-first);
 }
 #desktop .settings-navbar .item:hover {
-	background:var(--accent-second);
+	background:var(--accent-first);
 }
 #desktop .settings-navbar .item:hover span, .settings-navbar .item.active span {
 	color:var(--accent-contrast);

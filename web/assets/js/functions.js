@@ -58,7 +58,7 @@ function setBackground(background, theme) {
 		divAnimatedBackground.classList.remove("hidden");
 		divStaticBackground.classList.add("hidden");
 		divSimpleBackground.classList.add("hidden");
-		particlesJS("animated-background", particlesConfig[theme]);
+		particlesJS("animated-background", getParticlesConfig(theme, document.documentElement));
 	} else if(background === "static") {
 		applicationSettings.background = "static";
 

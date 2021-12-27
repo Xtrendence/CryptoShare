@@ -8,12 +8,14 @@ html.dark {
 	--main-third:rgb(50,50,50);
 	--main-fourth:rgb(60,60,60);
 	--main-fifth:rgb(75,75,75);
+
 	--main-contrast:rgb(255,255,255);
 	--main-contrast-dark:rgb(230,230,230);
 	--main-contrast-darker:rgb(200,200,200);
 
-	--accent-first:#d2af8c;
+	--accent-first:#c4a383;
 	--accent-second:#a3805e;
 	--accent-third:#866849;
+	
 	--accent-contrast:rgb(255,255,255);
 }

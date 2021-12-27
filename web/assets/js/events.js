@@ -2,7 +2,7 @@ let resizeTimeout;
 window.addEventListener("resize", () => {
 	clearTimeout(resizeTimeout);
 	resizeTimeout = setTimeout(() => {
-		particlesJS("animated-background", particlesConfig[applicationSettings.theme]);
+		particlesJS("animated-background", getParticlesConfig(applicationSettings.theme, document.documentElement));
 	}, 250);
 });
 
