@@ -8658,7 +8658,7 @@ prettier@^2.0.2:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.4.1.tgz#671e11c89c14a4cfc876ce564106c4a6726c9f5c"
   integrity sha512-9fbDAXSBcc6Bs1mZrDYb3XKzDLm4EXXL9sC1LqKP5rZkT6KRr/rf9amVUcODVXgguK/isJz0d0hP72WeaKWsvA==
 
-pretty-format@^26.4.0, pretty-format@^26.5.2, pretty-format@^26.6.2:
+pretty-format@^26.0.1, pretty-format@^26.4.0, pretty-format@^26.5.2, pretty-format@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-26.6.2.tgz#e35c2705f14cb7fe2fe94fa078345b444120fc93"
   integrity sha512-7AeGuCYNGmycyQbCqd/3PWH4eOoX/OiCa0uphp57NVTeAGdJGaAliecxwBDHYQCIvrW7aDBZCYeNTP/WX69mkg==
@@ -8835,7 +8835,7 @@ react-freeze@^1.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
+react-is@^16.13.0, react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.6:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -9116,6 +9116,22 @@ react-native-table-component@^1.2.1:
   resolved "https://registry.yarnpkg.com/react-native-table-component/-/react-native-table-component-1.2.1.tgz#5f1e0f159b1dff9df0d5601c4a5ab99d1aa99a25"
   integrity sha512-sapwO0bONfQtpWg3GVMwP5D3lGEJlxPB3c7fb0soXBynvCa+SBktacVZ9OmYJnIbRJ3uW5pS4tzNc8GmE+UScw==
 
+react-native-testing-library@^1.13.2:
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/react-native-testing-library/-/react-native-testing-library-1.14.0.tgz#d3f3d39225d2f0c1ed4d857a187b787307cd96c0"
+  integrity sha512-AzWmhe4VfkaWAvetqsbQkPVC/aMcixj26WMxtiOpXRXsKuqwR3ijQMAG/OjO5IXNixueO0VoPhvL4FeDfDtBKQ==
+  dependencies:
+    pretty-format "^26.0.1"
+
+react-native-toggle-element@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/react-native-toggle-element/-/react-native-toggle-element-1.0.1.tgz#d26e6d5d685d4d802515a9c20e6bae8a423cefb1"
+  integrity sha512-KpMB33BxZp6Zpfm1YfXuHum3GjNMnCKTdicQHDWLcSbi2WMqyLQekGhyWfvqMEVGsmbDV2XF/6jhkmxfvMRcfA==
+  dependencies:
+    prop-types "^15.7.2"
+    react-native-testing-library "^1.13.2"
+    react-test-renderer "^16.13.1"
+
 react-native-transparent-status-and-navigation-bar@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/react-native-transparent-status-and-navigation-bar/-/react-native-transparent-status-and-navigation-bar-1.0.3.tgz#367a07ef1554250439ccf4361eb69bdd38ffb239"
@@ -9284,6 +9300,16 @@ react-test-renderer@17.0.2:
     react-is "^17.0.2"
     react-shallow-renderer "^16.13.1"
     scheduler "^0.20.2"
+
+react-test-renderer@^16.13.1:
+  version "16.14.0"
+  resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.14.0.tgz#e98360087348e260c56d4fe2315e970480c228ae"
+  integrity sha512-L8yPjqPE5CZO6rKsKXRO/rVPiaCOy0tQQJbC+UjPNlobl5mad59lvPjwFsQHTvL03caVDIVr9x9/OSgDe6I5Eg==
+  dependencies:
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    react-is "^16.8.6"
+    scheduler "^0.19.1"
 
 react-timer-mixin@^0.13.4:
   version "0.13.4"
@@ -9550,13 +9576,6 @@ rimraf@~2.6.2:
   integrity sha512-mwqeW5XsA2qAejG46gYdENaxXjx9onRNCfn7L0duuP4hCuTIi/QO7PDK07KJfp1d+izWPrzEJDcSqBa0OZQriA==
   dependencies:
     glob "^7.1.3"
-
-rn-blur@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/rn-blur/-/rn-blur-3.2.3.tgz#d27f6b87bd9463708856b896690e229978a2c75d"
-  integrity sha512-OWxfps6G1DfUOOoMmalnJB30O1dCwRYO4ExXI3Y4itSyjpsJsc+bT6+6DRDBqgjb+t/cuX8NzC83GaJO06SigQ==
-  dependencies:
-    prop-types "^15.5.10"
 
 rsvp@^4.8.4:
   version "4.8.5"

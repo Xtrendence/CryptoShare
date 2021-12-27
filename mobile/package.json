@@ -58,12 +58,12 @@
 		"react-native-svg": "^12.1.1",
 		"react-native-svg-animations": "^0.2.6",
 		"react-native-table-component": "^1.2.1",
+		"react-native-toggle-element": "^1.0.1",
 		"react-native-transparent-status-and-navigation-bar": "^1.0.3",
 		"react-native-unimodules": "^0.14.10",
 		"react-native-vector-icons": "^9.0.0",
 		"react-native-web": "^0.17.5",
-		"react-redux": "^7.2.6",
-		"rn-blur": "^3.2.3"
+		"react-redux": "^7.2.6"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.15.8",

@@ -3,8 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ImageBackground, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Utils from "../utils/Utils";
+import { Colors } from "../styles/Global";
 import { switchTheme } from "../store/reducers/theme";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import Toggle from "react-native-toggle-element";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import styles from "../styles/Login";
 
 export default function Login() {
 	const dispatch = useDispatch();
@@ -15,19 +19,20 @@ export default function Login() {
 	return (
 		<ImageBackground source={background} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View>
-					<Text style={{ color:"rgb(255,255,255)", fontSize:20, fontWeight:"bold" }}>CryptoShare</Text>
-				</View>
+				<Toggle
+					value={theme === "dark" ? false : true}
+					onPress={() => dispatch(switchTheme())}
+					thumbActiveComponent={
+						<Icon name="sun" size={25} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
+					}
+					thumbInActiveComponent={
+						<Icon name="moon" size={25} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
+					}
+					trackBar={styles.trackBar}
+					thumbButton={styles.thumbButton}
+					animationDuration={250}
+				/>
 			</SafeAreaView>
 		</ImageBackground>
 	);
 }
-
-let styles = StyleSheet.create({
-	area: {
-		width:"100%",
-		height:"100%",
-		justifyContent:"center",
-		alignItems:"center"
-	}
-});
