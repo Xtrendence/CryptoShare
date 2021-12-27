@@ -145,7 +145,9 @@ function attemptLogin() {
 
 	if(!empty(userID) && !empty(token)) {
 		verifyToken(userID, token).then(result => {
-			divLoading.classList.add("hidden");
+			setTimeout(() => {
+				divLoading.classList.add("hidden");
+			}, 1000);
 
 			if("error" in result) {
 				if(result.error.includes("Invalid")) {
@@ -172,7 +174,9 @@ function attemptLogin() {
 			});
 		});
 	} else {
-		divLoading.classList.add("hidden");
+		setTimeout(() => {
+			divLoading.classList.add("hidden");
+		}, 1000);
 	}
 }
 
