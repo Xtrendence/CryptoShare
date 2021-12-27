@@ -40,7 +40,7 @@ const httpServer = createServer();
 	app.use(express.json());
 	app.use(express.static(webFolder));
 
-	console.log(`Starting Server... (${new Date().toTimeString().split(" ")[0]})`);
+	console.log(Utils.console.magenta, `-----------------------------\n`, `Starting Server... (${new Date().toTimeString().split(" ")[0]})`, Utils.console.reset);
 
 	setTimeout(() => {
 		app.use("/graphql", graphqlHTTP({ 
@@ -53,7 +53,7 @@ const httpServer = createServer();
 		}));
 
 		app.listen(portAPI, () => {
-			console.log(`GraphQL API Listening At http://localhost:${portAPI}/graphql`);
+			console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}/graphql`);
 		});
 
 		app.get("/", (request, response) => {
@@ -122,9 +122,11 @@ const httpServer = createServer();
 		});
 
 		httpServer.listen(portBot, () => {
-			console.log(`Bot Server Listening At http://localhost:${portBot}`);
+			console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portBot}`);
 		});
 
-		console.log(`Started Server (${new Date().toTimeString().split(" ")[0]})`);
+		console.log(Utils.console.reset, `Started Server (${new Date().toTimeString().split(" ")[0]})`);
+
+		console.log(Utils.console.reset, Utils.console.orange, `Web Interface:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}`, Utils.console.reset);
 	}, 1500);
 })();

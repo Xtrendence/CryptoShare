@@ -230,4 +230,12 @@ export default class Utils {
 
 		return false;
 	}
+
+	static console = {
+		underline: `\x1b[4m`,
+		reset: `\x1b[0m`,
+		orange: `\x1b[33m`,
+		blue: `\x1b[34m`,
+		magenta: `\x1b[35m`
+	};
 }
