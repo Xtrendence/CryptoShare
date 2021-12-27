@@ -6,7 +6,7 @@ export default StyleSheet.create<any>({
 		width: "100%",
 		height: "100%",
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	wrapper: {
 		overflow: "hidden",
@@ -94,20 +94,26 @@ export default StyleSheet.create<any>({
 	inputLight: {
 		borderColor: Colors.Light.accentFirst
 	},
+	toggleContainer: {
+		width: 140,
+		padding: 20,
+		justifyContent: "center",
+		alignItems: "center"
+	},
 	trackBar: {
 		activeBackgroundColor: Colors.Light.accentFirst,
-		inActiveBackgroundColor: Colors.Dark.mainSecond,
+		inActiveBackgroundColor: Colors.Dark.mainFirst,
 		borderActiveColor: Colors.Light.accentFirst,
 		borderInActiveColor: Colors.Dark.accentFirst,
 		borderWidth: 0,
 		width: 100,
-		height: 45
+		height: 35
 	},
 	thumbButton: {
 		activeBackgroundColor: Colors.Light.mainThird,
-		inActiveBackgroundColor: Colors.Dark.mainThird,
-		height: 50,
-		width: 52,
-		radius: 25,
+		inActiveBackgroundColor: Colors.Dark.mainFourth,
+		height: 45,
+		width: 47,
+		radius: 22.5,
 	}
 });

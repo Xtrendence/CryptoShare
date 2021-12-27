@@ -37,19 +37,23 @@ export default function Login() {
 						</TouchableOpacity>
 					</View>
 				</View>
-				<Toggle
-					value={theme === "Dark" ? false : true}
-					onPress={() => dispatch(switchTheme())}
-					thumbActiveComponent={
-						<Icon name="sun" size={25} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
-					}
-					thumbInActiveComponent={
-						<Icon name="moon" size={25} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
-					}
-					trackBar={styles.trackBar}
-					thumbButton={styles.thumbButton}
-					animationDuration={250}
-				/>
+				<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
+					<View style={[styles.toggleContainer, styles[`toggleContainer${theme}`]]}>
+						<Toggle
+							value={theme === "Dark" ? false : true}
+							onPress={() => dispatch(switchTheme())}
+							thumbActiveComponent={
+								<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
+							}
+							thumbInActiveComponent={
+								<Icon name="moon" size={20} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
+							}
+							trackBar={styles.trackBar}
+							thumbButton={styles.thumbButton}
+							animationDuration={250}
+						/>
+					</View>
+				</View>
 			</SafeAreaView>
 		</ImageBackground>
 	);
