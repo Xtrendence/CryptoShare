@@ -87,6 +87,14 @@ settingsToggleBackground.addEventListener("click", () => {
 	}
 });
 
+settingsToggleSimpleBackground.addEventListener("click", () => {
+	if(settingsToggleSimpleBackground.classList.contains("active")) {
+		setBackground("static", applicationSettings.theme);
+	} else {
+		setBackground("simple", applicationSettings.theme);
+	}
+});
+
 settingsToggleSounds.addEventListener("click", () => {
 	if(settingsToggleSounds.classList.contains("active")) {
 		setTimeout(() => {

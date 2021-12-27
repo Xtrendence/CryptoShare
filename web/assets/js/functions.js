@@ -52,22 +52,44 @@ function setBackground(background, theme) {
 			backgroundToggles[i].classList.add("active");
 		}
 
+		settingsToggleSimpleBackground.classList.remove("active");
+
 		localStorage.setItem("background", "animated");
 		divAnimatedBackground.classList.remove("hidden");
 		divStaticBackground.classList.add("hidden");
+		divSimpleBackground.classList.add("hidden");
 		particlesJS("animated-background", particlesConfig[theme]);
-	} else {
+	} else if(background === "static") {
 		applicationSettings.background = "static";
 
 		for(let i = 0; i < backgroundToggles.length; i++) {
 			backgroundToggles[i].classList.remove("active");
 		}
 
+		settingsToggleSimpleBackground.classList.remove("active");
+
 		localStorage.setItem("background", "static");
 		divAnimatedBackground.innerHTML = "";
 		divAnimatedBackground.classList.add("hidden");
 		divStaticBackground.classList.remove("hidden");
 		divStaticBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White-Gold.png")` : `url("./assets/img/BG-Black-Gold.png")`;
+		divSimpleBackground.classList.add("hidden");
+	} else if(background === "simple") {
+		applicationSettings.background = "simple";
+
+		for(let i = 0; i < backgroundToggles.length; i++) {
+			backgroundToggles[i].classList.remove("active");
+		}
+
+		settingsToggleSimpleBackground.classList.add("active");
+
+		localStorage.setItem("background", "simple");
+		divAnimatedBackground.innerHTML = "";
+		divAnimatedBackground.classList.add("hidden");
+		divStaticBackground.classList.add("hidden");
+		divStaticBackground.removeAttribute("style");
+		divSimpleBackground.classList.remove("hidden");
+		divSimpleBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
 	}
 }
 

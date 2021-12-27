@@ -95,7 +95,7 @@ input[type=number] {
 	color:rgb(255,255,255);
 }
 
-#animated-background, #static-background {
+#animated-background, #static-background, #simple-background {
 	pointer-events:none;
 	transform:scaleX(-1);
 	position:absolute;
@@ -107,6 +107,10 @@ input[type=number] {
 	background-size:cover;
 	background-attachment:fixed;
 	z-index:1;
+}
+#simple-background {
+	opacity:1;
+	transform:rotate(180deg);
 }
 
 .loading-screen {
