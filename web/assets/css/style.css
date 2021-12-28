@@ -471,6 +471,10 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 }
+.popup-wrapper .bottom span.detail {
+	margin-top:20px;
+	font-weight:bold;
+}
 .popup-wrapper .bottom .choice {
 	height:40px;
 	width:calc(50% - 10px);
