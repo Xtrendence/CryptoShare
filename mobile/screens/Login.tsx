@@ -9,11 +9,14 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import Toggle from "react-native-toggle-element";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import styles from "../styles/Login";
+import Requests from "../utils/Requests";
+import Loading from "../components/Loading";
 
-export default function Login() {
+export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
 
+	const [loading, setLoading] = useState<boolean>(false);
 	const [action, setAction] = useState<string>("login");
 
 	// TODO: Remove preset values.
@@ -56,7 +59,7 @@ export default function Login() {
 								<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("create")}>
 									<Text style={[styles.mainText, styles[`mainText${theme}`]]}>Need An Account?</Text>
 								</TouchableOpacity>
-								<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]}>
+								<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]} onPress={() => login(loginUsername, loginPassword)}>
 									<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Login</Text>
 								</TouchableOpacity>
 							</View>
@@ -117,6 +120,26 @@ export default function Login() {
 					</View>
 				</View>
 			</SafeAreaView>
+			<Loading active={loading}/>
 		</ImageBackground>
 	);
+
+	function login(username: string, password: string) {
+		setLoading(true);
+
+		let requests = new Requests("http://192.168.1.100:3190/graphql");
+
+		requests.login(username, password).then((response: any) => {
+			setTimeout(() => setLoading(false), 750);
+
+			if("error" in response) {
+				Utils.notify(theme, Utils.replaceAll("!", "", response.error));
+			} else {
+				Utils.setAccountInfo(response);
+				navigation.navigate("Dashboard");
+			}
+		}).catch((error: any) => {
+			setTimeout(() => setLoading(false), 750);
+		});
+	}
 }

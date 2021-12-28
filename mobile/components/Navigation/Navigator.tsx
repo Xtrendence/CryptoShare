@@ -3,13 +3,13 @@ import * as TransparentStatusAndNavigationBar from "react-native-transparent-sta
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import Login from "../screens/Login";
-import ChatBot from "../screens/ChatBot";
-import Dashboard from "../screens/Dashboard";
-import Market from "../screens/Market";
-import Holdings from "../screens/Holdings";
-import Activity from "../screens/Activity";
-import Settings from "../screens/Settings";
+import Login from "../../screens/Login";
+import ChatBot from "../../screens/ChatBot";
+import Dashboard from "../../screens/Dashboard";
+import Market from "../../screens/Market";
+import Holdings from "../../screens/Holdings";
+import Activity from "../../screens/Activity";
+import Settings from "../../screens/Settings";
 
 const Stack = createStackNavigator();
 

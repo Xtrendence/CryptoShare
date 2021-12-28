@@ -1,3 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { showMessage } from "react-native-flash-message";
+import { Colors } from "../styles/Global";
+
 export default class Utils {
 	static getBackground(theme: string, type: string) {
 		switch(theme) {
@@ -18,5 +22,39 @@ export default class Utils {
 				}
 				break;
 		}
+	}
+
+	static setAccountInfo(info: any) {
+		AsyncStorage.setItem("key", info?.key.toString());
+		AsyncStorage.setItem("token", info?.token.toString());
+		AsyncStorage.setItem("userID", info?.userID.toString());
+		AsyncStorage.setItem("username", info?.username.toString());
+	}
+
+	static notify(theme: string, message: string) {
+		showMessage({
+			message: message,
+			type: "info",
+			floating: true,
+			hideStatusBar: true,
+			backgroundColor: Colors[theme].accentSecond,
+			color: Colors[theme].accentContrast
+		});
+	}
+
+	static empty(value: any) {
+		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
+			return true;
+		}
+		
+		if(value === null || typeof value === "undefined" || value.toString().trim() === "") {
+			return true;
+		}
+
+		return false;
+	}
+
+	static replaceAll(find: string, replace: string, string: string, ignore: boolean = false) {
+		return string.replace(new RegExp(find.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(replace)=="string")?replace.replace(/\$/g,"$$$$"):replace);
 	}
 }

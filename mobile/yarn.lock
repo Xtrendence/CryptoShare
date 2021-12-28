@@ -8931,11 +8931,6 @@ react-native-animation-hooks@^1.0.1:
   resolved "https://registry.yarnpkg.com/react-native-animation-hooks/-/react-native-animation-hooks-1.0.1.tgz#fcda58867d708084cc63c6fcd001f5375a40f45b"
   integrity sha512-s1o71m9sPpEYwFpHTdBouO50jzvyxIVB4MmNwfVGgPWkdL02zKOzyXcNuPJmoCuLIstUj5TBEwtnGk1WMFJx5A==
 
-react-native-awesome-loading@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/react-native-awesome-loading/-/react-native-awesome-loading-1.0.15.tgz#9255ebe0be96af5268f6ad3490e5d866c91b9a2f"
-  integrity sha512-PkRtL3k/T2jqhiBsUl1Hls7HoNGpg5NS5Ro7RoBcbcR67KgJI7FxLeY+aOJzNZGTJvGTRznqtIsIG6dlGKXTHw==
-
 react-native-background-actions@^2.6.5:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/react-native-background-actions/-/react-native-background-actions-2.6.5.tgz#43361b64a878095536a5f6154d217fa1c3dedc41"
