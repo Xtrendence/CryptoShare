@@ -2,6 +2,15 @@ import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 
 export default createStyle<any>({
+	scrollView: {
+		width: "100%",
+		height: "100%",
+	},
+	scrollViewContent: {
+		justifyContent: "center", 
+		alignItems: "center", 
+		flexGrow: 1
+	},
 	area: {
 		width: "100%",
 		height: "100%",
@@ -121,5 +130,67 @@ export default createStyle<any>({
 		height: 45,
 		width: 47,
 		radius: 22.5
-	}
+	},
+	bottomModal: {
+		paddingBottom: 50,
+		backgroundColor: Colors.Dark.mainFirstTransparent
+	},
+	bottomModalLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent
+	},
+	bottomModalSection: {
+		borderColor: Colors.Dark.accentFirst,
+		borderWidth: 2,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainSecond,
+		marginBottom: 20,
+		padding: 10
+	},
+	bottomModalSectionLight: {
+		backgroundColor: Colors.Light.mainSecond
+	},
+	bottomModalFooter: {
+		paddingRight: 20,
+		paddingLeft: 20,
+		paddingBottom: 20
+	},
+	bottomModalText: {
+		color: Colors.Dark.mainContrast
+	},
+	bottomModalTextLight: {
+		color: Colors.Light.mainContrast
+	},
+	bottomModalMainButton: {
+		height: 60,
+		borderColor: Colors.Dark.accentFirst,
+		borderWidth: 2,
+		backgroundColor: Colors.Dark.mainSecond,
+		marginRight: 10,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	bottomModalMainButtonLight: {
+		borderColor: Colors.Light.accentFirst,
+		backgroundColor: Colors.Light.mainThird
+	},
+	bottomModalButtonMainText: {
+		color: Colors.Dark.mainContrast
+	},
+	bottomModalButtonMainTextLight: {
+		color: Colors.Light.mainContrast
+	},
+	bottomModalAccentButton: {
+		height: 60,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.accentFirst,
+		marginLeft: 10
+	},
+	bottomModalAccentButtonLight: {
+		backgroundColor: Colors.Light.accentFirst
+	},
+	bottomModalButtonAccentText: {
+		color: Colors.Dark.accentContrast
+	},
+	bottomModalButtonAccentTextLight: {
+		color: Colors.Light.accentContrast
+	},
 });

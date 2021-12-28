@@ -24,11 +24,19 @@ export default class Utils {
 		}
 	}
 
-	static setAccountInfo(info: any) {
-		AsyncStorage.setItem("key", info?.key.toString());
-		AsyncStorage.setItem("token", info?.token.toString());
-		AsyncStorage.setItem("userID", info?.userID.toString());
-		AsyncStorage.setItem("username", info?.username.toString());
+	static async setAccountInfo(info: any) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				await AsyncStorage.setItem("key", info?.key.toString());
+				await AsyncStorage.setItem("token", info?.token.toString());
+				await AsyncStorage.setItem("userID", info?.userID.toString());
+				await AsyncStorage.setItem("username", info?.username.toString());
+				resolve(null);
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
 	}
 
 	static notify(theme: string, message: string) {
