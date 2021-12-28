@@ -5,7 +5,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import Utils from "../utils/Utils";
 import { Colors } from "../styles/Global";
 import { switchTheme } from "../store/reducers/theme";
-import { BlurView } from "@react-native-community/blur";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Toggle from "react-native-toggle-element";
 import { TouchableOpacity } from "react-native-gesture-handler";

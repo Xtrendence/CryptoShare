@@ -1,7 +1,7 @@
-import { StyleSheet } from "react-native";
+import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 
-export default StyleSheet.create<any>({
+export default createStyle<any>({
 	area: {
 		width: "100%",
 		height: "100%",
@@ -95,10 +95,10 @@ export default StyleSheet.create<any>({
 		borderColor: Colors.Light.accentFirst
 	},
 	toggleContainer: {
-		width: 140,
+		width: 110,
 		padding: 20,
 		justifyContent: "center",
-		alignItems: "center"
+		alignItems: "center",
 	},
 	trackBar: {
 		activeBackgroundColor: Colors.Light.accentFirst,
@@ -106,7 +106,7 @@ export default StyleSheet.create<any>({
 		borderActiveColor: Colors.Light.accentFirst,
 		borderInActiveColor: Colors.Dark.accentFirst,
 		borderWidth: 0,
-		width: 100,
+		width: 80,
 		height: 35
 	},
 	thumbButton: {
@@ -114,6 +114,6 @@ export default StyleSheet.create<any>({
 		inActiveBackgroundColor: Colors.Dark.mainFourth,
 		height: 45,
 		width: 47,
-		radius: 22.5,
+		radius: 22.5
 	}
 });
