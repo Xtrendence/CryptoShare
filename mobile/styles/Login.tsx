@@ -48,10 +48,17 @@ export default createStyle<any>({
 		borderColor: Colors.Dark.accentFirst,
 		borderWidth: 2,
 		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		color: Colors.Dark.mainContrast,
 		paddingLeft: 10,
 		paddingRight: 10,
 		height: 40,
 		marginBottom: 20,
+	},
+	inputLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent,
+		borderColor: Colors.Light.accentFirst,
+		color: Colors.Light.mainContrast,
 	},
 	button: {
 		width: 180,
@@ -78,21 +85,20 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast,
 	},
 	mainButton: {
+		backgroundColor: Colors.Dark.mainFirstTransparent,
 		borderColor: Colors.Dark.accentFirst,
 		borderWidth: 2,
 		marginBottom: 20,
 	},
 	mainButtonLight: {
 		borderColor: Colors.Light.accentFirst,
+		backgroundColor: Colors.Light.mainFirstTransparent,
 	},
 	accentButton: {
 		backgroundColor: Colors.Dark.accentFirst
 	},
 	accentButtonLight: {
 		backgroundColor: Colors.Light.accentFirst
-	},
-	inputLight: {
-		borderColor: Colors.Light.accentFirst
 	},
 	toggleContainer: {
 		width: 110,
