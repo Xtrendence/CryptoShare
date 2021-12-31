@@ -215,6 +215,8 @@ export default function Login({ navigation }: any) {
 	async function login(url: string, username: string, password: string) {
 		setLoading(true);
 
+		setTimeout(() => setLoading(false), 8000);
+
 		if(!Utils.empty(url)) {
 			let requests = new Requests(url);
 
@@ -235,9 +237,9 @@ export default function Login({ navigation }: any) {
 					}
 				}
 			}).catch((error: any) => {
-				Utils.notify(theme, "Something went wrong...");
-				console.log(error);
 				setTimeout(() => setLoading(false), 750);
+				Utils.notify(theme, error.toString());
+				console.log(error);
 			});
 		} else {
 			Utils.notify(theme, "No API URL provided.");

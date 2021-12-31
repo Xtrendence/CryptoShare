@@ -27,106 +27,103 @@ const app = express();
 const httpServer = createServer();
 
 (async () => {
+	const db = new DB();
+	await db.initialize();
+	Utils.db = db;
+
 	const io = new Server(httpServer);
 	await addEvents(io);
 
-	const db = new DB();
-	await db.initialize();
-
-	Utils.db = db;
+	console.log(Utils.console.magenta, `-----------------------------\n`, `Starting Server... (${new Date().toTimeString().split(" ")[0]})`, Utils.console.reset);
 
 	app.use(cors());
 	app.use(express.urlencoded({ extended:true }));
 	app.use(express.json());
 	app.use(express.static(webFolder));
 
-	console.log(Utils.console.magenta, `-----------------------------\n`, `Starting Server... (${new Date().toTimeString().split(" ")[0]})`, Utils.console.reset);
+	app.use("/graphql", graphqlHTTP({ 
+		schema: schema,
+		rootValue: resolvers,
+		graphiql: true,
+		customFormatErrorFn: (error): any => {
+			return error.message.split("!")[1];
+		}
+	}));
 
-	setTimeout(() => {
-		app.use("/graphql", graphqlHTTP({ 
-			schema: schema,
-			rootValue: resolvers,
-			graphiql: true,
-			customFormatErrorFn: (error): any => {
-				return error.message.split("!")[1];
-			}
-		}));
+	app.listen(portAPI, () => {
+		console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}/graphql`);
+	});
 
-		app.listen(portAPI, () => {
-			console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}/graphql`);
-		});
+	app.get("/", (request, response) => {
+		try {
+			response.sendFile(indexFile);
+		} catch(error) {
+			console.log(error);
+		}
+	});
 
-		app.get("/", (request, response) => {
-			try {
-				response.sendFile(indexFile);
-			} catch(error) {
-				console.log(error);
-			}
-		});
+	app.post("/login", async (request, response) => {
+		let username = request.body.username;
+		let password = request.body.password;
 
-		app.post("/login", async (request, response) => {
-			let username = request.body.username;
-			let password = request.body.password;
+		try {
+			response.send(await Utils.login(username, password));
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
 
-			try {
-				response.send(await Utils.login(username, password));
-			} catch(error) {
-				response.send({ error:error });
-			}
-		});
+	app.post("/logout", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
 
-		app.post("/logout", async (request, response) => {
-			let userID = request.body.userID;
-			let token = request.body.token;
+		try {
+			response.send({ response:await Utils.logout(userID, token) });
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
 
-			try {
-				response.send({ response:await Utils.logout(userID, token) });
-			} catch(error) {
-				response.send({ error:error });
-			}
-		});
+	app.post("/logoutEverywhere", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
 
-		app.post("/logoutEverywhere", async (request, response) => {
-			let userID = request.body.userID;
-			let token = request.body.token;
+		try {
+			response.send({ response:await Utils.logoutEverywhere(userID, token) });
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
 
-			try {
-				response.send({ response:await Utils.logoutEverywhere(userID, token) });
-			} catch(error) {
-				response.send({ error:error });
-			}
-		});
+	app.post("/changePassword", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
+		let currentPassword = request.body.currentPassword;
+		let newPassword = request.body.newPassword;
 
-		app.post("/changePassword", async (request, response) => {
-			let userID = request.body.userID;
-			let token = request.body.token;
-			let currentPassword = request.body.currentPassword;
-			let newPassword = request.body.newPassword;
+		try {
+			response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
 
-			try {
-				response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
-			} catch(error) {
-				response.send({ error:error });
-			}
-		});
+	app.post("/verifyToken", async (request, response) => {
+		let userID = request.body.userID;
+		let token = request.body.token;
 
-		app.post("/verifyToken", async (request, response) => {
-			let userID = request.body.userID;
-			let token = request.body.token;
+		try {
+			response.send(await Utils.verifyToken(userID, token));
+		} catch(error) {
+			response.send({ error:error });
+		}
+	});
 
-			try {
-				response.send(await Utils.verifyToken(userID, token));
-			} catch(error) {
-				response.send({ error:error });
-			}
-		});
+	httpServer.listen(portBot, () => {
+		console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portBot}`);
+	});
 
-		httpServer.listen(portBot, () => {
-			console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portBot}`);
-		});
+	console.log(Utils.console.reset, `Started Server (${new Date().toTimeString().split(" ")[0]})`);
 
-		console.log(Utils.console.reset, `Started Server (${new Date().toTimeString().split(" ")[0]})`);
-
-		console.log(Utils.console.reset, Utils.console.orange, `Web Interface:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}`, Utils.console.reset);
-	}, 1500);
+	console.log(Utils.console.reset, Utils.console.orange, `Web Interface:`, Utils.console.blue, Utils.console.underline, `http://localhost:${portAPI}`, Utils.console.reset);
 })();

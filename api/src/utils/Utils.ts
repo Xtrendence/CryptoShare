@@ -1,12 +1,13 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
-import { existsSync, mkdirSync, readFileSync } from "fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
 import path from "path";
 import DB from "./DB";
 
 export default class Utils {
 	static db: DB | undefined;
 	static dataFolder: string = "./data/";
+	static dbFile: string = path.join(this.dataFolder, "data.db");
 
 	static async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
@@ -209,6 +210,10 @@ export default class Utils {
 		if(!existsSync(this.dataFolder)) {
 			mkdirSync(this.dataFolder);
 		}
+
+		if(!existsSync(this.dbFile)) {
+			writeFileSync(this.dbFile, "");
+		}
 	}
 
 	static getSchema() {
@@ -229,6 +234,14 @@ export default class Utils {
 		}
 
 		return false;
+	}
+
+	static wait(duration: number) {
+		return new Promise((resolve: any) => {
+			setTimeout(() => {
+				resolve();
+			}, duration);
+		});
 	}
 
 	static console = {

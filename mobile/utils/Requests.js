@@ -81,16 +81,24 @@ export default class Requests {
 			try {
 				let xhr = new XMLHttpRequest();
 
+				setTimeout(() => {
+					reject("Couldn't connect to the API.");
+					return;
+				}, 7500);
+
 				xhr.addEventListener("readystatechange", () => {
 					if(xhr.readyState === xhr.DONE) {
 						if(this.validJSON(xhr.responseText)) {
 							let response = JSON.parse(xhr.responseText);
 							resolve(response);
+							return;
 						} else {
 							if(this.empty(xhr.responseText)) {
 								reject("Server error.");
+								return;
 							} else {
 								reject("Invalid JSON.");
+								return;
 							}
 						}
 					}
@@ -98,6 +106,7 @@ export default class Requests {
 
 				xhr.addEventListener("error", (error) => {
 					reject(error);
+					return;
 				});
 
 				xhr.open(method, url, true);
@@ -106,6 +115,7 @@ export default class Requests {
 			} catch(error) {
 				console.log(error);
 				reject(error);
+				return;
 			}
 		});
 	}

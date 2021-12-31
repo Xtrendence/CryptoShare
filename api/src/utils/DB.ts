@@ -1,13 +1,14 @@
 import sqlite3, { Database } from "@louislam/sqlite3";
 import path from "path";
 import fs from "fs";
+import Utils from "./Utils";
 
 export default class DB {
 	db: sqlite3.Database | undefined;
 	file: string;
 
 	constructor() {
-		this.file = path.join("./data/", "data.db");
+		this.file = Utils.dbFile;
 		this.setDB();
 	}
 
@@ -22,14 +23,14 @@ export default class DB {
 		await this.createWatchlistTable();
 		await this.createMessageTable();
 		await this.createUserLoginView();
-		this.setDB();
 	}
 
 	setDB() {
-		let exists = fs.existsSync(this.file);
-		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
-			if(error && (!exists && !error.message.includes("SQLITE_CANTOPEN"))) {
-				console.log(error);
+		let retry = 0;
+		this.db = new Database(this.file, sqlite3.OPEN_READWRITE, (error) => {
+			if(error && retry < 10) {
+				this.setDB();
+				retry++;
 			}
 		});
 	}
