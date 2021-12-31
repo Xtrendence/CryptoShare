@@ -8,12 +8,7 @@ export default class DB {
 
 	constructor() {
 		this.file = path.join("./data/", "data.db");
-		let exists = fs.existsSync(this.file);
-		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
-			if(error && (!exists && !error.message.includes("SQLITE_CANTOPEN"))) {
-				console.log(error);
-			}
-		});
+		this.setDB();
 	}
 
 	async initialize() {
@@ -27,6 +22,16 @@ export default class DB {
 		await this.createWatchlistTable();
 		await this.createMessageTable();
 		await this.createUserLoginView();
+		this.setDB();
+	}
+
+	setDB() {
+		let exists = fs.existsSync(this.file);
+		this.db = new Database(this.file, sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE, (error) => {
+			if(error && (!exists && !error.message.includes("SQLITE_CANTOPEN"))) {
+				console.log(error);
+			}
+		});
 	}
 
 	runQuery(query: string, args: any) {
