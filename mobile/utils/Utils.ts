@@ -1,4 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback } from "react";
+import { BackHandler } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { Colors } from "../styles/Global";
 
@@ -37,6 +39,38 @@ export default class Utils {
 				reject(error);
 			}
 		});
+	}
+
+	static backHandler(navigation: any) {
+		return useCallback(() => {
+			function onBackPress(): boolean {
+				let routes = navigation.getState()?.routes;
+				let previous = routes[routes.length - 2];
+				
+				if(previous?.name === "Login") {
+					BackHandler.exitApp();
+				}
+
+				return true;
+			}
+
+			BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+			return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+		}, [])
+	}
+
+	static async getSettings() {
+		let settings: any = {
+			defaultPage: "Dashboard"
+		};
+
+		let defaultPage = await AsyncStorage.getItem("defaultPage");
+		if(!this.empty(defaultPage)) {
+			settings.defaultPage = defaultPage;
+		}
+
+		return settings;
 	}
 
 	static notify(theme: string, message: string) {

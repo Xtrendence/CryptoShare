@@ -230,7 +230,10 @@ export default function Login({ navigation }: any) {
 				} else {
 					try {
 						await Utils.setAccountInfo(response);
-						navigation.navigate("Dashboard");
+						
+						let settings = await Utils.getSettings();
+
+						navigation.navigate(settings.defaultPage);
 					} catch(error) {
 						Utils.notify(theme, "Couldn't save account info.");
 						console.log(error);
