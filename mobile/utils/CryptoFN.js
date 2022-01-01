@@ -3,6 +3,8 @@ const forge = require("node-forge");
 const atob = require("atob");
 const btoa = require("btoa");
 
+import Aes from "react-native-aes-crypto";
+
 /**
  * A class with static methods to simplify the use of cryptographic functions throughout the application.
  */
@@ -38,7 +40,7 @@ export default class CryptoFN {
 	/**
 	 * @param {string} plaintext - The string to encrypt.
 	 * @param {string} publicKey - The public RSA key to encrypt the data with.
-	 * @returns {string} - A Base64 encoded version of the ciphertext.
+	 * @returns {Promise} - A Base64 encoded version of the ciphertext.
 	 */
 	static encryptRSA(plaintext, publicKey) {
 		return new Promise((resolve) => {
@@ -50,7 +52,7 @@ export default class CryptoFN {
 	/**
 	 * @param {string} ciphertext - The string to decrypt.
 	 * @param {string} privateKey - The private RSA key to decrypt the data with.
-	 * @returns {string} - The plaintext.
+	 * @returns {Promise} - The plaintext.
 	 */
 	static decryptRSA(ciphertext, privateKey) {
 		return new Promise((resolve) => {
@@ -61,25 +63,35 @@ export default class CryptoFN {
 
 	/**
 	 * Generates a random password, and a cryptographically random salt, from which a 256-bit AES key is derived.
-	 * @returns {string} - The AES key.
+	 * @returns {Promise} - The AES key.
 	 */
-	static generateAESKey() {
-		let result = "";
-		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		let charactersLength = characters.length;
+	static async generateAESKey() {
+		return new Promise((resolve, reject) => {
+			try {
+				let result = "";
+				let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+				let charactersLength = characters.length;
 
-		for(let i = 0; i < length; i++) {
-			result += characters.charAt(Math.floor(Math.random() * charactersLength));
-		}
+				for(let i = 0; i < charactersLength; i++) {
+					result += characters.charAt(Math.floor(Math.random() * charactersLength));
+				}
 
-		let salt = CryptoJS.lib.WordArray.random(128/8);
+				let salt = result;
 
-		return CryptoJS.PBKDF2(result, salt, { keySize: 256/32 }).toString(CryptoJS.enc.Base64);
+				Aes.pbkdf2(result, salt, 20000, 256).then(result => {
+					resolve(result);
+				}).catch(error => {
+					reject(error);
+				});
+			} catch(error) {
+				reject(error);
+			}
+		});
 	}
 
 	/**
 	 * Generate a public and private RSA key pair.
-	 * @returns {Object} - An object containing both the public and private key.
+	 * @returns {Promise} - An object containing both the public and private key.
 	 */
 	static generateRSAKeys() {
 		let rsa = forge.pki.rsa;

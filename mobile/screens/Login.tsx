@@ -240,7 +240,10 @@ export default function Login({ navigation }: any) {
 					Utils.notify(theme, Utils.replaceAll("!", "", response.error));
 				} else {
 					try {
-						await Utils.setAccountInfo(response);
+						let decrypted = CryptoFN.decryptAES(response.key, password);
+						response.key = decrypted;
+
+						await Utils.setAccountInfo(response, true);
 						
 						let settings = await Utils.getSettings();
 
@@ -260,22 +263,31 @@ export default function Login({ navigation }: any) {
 		}
 	}
 
-	function createAccount(url: string, username: string, password: string) {
-		new Requests(url).createAccount(username, password).then(result => {
-			if(result.data.createUser === "Done") {
-				hideBottomModal();
+	async function createAccount(url: string, username: string, password: string) {
+		try {
+			let key = await CryptoFN.generateAESKey();
+			let encrypted = CryptoFN.encryptAES(key, password);
 
-				setAction("login");
+			new Requests(url).createAccount(username, password, encrypted).then(result => {
+				if(result.data.createUser === "Done") {
+					AsyncStorage.setItem("key", key);
 
-				setLoginUsername(username);
-				setLoginPassword(password);
+					hideBottomModal();
 
-				Utils.notify(theme, "Account created.");
-			} else {
-				Utils.notify(theme, "Something went wrong...");
-			}
-		}).catch(error => {
-			Utils.notify(theme, error.toString());
-		});
+					setAction("login");
+
+					setLoginUsername(username);
+					setLoginPassword(password);
+
+					Utils.notify(theme, "Account created.");
+				} else {
+					Utils.notify(theme, "Something went wrong...");
+				}
+			}).catch(error => {
+				Utils.notify(theme, error.toString());
+			});
+		} catch(error) {
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 }

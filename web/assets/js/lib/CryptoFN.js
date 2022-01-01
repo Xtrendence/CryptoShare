@@ -16,11 +16,7 @@ class CryptoFN {
 	 * @returns {string} - The ciphertext.
 	 */
 	static encryptAES(plaintext, password) {
-		let encrypted = CryptoJS.AES.encrypt(plaintext, password, { 
-			mode: CryptoJS.mode.CFB,
-			padding: CryptoJS.pad.Pkcs7
-		});
-
+		let encrypted = CryptoJS.AES.encrypt(plaintext, password);
 		return encrypted.toString();
 	}
 
@@ -30,11 +26,7 @@ class CryptoFN {
 	 * @returns {string} - The plaintext.
 	 */
 	static decryptAES(ciphertext, password) {
-		let decrypted = CryptoJS.AES.decrypt(ciphertext, password, {
-			mode: CryptoJS.mode.CFB,
-			padding: CryptoJS.pad.Pkcs7
-		});
-
+		let decrypted = CryptoJS.AES.decrypt(ciphertext, password);
 		return decrypted.toString(CryptoJS.enc.Utf8);
 	}
 
@@ -71,7 +63,7 @@ class CryptoFN {
 		let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		let charactersLength = characters.length;
 
-		for(let i = 0; i < length; i++) {
+		for(let i = 0; i < charactersLength; i++) {
 			result += characters.charAt(Math.floor(Math.random() * charactersLength));
 		}
 

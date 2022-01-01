@@ -26,10 +26,13 @@ export default class Utils {
 		}
 	}
 
-	static async setAccountInfo(info: any) {
+	static async setAccountInfo(info: any, updateKey: boolean) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				await AsyncStorage.setItem("key", info?.key.toString());
+				if(updateKey) {
+					await AsyncStorage.setItem("key", info?.key.toString());
+				}
+				
 				await AsyncStorage.setItem("token", info?.token.toString());
 				await AsyncStorage.setItem("userID", info?.userID.toString());
 				await AsyncStorage.setItem("username", info?.username.toString());

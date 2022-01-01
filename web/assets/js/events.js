@@ -40,7 +40,9 @@ buttonLoginAccount.addEventListener("click", () => {
 				color: "var(--accent-contrast)"
 			});
 		} else {
-			setAccountInfo(result);
+			let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
+			result.key = decrypted;
+			setAccountInfo(result, true);
 			showApp();
 		}
 	}).catch(error => {

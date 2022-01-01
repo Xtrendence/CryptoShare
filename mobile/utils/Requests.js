@@ -1,3 +1,5 @@
+import CryptoFN from "./CryptoFN";
+
 export default class Requests {
 	constructor(urlAPI) {
 		this.urlAPI = urlAPI;
@@ -13,8 +15,7 @@ export default class Requests {
 		return this.request("POST", this.urlAPI, query);
 	}
 
-	// TODO: Generate key.
-	createAccount(username, password) {
+	createAccount(username, password, key) {
 		let query = {
 			query: `mutation createUser($username: String!, $password: String!, $key: String!) {
 				createUser(username: $username, password: $password, key: $key)
@@ -22,7 +23,7 @@ export default class Requests {
 			variables: {
 				username: username,
 				password: password,
-				key: "-"
+				key: key
 			}
 		};
 

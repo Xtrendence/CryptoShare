@@ -161,7 +161,7 @@ function attemptLogin() {
 					color: "var(--accent-contrast)"
 				});
 			} else {
-				setAccountInfo(result);
+				setAccountInfo(result, false);
 				showApp();
 			}
 		}).catch(error => {
@@ -197,12 +197,14 @@ function finishLogout() {
 	});
 }
 
-// TODO: Decrypt key.
-function setAccountInfo(info) {
+function setAccountInfo(info, updateKey) {
 	localStorage.setItem("userID", info.userID);
 	localStorage.setItem("username", info.username);
 	localStorage.setItem("token", info.token);
-	localStorage.setItem("key", info.key);
+
+	if(updateKey) {
+		localStorage.setItem("key", info.key);
+	}
 }
 
 function removeAccountInfo() {

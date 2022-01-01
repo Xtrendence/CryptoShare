@@ -10,8 +10,7 @@ function userExists(username) {
 	return request("POST", urlAPI, query);
 }
 
-// TODO: Generate key.
-function createAccount(username, password) {
+function createAccount(username, password, key) {
 	let query = {
 		query: `mutation createUser($username: String!, $password: String!, $key: String!) {
 			createUser(username: $username, password: $password, key: $key)
@@ -19,7 +18,7 @@ function createAccount(username, password) {
 		variables: {
 			username: username,
 			password: password,
-			key: "-"
+			key: key
 		}
 	};
 

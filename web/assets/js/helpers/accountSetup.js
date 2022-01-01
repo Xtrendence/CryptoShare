@@ -134,8 +134,13 @@ async function accountSetup() {
 					count++;
 					break;
 				case 6:
-					createAccount(username, inputCreatePassword.value).then(result => {
+					let key = CryptoFN.generateAESKey();
+					let encrypted = CryptoFN.encryptAES(key, inputCreatePassword.value);
+
+					createAccount(username, inputCreatePassword.value, encrypted).then(result => {
 						if(result.data.createUser === "Done") {
+							localStorage.setItem("key", key);
+							
 							popup.hide();
 
 							buttonExistingAccount.click();
