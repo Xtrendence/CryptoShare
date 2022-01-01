@@ -3,14 +3,23 @@ import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 
 const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
+const statusBarHeight = screenHeight - windowHeight; 
+const barHeight = 62;
+
+export { screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight, barHeight };
 
 export default createStyle<any>({
 	bar: {
 		position: "absolute",
-		bottom: 60,
+		bottom: statusBarHeight + 10,
 		left: 20,
 		width: screenWidth - 40,
-		height: 62,
+		height: barHeight,
 		borderWidth: 2,
 		borderRadius: GlobalStyle.borderRadius,
 		borderColor: Colors.Dark.accentFirst,

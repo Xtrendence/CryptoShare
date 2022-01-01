@@ -44,6 +44,21 @@ export default class Utils {
 		});
 	}
 
+	static async removeAccountInfo() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				await AsyncStorage.removeItem("key");
+				await AsyncStorage.removeItem("token");
+				await AsyncStorage.removeItem("userID");
+				await AsyncStorage.removeItem("username");
+				resolve(null);
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
 	static backHandler(navigation: any) {
 		return useCallback(() => {
 			function onBackPress(): boolean {
@@ -61,7 +76,7 @@ export default class Utils {
 			BackHandler.addEventListener("hardwareBackPress", onBackPress);
 
 			return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
-		}, [])
+		}, []);
 	}
 
 	static async getSettings() {

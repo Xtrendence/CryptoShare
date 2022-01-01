@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Dimensions, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors, GlobalStyle } from "../../styles/Global";

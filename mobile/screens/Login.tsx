@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { BackHandler, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomModal, ModalContent, ModalButton, ModalFooter } from "react-native-modals";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -32,6 +32,17 @@ export default function Login({ navigation }: any) {
 	const [createUsername, setCreateUsername] = useState<string>("Admin");
 	const [createPassword, setCreatePassword] = useState<string>("admin");
 	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("admin");
+
+	useCallback(() => {
+		function onBackPress(): boolean {
+			BackHandler.exitApp();
+			return true;
+		}
+
+		BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+		return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+	}, []);
 
 	useEffect(() => {
 		setLoading(true);

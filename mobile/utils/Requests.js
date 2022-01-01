@@ -1,5 +1,3 @@
-import CryptoFN from "./CryptoFN";
-
 export default class Requests {
 	constructor(urlAPI) {
 		this.urlAPI = urlAPI;
