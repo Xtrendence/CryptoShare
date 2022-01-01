@@ -2,8 +2,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useCallback } from "react";
 import { BackHandler } from "react-native";
 import { showMessage } from "react-native-flash-message";
+import { changeSetting } from "../store/reducers/settings";
 import { Colors } from "../styles/Global";
-
 export default class Utils {
 	static getBackground(theme: string, type: string) {
 		switch(theme) {
@@ -79,7 +79,7 @@ export default class Utils {
 		}, []);
 	}
 
-	static async getSettings() {
+	static async getSettings(dispatch: any) {
 		let settings: any = {
 			defaultPage: "Dashboard"
 		};
@@ -87,6 +87,7 @@ export default class Utils {
 		let defaultPage = await AsyncStorage.getItem("defaultPage");
 		if(!this.empty(defaultPage)) {
 			settings.defaultPage = defaultPage;
+			dispatch(changeSetting({ key:"defaultPage", value:defaultPage }));
 		}
 
 		return settings;

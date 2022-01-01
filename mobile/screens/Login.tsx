@@ -256,7 +256,7 @@ export default function Login({ navigation }: any) {
 
 						await Utils.setAccountInfo(response, true);
 						
-						let settings = await Utils.getSettings();
+						let settings = await Utils.getSettings(dispatch);
 
 						navigation.navigate(settings.defaultPage);
 					} catch(error) {

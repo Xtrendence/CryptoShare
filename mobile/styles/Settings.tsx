@@ -85,7 +85,7 @@ export default createStyle<any>({
 		color: Colors.Light.mainContrast
 	},
 	titleTop: {
-		marginBottom: 10
+		marginBottom: 20
 	},
 	button: {
 		paddingLeft: 10,
@@ -96,7 +96,7 @@ export default createStyle<any>({
 		paddingBottom: 2,
 		borderRadius: GlobalStyle.borderRadius,
 		marginBottom: 10,
-		marginRight: 10,
+		marginLeft: 10
 	},
 	actionText: {
 		fontSize: 16,
@@ -111,6 +111,35 @@ export default createStyle<any>({
 	},
 	actionButtonLight: {
 		backgroundColor: Colors.Light.accentFirst
+	},
+	choiceButton: {
+		backgroundColor: "transparent",
+		borderWidth: 2,
+		borderColor: Colors.Dark.accentFirst
+	},
+	choiceButtonLight: {
+		backgroundColor: "transparent",
+		borderColor: Colors.Light.accentFirst
+	},
+	choiceButtonActiveDark: {
+		backgroundColor: Colors.Dark.accentFirst
+	},
+	choiceButtonActiveLight: {
+		backgroundColor: Colors.Light.accentFirst
+	},
+	choiceText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.accentContrast,
+	},
+	choiceTextLight: {
+		color: Colors.Light.mainContrast,
+	},
+	choiceTextActiveDark: {
+		color: Colors.Dark.accentContrast
+	},
+	choiceTextActiveLight: {
+		color: Colors.Light.accentContrast
 	},
 	trackBar: {
 		activeBackgroundColor: Colors.Light.accentFirst,

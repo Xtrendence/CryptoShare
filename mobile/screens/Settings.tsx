@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React from "react";
+import React, { useEffect } from "react";
 import { ImageBackground, ScrollView, Text, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
@@ -12,12 +12,25 @@ import { Colors } from "../styles/Global";
 import { switchTheme } from "../store/reducers/theme";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Requests from "../utils/Requests";
+import { changeSetting, setSettingsState } from "../store/reducers/settings";
+import ChoiceButton from "../components/ChoiceButton";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
 	
 	useFocusEffect(Utils.backHandler(navigation));
+
+	useEffect(() => {
+		navigation.addListener("focus", () => {
+			if(navigation.isFocused()) {
+				setTimeout(() => {
+					Utils.getSettings(dispatch);
+				}, 500);
+			}
+		});
+	}, []);
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme, "static")} resizeMethod="scale" resizeMode="cover">
@@ -56,9 +69,22 @@ export default function Settings({ navigation }: any) {
 								<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 									<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Logout Everywhere</Text>
 								</TouchableOpacity>
-								<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], { marginBottom:0 }]}>
+								<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 									<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Change Password</Text>
 								</TouchableOpacity>
+							</View>
+						</View>
+						<View style={[styles.section, styles[`section${theme}`]]}>
+							<View style={styles.sectionTop}>
+								<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Default Page</Text>
+							</View>
+							<View style={styles.sectionBottom}>
+								<ChoiceButton setting="Chat Bot" active={settings.defaultPage} text="Chat Bot" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Chat Bot" }))}/>
+								<ChoiceButton setting="Dashboard" active={settings.defaultPage} text="Dashboard" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Dashboard" }))}/>
+								<ChoiceButton setting="Market" active={settings.defaultPage} text="Market" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Market" }))}/>
+								<ChoiceButton setting="Holdings" active={settings.defaultPage} text="Holdings" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Holdings" }))}/>
+								<ChoiceButton setting="Activity" active={settings.defaultPage} text="Activity" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Activity" }))}/>
+								<ChoiceButton setting="Settings" active={settings.defaultPage} text="Settings" theme={theme} onPress={() => dispatch(changeSetting({ key:"defaultPage", value:"Settings" }))}/>
 							</View>
 						</View>
 					</ScrollView>

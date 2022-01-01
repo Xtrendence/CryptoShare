@@ -770,7 +770,7 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 	background:none;
-	color:var(--accent-first);
+	color:var(--main-contrast);
 }
 html.light .settings-section .choice-button {
 	color:var(--main-contrast-darker);
