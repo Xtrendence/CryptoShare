@@ -19,7 +19,7 @@ export default function Login({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 
 	const [bottomModal, setBottomModal] = useState<boolean>(false);
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [action, setAction] = useState<string>("login");
 
 	// TODO: Remove preset values.
@@ -33,10 +33,20 @@ export default function Login({ navigation }: any) {
 	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("admin");
 
 	useEffect(() => {
+		setLoading(true);
+
 		AsyncStorage.getItem("api").then(api => {
 			if(!Utils.empty(api)) {
 				setURL(api);
 			}
+		});
+
+		AsyncStorage.getItem("theme").then(savedTheme => {
+			dispatch(switchTheme(savedTheme));
+			
+			Utils.wait(250).then(() => {
+				setLoading(false);
+			});
 		});
 	}, []);
 
@@ -136,7 +146,7 @@ export default function Login({ navigation }: any) {
 						<View style={[styles.toggleContainer, styles[`toggleContainer${theme}`]]}>
 							<Toggle
 								value={theme === "Dark" ? false : true}
-								onPress={() => dispatch(switchTheme())}
+								onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
 								thumbActiveComponent={
 									<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
 								}

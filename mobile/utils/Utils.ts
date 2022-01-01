@@ -97,6 +97,14 @@ export default class Utils {
 		return false;
 	}
 
+	static wait(duration: number) {
+		return new Promise((resolve: any) => {
+			setTimeout(() => {
+				resolve();
+			}, duration);
+		});
+	}
+
 	static replaceAll(find: string, replace: string, string: string, ignore: boolean = false) {
 		return string.replace(new RegExp(find.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(replace)=="string")?replace.replace(/\$/g,"$$$$"):replace);
 	}
