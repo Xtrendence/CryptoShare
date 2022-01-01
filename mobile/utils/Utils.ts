@@ -93,6 +93,33 @@ export default class Utils {
 		return settings;
 	}
 
+	static filterSettings(query: string) {
+		let content: any = {
+			appearance: ["theme", "dark", "light", "mode", "appearance", "looks"],
+			account: ["logout", "token", "user", "account"],
+			defaultPage: ["page", "default", "login", "area", "section", "load"]
+		};
+
+		if(!this.empty(query)) {
+			query = query.toLowerCase();
+			let result: string[] = [];
+
+			Object.keys(content).map(section => {
+				let tags = content[section];
+
+				tags.map((tag: string) => {
+					if(tag.includes(query)) {
+						result.push(section);
+					}
+				});
+			});
+
+			return result;
+		}
+
+		return Object.keys(content);
+	}
+
 	static notify(theme: string, message: string) {
 		showMessage({
 			message: message,
