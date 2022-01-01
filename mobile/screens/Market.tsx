@@ -15,7 +15,7 @@ export default function Market({ navigation }: any) {
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme, "static")} resizeMethod="scale" resizeMode="cover">
-			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
 
 				</SafeAreaView>

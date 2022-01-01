@@ -42,7 +42,7 @@ export default function Login({ navigation }: any) {
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme, "static")} resizeMethod="scale" resizeMode="cover">
-			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
 					<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
 						<View style={[styles.titleContainer, styles[`titleContainer${theme}`]]}>
