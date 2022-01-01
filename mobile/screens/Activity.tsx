@@ -1,13 +1,25 @@
+import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
-import { View } from "react-native";
+import { ImageBackground, ScrollView, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
-import { useFocusEffect } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import styles from "../styles/Activity";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Activity({ navigation }: any) {
+	const dispatch = useDispatch();
+	const { theme } = useSelector((state: any) => state.theme);
+	
 	useFocusEffect(Utils.backHandler(navigation));
 
 	return (
-		<View></View>
+		<ImageBackground source={Utils.getBackground(theme, "static")} resizeMethod="scale" resizeMode="cover">
+			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent}>
+				<SafeAreaView style={styles.area}>
+
+				</SafeAreaView>
+			</ScrollView>
+		</ImageBackground>
 	);
 }

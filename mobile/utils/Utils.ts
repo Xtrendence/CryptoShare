@@ -49,9 +49,10 @@ export default class Utils {
 				
 				if(previous?.name === "Login") {
 					BackHandler.exitApp();
+					return true;
 				}
 
-				return true;
+				return false;
 			}
 
 			BackHandler.addEventListener("hardwareBackPress", onBackPress);
