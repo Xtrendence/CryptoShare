@@ -13,6 +13,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import styles from "../styles/Login";
 import Requests from "../utils/Requests";
 import Loading from "../components/Loading";
+import CryptoFN from "../utils/CryptoFN";
 
 export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -43,7 +44,7 @@ export default function Login({ navigation }: any) {
 
 		AsyncStorage.getItem("theme").then(savedTheme => {
 			dispatch(switchTheme(savedTheme));
-			
+
 			Utils.wait(250).then(() => {
 				setLoading(false);
 			});
