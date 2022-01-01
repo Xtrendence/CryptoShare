@@ -15,20 +15,13 @@ import { useSelector } from "react-redux";
 
 const Stack = createStackNavigator();
 
-const horizontalAnimation: object = {
-	gestureDirection: "horizontal",
-	cardStyleInterpolator: ({ current, layouts }: any) => {
-		return {
-			cardStyle: {
-				transform: [{
-					translateX: current.progress.interpolate({
-						inputRange: [0, 1],
-						outputRange: [layouts.screen.width, 0],
-					}),
-				}],
-			}
-		};
-	},
+const screenOptions = {
+	headerShown:false, 
+	cardStyleInterpolator: ({ current }: any) => ({
+		cardStyle: {
+			opacity: current.progress,
+		},
+	})
 };
 
 export default function Navigator() {
@@ -42,14 +35,14 @@ export default function Navigator() {
 	return (
 		<NavigationContainer ref={navigationRef} onStateChange={() => checkState()} onReady={() =>
 			(routeNameRef.current = navigationRef.current.getCurrentRoute().name)} theme={theme === "Light" ? DefaultTheme : DarkTheme}>
-			<Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown:false }}>
+			<Stack.Navigator initialRouteName="Login" screenOptions={screenOptions}>
 				<Stack.Screen name="Login" component={Login}></Stack.Screen>
 				<Stack.Screen name="Chat Bot" component={ChatBot}></Stack.Screen>
-				<Stack.Screen name="Dashboard" component={Dashboard} options={horizontalAnimation}></Stack.Screen>
-				<Stack.Screen name="Market" component={Market} options={horizontalAnimation}></Stack.Screen>	
-				<Stack.Screen name="Holdings" component={Holdings} options={horizontalAnimation}></Stack.Screen>
-				<Stack.Screen name="Activity" component={Activity} options={horizontalAnimation}></Stack.Screen>
-				<Stack.Screen name="Settings" component={Settings} options={horizontalAnimation}></Stack.Screen>
+				<Stack.Screen name="Dashboard" component={Dashboard}></Stack.Screen>
+				<Stack.Screen name="Market" component={Market}></Stack.Screen>	
+				<Stack.Screen name="Holdings" component={Holdings}></Stack.Screen>
+				<Stack.Screen name="Activity" component={Activity}></Stack.Screen>
+				<Stack.Screen name="Settings" component={Settings}></Stack.Screen>
 			</Stack.Navigator>
 			{ active !== "Login" && 
 				<NavigationBar navigation={navigationRef} screen={{ active:active, setActive:setActive }}></NavigationBar>
