@@ -75,6 +75,21 @@ export default class Requests {
 		return this.request("POST", this.urlAPI.replace("graphql", "changePassword"), body);
 	}
 
+	updateSetting(token, userID, userSettings) {
+		let query = {
+			query: `mutation updateSetting($token: String!, $userID: Int!, $userSettings: String!) {
+				updateSetting(token: $token, userID: $userID, userSettings: $userSettings)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				userSettings: userSettings
+			}
+		};
+
+		return this.request("POST", this.urlAPI, query);
+	}
+
 	request(method, url, body) {
 		return new Promise((resolve, reject) => {
 			try {

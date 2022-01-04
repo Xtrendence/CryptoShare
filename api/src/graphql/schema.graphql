@@ -88,8 +88,8 @@ type Mutation {
 	importActivity(token: String!, userID: Int!, rows: String!): String
 
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
-	updateSetting(token: String!, userID: Int!, settingID: Int!, userSettings: String!): String
-	deleteSetting(token: String!, userID: Int!, settingID: Int!): String
+	updateSetting(token: String!, userID: Int!, userSettings: String!): String
+	deleteSetting(token: String!, userID: Int!): String
 
 	createHolding(token: String!, userID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	updateHolding(token: String!, userID: Int!, holdingID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String

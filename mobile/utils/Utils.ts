@@ -4,7 +4,13 @@ import { BackHandler } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { changeSetting } from "../store/reducers/settings";
 import { Colors } from "../styles/Global";
+import CryptoFN from "./CryptoFN";
+import Requests from "./Requests";
 export default class Utils {
+	static defaultSettings: any = {
+		defaultPage: "Dashboard"
+	}
+
 	static getBackground(theme: string, type: string) {
 		switch(theme) {
 			case "Light":
@@ -80,9 +86,7 @@ export default class Utils {
 	}
 
 	static async getSettings(dispatch: any) {
-		let settings: any = {
-			defaultPage: "Dashboard"
-		};
+		let settings = this.defaultSettings;
 
 		let defaultPage = await AsyncStorage.getItem("defaultPage");
 		if(!this.empty(defaultPage)) {
@@ -91,6 +95,19 @@ export default class Utils {
 		}
 
 		return settings;
+	}
+
+	static async setSettings(dispatch: any, settings: any) {
+		if(this.empty(settings)) {
+			settings = this.defaultSettings;
+		}
+
+		Object.keys(settings).map(async key => {
+			let value = settings[key];
+
+			await AsyncStorage.setItem(key, value);
+			dispatch(changeSetting({ key:key, value:value }));
+		});
 	}
 
 	static filterSettings(query: string) {
@@ -120,6 +137,32 @@ export default class Utils {
 		return Object.keys(content);
 	}
 
+	static async syncSettings() {
+		let theme: any = await AsyncStorage.getItem("theme");
+		let url = await AsyncStorage.getItem("api");
+		let userID = await AsyncStorage.getItem("userID");
+		let token = await AsyncStorage.getItem("token");
+
+		let key: any = await AsyncStorage.getItem("key");
+
+		let settings = JSON.stringify({
+			theme: await AsyncStorage.getItem("theme"),
+			defaultPage: await AsyncStorage.getItem("defaultPage"),
+		});
+
+		let encrypted = CryptoFN.encryptAES(settings, key);
+
+		new Requests(url).updateSetting(token, userID, encrypted).then(result => {
+			if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
+				Utils.notify(theme, "Couldn't update / sync setting.");
+				console.log(result);
+			}
+		}).catch(error => {
+			Utils.notify(theme, error);
+			console.log(error);
+		});
+	}
+
 	static notify(theme: string, message: string) {
 		showMessage({
 			message: message,
@@ -140,6 +183,17 @@ export default class Utils {
 			return true;
 		}
 
+		return false;
+	}
+
+	static validJSON(json: any) {
+		try {
+			let object = JSON.parse(json);
+			if(object && typeof object === "object") {
+				return true;
+			}
+		}
+		catch(e) { }
 		return false;
 	}
 

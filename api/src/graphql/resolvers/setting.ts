@@ -41,22 +41,22 @@ export async function readSetting({ token, userID }: any) {
 	});
 }
 
-export async function updateSetting({ token, userID, settingID, userSettings }: any) {
+export async function updateSetting({ token, userID, userSettings }: any) {
 	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("UPDATE Setting SET userSettings = ? WHERE settingID = ? AND userID = ?", [userSettings, settingID, userID]);
+		db.runQuery("UPDATE Setting SET userSettings = ? WHERE userID = ?", [userSettings, userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";
 	}
 }
 
-export async function deleteSetting({ token, userID, settingID }: any) {
+export async function deleteSetting({ token, userID }: any) {
 	let valid = await Utils.verifyToken(userID, token);
 
 	if(valid) {
-		db.runQuery("DELETE FROM Setting WHERE settingID = ? AND userID = ?", [settingID, userID]);
+		db.runQuery("DELETE FROM Setting WHERE userID = ?", [userID]);
 		return "Done";
 	} else {
 		return "Unauthorized";

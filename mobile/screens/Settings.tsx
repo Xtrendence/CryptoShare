@@ -24,6 +24,7 @@ export default function Settings({ navigation }: any) {
 	
 	useFocusEffect(Utils.backHandler(navigation));
 
+	// TODO: Fetch settings from server.
 	useEffect(() => {
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {

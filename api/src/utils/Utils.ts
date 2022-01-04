@@ -37,11 +37,25 @@ export default class Utils {
 								return;
 							}
 
+							let settings;
+
+							try {
+								settings = await this.db?.asyncDBGet("SELECT * FROM Setting WHERE userID = ?", [row.userID]);
+							} catch(error: any) {
+								if(error.toString().includes("not found")) {
+									this.db?.runQuery("INSERT INTO Setting (userID, userSettings) VALUES (?, ?)", [row.userID, ""]);
+									settings = "";
+								} else {
+									console.log(error);
+								}
+							}
+
 							resolve(JSON.stringify({
 								userID: user.userID,
 								username: user.username,
 								key: user.key,
-								token: token
+								token: token,
+								settings: settings
 							}));
 						}
 					});

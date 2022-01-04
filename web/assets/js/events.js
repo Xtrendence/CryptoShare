@@ -42,6 +42,19 @@ buttonLoginAccount.addEventListener("click", () => {
 		} else {
 			let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
 			result.key = decrypted;
+
+			let settings = { ...defaultSettings, ...defaultChoices };
+			if(!empty(result.settings)) {
+				let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
+				if(validJSON(decryptedSettings)) {
+					settings = JSON.parse(decryptedSettings);
+				}
+			}
+
+			setPage(settings?.defaultPage);
+			setSettingsPage(settings?.defaultSettingsPage);
+
+			setSettings(settings);
 			setAccountInfo(result, true);
 			showApp();
 		}
@@ -79,6 +92,8 @@ settingsToggleTheme.addEventListener("click", () => {
 	} else {
 		setTheme("light");
 	}
+
+	syncSettings();
 });
 
 settingsToggleBackground.addEventListener("click", () => {
@@ -87,6 +102,8 @@ settingsToggleBackground.addEventListener("click", () => {
 	} else {
 		setBackground("animated", applicationSettings.theme);
 	}
+
+	syncSettings();
 });
 
 settingsToggleSimpleBackground.addEventListener("click", () => {
@@ -95,6 +112,8 @@ settingsToggleSimpleBackground.addEventListener("click", () => {
 	} else {
 		setBackground("simple", applicationSettings.theme);
 	}
+
+	syncSettings();
 });
 
 settingsToggleSounds.addEventListener("click", () => {
@@ -105,6 +124,8 @@ settingsToggleSounds.addEventListener("click", () => {
 	} else {
 		setSounds("enabled");
 	}
+
+	syncSettings();
 });
 
 buttonSettingsLogout.addEventListener("click", () => {

@@ -1,4 +1,6 @@
-let urlAPI = "http://localhost:3190/graphql";
+let ip = getIP();
+let port = getPort();
+let urlAPI = `${getProtocol()}//${ip}:${port}/graphql`;
 
 function userExists(username) {
 	let query = {
@@ -70,6 +72,21 @@ function changePassword(userID, token, currentPassword, newPassword) {
 	};
 
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
+}
+
+function updateSetting(token, userID, userSettings) {
+	let query = {
+		query: `mutation updateSetting($token: String!, $userID: Int!, $userSettings: String!) {
+			updateSetting(token: $token, userID: $userID, userSettings: $userSettings)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			userSettings: userSettings
+		}
+	};
+
+	return request("POST", urlAPI, query);
 }
 
 function request(method, url, body) {

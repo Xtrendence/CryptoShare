@@ -16,6 +16,6 @@ addSettingsNavbarEvents();
 
 addSettingsChoiceEvents();
 
-setPage(applicationChoices["default-page"]);
+setPage(applicationChoices["defaultPage"]);
 
-setSettingsPage(applicationChoices["default-settings-page"]);
+setSettingsPage(applicationChoices["defaultSettingsPage"]);

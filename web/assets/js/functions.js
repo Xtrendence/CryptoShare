@@ -161,6 +161,21 @@ function attemptLogin() {
 					color: "var(--accent-contrast)"
 				});
 			} else {
+				let key = localStorage.getItem("key");
+
+				let settings = { ...defaultSettings, ...defaultChoices };
+				if(!empty(result.settings)) {
+					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, key);
+					if(validJSON(decryptedSettings)) {
+						settings = JSON.parse(decryptedSettings);
+					}
+				}
+
+				setPage(settings?.defaultPage);
+				setSettingsPage(settings?.defaultSettingsPage);
+
+				setSettings(settings);
+
 				setAccountInfo(result, false);
 				showApp();
 			}
@@ -268,7 +283,10 @@ function clearActivePage() {
 	}
 }
 
+// TODO: Fetch data when switching between pages.
 function setPage(page) {
+	page = empty(page) ? defaultChoices.defaultPage.toLowerCase() : page.toLowerCase();
+
 	clearActiveNavbarItem();
 	clearActivePage();
 
@@ -328,6 +346,7 @@ function addSettingsChoiceEvents() {
 			let value = button.getAttribute("data-value");
 			setChoice(key, value);
 			setSettingsChoices(getSettingsChoices());
+			syncSettings();
 		});
 	}
 }
@@ -400,7 +419,25 @@ function setSettingsChoices(choices) {
 	}
 }
 
+function setSettings(settings) {
+	if(empty(settings)) {
+		settings = { ...defaultSettings, ...defaultChoices };
+	}
+
+	Object.keys(settings).map(key => {
+		let value = settings[key];
+		localStorage.setItem(key, value);
+	});
+
+	applicationSettings = getSettings();
+	applicationChoices = getSettingsChoices();
+
+	setSettingsChoices(applicationChoices);
+}
+
 function setSettingsPage(page) {
+	page = empty(page) ? defaultChoices.defaultSettingsPage : page.toLowerCase();
+
 	clearActiveSettingsNavbarItem();
 	clearActiveSettingsPage();
 
@@ -419,6 +456,39 @@ function resetSettings() {
 	setTimeout(() => {
 		window.location.reload();
 	}, 3500);
+}
+
+// Get settings before updating.
+function syncSettings() {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
+
+	let settings = JSON.stringify({ ...getSettings(), ...getSettingsChoices() });
+	let encrypted = CryptoFN.encryptAES(settings, localStorage.getItem("key"));
+
+	updateSetting(token, userID, encrypted).then(result => {
+		if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
+			Notify.error({
+				title: "Error",
+				description: "Couldn't update / sync setting.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+
+			console.log(result);
+		}
+	}).catch(error => {
+		Notify.error({
+			title: "Error",
+			description: error,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+
+		console.log(error);
+	});
 }
 
 function showLoading(limit, text = "") {
