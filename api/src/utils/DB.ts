@@ -45,6 +45,24 @@ export default class DB {
 		});
 	}
 
+	asyncDBGet(sql: string, values: any[]) {
+		return new Promise((resolve, reject) => {
+			this.db?.get(sql, values, (error: any, row: any) => {
+				if(error) {
+					console.log(error);
+					reject();
+				} else {
+					if(row === undefined) {
+						reject("Row not found.");
+						return;
+					}
+
+					resolve(row);
+				}
+			});
+		});
+	}
+
 	async createUserTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {

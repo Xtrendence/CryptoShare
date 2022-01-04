@@ -136,11 +136,25 @@ export default class Utils {
 						let token = await this.generateToken();
 						this.db?.runQuery("INSERT INTO Login (userID, loginToken, loginDate) VALUES (?, ?, TIME())", [row.userID, token]);
 
+						let settings;
+
+						try {
+							settings = await this.db?.asyncDBGet("SELECT * FROM Setting WHERE userID = ?", [row.userID]);
+						} catch(error: any) {
+							if(error.toString().includes("not found")) {
+								this.db?.runQuery("INSERT INTO Setting (userID, userSettings) VALUES (?, ?)", [row.userID, ""]);
+								settings = "";
+							} else {
+								console.log(error);
+							}
+						}
+
 						resolve(JSON.stringify({
 							userID: row.userID,
 							username: row.username,
 							key: row.key,
-							token: token
+							token: token,
+							settings: settings
 						}));
 					} else {
 						reject("!Incorrect password.!");
