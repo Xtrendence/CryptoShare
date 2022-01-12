@@ -137,6 +137,7 @@ export default class Utils {
 		return Object.keys(content);
 	}
 
+	// TODO: Get settings before updating.
 	static async syncSettings() {
 		let theme: any = await AsyncStorage.getItem("theme");
 		let url = await AsyncStorage.getItem("api");

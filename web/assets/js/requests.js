@@ -74,6 +74,22 @@ function changePassword(userID, token, currentPassword, newPassword) {
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
 }
 
+function readSetting(token, userID) {
+	let query = {
+		query: `query readSetting($token: String!, $userID: Int!) {
+			readSetting(token: $token, userID: $userID) {
+				userSettings
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function updateSetting(token, userID, userSettings) {
 	let query = {
 		query: `mutation updateSetting($token: String!, $userID: Int!, $userSettings: String!) {

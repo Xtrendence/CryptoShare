@@ -368,6 +368,31 @@ function setChoice(key, value) {
 	localStorage.setItem("choices", JSON.stringify(choices));
 }
 
+function fetchSettings() {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
+	let key = localStorage.getItem("key");
+
+	return new Promise((resolve, reject) => {
+		readSetting(token, userID).then(result => {
+			if(!("errors" in result)) {
+				let current = CryptoFN.decryptAES(result.data.readSetting.userSettings, key);
+				resolve(current);
+			} else {
+				Notify.error({
+					title: "Error",
+					description: result.errors[0],
+					duration: 5000,
+					background: "var(--accent-second)",
+					color: "var(--accent-contrast)"
+				});
+			}
+		}).catch(error => {
+			reject(error);
+		})
+	});
+}
+
 function getSettings() {
 	let settings = {};
 
@@ -458,13 +483,24 @@ function resetSettings() {
 	}, 3500);
 }
 
-// Get settings before updating.
-function syncSettings() {
-	let userID = localStorage.getItem("userID");
+async function syncSettings() {
 	let token = localStorage.getItem("token");
+	let userID = localStorage.getItem("userID");
+	let key = localStorage.getItem("key");
 
-	let settings = JSON.stringify({ ...getSettings(), ...getSettingsChoices() });
-	let encrypted = CryptoFN.encryptAES(settings, localStorage.getItem("key"));
+	let settings = { ...getSettings(), ...getSettingsChoices() };
+
+	let current = await fetchSettings();
+
+	if(validJSON(current)) {
+		current = JSON.parse(current);
+
+		Object.keys(current).map(settingKey => {
+			settings[settingKey] = current[settingKey];
+		});
+	}
+
+	let encrypted = CryptoFN.encryptAES(JSON.stringify(settings), key);
 
 	updateSetting(token, userID, encrypted).then(result => {
 		if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
