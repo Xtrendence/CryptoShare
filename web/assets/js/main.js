@@ -15,3 +15,7 @@ addNavbarEvents();
 addSettingsNavbarEvents();
 
 addSettingsChoiceEvents();
+
+setInterval(() => {
+	populateMarketList();
+}, 15000);

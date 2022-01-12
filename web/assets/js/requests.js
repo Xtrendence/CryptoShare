@@ -106,6 +106,8 @@ function updateSetting(token, userID, userSettings) {
 }
 
 function request(method, url, body) {
+	console.log("Request", url);
+
 	return new Promise((resolve, reject) => {
 		try {
 			let xhr = new XMLHttpRequest();

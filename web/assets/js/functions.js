@@ -269,6 +269,15 @@ function addNavbarEvents() {
 	}
 }
 
+function getActivePage() {
+	let pages = divPageApp.getElementsByClassName("page");
+	for(let i = 0; i < pages.length; i++) {
+		if(!pages[i].classList.contains("hidden")) {
+			return pages[i];
+		}
+	}
+}
+
 function clearActiveNavbarItem() {
 	let items = divNavbar.getElementsByClassName("item");
 	for(let i = 0; i < items.length; i++) {
@@ -312,8 +321,10 @@ function setPage(page) {
 }
 
 async function populateMarketList() {
-	let currency = getCurrency();
-	populateMarketListCrypto(currency);
+	if(getActivePage().id === "market-page") {
+		let currency = getCurrency();
+		populateMarketListCrypto(currency);
+	}
 }
 
 async function populateMarketListCrypto(currency) {
