@@ -143,7 +143,8 @@ export default class DB {
 					CREATE TABLE IF NOT EXISTS Coin (
 						coinID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 						assetID VARCHAR(64) NOT NULL,
-						assetSymbol VARCHAR(16) NOT NULL
+						assetSymbol VARCHAR(16) NOT NULL,
+						data BLOB
 					);
 				`);
 
@@ -200,7 +201,8 @@ export default class DB {
 					CREATE TABLE IF NOT EXISTS Stock (
 						stockID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 						assetID VARCHAR(64) NOT NULL,
-						assetSymbol VARCHAR(16) NOT NULL
+						assetSymbol VARCHAR(16) NOT NULL,
+						data BLOB
 					);
 				`);
 

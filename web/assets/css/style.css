@@ -654,6 +654,21 @@ html.light .toggle-container {
 
 }
 
+.page-container-toolbar {
+	display:block;
+	width:100%;
+	text-align:center;
+	margin:20px auto 20px auto;
+}
+
+.market-list {
+	position:absolute;
+	width:100%;
+	height:calc(100% - 40px - 60px);
+	left:0;
+	top:80px;
+}
+
 .page-container.settings {
 	box-sizing:border-box;
 	border-style:solid;
@@ -751,7 +766,7 @@ html.light .toggle-container {
 	margin-top:5px;
 	margin-bottom:5px;
 }
-.settings-section .action-button, .settings-section .choice-button {
+.action-button, .choice-button {
 	display:inline-block;
 	vertical-align:middle;
 	padding:0 10px 0 10px;
@@ -764,7 +779,7 @@ html.light .toggle-container {
 	color:var(--accent-contrast);
 	transition:background 0.25s;
 }
-.settings-section .choice-button {
+.choice-button {
 	box-sizing:border-box;
 	border-style:solid;
 	border-width:2px;
@@ -772,21 +787,21 @@ html.light .toggle-container {
 	background:none;
 	color:var(--main-contrast);
 }
-html.light .settings-section .choice-button {
+html.light .choice-button {
 	color:var(--main-contrast-darker);
 	border-color:var(--main-contrast-darker);
 }
 .settings-section .action-button:first-of-type, .settings-section .choice-button:first-of-type {
 	margin-left:0;
 }
-#desktop .settings-section .action-button:hover {
+#desktop .action-button:hover {
 	background:var(--accent-second);
 }
-#desktop .settings-section .choice-button:hover, .settings-section .choice-button.active, html.light .settings-section .choice-button.active {
+#desktop .choice-button:hover, .choice-button.active, html.light .choice-button.active {
 	background:var(--accent-first);
 	border-color:var(--accent-first);
 	color:var(--accent-contrast);
 }
-.settings-section .choice-button.active {
+.choice-button.active {
 	pointer-events:none;
 }
