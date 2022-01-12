@@ -695,7 +695,7 @@ html.light .toggle-container {
 	padding:20px;
 	border-radius:50%;
 }
-.market-list-row .info-wrapper {
+.market-list-row .info-wrapper, .market-list-row .info-container {
 	display:inline-block;
 	vertical-align:middle;
 	text-align:right;

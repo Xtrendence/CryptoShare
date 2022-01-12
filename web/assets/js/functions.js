@@ -337,7 +337,16 @@ async function populateMarketListCrypto(currency) {
 			if(divMarketListCrypto.childElementCount >= i + 1) {
 				let current = divMarketListCrypto.getElementsByClassName("market-list-row")[i];
 				if(current.innerHTML !== rows[i].innerHTML) {
-					current.innerHTML = rows[i].innerHTML;
+					let currentIcon = current.getElementsByClassName("icon")[0];
+					let currentInfo = current.getElementsByClassName("info-wrapper")[0];
+
+					if(currentIcon !== rows[i].getElementsByClassName("icon")[0]) {
+						currentIcon.setAttribute("src", rows[i].getElementsByClassName("icon")[0].getAttribute("src"));
+					}
+
+					if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
+						currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
+					}
 				}
 			} else {
 				divMarketListCrypto.appendChild(rows[i]);
@@ -380,7 +389,7 @@ function createMarketListCryptoRows(marketData, currency) {
 		div.id = "market-list-crypto-" + id;
 		div.setAttribute("class", "market-list-row crypto noselect");
 
-		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><span class="name">${name}</span><span class="symbol">${symbol.toUpperCase()}</span><div class="info-wrapper"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div>`;
+		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><div class="info-wrapper"><span class="name">${name}</span><span class="symbol">${symbol.toUpperCase()}</span><div class="info-container"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div></div>`;
 
 		rows.push(div);
 	});
