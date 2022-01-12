@@ -28,6 +28,12 @@ let loginToggleTheme = document.getElementById("login-toggle-theme");
 let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
+let divMarketListCrypto = document.getElementById("market-list-crypto");
+let divMarketListStocks = document.getElementById("market-list-stocks");
+
+let buttonMarketCrypto = document.getElementById("button-market-crypto");
+let buttonMarketStocks = document.getElementById("button-market-stocks");
+
 let divSettingsNavbar = document.getElementById("settings-navbar");
 let divPageSettings = document.getElementById("settings-page");
 

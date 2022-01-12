@@ -6,7 +6,6 @@ window.addEventListener("resize", () => {
 	}, 250);
 });
 
-// TODO: Remove after development.
 document.addEventListener("click", (event) => {
 	let audible = audibleElement(event.target);
 	if(applicationSettings.sounds === "enabled" && audioPlayable && audible.audible) {
@@ -86,6 +85,26 @@ loginToggleTheme.addEventListener("click", () => {
 	}
 });
 
+buttonMarketCrypto.addEventListener("click", () => {
+	if(!buttonMarketCrypto.classList.contains("active")) {
+		buttonMarketCrypto.classList.add("active");
+		buttonMarketStocks.classList.remove("active");
+
+		divMarketListCrypto.classList.remove("hidden");
+		divMarketListStocks.classList.add("hidden");
+	}
+});
+
+buttonMarketStocks.addEventListener("click", () => {
+	if(!buttonMarketStocks.classList.contains("active")) {
+		buttonMarketCrypto.classList.remove("active");
+		buttonMarketStocks.classList.add("active");
+
+		divMarketListCrypto.classList.add("hidden");
+		divMarketListStocks.classList.remove("hidden");
+	}
+});
+
 settingsToggleTheme.addEventListener("click", () => {
 	if(settingsToggleTheme.classList.contains("active")) {
 		setTheme("dark");
@@ -93,7 +112,7 @@ settingsToggleTheme.addEventListener("click", () => {
 		setTheme("light");
 	}
 
-	syncSettings();
+	syncSettings(true);
 });
 
 settingsToggleBackground.addEventListener("click", () => {
@@ -103,7 +122,7 @@ settingsToggleBackground.addEventListener("click", () => {
 		setBackground("animated", applicationSettings.theme);
 	}
 
-	syncSettings();
+	syncSettings(true);
 });
 
 settingsToggleSimpleBackground.addEventListener("click", () => {
@@ -113,7 +132,7 @@ settingsToggleSimpleBackground.addEventListener("click", () => {
 		setBackground("simple", applicationSettings.theme);
 	}
 
-	syncSettings();
+	syncSettings(true);
 });
 
 settingsToggleSounds.addEventListener("click", () => {
@@ -125,7 +144,7 @@ settingsToggleSounds.addEventListener("click", () => {
 		setSounds("enabled");
 	}
 
-	syncSettings();
+	syncSettings(true);
 });
 
 buttonSettingsLogout.addEventListener("click", () => {
