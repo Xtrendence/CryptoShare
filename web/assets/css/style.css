@@ -717,11 +717,18 @@ html.light .toggle-container {
 .market-list-row .name {
 	position:absolute;
 	left:140px;
-	top:calc(50% - 40px / 2);
-	display:block;
-	line-height:40px;
-	padding:0 10px 0 10px;
+	top:17px;
+	padding:9px 10px 9px 10px;
 	background:var(--accent-first);
+	color:var(--accent-contrast);
+	border-radius:var(--border-radius);
+}
+.market-list-row .symbol {
+	position:absolute;
+	left:140px;
+	bottom:17px;
+	padding:9px 10px 9px 10px;
+	background:var(--accent-second);
 	color:var(--accent-contrast);
 	border-radius:var(--border-radius);
 }

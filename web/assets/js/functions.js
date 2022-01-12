@@ -369,7 +369,7 @@ function createMarketListCryptoRows(marketData, currency) {
 		div.id = "market-list-crypto-" + id;
 		div.setAttribute("class", "market-list-row crypto noselect");
 
-		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><span class="name">${name} (${symbol.toUpperCase()})</span><div class="info-wrapper"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div>`;
+		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><span class="name">${name}</span><span class="symbol">${symbol.toUpperCase()}</span><div class="info-wrapper"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div>`;
 
 		rows.push(div);
 	});
