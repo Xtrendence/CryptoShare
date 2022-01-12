@@ -496,11 +496,13 @@ async function syncSettings() {
 		current = JSON.parse(current);
 
 		Object.keys(current).map(settingKey => {
-			settings[settingKey] = current[settingKey];
+			if(settingKey in settings) {
+				current[settingKey] = settings[settingKey];
+			}
 		});
 	}
 
-	let encrypted = CryptoFN.encryptAES(JSON.stringify(settings), key);
+	let encrypted = CryptoFN.encryptAES(JSON.stringify(current), key);
 
 	updateSetting(token, userID, encrypted).then(result => {
 		if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
