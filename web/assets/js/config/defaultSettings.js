@@ -6,5 +6,6 @@ let defaultSettings = {
 
 let defaultChoices = {
 	"defaultPage": "Market",
-	"defaultSettingsPage": "behavior"
+	"defaultSettingsPage": "behavior",
+	"currency": "usd"
 };

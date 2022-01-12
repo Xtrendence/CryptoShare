@@ -299,6 +299,7 @@ function setPage(page) {
 		case "dashboard":
 			break;
 		case "market":
+			populateMarketList();
 			break;
 		case "holdings":
 			break;
@@ -308,6 +309,82 @@ function setPage(page) {
 			syncSettings(false);
 			break;
 	}
+}
+
+async function populateMarketList() {
+	let currency = getCurrency();
+	populateMarketListCrypto(currency);
+}
+
+async function populateMarketListCrypto(currency) {
+	try {
+		let marketData = await cryptoAPI.getMarket(currency, 100, 1);
+
+		let rows = createMarketListCryptoRows(marketData, currency);
+
+		for(let i = 0; i < rows.length; i++) {
+			if(divMarketListCrypto.childElementCount >= i + 1) {
+				let current = divMarketListCrypto.getElementsByClassName("market-list-row")[i];
+				if(current.innerHTML !== rows[i].innerHTML) {
+					current.innerHTML = rows[i].innerHTML;
+				}
+			} else {
+				divMarketListCrypto.appendChild(rows[i]);
+			}
+		}
+	} catch(error) {
+		console.log(error);
+	}
+}
+
+function createMarketListCryptoRows(marketData, currency) {
+	let rows = [];
+
+	let ids = Object.keys(marketData);
+
+	ids.map(id => {
+		let coin = marketData[id];
+
+		let price = coin.current_price;
+		let icon = coin.image;
+		let marketCap = coin.market_cap;
+		let priceChangeDay = coin.market_cap_change_percentage_24h;
+		let athChange = coin.ath_change_percentage;
+		let name = coin.name;
+		let symbol = coin.symbol;
+
+		if(!empty(priceChangeDay)) {
+			priceChangeDay = priceChangeDay.toFixed(2).includes("-") ? priceChangeDay.toFixed(2) : "+" + priceChangeDay.toFixed(2);
+		} else {
+			priceChangeDay = "-";
+		}
+
+		if(!empty(athChange)) {
+			athChange = athChange.toFixed(2).includes("-") ? athChange.toFixed(2) : "+" + athChange.toFixed(2);
+		} else {
+			athChange = "-";
+		}
+
+		let div = document.createElement("div");
+		div.id = "market-list-crypto-" + id;
+		div.setAttribute("class", "market-list-row crypto noselect");
+
+		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><span class="name">${name} (${symbol.toUpperCase()})</span><div class="info-wrapper"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div>`;
+
+		rows.push(div);
+	});
+
+	return rows;
+}
+
+function getCurrency() {
+	let currency = getSettingsChoices()?.currency;
+
+	if(empty(currency)) {
+		return defaultChoices.currency;
+	}
+
+	return currency;
 }
 
 function addSettingsNavbarEvents() {
@@ -390,7 +467,7 @@ function fetchSettings() {
 			}
 		}).catch(error => {
 			reject(error);
-		})
+		});
 	});
 }
 

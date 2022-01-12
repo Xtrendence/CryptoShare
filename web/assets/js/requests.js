@@ -139,6 +139,32 @@ function request(method, url, body) {
 	});
 }
 
+const cryptoAPI = {
+	getGlobal() {
+		return request("GET", "https://api.coingecko.com/api/v3/global", null);
+	},
+
+	getCoins() {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/", null);
+	},
+
+	getCoinData(id) {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null);
+	},
+
+	getCoinDataByDate(id, date) {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null);
+	},
+
+	getMarketByID(currency, ids) {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&ids=" + ids + "&order=market_cap_desc&per_page=250&page=1&sparkline=false", null);
+	},
+
+	getMarket(currency, amount, page) {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&order=market_cap_desc&per_page=" + amount + "&page=" + page + "&sparkline=false", null);
+	},
+};
+
 function empty(value) {
 	if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 		return true;
