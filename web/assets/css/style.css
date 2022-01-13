@@ -706,8 +706,12 @@ html.light .market-list-row .icon-wrapper {
 .market-list-row .icon {
 	width:calc(100% - 40px);
 	height:calc(100% - 40px);
-	padding:20px;
+	margin:16px;
+	padding:2px;
 	border-radius:50%;
+}
+html.dark .market-list.backdrop .icon {
+	background:rgb(255,255,255);
 }
 .market-list-row .info-wrapper, .market-list-row .info-container {
 	display:inline-block;
@@ -716,7 +720,7 @@ html.light .market-list-row .icon-wrapper {
 	width:calc(100% - 40px - 60px - 30px);
 }
 .market-list-row .info-container {
-	width:calc(100% - 200px);
+	width:calc(100% - 220px);
 	white-space:nowrap;
 	overflow:auto visible;
 	padding:20px 0 20px 0;

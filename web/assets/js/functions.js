@@ -322,8 +322,21 @@ function setPage(page) {
 
 async function populateMarketList() {
 	if(getActivePage().id === "market-page") {
+		checkBackdrop();
 		let currency = getCurrency();
 		populateMarketListCrypto(currency);
+	}
+}
+
+function checkBackdrop() {
+	let choices = getSettingsChoices();
+
+	if("assetIconBackdrop" in choices && choices.assetIconBackdrop === "enabled") {
+		divMarketListCrypto.classList.add("backdrop");
+		divMarketListStocks.classList.add("backdrop");
+	} else {
+		divMarketListCrypto.classList.remove("backdrop");
+		divMarketListStocks.classList.remove("backdrop");
 	}
 }
 

@@ -7,5 +7,6 @@ let defaultSettings = {
 let defaultChoices = {
 	"defaultPage": "Market",
 	"defaultSettingsPage": "behavior",
-	"currency": "usd"
+	"currency": "usd",
+	"assetIconBackdrop": "disabled"
 };
