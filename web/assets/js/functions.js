@@ -368,8 +368,8 @@ function createMarketListCryptoRows(marketData, currency) {
 		let price = coin.current_price;
 		let icon = coin.image;
 		let marketCap = coin.market_cap;
-		let priceChangeDay = coin.market_cap_change_percentage_24h;
-		let athChange = coin.ath_change_percentage;
+		let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+		let athChange = formatPercentage(coin.ath_change_percentage);
 		let ath = coin.ath;
 		let high24h = coin.high_24h;
 		let low24h = coin.low_24h;
@@ -378,25 +378,13 @@ function createMarketListCryptoRows(marketData, currency) {
 		let name = coin.name;
 		let symbol = coin.symbol;
 
-		if(!empty(priceChangeDay)) {
-			priceChangeDay = priceChangeDay.toFixed(2).includes("-") ? priceChangeDay.toFixed(2) : "+" + priceChangeDay.toFixed(2);
-		} else {
-			priceChangeDay = "-";
-		}
-
-		if(!empty(athChange)) {
-			athChange = athChange.toFixed(2).includes("-") ? athChange.toFixed(2) : "+" + athChange.toFixed(2);
-		} else {
-			athChange = "-";
-		}
-
 		let div = document.createElement("div");
 		div.id = "market-list-crypto-" + id;
 		div.setAttribute("class", "market-list-row crypto noselect");
 
 		div.innerHTML = `
 			<div class="icon-wrapper">
-				<img class="icon" src="${icon}">
+				<img class="icon" src="${icon}" draggable="false">
 			</div>
 			<div class="info-wrapper">
 				<span class="name">${name}</span>

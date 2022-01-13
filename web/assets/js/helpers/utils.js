@@ -39,6 +39,14 @@ function validJSON(json) {
 	return false;
 }
 
+function formatPercentage(number) {
+	if(!empty(number)) {
+		return number.toFixed(2).includes("-") ? number.toFixed(2) : "+" + number.toFixed(2);
+	} else {
+		return "-";
+	}
+}
+
 function separateThousands(number) {
 	let parts = number.toString().split(".");
 	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");

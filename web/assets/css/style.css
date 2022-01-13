@@ -679,6 +679,16 @@ html.light .toggle-container {
 	overflow:hidden;
 	border-radius:var(--border-radius);
 	margin:0 auto 20px auto;
+	cursor:pointer;
+}
+html.light .market-list-row {
+	background:var(--main-fourth);
+}
+html.light #desktop .market-list-row:hover {
+	background:var(--main-fifth);
+}
+#desktop .market-list-row:hover {
+	background:var(--main-fourth);
 }
 .market-list-row .icon-wrapper {
 	width:120px;
@@ -688,6 +698,9 @@ html.light .toggle-container {
 	position:relative;
 	background:var(--main-first);
 	margin-left:-10px;
+}
+html.light .market-list-row .icon-wrapper {
+	background:var(--main-first-transparent);
 }
 .market-list-row .icon {
 	width:calc(100% - 40px);
