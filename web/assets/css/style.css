@@ -51,18 +51,18 @@ a {
 ::-webkit-scrollbar, div::-webkit-scrollbar {
 	display:block;
 	width:4px;
-	height:10px;
-	background:var(--main-second);
+	height:6px;
+	background:var(--main-fifth);
 }
 ::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 	border-radius:5px;
-	background:var(--main-fifth);
+	background:var(--main-contrast-darker);
 }
 ::-webkit-scrollbar-thumb:hover, div::-webkit-scrollbar-thumb:hover {
-	background:var(--main-fourth);
+	background:var(--accent-first);
 }
 ::-webkit-scrollbar-track, div::-webkit-scrollbar-track { 
-	background:var(--main-second);
+	background:var(--main-first);
 }
 
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
@@ -672,6 +672,7 @@ html.light .toggle-container {
 .market-list-row {
 	position:relative;
 	width:calc(100% - 40px);
+	max-width:1320px;
 	display:block;
 	background:var(--main-third);
 	opacity:0.8;
@@ -715,7 +716,7 @@ html.light .market-list-row .icon-wrapper {
 	width:calc(100% - 40px - 60px - 30px);
 }
 .market-list-row .info-container {
-	width:calc(100% - 160px);
+	width:calc(100% - 200px);
 	white-space:nowrap;
 	overflow:auto visible;
 	padding:20px 0 20px 0;
@@ -745,7 +746,7 @@ html.light .market-list-row .icon-wrapper {
 	padding:10px;
 	border-radius:var(--border-radius);
 }
-.market-list-row .name, .market-list-row .symbol {
+.market-list-row .name, .market-list-row .rank, .market-list-row .symbol {
 	max-width:200px;
 	text-overflow:ellipsis;
 	white-space:nowrap;
@@ -758,9 +759,29 @@ html.light .market-list-row .icon-wrapper {
 	color:var(--accent-contrast);
 	border-radius:var(--border-radius);
 }
-.market-list-row .symbol {
-	top:auto;
+.market-list-row .rank-container {
+	position:absolute;
+	left:140px;
 	bottom:17px;
+}
+.market-list-row .rank {
+	text-align:center;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+	top:auto;
+	left:auto;
+	background:var(--accent-second);
+}
+.market-list-row .symbol {
+	margin-left:10px;
+	text-align:center;
+	display:inline-block;
+	vertical-align:top;
+	position:relative;
+	top:auto;
+	left:auto;
+	background:var(--accent-third);
 }
 
 .page-container.settings {

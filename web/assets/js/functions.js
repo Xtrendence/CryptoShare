@@ -362,7 +362,8 @@ function createMarketListCryptoRows(marketData, currency) {
 
 	let ids = Object.keys(marketData);
 
-	ids.map(id => {
+	for(let i = 0; i < ids.length; i++) {
+		let id = ids[i];
 		let coin = marketData[id];
 
 		let price = coin.current_price;
@@ -388,7 +389,10 @@ function createMarketListCryptoRows(marketData, currency) {
 			</div>
 			<div class="info-wrapper">
 				<span class="name">${name}</span>
-				<span class="symbol">${symbol.toUpperCase()}</span>
+				<div class="rank-container">
+					<span class="rank">#${i + 1}</span>
+					<span class="symbol">${symbol.toUpperCase()}</span>
+				</div>
 				<div class="info-container">
 					<div class="top">
 						<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
@@ -408,7 +412,7 @@ function createMarketListCryptoRows(marketData, currency) {
 		`;
 
 		rows.push(div);
-	});
+	}
 
 	return rows;
 }
