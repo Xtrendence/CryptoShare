@@ -53,6 +53,7 @@ a {
 	width:4px;
 	height:6px;
 	background:var(--main-fifth);
+	border-radius:5px;
 }
 ::-webkit-scrollbar-thumb, div::-webkit-scrollbar-thumb {
 	border-radius:5px;
@@ -63,6 +64,7 @@ a {
 }
 ::-webkit-scrollbar-track, div::-webkit-scrollbar-track { 
 	background:var(--main-first);
+	border-radius:5px;
 }
 
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
