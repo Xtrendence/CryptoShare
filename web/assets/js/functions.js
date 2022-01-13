@@ -406,6 +406,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 
 			let coin = marketData[id];
 
+			let coinID = coin.id;
 			let price = coin.current_price;
 			let icon = coin.image;
 			let marketCap = coin.market_cap;
@@ -419,29 +420,31 @@ function createMarketListCryptoRows(marketData, page, currency) {
 			let name = coin.name;
 			let symbol = coin.symbol;
 
+			let info = { coinID:coinID, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, athChange:ath, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol };
+
 			let div = document.createElement("div");
-			div.id = "market-list-crypto-" + id;
-			div.setAttribute("class", "market-list-row crypto noselect");
+			div.id = "market-list-crypto-" + coinID;
+			div.setAttribute("class", "market-list-row crypto noselect audible-pop");
 
 			div.innerHTML = `
-				<div class="icon-wrapper">
+				<div class="icon-wrapper audible-pop">
 					<img class="icon" src="${icon}" draggable="false">
 				</div>
-				<div class="info-wrapper">
+				<div class="info-wrapper audible-pop">
 					<span class="name">${name}</span>
-					<div class="rank-container">
+					<div class="rank-container audible-pop">
 						<span class="rank">#${rank}</span>
 						<span class="symbol">${symbol.toUpperCase()}</span>
 					</div>
 					<div class="info-container">
-						<div class="top">
+						<div class="top audible-pop">
 							<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
 							<span class="ath">ATH: ${currencySymbols[currency] + separateThousands(ath)}</span>
 							<span class="high-24h">24h High: ${currencySymbols[currency] + separateThousands(high24h)}</span>
 							<span class="low-24h">24h Low: ${currencySymbols[currency] + separateThousands(low24h)}</span>
 							<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
 						</div>
-						<div class="bottom">
+						<div class="bottom audible-pop">
 							<span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span>
 							<span class="price-change">24h Change: ${priceChangeDay}%</span>
 							<span class="ath-change">ATH Change: ${athChange}%</span>
@@ -451,6 +454,8 @@ function createMarketListCryptoRows(marketData, page, currency) {
 				</div>
 			`;
 
+			addMarketListCryptoRowListener(div, info);
+
 			rows.push(div);
 		} catch(error) {
 			console.log(error);
@@ -458,6 +463,34 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	}
 
 	return rows;
+}
+
+// TODO: Fetch coin historical data.
+function addMarketListCryptoRowListener(div, info) {
+	div.addEventListener("click", async () => {
+		try {
+			showLoading(4000, "Fetching Market Data...");
+
+			let data = await cryptoAPI.getCoinData(info.coinID);
+			hideLoading();
+
+			console.log(data);
+
+			let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
+
+			popup.show();
+		} catch(error) {
+			Notify.error({
+				title: "Error",
+				description: `Couldn't fetch market data for ${info.name}`,
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+
+			console.log(error);
+		}
+	});
 }
 
 function getCurrency() {

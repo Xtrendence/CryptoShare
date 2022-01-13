@@ -102,32 +102,37 @@ class Popup {
 		let div = document.createElement("div");
 		div.setAttribute("class", "popup-button-wrapper");
 
-		let buttonCancel = document.createElement("button");
-		buttonCancel.id = "popup-button-cancel";
-		buttonCancel.setAttribute("class", "button-cancel");
-		buttonCancel.textContent = ("cancelText" in this.options) ? this.options.cancelText : "Cancel";
-		buttonCancel.addEventListener("click", () => {
-			if(this.hasEvent("cancel")) {
-				this.events["cancel"]();
-				return;
-			}
-			this.hide();
-		});
+		if(!("cancelText" in this.options) || this.options.cancelText !== "-") {
+			let buttonCancel = document.createElement("button");
+			buttonCancel.id = "popup-button-cancel";
+			buttonCancel.setAttribute("class", "button-cancel");
+			buttonCancel.textContent = ("cancelText" in this.options) ? this.options.cancelText : "Cancel";
+			buttonCancel.addEventListener("click", () => {
+				if(this.hasEvent("cancel")) {
+					this.events["cancel"]();
+					return;
+				}
+				this.hide();
+			});
+			
+			div.appendChild(buttonCancel);
+		}
 
-		let buttonConfirm = document.createElement("button");
-		buttonConfirm.id = "popup-button-confirm";
-		buttonConfirm.setAttribute("class", "button-confirm");
-		buttonConfirm.textContent = ("confirmText" in this.options) ? this.options.confirmText : "Confirm";
-		buttonConfirm.addEventListener("click", () => {
-			if(this.hasEvent("confirm")) {
-				this.events["confirm"]();
-				return;
-			}
-			this.hide();
-		});
-
-		div.appendChild(buttonCancel);
-		div.appendChild(buttonConfirm);
+		if(!("confirmText" in this.options) || this.options.confirmText !== "-") {
+			let buttonConfirm = document.createElement("button");
+			buttonConfirm.id = "popup-button-confirm";
+			buttonConfirm.setAttribute("class", "button-confirm");
+			buttonConfirm.textContent = ("confirmText" in this.options) ? this.options.confirmText : "Confirm";
+			buttonConfirm.addEventListener("click", () => {
+				if(this.hasEvent("confirm")) {
+					this.events["confirm"]();
+					return;
+				}
+				this.hide();
+			});
+			
+			div.appendChild(buttonConfirm);
+		}
 
 		content.appendChild(div);
 
@@ -147,12 +152,29 @@ class Popup {
 	}
 
 	setSize(width, height) {
-		this.width = width;
-		this.height = height;
-		this.element.style.width = width + "px";
-		this.element.style.height = height + "px";
-		this.element.style.left = `calc(50% - ${width / 2}px)`;
-		this.element.style.top = `calc(50% - ${height / 2}px)`;
+		if(width === "full") {
+			this.width = "calc(100% - 40px)";
+			this.element.style.width = this.width;
+			this.element.style.left = "20px";
+			this.element.classList.add("full-width");
+		} else {
+			this.width = width;
+			this.element.style.width = width + "px";
+			this.element.style.left = `calc(50% - ${width / 2}px)`;
+			this.element.classList.remove("full-width");
+		}
+		
+		if(height === "full") {
+			this.height = "calc(100% - 40px)";
+			this.element.style.height = this.height;
+			this.element.style.top = "20px";
+			this.element.classList.add("full-height");
+		} else {
+			this.height = height;
+			this.element.style.height = height + "px";
+			this.element.style.top = `calc(50% - ${height / 2}px)`;
+			this.element.classList.remove("full-height");
+		}
 	}
 
 	setTitle(title) {
