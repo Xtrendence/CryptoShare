@@ -370,6 +370,11 @@ function createMarketListCryptoRows(marketData, currency) {
 		let marketCap = coin.market_cap;
 		let priceChangeDay = coin.market_cap_change_percentage_24h;
 		let athChange = coin.ath_change_percentage;
+		let ath = coin.ath;
+		let high24h = coin.high_24h;
+		let low24h = coin.low_24h;
+		let volume = coin.total_volume;
+		let supply = coin.circulating_supply;
 		let name = coin.name;
 		let symbol = coin.symbol;
 
@@ -389,7 +394,30 @@ function createMarketListCryptoRows(marketData, currency) {
 		div.id = "market-list-crypto-" + id;
 		div.setAttribute("class", "market-list-row crypto noselect");
 
-		div.innerHTML = `<div class="icon-wrapper"><img class="icon" src="${icon}"></div><div class="info-wrapper"><span class="name">${name}</span><span class="symbol">${symbol.toUpperCase()}</span><div class="info-container"><div class="top"><span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span><span class="ath">ATH Change: ${athChange}%</span></div><div class="bottom"><span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span><span class="change">24h Change: ${priceChangeDay}%</span></div></div></div>`;
+		div.innerHTML = `
+			<div class="icon-wrapper">
+				<img class="icon" src="${icon}">
+			</div>
+			<div class="info-wrapper">
+				<span class="name">${name}</span>
+				<span class="symbol">${symbol.toUpperCase()}</span>
+				<div class="info-container">
+					<div class="top">
+						<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+						<span class="ath">ATH: ${currencySymbols[currency] + separateThousands(ath)}</span>
+						<span class="high-24h">24h High: ${currencySymbols[currency] + separateThousands(high24h)}</span>
+						<span class="low-24h">24h Low: ${currencySymbols[currency] + separateThousands(low24h)}</span>
+						<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+					</div>
+					<div class="bottom">
+						<span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span>
+						<span class="price-change">24h Change: ${priceChangeDay}%</span>
+						<span class="ath-change">ATH Change: ${athChange}%</span>
+						<span class="supply">Supply: ${abbreviateNumber(supply, 2)}</span>
+					</div>
+				</div>
+			</div>
+		`;
 
 		rows.push(div);
 	});

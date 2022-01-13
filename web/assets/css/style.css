@@ -701,6 +701,12 @@ html.light .toggle-container {
 	text-align:right;
 	width:calc(100% - 40px - 60px - 30px);
 }
+.market-list-row .info-container {
+	width:calc(100% - 160px);
+	white-space:nowrap;
+	overflow:auto visible;
+	padding:20px 0 20px 0;
+}
 .market-list-row span {
 	font-size:16px;
 	font-weight:bold;
@@ -714,7 +720,23 @@ html.light .toggle-container {
 	display:block;
 	margin-top:30px;
 }
-.market-list-row .name {
+.market-list-row .top span {
+	background:var(--main-first);
+	margin-left:10px;
+	padding:10px;
+	border-radius:var(--border-radius);
+}
+.market-list-row .bottom span {
+	background:var(--main-first-transparent);
+	margin-left:10px;
+	padding:10px;
+	border-radius:var(--border-radius);
+}
+.market-list-row .name, .market-list-row .symbol {
+	max-width:200px;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
 	position:absolute;
 	left:140px;
 	top:17px;
@@ -724,35 +746,8 @@ html.light .toggle-container {
 	border-radius:var(--border-radius);
 }
 .market-list-row .symbol {
-	position:absolute;
-	left:140px;
+	top:auto;
 	bottom:17px;
-	padding:9px 10px 9px 10px;
-	background:var(--accent-second);
-	color:var(--accent-contrast);
-	border-radius:var(--border-radius);
-}
-.market-list-row .price {
-	background:var(--main-first);
-	padding:10px;
-	border-radius:var(--border-radius);
-}
-.market-list-row .ath {
-	background:var(--main-first);
-	padding:10px;
-	border-radius:var(--border-radius);
-	margin-left:10px;
-}
-.market-list-row .market-cap {
-	background:var(--main-first-transparent);
-	padding:10px;
-	border-radius:var(--border-radius);
-}
-.market-list-row .change {
-	background:var(--main-first-transparent);
-	padding:10px;
-	border-radius:var(--border-radius);
-	margin-left:10px;
 }
 
 .page-container.settings {
