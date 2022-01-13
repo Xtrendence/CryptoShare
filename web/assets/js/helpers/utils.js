@@ -48,9 +48,13 @@ function formatPercentage(number) {
 }
 
 function separateThousands(number) {
-	let parts = number.toString().split(".");
-	parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-	return parts.join(".");
+	try {
+		let parts = number.toString().split(".");
+		parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		return parts.join(".");
+	} catch(error) {
+		return "0";
+	}
 }
 
 function abbreviateNumber(num, digits) {

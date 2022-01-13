@@ -308,7 +308,7 @@ function setPage(page) {
 		case "dashboard":
 			break;
 		case "market":
-			populateMarketList();
+			populateMarketList(1, 1, true);
 			break;
 		case "holdings":
 			break;
@@ -320,11 +320,34 @@ function setPage(page) {
 	}
 }
 
-async function populateMarketList() {
+function getActiveMarketPage() {
+	return { 
+		type: buttonMarketCrypto.classList.contains("active") ? "crypto" : "stocks", 
+		cryptoPage: parseInt(divMarketListCrypto.getAttribute("data-page")),
+		stocksPage: parseInt(divMarketListStocks.getAttribute("data-page"))
+	};
+}
+
+async function populateMarketList(cryptoPage, stocksPage, recreate) {
 	if(getActivePage().id === "market-page") {
+		divMarketListCrypto.setAttribute("data-page", cryptoPage);
+		divMarketListStocks.setAttribute("data-page", stocksPage);
+
+		if(recreate) {
+			let active = getActiveMarketPage();
+
+			if(active.type === "crypto") {
+				divMarketListCrypto.innerHTML = "";
+				spanMarketPage.textContent = `Page ${active.cryptoPage}`;
+			} else {
+				divMarketListStocks.innerHTML = "";
+				spanMarketPage.textContent = `Page ${active.stocksPage}`;
+			}
+		}
+
 		checkBackdrop();
 		let currency = getCurrency();
-		populateMarketListCrypto(currency);
+		populateMarketListCrypto(cryptoPage, currency);
 	}
 }
 
@@ -340,11 +363,11 @@ function checkBackdrop() {
 	}
 }
 
-async function populateMarketListCrypto(currency) {
+async function populateMarketListCrypto(page, currency) {
 	try {
-		let marketData = await cryptoAPI.getMarket(currency, 100, 1);
+		let marketData = await cryptoAPI.getMarket(currency, 100, page);
 
-		let rows = createMarketListCryptoRows(marketData, currency);
+		let rows = createMarketListCryptoRows(marketData, page, currency);
 
 		for(let i = 0; i < rows.length; i++) {
 			if(divMarketListCrypto.childElementCount >= i + 1) {
@@ -370,61 +393,68 @@ async function populateMarketListCrypto(currency) {
 	}
 }
 
-function createMarketListCryptoRows(marketData, currency) {
+function createMarketListCryptoRows(marketData, page, currency) {
 	let rows = [];
 
 	let ids = Object.keys(marketData);
 
-	for(let i = 0; i < ids.length; i++) {
-		let id = ids[i];
-		let coin = marketData[id];
+	for(let i = 0; i < 100; i++) {
+		try {
+			let id = ids[i];
+			
+			let rank = (page - 1) * 100 + (i + 1);
 
-		let price = coin.current_price;
-		let icon = coin.image;
-		let marketCap = coin.market_cap;
-		let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
-		let athChange = formatPercentage(coin.ath_change_percentage);
-		let ath = coin.ath;
-		let high24h = coin.high_24h;
-		let low24h = coin.low_24h;
-		let volume = coin.total_volume;
-		let supply = coin.circulating_supply;
-		let name = coin.name;
-		let symbol = coin.symbol;
+			let coin = marketData[id];
 
-		let div = document.createElement("div");
-		div.id = "market-list-crypto-" + id;
-		div.setAttribute("class", "market-list-row crypto noselect");
+			let price = coin.current_price;
+			let icon = coin.image;
+			let marketCap = coin.market_cap;
+			let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+			let athChange = formatPercentage(coin.ath_change_percentage);
+			let ath = coin.ath;
+			let high24h = coin.high_24h;
+			let low24h = coin.low_24h;
+			let volume = coin.total_volume;
+			let supply = coin.circulating_supply;
+			let name = coin.name;
+			let symbol = coin.symbol;
 
-		div.innerHTML = `
-			<div class="icon-wrapper">
-				<img class="icon" src="${icon}" draggable="false">
-			</div>
-			<div class="info-wrapper">
-				<span class="name">${name}</span>
-				<div class="rank-container">
-					<span class="rank">#${i + 1}</span>
-					<span class="symbol">${symbol.toUpperCase()}</span>
+			let div = document.createElement("div");
+			div.id = "market-list-crypto-" + id;
+			div.setAttribute("class", "market-list-row crypto noselect");
+
+			div.innerHTML = `
+				<div class="icon-wrapper">
+					<img class="icon" src="${icon}" draggable="false">
 				</div>
-				<div class="info-container">
-					<div class="top">
-						<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
-						<span class="ath">ATH: ${currencySymbols[currency] + separateThousands(ath)}</span>
-						<span class="high-24h">24h High: ${currencySymbols[currency] + separateThousands(high24h)}</span>
-						<span class="low-24h">24h Low: ${currencySymbols[currency] + separateThousands(low24h)}</span>
-						<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+				<div class="info-wrapper">
+					<span class="name">${name}</span>
+					<div class="rank-container">
+						<span class="rank">#${rank}</span>
+						<span class="symbol">${symbol.toUpperCase()}</span>
 					</div>
-					<div class="bottom">
-						<span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span>
-						<span class="price-change">24h Change: ${priceChangeDay}%</span>
-						<span class="ath-change">ATH Change: ${athChange}%</span>
-						<span class="supply">Supply: ${abbreviateNumber(supply, 2)}</span>
+					<div class="info-container">
+						<div class="top">
+							<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+							<span class="ath">ATH: ${currencySymbols[currency] + separateThousands(ath)}</span>
+							<span class="high-24h">24h High: ${currencySymbols[currency] + separateThousands(high24h)}</span>
+							<span class="low-24h">24h Low: ${currencySymbols[currency] + separateThousands(low24h)}</span>
+							<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+						</div>
+						<div class="bottom">
+							<span class="market-cap">Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span>
+							<span class="price-change">24h Change: ${priceChangeDay}%</span>
+							<span class="ath-change">ATH Change: ${athChange}%</span>
+							<span class="supply">Supply: ${abbreviateNumber(supply, 2)}</span>
+						</div>
 					</div>
 				</div>
-			</div>
-		`;
+			`;
 
-		rows.push(div);
+			rows.push(div);
+		} catch(error) {
+			console.log(error);
+		}
 	}
 
 	return rows;

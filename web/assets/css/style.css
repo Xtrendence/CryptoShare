@@ -654,11 +654,43 @@ html.light .toggle-container {
 
 }
 
-.page-container-toolbar {
+.page.market .page-container-toolbar {
 	display:block;
 	width:100%;
 	text-align:center;
 	margin:20px auto 20px auto;
+}
+
+.page.market .page-navigation-wrapper {
+	position:absolute;
+	top:20px;
+	right:24px;
+}
+.page.market .page-navigation-wrapper svg {
+	width:20px;
+	height:20px;
+	fill:var(--accent-contrast);
+	margin-top:4px;
+	display:inline-block;
+	vertical-align:top;
+}
+.page.market .page-navigation-wrapper .left {
+	margin-right:4px;
+}
+.page.market .page-navigation-wrapper .right {
+	margin-left:4px;
+}
+.page.market .page-navigation-wrapper span {
+	margin-left:10px;
+	border-radius:var(--border-radius);
+	padding:0 10px 0 10px;
+	font-size:16px;
+	line-height:40px;
+	display:inline-block;
+	vertical-align:top;
+	font-weight:bold;
+	background:var(--main-third);
+	color:var(--main-contrast);
 }
 
 .market-list {

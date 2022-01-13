@@ -92,6 +92,9 @@ buttonMarketCrypto.addEventListener("click", () => {
 
 		divMarketListCrypto.classList.remove("hidden");
 		divMarketListStocks.classList.add("hidden");
+
+		let active = getActiveMarketPage();
+		populateMarketList(active.cryptoPage, active.stocksPage, true);
 	}
 });
 
@@ -102,6 +105,51 @@ buttonMarketStocks.addEventListener("click", () => {
 
 		divMarketListCrypto.classList.add("hidden");
 		divMarketListStocks.classList.remove("hidden");
+
+		let active = getActiveMarketPage();
+		populateMarketList(active.cryptoPage, active.stocksPage, true);
+	}
+});
+
+buttonMarketPrevious.addEventListener("click", () => {
+	let active = getActiveMarketPage();
+	let previous = active.type === "crypto" ? active.cryptoPage - 1 : active.stocksPage - 1;
+
+	if(previous > 0) {
+		if(active.type === "crypto") {
+			populateMarketList(previous, active.stocksPage, true);
+		} else {
+			populateMarketList(active.cryptoPage, previous, true);
+		}
+	} else {
+		Notify.error({
+			title: "Error",
+			description: "That's just not possible...",
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+	}
+});
+
+buttonMarketNext.addEventListener("click", () => {
+	let active = getActiveMarketPage();
+	let next = active.type === "crypto" ? active.cryptoPage + 1 : active.stocksPage + 1;
+
+	if(next <= 5) {
+		if(active.type === "crypto") {
+			populateMarketList(next, active.stocksPage, true);
+		} else {
+			populateMarketList(active.cryptoPage, next, true);
+		}
+	} else {
+		Notify.error({
+			title: "Error",
+			description: "The market page only includes the top 500 assets.",
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
 	}
 });
 
