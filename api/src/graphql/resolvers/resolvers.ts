@@ -3,8 +3,8 @@ import { createActivity, readActivity, updateActivity, deleteActivity, importAct
 import { createSetting, readSetting, updateSetting, deleteSetting } from "./setting";
 import { createHolding, readHolding, updateHolding, deleteHolding, importHolding } from "./holding";
 import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
-import { createCoin, readCoinByID, readCoinBySymbol, updateCoin, deleteCoin } from "./coin";
-import { createStock, readStockByID, readStockBySymbol, updateStock, deleteStock } from "./stock";
+import { readCoin } from "./coin";
+import { readStock } from "./stock";
 
 let resolvers = {
 	userExists, createUser, readUser, updateUser, deleteUser,
@@ -12,8 +12,8 @@ let resolvers = {
 	createSetting, readSetting, updateSetting, deleteSetting,
 	createHolding, readHolding, updateHolding, deleteHolding, importHolding,
 	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,
-	createCoin, readCoinByID, readCoinBySymbol, updateCoin, deleteCoin,
-	createStock, readStockByID, readStockBySymbol, updateStock, deleteStock
+	readCoin,
+	readStock
 };
 
 export default resolvers;

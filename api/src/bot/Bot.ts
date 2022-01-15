@@ -2,8 +2,6 @@ import { NlpManager } from "node-nlp";
 import { createActivity } from "../graphql/resolvers/activity";
 import { createHolding, deleteHolding, updateHolding } from "../graphql/resolvers/holding";
 import { createWatchlist, deleteWatchlist } from "../graphql/resolvers/watchlist";
-import { readCoinBySymbol } from "../graphql/resolvers/coin";
-import { readStockBySymbol } from "../graphql/resolvers/stock";
 import Utils from "../utils/Utils";
 
 export default class Bot {
@@ -66,7 +64,8 @@ export default class Bot {
 				let details = this.queue[index];
 				details["type"] = type;
 
-				let assetID = type === "stock" ? await readStockBySymbol(details.asset) : await readCoinBySymbol(details.asset);
+				// let assetID = type === "stock" ? await readStockBySymbol(details.asset) : await readCoinBySymbol(details.asset);
+				let assetID = "temp";
 
 				// TODO: Encrypt Data
 				switch(details.category) {

@@ -47,15 +47,15 @@ type Watchlist {
 }
 
 type Coin {
-	coinID: Int!,
 	assetID: String!,
-	assetSymbol: String!
+	assetSymbol: String!,
+	data: String!
 }
 
 type Stock {
-	stockID: Int!,
 	assetID: String!,
-	assetSymbol: String!
+	assetSymbol: String!,
+	data: String!
 }
 
 type Query {
@@ -70,11 +70,9 @@ type Query {
 
 	readWatchlist(token: String!, userID: Int!): Watchlist
 
-	readCoinByID(token: String!, userID: Int!, assetID: String!): Coin
-	readCoinBySymbol(token: String!, userID: Int!, assetSymbol: String!): Coin
+	readCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, currency: String!): Coin
 
-	readStockByID(token: String!, userID: Int!, assetID: String!): Stock
-	readStockBySymbol(token: String!, userID: Int!, assetSymbol: String!): Stock
+	readStock(token: String!, userID: Int!, assetID: String!): Stock
 }
 
 type Mutation {
@@ -99,12 +97,4 @@ type Mutation {
 	createWatchlist(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
 	updateWatchlist(token: String!, userID: Int!, watchlistID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
 	deleteWatchlist(token: String!, userID: Int!, watchlistID: Int!): String
-
-	createCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
-	updateCoin(token: String!, userID: Int!, coinID: Int!, assetID: String!, assetSymbol: String!): String
-	deleteCoin(token: String!, userID: Int!, coinID: Int!): String
-
-	createStock(token: String!, userID: Int!, assetID: String!, assetSymbol: String!): String
-	updateStock(token: String!, userID: Int!, stockID: Int!, assetID: String!, assetSymbol: String!): String
-	deleteStock(token: String!, userID: Int!, stockID: Int!): String
 }

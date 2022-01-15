@@ -4,87 +4,38 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
-export async function createCoin({ token, userID, assetID, assetSymbol }: any) {
-	let valid = await Utils.verifyToken(userID, token);
-
-	if(valid) {
-		db.runQuery("INSERT INTO Coin (assetID, assetSymbol) VALUES (?, ?)", [assetID, assetSymbol]);
-		return "Done";
-	} else {
-		return "Unauthorized";
-	}
-}
-
-export async function readCoinByID({ token, userID, assetID }: any) {
+export async function readCoin({ token, userID, assetID, assetSymbol, currency }: any) {
 	return new Promise(async (resolve, reject) => {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.db?.get("SELECT * FROM Coin WHERE assetID = ?", [assetID], (error, row) => {
+			let id = `${assetID}-${currency}`;
+
+			db.db?.get("SELECT * FROM Coin WHERE assetID = ?", [id], async (error, row) => {
 				if(error) {
 					console.log(error);
 					reject();
 				} else {
-					if(row === undefined) {
-						reject("!Coin not found.!");
-						return;
-					}
+					if(row === undefined || !Utils.validJSON(row.data) || Utils.refetchRequired(JSON.parse(row.data).time)) {
+						let from = Math.floor(Utils.previousYear(new Date()).getTime() / 1000);
+						let now = Math.floor(new Date().getTime() / 1000);
 
-					let coin = new Coin(assetID, row.assetSymbol);
-					coin.coinID = row.coinID;
-					resolve(coin);
+						let historicalData = await Utils.request("GET", "https://api.coingecko.com/api/v3/coins/" + assetID + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + now, null);
+
+						let data = JSON.stringify({ time:now, historicalData:historicalData });
+
+						db.runQuery("INSERT INTO Coin (assetID, assetSymbol, data) VALUES (?, ?, ?)", [id, assetSymbol, data]);
+
+						let coin = new Coin(id, assetSymbol, data);
+						resolve(coin);
+					} else {
+						let coin = new Coin(id, row.assetSymbol, row.data);
+						resolve(coin);
+					}
 				}
 			});
 		} else {
 			reject("!Unauthorized!");
 		}
 	});
-}
-
-export async function readCoinBySymbol({ token, userID, assetSymbol }: any) {
-	return new Promise(async (resolve, reject) => {
-		let valid = await Utils.verifyToken(userID, token);
-
-		if(valid) {
-			db.db?.get("SELECT * FROM Coin WHERE assetSymbol = ?", [assetSymbol], (error, row) => {
-				if(error) {
-					console.log(error);
-					reject();
-				} else {
-					if(row === undefined) {
-						reject("!Coin not found.!");
-						return;
-					}
-
-					let coin = new Coin(row.assetID, assetSymbol);
-					coin.coinID = row.coinID;
-					resolve(coin);
-				}
-			});
-		} else {
-			reject("!Unauthorized!");
-		}
-	});
-}
-
-export async function updateCoin({ token, userID, coinID, assetID, assetSymbol }: any) {
-	let valid = await Utils.verifyToken(userID, token);
-
-	if(valid) {
-		db.runQuery("UPDATE Coin SET assetID = ?, assetSymbol = ? WHERE coinID = ?", [assetID, assetSymbol, coinID]);
-		return "Done";
-	} else {
-		return "Unauthorized";
-	}
-}
-
-export async function deleteCoin({ token, userID, coinID }: any) {
-	let valid = await Utils.verifyToken(userID, token);
-
-	if(valid) {
-		db.runQuery("DELETE FROM Coin WHERE coinID = ?", [coinID]);
-		return "Done";
-	} else {
-		return "Unauthorized";
-	}
 }

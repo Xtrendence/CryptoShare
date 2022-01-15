@@ -31,13 +31,7 @@ buttonNewAccount.addEventListener("click", () => {
 buttonLoginAccount.addEventListener("click", () => {
 	login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
 		if("error" in result) {
-			Notify.error({
-				title: "Error",
-				description: result.error.replaceAll("!", ""),
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			errorNotification(result.error.replaceAll("!", ""));
 		} else {
 			let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
 			result.key = decrypted;
@@ -58,13 +52,7 @@ buttonLoginAccount.addEventListener("click", () => {
 			showApp();
 		}
 	}).catch(error => {
-		Notify.error({
-			title: "Error",
-			description: error,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		errorNotification(error);
 	});
 });
 
@@ -122,13 +110,7 @@ buttonMarketPrevious.addEventListener("click", () => {
 			populateMarketList(active.cryptoPage, previous, true);
 		}
 	} else {
-		Notify.error({
-			title: "Error",
-			description: "That's just not possible...",
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		errorNotification("That's just not possible...");
 	}
 });
 
@@ -143,13 +125,7 @@ buttonMarketNext.addEventListener("click", () => {
 			populateMarketList(active.cryptoPage, next, true);
 		}
 	} else {
-		Notify.error({
-			title: "Error",
-			description: "The market page only includes the top 500 assets.",
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		errorNotification("The market page only includes the top 500 assets.");
 	}
 });
 
@@ -201,24 +177,12 @@ buttonSettingsLogout.addEventListener("click", () => {
 
 	logout(userID, token).then(result => {
 		if("error" in result) {
-			Notify.error({
-				title: "Error",
-				description: result.error,
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			errorNotification(result.error);
 		} else {
 			finishLogout();
 		}
 	}).catch(error => {
-		Notify.error({
-			title: "Error",
-			description: error,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		errorNotification(error);
 	});
 });
 
@@ -234,24 +198,12 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 		
 		logoutEverywhere(userID, token).then(result => {
 			if("error" in result) {
-				Notify.error({
-					title: "Error",
-					description: result.error,
-					duration: 5000,
-					background: "var(--accent-second)",
-					color: "var(--accent-contrast)"
-				});
+				errorNotification(result.error);
 			} else {
 				finishLogout();
 			}
 		}).catch(error => {
-			Notify.error({
-				title: "Error",
-				description: error,
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			errorNotification(error);
 		});
 	});
 });
@@ -269,17 +221,11 @@ buttonSettingsPassword.addEventListener("click", () => {
 		let repeatPassword = document.getElementById("popup-input-repeat-password").value;
 
 		if(newPassword === repeatPassword) {
-			changePassword(userID, token, currentPassword, newPassword).then(response => {
-				if("error" in response) {
-					Notify.error({
-						title: "Error",
-						description: response.error,
-						duration: 5000,
-						background: "var(--accent-second)",
-						color: "var(--accent-contrast)"
-					});
+			changePassword(userID, token, currentPassword, newPassword).then(result => {
+				if("error" in result) {
+					errorNotification(result.error);
 				} else {
-					if("username" in response) {
+					if("username" in result) {
 						Notify.success({
 							title: "Password Changed",
 							description: "Your password has been changed.",
@@ -292,22 +238,10 @@ buttonSettingsPassword.addEventListener("click", () => {
 					}
 				}
 			}).catch(error => {
-				Notify.error({
-					title: "Error",
-					description: error,
-					duration: 5000,
-					background: "var(--accent-second)",
-					color: "var(--accent-contrast)"
-				});
+				errorNotification(error);
 			});
 		} else {
-			Notify.error({
-				title: "Error",
-				description: "Passwords don't match.",
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			errorNotification("Passwords don't match.");
 		}
 	});
 });

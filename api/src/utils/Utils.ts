@@ -223,6 +223,22 @@ export default class Utils {
 		}
 	}
 
+	static refetchRequired(time: string) {
+		let refetchTime = 86400;
+		return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
+	}
+
+	static validJSON(json: string) {
+		try {
+			let object = JSON.parse(json);
+			if(object && typeof object === "object") {
+				return true;
+			}
+		}
+		catch(e) { }
+		return false;
+	}
+
 	static xssValid(string: string) {
 		try {
 			if(string.includes("<") || string.includes(">")) {
@@ -246,6 +262,48 @@ export default class Utils {
 
 	static getSchema() {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
+	}
+
+	static request(method: string, url: string, body: any) {
+		return new Promise((resolve, reject) => {
+			try {
+				let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+				let xhr = new XMLHttpRequest();
+
+				xhr.addEventListener("readystatechange", () => {
+					if(xhr.readyState === xhr.DONE) {
+						if(Utils.validJSON(xhr.responseText)) {
+							let response = JSON.parse(xhr.responseText);
+							resolve(response);
+						} else {
+							if(Utils.empty(xhr.responseText)) {
+								reject("Server error.");
+							} else {
+								reject("Invalid JSON.");
+							}
+						}
+					}
+				});
+
+				xhr.addEventListener("error", (error: any) => {
+					reject(error);
+				});
+
+				xhr.open(method, url, true);
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.send(JSON.stringify(body));
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
+	static previousYear(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear() - 1;
+		return new Date(Date.parse(year + "-" + month + "-" + day));
 	}
 
 	static capitalizeFirstLetter(string: string) {

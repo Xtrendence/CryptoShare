@@ -1,6 +1,6 @@
 function getParticlesConfig(theme, documentElement) {
-	let accentFirst = getComputedStyle(documentElement).getPropertyValue("--accent-first");
-	let accentSecond = getComputedStyle(documentElement).getPropertyValue("--accent-second");
+	let accentFirst = cssValue("--accent-first");
+	let accentSecond = cssValue("--accent-second");
 
 	if(theme === "light") {
 		return {

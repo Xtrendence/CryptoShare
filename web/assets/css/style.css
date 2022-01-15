@@ -461,6 +461,7 @@ html.light .toggle-container {
 	height:calc(100% - 30px - 40px);
 	padding:20px;
 	text-align:left;
+	overflow:hidden auto;
 }
 .popup-wrapper .bottom span {
 	display:block;
@@ -561,6 +562,17 @@ html.light .toggle-container {
 .popup-wrapper .bottom input {
 	margin:0;
 	width:100%;
+	margin-bottom:20px;
+}
+.popup-wrapper .bottom .chart-wrapper {
+	display:block;
+	padding:10px;
+	background:var(--main-first);
+	border-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
 	margin-bottom:20px;
 }
 

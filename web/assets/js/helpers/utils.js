@@ -77,6 +77,72 @@ function abbreviateNumber(num, digits) {
 	return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 }
 
+function cssValue(variable) {
+	return getComputedStyle(document.documentElement).getPropertyValue(variable);
+}
+
+function getLocalStorageUsedSize() {
+	return JSON.stringify(localStorage).length / 1000;
+}
+
+function sum(total, num) {
+	return total + num;
+}
+
+function formatHour(date) {
+	let hours = ("00" + date.getHours()).slice(-2);
+	let minutes = ("00" + date.getMinutes()).slice(-2);
+	return hours + ":" + minutes;
+}
+
+function formatDate(date) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+	return year + " / " + month + " / " + day;
+}
+
+function formatDateHuman(date) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+	return day + " / " + month + " / " + year;
+}
+
+function formatDateHyphenated(date) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+	return day + "-" + month + "-" + year;
+}
+
+function previousYear(date) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear() - 1;
+	return new Date(Date.parse(year + "-" + month + "-" + day));
+}
+
+function previousMonth(date) {
+	return new Date(date.getTime() - 2592000 * 1000);
+}
+
+function previousWeek(date) {
+	return new Date(date.getTime() - (60 * 60 * 24 * 6 * 1000));
+}
+
+function positiveToNegative(number) {
+	return -Math.abs(number);
+}
+
+function capitalizeFirstLetter(string) {
+	return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+function insertAfter(newNode, referenceNode) {
+	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
+
 String.prototype.replaceAll = function(str1, str2, ignore) {
 	return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 }

@@ -74,6 +74,25 @@ function changePassword(userID, token, currentPassword, newPassword) {
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
 }
 
+function readCoin(token, userID, assetID, assetSymbol, currency) {
+	let query = {
+		query: `query readCoin($token: String!, $userID: Int!, $assetID: String!, $assetSymbol: String!, $currency: String!) {
+			readCoin(token: $token, userID: $userID, assetID: $assetID, assetSymbol: $assetSymbol, currency: $currency) {
+				data
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			assetID: assetID,
+			assetSymbol: assetSymbol,
+			currency: currency
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function readSetting(token, userID) {
 	let query = {
 		query: `query readSetting($token: String!, $userID: Int!) {
@@ -156,6 +175,10 @@ const cryptoAPI = {
 
 	getCoinDataByDate(id, date) {
 		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null);
+	},
+
+	getCoinHistoricalData(currency, id, from, to) {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + to, null);
 	},
 
 	getMarketByID(currency, ids) {

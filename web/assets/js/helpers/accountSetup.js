@@ -4,26 +4,12 @@ async function accountSetup() {
 		let exists = await userExists(username);
 
 		if(exists.data.userExists !== "Not found.") {
-			Notify.error({
-				title: "Username Taken",
-				description: "A user with that username already exists.",
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
-
+			errorNotification("A user with that username already exists.");
 			return;
 		}
 
 		if(inputCreatePassword.value !== inputCreateRepeatPassword.value) {
-			Notify.error({
-				title: "Error",
-				description: "Passwords don't match.",
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
-
+			errorNotification("Passwords don't match.");
 			return;
 		}
 
@@ -156,33 +142,16 @@ async function accountSetup() {
 								color: "var(--accent-contrast)"
 							});
 						} else {
-							Notify.error({
-								title: "Error",
-								description: "Something went wrong...",
-								duration: 5000,
-								background: "var(--accent-second)",
-								color: "var(--accent-contrast)"
-							});
+							errorNotification("Something went wrong...");
 						}
 					}).catch(error => {
-						Notify.error({
-							title: "Error",
-							description: error,
-							duration: 5000,
-							background: "var(--accent-second)",
-							color: "var(--accent-contrast)"
-						});
+						errorNotification(error);
+						console.log(error);
 					});
 					break;
 			}
 		});
 	} catch(error) {
-		Notify.error({
-			title: "Error",
-			description: error,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		errorNotification(error);
 	}
 }

@@ -153,13 +153,7 @@ function attemptLogin() {
 				if(result.error.includes("Invalid")) {
 					removeAccountInfo();
 				}
-				Notify.error({
-					title: "Error",
-					description: result.error,
-					duration: 5000,
-					background: "var(--accent-second)",
-					color: "var(--accent-contrast)"
-				});
+				errorNotification(result.error);
 			} else {
 				let key = localStorage.getItem("key");
 
@@ -180,13 +174,7 @@ function attemptLogin() {
 				showApp();
 			}
 		}).catch(error => {
-			Notify.error({
-				title: "Error",
-				description: error,
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			errorNotification(error);
 		});
 	} else {
 		setTimeout(() => {
@@ -420,7 +408,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 			let name = coin.name;
 			let symbol = coin.symbol;
 
-			let info = { coinID:coinID, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, athChange:ath, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol };
+			let info = { coinID:coinID, currency:currency, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, athChange:ath, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol };
 
 			let div = document.createElement("div");
 			div.id = "market-list-crypto-" + coinID;
@@ -471,26 +459,154 @@ function addMarketListCryptoRowListener(div, info) {
 		try {
 			showLoading(4000, "Fetching Market Data...");
 
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+
 			let data = await cryptoAPI.getCoinData(info.coinID);
 			hideLoading();
 
 			console.log(data);
 
-			let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
+			let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
 
 			popup.show();
-		} catch(error) {
-			Notify.error({
-				title: "Error",
-				description: `Couldn't fetch market data for ${info.name}`,
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
 
+			let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
+
+			let request = await readCoin(token, userID, info.coinID, info.symbol, info.currency);
+
+			try {
+				let historicalData = request?.data?.readCoin?.data;
+
+				if(validJSON(historicalData)) {
+					historicalData = JSON.parse(historicalData)?.historicalData?.prices;
+
+					let parsed = parseHistoricalCryptoData(historicalData);
+
+					generateMarketChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices);
+				} else {
+					errorNotification("Invalid historical data JSON.");
+				}
+			} catch(error) {
+				errorNotification("Couldn't parse historical data.");
+
+				console.log(error);
+			}
+		} catch(error) {
+			errorNotification(`Couldn't fetch market data for ${info.name}`);
 			console.log(error);
 		}
 	});
+}
+
+function parseHistoricalCryptoData(data) {
+	let labels = [];
+	let tooltips = [];
+	let prices = [];
+
+	data.map(day => {
+		labels.push(new Date(day[0]));
+		tooltips.push(formatDateHuman(new Date(day[0])));
+		prices.push(day[1]);
+	});
+
+	return { labels:labels, tooltips:tooltips, prices:prices };
+}
+
+async function generateMarketChart(element, title, labels, tooltips, currency, data) {
+	let canvas = document.createElement("canvas");
+	canvas.id = "chart-canvas";
+	canvas.classList.add("chart-canvas");
+
+	let context = canvas.getContext("2d");
+
+	let mainSecond = cssValue("--main-second");
+
+	let mainContrastDark = cssValue("--main-contrast-dark");
+
+	let accentFirst = cssValue("--accent-first");
+	let accentSecond = cssValue("--accent-second");
+	let accentThird = cssValue("--accent-third");
+
+	let gradientStroke = context.createLinearGradient(1000, 0, 300, 0);
+	gradientStroke.addColorStop(0, accentFirst);
+	gradientStroke.addColorStop(0.5, accentSecond);
+	gradientStroke.addColorStop(0.7, accentThird);
+	gradientStroke.addColorStop(1, accentFirst);
+
+	new Chart(canvas, {
+		type: "line",
+		data: {
+			labels: labels,
+			datasets:[{
+				label: title,
+				backgroundColor: "rgba(0,0,0,0)",
+				borderColor: gradientStroke,
+				data: data,
+				pointRadius: 1,
+				pointHoverRadius: 6,
+			}],
+		},
+		options: {
+			events: ["mousemove", "mouseout", "touchstart", "touchmove"],
+			responsive: true,
+			legend: {
+				display: false
+			},
+			hover: {
+				mode: "index",
+				intersect: false,
+			},
+			scales: {
+				xAxes: [{
+					beginAtZero: true,
+					gridLines: {
+						zeroLineColor: mainSecond,
+						color: mainSecond,
+					},
+					ticks: {
+						autoSkip: true,
+						maxTicksLimit: 12,
+						fontColor: mainContrastDark
+					},
+					type: "time",
+					time: {
+						unit: "month"
+					}
+				}],
+				yAxes: [{
+					beginAtZero: true,
+					gridLines: {
+						color: mainSecond
+					},
+					ticks: {
+						fontColor: mainContrastDark
+					}
+				}]
+			},
+			tooltips: {
+				displayColors: false,
+				intersect: false,
+				callbacks: {
+					title: function() {
+						return "";
+					},
+					label: function(item) {
+						let price = data[item.index];
+
+						if(price > 1) {
+							price = separateThousands(price.toFixed(2));
+						}
+
+						return [tooltips[item.index], currencySymbols[currency] + price];
+					}
+				}
+			}
+		}
+	});
+
+	element.innerHTML = "";
+	element.appendChild(canvas);
 }
 
 function getCurrency() {
@@ -573,13 +689,7 @@ function fetchSettings() {
 				let current = CryptoFN.decryptAES(result.data.readSetting.userSettings, key);
 				resolve(current);
 			} else {
-				Notify.error({
-					title: "Error",
-					description: result.errors[0],
-					duration: 5000,
-					background: "var(--accent-second)",
-					color: "var(--accent-contrast)"
-				});
+				errorNotification(result.errors[0]);
 			}
 		}).catch(error => {
 			reject(error);
@@ -703,25 +813,11 @@ async function syncSettings(update) {
 	if(update) {
 		updateSetting(token, userID, encrypted).then(result => {
 			if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
-				Notify.error({
-					title: "Error",
-					description: "Couldn't update / sync setting.",
-					duration: 5000,
-					background: "var(--accent-second)",
-					color: "var(--accent-contrast)"
-				});
-
+				errorNotification("Couldn't update / sync setting.");
 				console.log(result);
 			}
 		}).catch(error => {
-			Notify.error({
-				title: "Error",
-				description: error,
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
-
+			errorNotification(error);
 			console.log(error);
 		});
 	}
@@ -774,4 +870,14 @@ function audibleElement(element) {
 	} catch(error) {
 		return { audible:false, error:error };
 	}
+}
+
+function errorNotification(description) {
+	Notify.error({
+		title: "Error",
+		description: description,
+		duration: 5000,
+		background: "var(--accent-second)",
+		color: "var(--accent-contrast)"
+	});
 }
