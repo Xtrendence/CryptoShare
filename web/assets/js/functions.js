@@ -457,15 +457,12 @@ function createMarketListCryptoRows(marketData, page, currency) {
 function addMarketListCryptoRowListener(div, info) {
 	div.addEventListener("click", async () => {
 		try {
-			showLoading(4000, "Fetching Market Data...");
+			showLoading(2500, "Fetching Market Data...");
 
 			let userID = localStorage.getItem("userID");
 			let token = localStorage.getItem("token");
 
 			let data = await cryptoAPI.getCoinData(info.coinID);
-			hideLoading();
-
-			console.log(data);
 
 			let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
 
@@ -474,6 +471,10 @@ function addMarketListCryptoRowListener(div, info) {
 			let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
 
 			let request = await readCoin(token, userID, info.coinID, info.symbol, info.currency);
+
+			setTimeout(() => {
+				hideLoading();
+			}, 250);
 
 			try {
 				let historicalData = request?.data?.readCoin?.data;
