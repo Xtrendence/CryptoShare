@@ -573,7 +573,8 @@ html.light .toggle-container {
 	border-style:solid;
 	border-width:2px;
 	border-color:var(--accent-first);
-	margin-bottom:20px;
+	margin:0 auto 20px auto;
+	max-width:1300px;
 }
 
 .navbar-wrapper {

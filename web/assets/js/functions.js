@@ -453,7 +453,6 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-// TODO: Fetch coin historical data.
 function addMarketListCryptoRowListener(div, info) {
 	div.addEventListener("click", async () => {
 		try {
