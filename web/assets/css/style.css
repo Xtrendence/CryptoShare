@@ -44,6 +44,9 @@ a {
 	position:absolute;
 	z-index:-1;
 }
+.uppercase {
+	text-transform:uppercase;
+}
 
 #web .app-only {
 	display:none;
@@ -68,6 +71,21 @@ a {
 	border-radius:5px;
 }
 
+input::-webkit-input-placeholder {
+	text-transform: none;
+}
+input:-moz-placeholder {
+	text-transform: none;
+}
+input::-moz-placeholder {
+	text-transform: none;
+}
+input:-ms-input-placeholder {
+	text-transform: none;
+}
+input::placeholder {
+	text-transform: none;
+}
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 	-webkit-appearance:none;
 	margin:0;

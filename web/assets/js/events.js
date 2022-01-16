@@ -108,7 +108,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 
 buttonMarketSearch.addEventListener("click", () => {
 	try {
-		let html = `<input id="popup-input-search" type="text" placeholder="Coin Symbol...">`;
+		let html = `<input class="uppercase" id="popup-input-search" type="text" placeholder="Coin Symbol...">`;
 		let popup = new Popup(240, "auto", "Market Search", html, { confirmText:"Search" });
 		popup.show();
 		popup.updateHeight();
@@ -123,7 +123,7 @@ buttonMarketSearch.addEventListener("click", () => {
 
 				if("id" in result) {
 					showLoading(1000, "Loading...");
-					
+
 					let data = await cryptoAPI.getMarketByID(currency, result.id);
 					let info = parseCryptoMarketData(currency, data[0]);
 					showCryptoMarketData(info);
