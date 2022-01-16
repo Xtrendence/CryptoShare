@@ -16,6 +16,8 @@ addSettingsNavbarEvents();
 
 addSettingsChoiceEvents();
 
+addTooltips();
+
 setInterval(() => {
 	let active = getActiveMarketPage();
 	populateMarketList(active.cryptoPage, active.stocksPage, false);

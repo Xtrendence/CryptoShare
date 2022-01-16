@@ -661,6 +661,15 @@ async function syncSettings(update) {
 	}
 }
 
+function addTooltips() {
+	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
+	tippy(buttonMarketCrypto, { content:"Crypto Market", placement:"left" });
+	tippy(buttonMarketStocks, { content:"Stock Market", placement:"right" });
+	tippy(buttonMarketPrevious, { content:"Previous", placement:"top" });
+	tippy(buttonMarketNext, { content:"Next", placement:"top" });
+	tippy(buttonSettingsLogoutEverywhere, { content:"Deletes all your active session tokens, causing you to get logged out on every device.", placement:"right" });
+}
+
 function showLoading(limit, text = "") {
 	hideLoading();
 
