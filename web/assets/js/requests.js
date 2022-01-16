@@ -165,8 +165,8 @@ const cryptoAPI = {
 		return request("GET", "https://api.coingecko.com/api/v3/global", null);
 	},
 
-	getCoins() {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/", null);
+	getCoinList() {
+		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null);
 	},
 
 	getCoinData(id) {

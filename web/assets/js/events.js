@@ -81,8 +81,6 @@ buttonMarketInfo.addEventListener("click", async () => {
 
 		let data = await cryptoAPI.getGlobal();
 
-		console.log(data);
-
 		let volume = parseInt(data.data.total_volume[currency].toFixed(2));
 		let marketCap = parseInt(data.data.total_market_cap[currency].toFixed(2));
 		let marketCapChangeDay = formatPercentage(data.data.market_cap_change_percentage_24h_usd);
@@ -98,10 +96,9 @@ buttonMarketInfo.addEventListener("click", async () => {
 			</div>
 			<span>Last Update: ${updated}</span>
 		`;
+
 		let popup = new Popup(400, "auto", "Global Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
-
 		popup.show();
-
 		popup.updateHeight();
 	} catch(error) {
 		errorNotification("Could not fetch global market data.");
@@ -110,7 +107,55 @@ buttonMarketInfo.addEventListener("click", async () => {
 });
 
 buttonMarketSearch.addEventListener("click", () => {
+	try {
+		let html = `<input id="popup-input-search" type="text" placeholder="Coin Symbol...">`;
+		let popup = new Popup(240, "auto", "Market Search", html, { confirmText:"Search" });
+		popup.show();
+		popup.updateHeight();
 
+		popup.on("confirm", async () => {
+			let currency = getCurrency();
+			let inputSearch = document.getElementById("popup-input-search");
+			let symbol = inputSearch.value;
+
+			if(!empty(symbol)) {
+				let result = await getCoin({ symbol:symbol });
+
+				if("id" in result) {
+					showLoading(1000, "Loading...");
+					
+					let data = await cryptoAPI.getMarketByID(currency, result.id);
+					let info = parseCryptoMarketData(currency, data[0]);
+					showCryptoMarketData(info);
+					popup.hide();
+				} else {
+					showCryptoMatches(inputSearch, result);
+					popup.setSize(360, "auto");
+					popup.updateHeight();
+
+					let rows = popup.element.getElementsByClassName("popup-list-row");
+
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							showLoading(1000, "Loading...");
+
+							let id = rows[i].getAttribute("data-id");
+
+							let data = await cryptoAPI.getMarketByID(currency, id);
+							let info = parseCryptoMarketData(currency, data[0]);
+							showCryptoMarketData(info);
+							popup.hide();
+						});
+					}
+				}
+			} else {
+				errorNotification("Please provide a symbol/ticker to search for.");
+			}
+		});
+	} catch(error) {
+		errorNotification("Something went wrong...");
+		console.log(error);
+	}
 });
 
 buttonMarketCrypto.addEventListener("click", () => {

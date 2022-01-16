@@ -93,7 +93,9 @@ function createMarketListCryptoRows(marketData, page, currency) {
 				</div>
 			`;
 
-			addMarketListCryptoRowListener(div, info);
+			div.addEventListener("click", () => {
+				showCryptoMarketData(info);
+			});
 
 			rows.push(div);
 		} catch(error) {
@@ -104,52 +106,50 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-function addMarketListCryptoRowListener(div, info) {
-	div.addEventListener("click", async () => {
+async function showCryptoMarketData(info) {
+	try {
+		showLoading(2500, "Fetching Market Data...");
+
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let data = await cryptoAPI.getCoinData(info.coinID);
+
+		let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
+
+		popup.show();
+
+		let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
+
+		let request = await readCoin(token, userID, info.coinID, info.symbol, info.currency);
+
+		setTimeout(() => {
+			hideLoading();
+		}, 250);
+
 		try {
-			showLoading(2500, "Fetching Market Data...");
+			let historicalData = request?.data?.readCoin?.data;
 
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
+			if(validJSON(historicalData)) {
+				historicalData = JSON.parse(historicalData)?.historicalData?.prices;
 
-			let data = await cryptoAPI.getCoinData(info.coinID);
+				let parsed = parseHistoricalCryptoData(historicalData);
 
-			let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
+				generateMarketChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices);
 
-			popup.show();
-
-			let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
-
-			let request = await readCoin(token, userID, info.coinID, info.symbol, info.currency);
-
-			setTimeout(() => {
-				hideLoading();
-			}, 250);
-
-			try {
-				let historicalData = request?.data?.readCoin?.data;
-
-				if(validJSON(historicalData)) {
-					historicalData = JSON.parse(historicalData)?.historicalData?.prices;
-
-					let parsed = parseHistoricalCryptoData(historicalData);
-
-					generateMarketChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices);
-
-					addMarketCryptoData(divChart, info);
-				} else {
-					errorNotification("Invalid historical data JSON.");
-				}
-			} catch(error) {
-				errorNotification("Couldn't parse historical data.");
-
-				console.log(error);
+				addMarketCryptoData(divChart, info);
+			} else {
+				errorNotification("Invalid historical data JSON.");
 			}
 		} catch(error) {
-			errorNotification(`Couldn't fetch market data for ${info.name}`);
+			errorNotification("Couldn't parse historical data.");
+
 			console.log(error);
 		}
-	});
+	} catch(error) {
+		errorNotification(`Couldn't fetch market data for ${info.name}`);
+		console.log(error);
+	}
 }
 
 // TODO: Add watchlist, holdings, and activity buttons.
@@ -175,6 +175,25 @@ function addMarketCryptoData(previousElement, info) {
 	`;
 
 	insertAfter(div, previousElement);
+}
+
+function parseCryptoMarketData(currency, coin) {
+	let coinID = coin.id;
+	let price = coin.current_price;
+	let icon = coin.image;
+	let marketCap = coin.market_cap;
+	let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+	let athChange = formatPercentage(coin.ath_change_percentage);
+	let ath = coin.ath;
+	let high24h = coin.high_24h;
+	let low24h = coin.low_24h;
+	let volume = coin.total_volume;
+	let supply = coin.circulating_supply;
+	let name = coin.name;
+	let symbol = coin.symbol;
+	let rank = coin.market_cap_rank;
+
+	return { coinID:coinID, currency:currency, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
 }
 
 function parseHistoricalCryptoData(data) {
@@ -221,8 +240,7 @@ async function fetchCoinList() {
 			let current = localStorage.getItem("coinList");
 			
 			if(empty(current) || !validJSON(current) || refetchRequired(JSON.parse(current).time)) {
-				let json = await cryptoAPI.getCoins();
-				let list = JSON.parse(json);
+				let list = await cryptoAPI.getCoinList();
 
 				let pairs = [];
 
@@ -239,7 +257,7 @@ async function fetchCoinList() {
 
 				localStorage.setItem("coinList", JSON.stringify(coinList));
 
-				resolve(JSON.parse(pairs));
+				resolve(pairs);
 			} else {
 				resolve(JSON.parse(current).data);
 			}
@@ -290,5 +308,29 @@ function findCryptoByID(coins, id, retry) {
 		} else {
 			return { error:"No coins were found with that symbol." };
 		}
+	}
+}
+
+function showCryptoMatches(referenceNode, list) {
+	if("matches" in list && list.matches.length > 1) {
+		let div = document.createElement("div");
+		div.setAttribute("class", "popup-list noselect");
+
+		Object.keys(list.matches).map(index => {
+			let match = list.matches[index];
+			let symbol = Object.keys(match)[0];
+			let id = match[symbol];
+
+			let row = document.createElement("div");
+			row.setAttribute("class", "popup-list-row");
+			row.setAttribute("data-id", id);
+			row.innerHTML = `<span class="symbol">${symbol.toUpperCase()}</span><span class="id">${id}</span>`;
+
+			div.appendChild(row);
+		});
+
+		insertAfter(div, referenceNode);
+	} else {
+		errorNotification("Invalid number of matches.");
 	}
 }

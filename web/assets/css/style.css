@@ -591,6 +591,35 @@ html.light .toggle-container {
 	display:inline-block;
 	margin:0 5px 10px 5px;
 }
+.popup-wrapper .bottom .popup-list {
+	overflow:hidden auto;
+	border-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:var(--accent-first);
+}
+.popup-wrapper .bottom .popup-list div {
+	display:block;
+	background:var(--main-first);
+	cursor:pointer;
+}
+.popup-wrapper .bottom .popup-list div:nth-child(odd) {
+	background:var(--main-second);
+}
+#desktop .popup-wrapper .bottom .popup-list div:hover {
+	background:var(--accent-first);
+}
+#desktop .popup-wrapper .bottom .popup-list div:hover span {
+	color:var(--accent-contrast);
+}
+.popup-wrapper .bottom .popup-list span {
+	background:none;
+	font-weight:bold;
+	display:inline-block;
+	border:none;
+	color:var(--main-contrast);
+}
 
 .navbar-wrapper {
 	height:140px;
