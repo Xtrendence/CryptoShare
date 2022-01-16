@@ -36,7 +36,7 @@ buttonLoginAccount.addEventListener("click", () => {
 			let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
 			result.key = decrypted;
 
-			let settings = { ...defaultSettings, ...defaultChoices };
+			let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 			if(!empty(result.settings)) {
 				let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
 				if(validJSON(decryptedSettings)) {
@@ -44,8 +44,10 @@ buttonLoginAccount.addEventListener("click", () => {
 				}
 			}
 
-			setPage(settings?.defaultPage);
-			setSettingsPage(settings?.defaultSettingsPage);
+			let choices = JSON.parse(settings?.choices);
+
+			setPage(choices?.defaultPage);
+			setSettingsPage(choices?.defaultSettingsPage);
 
 			setSettings(settings);
 			setAccountInfo(result, true);

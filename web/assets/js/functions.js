@@ -157,7 +157,7 @@ function attemptLogin() {
 			} else {
 				let key = localStorage.getItem("key");
 
-				let settings = { ...defaultSettings, ...defaultChoices };
+				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 				if(!empty(result.settings)) {
 					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, key);
 					if(validJSON(decryptedSettings)) {
@@ -165,8 +165,10 @@ function attemptLogin() {
 					}
 				}
 
-				setPage(settings?.defaultPage);
-				setSettingsPage(settings?.defaultSettingsPage);
+				let choices = JSON.parse(settings?.choices);
+
+				setPage(choices?.defaultPage);
+				setSettingsPage(choices?.defaultSettingsPage);
 
 				setSettings(settings);
 
@@ -551,17 +553,7 @@ function getSettingsChoices() {
 	if(empty(choicesJSON) || !validJSON(choicesJSON)) {
 		return defaultChoices;
 	} else {
-		let choices = {};
-
-		let parsed = JSON.parse(choicesJSON);
-
-		let keys = Object.keys(parsed);
-
-		keys.map(key => {
-			choices[key] = parsed[key];
-		});
-
-		return choices;
+		return JSON.parse(choicesJSON);
 	}
 }
 
@@ -588,8 +580,10 @@ function setSettingsChoices(choices) {
 
 function setSettings(settings) {
 	if(empty(settings)) {
-		settings = { ...defaultSettings, ...defaultChoices };
+		settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 	}
+
+	console.log(settings);
 
 	Object.keys(settings).map(key => {
 		let value = settings[key];
@@ -630,7 +624,7 @@ async function syncSettings(update) {
 	let userID = localStorage.getItem("userID");
 	let key = localStorage.getItem("key");
 
-	let settings = { ...getSettings(), ...getSettingsChoices() };
+	let settings = { ...getSettings(), choices:JSON.stringify(getSettingsChoices()) };
 
 	let current = await fetchSettings();
 
@@ -642,6 +636,8 @@ async function syncSettings(update) {
 				current[settingKey] = settings[settingKey];
 			}
 		});
+	} else {
+		current = settings;
 	}
 
 	setSettings(current);
