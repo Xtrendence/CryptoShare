@@ -576,6 +576,21 @@ html.light .toggle-container {
 	margin:0 auto 20px auto;
 	max-width:1300px;
 }
+.popup-wrapper .bottom .info-wrapper {
+	display:block;
+}
+.popup-wrapper .bottom .info-container {
+	text-align:center;
+	margin-bottom:10px;
+}
+.popup-wrapper .bottom .info-container span {
+	background:var(--main-first);
+	color:var(--main-contrast);
+	font-size:16px;
+	font-weight:bold;
+	display:inline-block;
+	margin:0 5px 10px 5px;
+}
 
 .navbar-wrapper {
 	height:140px;
