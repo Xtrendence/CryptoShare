@@ -77,9 +77,15 @@ loginToggleTheme.addEventListener("click", () => {
 
 buttonMarketInfo.addEventListener("click", async () => {
 	try {
+		showLoading(2000, "Fetching Global Market Data...");
+
 		let currency = getCurrency();
 
 		let data = await cryptoAPI.getGlobal();
+
+		setTimeout(() => {
+			hideLoading();
+		}, 250);
 
 		let volume = parseInt(data.data.total_volume[currency].toFixed(2));
 		let marketCap = parseInt(data.data.total_market_cap[currency].toFixed(2));
