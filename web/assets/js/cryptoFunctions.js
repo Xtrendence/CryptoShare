@@ -4,6 +4,10 @@ async function populateMarketListCrypto(page, currency) {
 
 		let rows = createMarketListCryptoRows(marketData, page, currency);
 
+		if(divMarketListCrypto.getElementsByClassName("loading-icon").length > 0) {
+			divMarketListCrypto.innerHTML = "";
+		}
+
 		for(let i = 0; i < rows.length; i++) {
 			if(divMarketListCrypto.childElementCount >= i + 1) {
 				let current = divMarketListCrypto.getElementsByClassName("market-list-row")[i];

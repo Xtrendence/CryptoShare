@@ -325,10 +325,10 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 			let active = getActiveMarketPage();
 
 			if(active.type === "crypto") {
-				divMarketListCrypto.innerHTML = "";
+				divMarketListCrypto.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 				spanMarketPage.textContent = `Page ${active.cryptoPage}`;
 			} else {
-				divMarketListStocks.innerHTML = "";
+				divMarketListStocks.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 				spanMarketPage.textContent = `Page ${active.stocksPage}`;
 			}
 		}
