@@ -75,6 +75,14 @@ loginToggleTheme.addEventListener("click", () => {
 	}
 });
 
+buttonMarketInfo.addEventListener("click", () => {
+	
+});
+
+buttonMarketSearch.addEventListener("click", () => {
+
+});
+
 buttonMarketCrypto.addEventListener("click", () => {
 	if(!buttonMarketCrypto.classList.contains("active")) {
 		buttonMarketCrypto.classList.add("active");

@@ -583,8 +583,6 @@ function setSettings(settings) {
 		settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 	}
 
-	console.log(settings);
-
 	Object.keys(settings).map(key => {
 		let value = settings[key];
 		localStorage.setItem(key, value);
@@ -659,6 +657,8 @@ async function syncSettings(update) {
 
 function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
+	tippy(buttonMarketInfo, { content:"Market Info", placement:"top" });
+	tippy(buttonMarketSearch, { content:"Search", placement:"top" });
 	tippy(buttonMarketCrypto, { content:"Crypto Market", placement:"left" });
 	tippy(buttonMarketStocks, { content:"Stock Market", placement:"right" });
 	tippy(buttonMarketPrevious, { content:"Previous", placement:"top" });

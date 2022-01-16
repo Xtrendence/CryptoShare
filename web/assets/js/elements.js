@@ -31,6 +31,8 @@ let divNavbar = document.getElementById("navbar");
 let divMarketListCrypto = document.getElementById("market-list-crypto");
 let divMarketListStocks = document.getElementById("market-list-stocks");
 
+let buttonMarketInfo = document.getElementById("button-market-info");
+let buttonMarketSearch = document.getElementById("button-market-search");
 let buttonMarketCrypto = document.getElementById("button-market-crypto");
 let buttonMarketStocks = document.getElementById("button-market-stocks");
 let buttonMarketPrevious = document.getElementById("button-market-previous");

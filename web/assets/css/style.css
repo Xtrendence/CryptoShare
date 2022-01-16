@@ -695,18 +695,28 @@ html.light .toggle-container {
 	margin:20px auto 20px auto;
 }
 
-.page.market .page-navigation-wrapper {
+.page.market .page-actions-wrapper, .page.market .page-navigation-wrapper {
 	position:absolute;
 	top:20px;
+	left:20px;
+}
+.page.market .page-actions-wrapper button {
+	margin-left:0;
+	margin-right:10px;
+}
+.page.market .page-navigation-wrapper {
+	left:auto;
 	right:24px;
 }
-.page.market .page-navigation-wrapper svg {
+.page.market .page-actions-wrapper svg, .page.market .page-navigation-wrapper svg {
 	width:20px;
 	height:20px;
 	fill:var(--accent-contrast);
-	margin-top:4px;
 	display:inline-block;
 	vertical-align:top;
+}
+.page.market .page-navigation-wrapper svg {
+	margin-top:4px;
 }
 .page.market .page-navigation-wrapper .left {
 	margin-right:4px;

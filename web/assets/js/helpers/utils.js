@@ -16,6 +16,11 @@ function getProtocol() {
 	return window.location.protocol;
 }
 
+function refetchRequired(time) {
+	let refetchTime = 86400;
+	return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
+}
+
 function empty(value) {
 	if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 		return true;
