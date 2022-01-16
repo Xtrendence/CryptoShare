@@ -75,8 +75,38 @@ loginToggleTheme.addEventListener("click", () => {
 	}
 });
 
-buttonMarketInfo.addEventListener("click", () => {
-	
+buttonMarketInfo.addEventListener("click", async () => {
+	try {
+		let currency = getCurrency();
+
+		let data = await cryptoAPI.getGlobal();
+
+		console.log(data);
+
+		let volume = parseInt(data.data.total_volume[currency].toFixed(2));
+		let marketCap = parseInt(data.data.total_market_cap[currency].toFixed(2));
+		let marketCapChangeDay = formatPercentage(data.data.market_cap_change_percentage_24h_usd);
+		let updated = formatDateHuman(new Date(data.data.updated_at * 1000));
+
+		let html = `
+			<div class="info-wrapper noselect">
+				<div class="info-container">
+					<span>Volume: ${currencySymbols[currency] + separateThousands(volume)}</span>
+					<span>Market Cap: ${currencySymbols[currency] + separateThousands(marketCap)}</span>
+					<span>24 Change: ${marketCapChangeDay}%</span>
+				</div>
+			</div>
+			<span>Last Update: ${updated}</span>
+		`;
+		let popup = new Popup(400, "auto", "Global Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
+
+		popup.show();
+
+		popup.updateHeight();
+	} catch(error) {
+		errorNotification("Could not fetch global market data.");
+		console.log(error);
+	}
 });
 
 buttonMarketSearch.addEventListener("click", () => {

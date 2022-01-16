@@ -412,7 +412,7 @@ html.light .toggle-container {
 	height:100%;
 	z-index:49;
 	backdrop-filter:blur(4px);
-	background:rgba(0,0,0,0.5);
+	background:rgba(0,0,0,0.65);
 }
 .popup-wrapper {
 	position:absolute;
