@@ -8,5 +8,6 @@ let defaultChoices = {
 	"defaultPage": "Market",
 	"defaultSettingsPage": "behavior",
 	"currency": "usd",
-	"assetIconBackdrop": "disabled"
+	"assetIconBackdrop": "disabled",
+	"transactionsAffectHoldings": "enabled"
 };

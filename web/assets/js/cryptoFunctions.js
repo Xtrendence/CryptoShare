@@ -152,6 +152,7 @@ function addMarketListCryptoRowListener(div, info) {
 	});
 }
 
+// TODO: Add watchlist, holdings, and activity buttons.
 function addMarketCryptoData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
