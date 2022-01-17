@@ -305,26 +305,28 @@ async function populateHoldingsList(recreate) {
 		checkBackdrop();
 
 		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
 			let currency = getCurrency();
 
-			// TODO: Fetch actual holdings.
-			let holdingsData = {
-				bitcoin: {
-					amount: 0.75
-				},
-				ethereum: {
-					amount: 1.25
-				},
-				loopring: {
-					amount: 500
-				},
-				polkadot: {
-					amount: 25
-				},
-				cardano: {
-					amount: 100
-				},
+			let holdings = await readHolding(token, userID);
+
+			if(empty(holdings?.data?.readHolding)) {
+				errorNotification("No holdings found.");
+				return;
 			}
+			
+			let holdingsData = {};
+
+			let encrypted = holdings?.data?.readHolding;
+
+			Object.keys(encrypted).map(index => {
+				let decrypted = decryptObjectValues(key, encrypted[index]);
+				decrypted.holdingID = encrypted[index].holdingID;
+				holdingsData[decrypted.holdingAssetID] = decrypted;
+			});
 
 			let ids = Object.keys(holdingsData);
 

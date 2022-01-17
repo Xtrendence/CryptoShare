@@ -29,6 +29,19 @@ function encryptObjectValues(password, object) {
 	return encrypted;
 }
 
+function decryptObjectValues(password, object) {
+	let decrypted = {};
+	let keys = Object.keys(object);
+
+	keys.map(key => {
+		let value = object[key];
+		let plaintext = CryptoFN.decryptAES(value, password);
+		decrypted[key] = plaintext;
+	});
+
+	return decrypted;
+}
+
 function refetchRequired(time) {
 	let refetchTime = 86400;
 	return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);

@@ -106,7 +106,6 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-// TODO: Sort alphabetically.
 function createHoldingsListRows(marketData, holdingsData, currency) {
 	let output = { rows:[], totalValue:0 };
 
@@ -128,7 +127,7 @@ function createHoldingsListRows(marketData, holdingsData, currency) {
 
 			let holding = holdingsData[coinID];
 
-			let amount = holding.amount;
+			let amount = parseFloat(holding.holdingAssetAmount);
 			let value = parseFloat((amount * price).toFixed(2));
 
 			let div = document.createElement("div");
@@ -280,15 +279,27 @@ function parseHistoricalCryptoData(data) {
 async function cryptoHoldingExists(id) {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");
+	let key = localStorage.getItem("key");
 
 	return new Promise(async (resolve, reject) => {
 		try {
 			let holdings = await readHolding(token, userID);
 
 			if(empty(holdings) || holdings?.data?.readHolding.length === 0) {
-				resolve(false);
+				resolve({ exists:false });
 			} else {
+				let encrypted = holdings?.data?.readHolding;
 
+				Object.keys(encrypted).map(index => {
+					let decrypted = decryptObjectValues(key, encrypted[index]);
+
+					if(decrypted.holdingAssetID === id) {
+						resolve({ exists:true, holdingID:encrypted[index].holdingID });
+						return;
+					}
+				});
+
+				resolve({ exists:false });
 			}
 		} catch(error) {
 			console.log(error);

@@ -262,13 +262,15 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 						holdingAssetType: "crypto"
 					});
 
-					console.log(encrypted);
-
-					if(exists) {
-						await updateHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					if(exists.exists) {
+						await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+						
+						errorNotification("Asset was already part of your holdings, but the amount was updated.");
 					} else {
 						await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 					}
+
+					populateHoldingsList(true);
 
 					popup.hide();
 				} else {
@@ -293,11 +295,15 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 								holdingAssetType: "crypto"
 							});
 
-							if(exists) {
-								await updateHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+							if(exists.exists) {
+								await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+
+								errorNotification("Asset was already part of your holdings, but the amount was updated.");
 							} else {
 								await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 							}
+
+							populateHoldingsList(true);
 
 							popup.hide();
 						});
