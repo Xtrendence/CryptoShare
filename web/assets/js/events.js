@@ -21,33 +21,43 @@ buttonNewAccount.addEventListener("click", () => {
 });
 
 buttonLoginAccount.addEventListener("click", () => {
-	login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
-		if("error" in result) {
-			errorNotification(result.error.replaceAll("!", ""));
-		} else {
-			let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
-			result.key = decrypted;
-
-			let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
-			if(!empty(result.settings)) {
-				let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
-				if(validJSON(decryptedSettings)) {
-					settings = JSON.parse(decryptedSettings);
-				}
-			}
-
-			let choices = JSON.parse(settings?.choices);
-
-			setPage(choices?.defaultPage);
-			setSettingsPage(choices?.defaultSettingsPage);
-
-			setSettings(settings);
-			setAccountInfo(result, true);
-			showApp();
+	try {
+		if(empty(inputLoginUsername.value) || empty(inputLoginPassword.value)) {
+			errorNotification("Please fill out all fields.");
+			return;
 		}
-	}).catch(error => {
-		errorNotification(error);
-	});
+
+		login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
+			if("error" in result) {
+				errorNotification(result.error.replaceAll("!", ""));
+			} else {
+				let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
+				result.key = decrypted;
+
+				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
+				if(!empty(result.settings)) {
+					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
+					if(validJSON(decryptedSettings)) {
+						settings = JSON.parse(decryptedSettings);
+					}
+				}
+
+				let choices = JSON.parse(settings?.choices);
+
+				setPage(choices?.defaultPage);
+				setSettingsPage(choices?.defaultSettingsPage);
+
+				setSettings(settings);
+				setAccountInfo(result, true);
+				showApp();
+			}
+		}).catch(error => {
+			errorNotification(error);
+		});
+	} catch(error) {
+		errorNotification("Something went wrong...");
+		console.log(error);
+	}
 });
 
 buttonExistingAccount.addEventListener("click", () => {

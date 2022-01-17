@@ -1,6 +1,17 @@
 async function accountSetup() {
 	try {
 		let username = inputCreateUsername.value;
+
+		if(empty(username) || empty(inputCreatePassword.value) || empty(inputCreateRepeatPassword.value)) {
+			errorNotification("Please fill out all fields.");
+			return;
+		}
+
+		if(!validUsername(username)) {
+			errorNotification("Username must be shorter than 16 characters, and not contain any special characters.");
+			return;
+		}
+		
 		let exists = await userExists(username);
 
 		if(exists.data.userExists !== "Not found.") {

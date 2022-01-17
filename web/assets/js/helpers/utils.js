@@ -44,6 +44,19 @@ function validJSON(json) {
 	return false;
 }
 
+function validUsername(username) {
+	try {
+		if(username.length > 16) {
+			return false;
+		}
+
+		return (/^[A-Za-z0-9]+$/.test(username));
+	} catch(error) {
+		console.log(error);
+		return false;
+	}
+}
+
 function formatPercentage(number) {
 	if(!empty(number)) {
 		return number.toFixed(2).includes("-") ? number.toFixed(2) : "+" + number.toFixed(2);
