@@ -16,7 +16,7 @@ addSettingsNavbarEvents();
 
 addSettingsChoiceEvents();
 
-addNavbarPattern();
+addPattern();
 
 addTooltips();
 

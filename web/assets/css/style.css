@@ -687,9 +687,15 @@ html.light .toggle-container {
 	pointer-events:none;
 	border-radius:var(--border-radius);
 }
+html.light .navbar .item .pattern {
+	fill:var(--main-second);
+}
 .navbar .item.active .pattern, #desktop .navbar .item:hover .pattern {
-	opacity:0.15;
+	opacity:0.125;
 	fill:var(--accent-contrast);
+}
+html.light .navbar .item.active .pattern, html.light #desktop .navbar .item:hover .pattern {
+	opacity:0.1;
 }
 .navbar .item .background {
 	position:absolute;
@@ -926,6 +932,9 @@ html.light .market-list-row .icon-wrapper, html.light .holdings-list-row .icon-w
 	margin:16px;
 	padding:2px;
 	border-radius:50%;
+}
+.holdings-list-row .icon {
+	margin:20px 16px 16px 22.5px;
 }
 html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	background:rgb(255,255,255);

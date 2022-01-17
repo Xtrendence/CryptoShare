@@ -24,6 +24,8 @@ Contrived for investors and the financially diligent, who lack the ability to ma
 
 BG Jar: https://bgjar.com/
 
+Finterprint Icon: https://www.svgrepo.com/svg/5105/fingerprint
+
 Pop Sound: https://freesound.org/people/InspectorJ/sounds/411639/
 
 Switch Sound: https://freesound.org/people/patchytherat/sounds/531391/

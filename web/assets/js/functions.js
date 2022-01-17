@@ -299,6 +299,7 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 async function populateHoldingsList(recreate) {
 	if(getActivePage().id === "holdings-page") {
 		if(recreate) {
+			spanHoldingsValue.textContent = "-";
 			divHoldingsList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
 
@@ -769,7 +770,7 @@ function errorNotification(description) {
 	});
 }
 
-function addNavbarPattern() {
+function addPattern() {
 	let items = divNavbarWrapper.getElementsByClassName("item");
 
 	for(let i = 0; i < items.length; i++) {

@@ -157,10 +157,7 @@ function createHoldingsListRows(marketData, holdingsData, currency) {
 				</div>
 			`;
 
-			// TODO: Add functionality.
-			div.addEventListener("click", () => {
-
-			});
+			addHoldingListRowEvent(div, holding.holdingID, coinID, symbol);
 
 			output.rows.push(div);
 			output.totalValue += value;
@@ -170,6 +167,49 @@ function createHoldingsListRows(marketData, holdingsData, currency) {
 	}
 
 	return output;
+}
+
+function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol) {
+	div.addEventListener("click", () => {
+		try {
+			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount...">`;
+			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
+			popup.show();
+			popup.updateHeight();
+
+			let inputAmount = document.getElementById("popup-input-amount-crypto");
+
+			inputAmount.focus();
+		
+			popup.on("confirm", async () => {		
+				let amount = inputAmount.value;
+		
+				if(!empty(amount) && !isNaN(amount) && amount > 0) {
+					let userID = localStorage.getItem("userID");
+					let token = localStorage.getItem("token");
+					let key = localStorage.getItem("key");
+
+					let encrypted = encryptObjectValues(key, {
+						holdingAssetID: holdingAssetID,
+						holdingAssetSymbol: holdingAssetSymbol,
+						holdingAssetAmount: amount,
+						holdingAssetType: "crypto"
+					});
+
+					await updateHolding(token, userID, holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+
+					populateHoldingsList(true);
+
+					popup.hide();
+				} else {
+					errorNotification("Please fill out both fields, and enter the amount as a number.");
+				}
+			});
+		} catch(error) {
+			errorNotification("Something went wrong...");
+			console.log(error);
+		}
+	});
 }
 
 async function showCryptoMarketData(info) {

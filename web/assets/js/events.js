@@ -11,6 +11,24 @@ document.addEventListener("click", (event) => {
 	}
 });
 
+document.addEventListener("keydown", (event) => {
+	if(event.key.toLowerCase() === "enter") {
+		if(document.getElementById("popup-button-confirm")) {
+			document.getElementById("popup-button-confirm").click();
+		} else {
+			if(document.getElementById("popup-button-cancel")) {
+				document.getElementById("popup-button-cancel").click();
+			}
+		}
+	}
+
+	if(event.key.toLowerCase() === "escape") {
+		if(document.getElementById("popup-button-cancel")) {
+			document.getElementById("popup-button-cancel").click();
+		}
+	}
+});
+
 audioPop.addEventListener("canplay", () => {
 	audioPlayable = true;
 });
@@ -121,9 +139,12 @@ buttonMarketSearch.addEventListener("click", () => {
 		popup.show();
 		popup.updateHeight();
 
+		let inputSearch = document.getElementById("popup-input-search");
+
+		inputSearch.focus();
+
 		popup.on("confirm", async () => {
 			let currency = getCurrency();
-			let inputSearch = document.getElementById("popup-input-search");
 			let symbol = inputSearch.value;
 
 			if(!empty(symbol)) {
@@ -234,10 +255,12 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 		popup.show();
 		popup.updateHeight();
 
-		popup.on("confirm", async () => {
-			let inputSymbol = document.getElementById("popup-input-symbol-crypto");
-			let inputAmount = document.getElementById("popup-input-amount-crypto");
+		let inputSymbol = document.getElementById("popup-input-symbol-crypto");
+		let inputAmount = document.getElementById("popup-input-amount-crypto");
 
+		inputSymbol.focus();
+
+		popup.on("confirm", async () => {
 			let symbol = inputSymbol.value;
 			let amount = inputAmount.value;
 
@@ -387,11 +410,15 @@ buttonSettingsPassword.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Change Password", `<input type="password" id="popup-input-current-password" placeholder="Current Password..."><input type="password" id="popup-input-new-password" placeholder="New Password..."><input type="password" id="popup-input-repeat-password" placeholder="Repeat Password...">`);
 	popup.show();
 
+	let inputCurrentPassword = document.getElementById("popup-input-current-password");
+
+	inputCurrentPassword.focus();
+
 	popup.on("confirm", () => {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let currentPassword = document.getElementById("popup-input-current-password").value;
+		let currentPassword = inputCurrentPassword.value;
 		let newPassword = document.getElementById("popup-input-new-password").value;
 		let repeatPassword = document.getElementById("popup-input-repeat-password").value;
 
