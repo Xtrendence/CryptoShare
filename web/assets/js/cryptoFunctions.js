@@ -172,16 +172,20 @@ function createHoldingsListRows(marketData, holdingsData, currency) {
 function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol) {
 	div.addEventListener("click", () => {
 		try {
-			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount...">`;
+			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount..."><button class="action-button delete" id="popup-button-delete-crypto">Delete Asset</button>`;
 			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
 			popup.show();
 			popup.updateHeight();
+
+			addHoldingPopupDeleteEvent(popup, document.getElementById("popup-button-delete-crypto"), holdingID);
 
 			let inputAmount = document.getElementById("popup-input-amount-crypto");
 
 			inputAmount.focus();
 		
-			popup.on("confirm", async () => {		
+			popup.on("confirm", async () => {	
+				showLoading(1500, "Updating...");
+
 				let amount = inputAmount.value;
 		
 				if(!empty(amount) && !isNaN(amount) && amount > 0) {
@@ -200,6 +204,8 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 
 					populateHoldingsList(true);
 
+					hideLoading();
+
 					popup.hide();
 				} else {
 					errorNotification("Please fill out both fields, and enter the amount as a number.");
@@ -209,6 +215,35 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 			errorNotification("Something went wrong...");
 			console.log(error);
 		}
+	});
+}
+
+function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID) {
+	buttonDelete.addEventListener("click", () => {
+		previousPopup.hide();
+		
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove this asset from your portfolio?</span>`);
+		popup.show();
+
+		popup.on("confirm", async () => {
+			try {
+				showLoading(1500, "Deleting...");
+
+				await deleteHolding(token, userID, holdingID);
+
+				populateHoldingsList(true);
+
+				hideLoading();
+
+				popup.hide();
+			} catch(error) {
+				console.log(error);
+				errorNotification("Couldn't delete asset.");
+			}
+		});
 	});
 }
 

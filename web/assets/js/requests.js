@@ -127,6 +127,21 @@ function updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSym
 	return request("POST", urlAPI, query);
 }
 
+function deleteHolding(token, userID, holdingID) {
+	let query = {
+		query: `mutation deleteHolding($token: String!, $userID: Int!, $holdingID: Int!) {
+			deleteHolding(token: $token, userID: $userID, holdingID: $holdingID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			holdingID: parseInt(holdingID)
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function readCoin(token, userID, assetID, assetSymbol, currency) {
 	let query = {
 		query: `query readCoin($token: String!, $userID: Int!, $assetID: String!, $assetSymbol: String!, $currency: String!) {

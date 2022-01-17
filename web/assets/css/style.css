@@ -634,6 +634,15 @@ html.light .toggle-container {
 	border:none;
 	color:var(--main-contrast);
 }
+.popup-wrapper .bottom .action-button.delete {
+	display:block;
+	width:100%;
+	background:var(--danger-first);
+	margin:0 auto 0 auto;
+}
+#desktop .popup-wrapper .bottom .action-button.delete:hover {
+	background:var(--danger-second);
+}
 
 .navbar-wrapper {
 	height:140px;
