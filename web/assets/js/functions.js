@@ -311,10 +311,21 @@ async function populateHoldingsList(recreate) {
 
 			let currency = getCurrency();
 
-			let holdings = await readHolding(token, userID);
+			let holdings;
+			
+			if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+				holdings = await readHolding(token, userID);
 
-			if(empty(holdings?.data?.readHolding)) {
-				errorNotification("No holdings found.");
+				if(empty(holdings?.data?.readHolding)) {
+					errorNotification("No holdings found.");
+					return;
+				}
+			} else {
+				// TODO: Fetch activity and convert into holdings.
+			}
+
+			if(empty(holdings)) {
+				divHoldingsList.innerHTML = `<span class="list-text noselect">No Holdings Found</span>`;
 				return;
 			}
 			

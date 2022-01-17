@@ -824,6 +824,16 @@ html.light .toggle-container {
 	color:var(--main-contrast);
 }
 
+.list-text {
+	position:absolute;
+	font-size:18px;
+	font-weight:bold;
+	color:var(--main-contrast);
+	line-height:40px;
+	width:200px;
+	top:calc(50% - 40px / 2);
+	left:calc(50% - 200px / 2);
+}
 .market-list, .holdings-list {
 	position:absolute;
 	width:100%;

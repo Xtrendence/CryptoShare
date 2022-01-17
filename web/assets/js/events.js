@@ -241,7 +241,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 			let symbol = inputSymbol.value;
 			let amount = inputAmount.value;
 
-			if(!empty(symbol) && !empty(amount) && !isNaN(amount)) {
+			if(!empty(symbol) && !empty(amount) && !isNaN(amount) && amount > 0) {
 				let userID = localStorage.getItem("userID");
 				let token = localStorage.getItem("token");
 				let key = localStorage.getItem("key");
