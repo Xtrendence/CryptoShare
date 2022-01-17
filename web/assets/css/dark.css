@@ -30,3 +30,34 @@ html.dark {
 	--playful-gradient:linear-gradient(340deg, #fc00ff, #27bcbe);
 	--atlas-gradient:linear-gradient(300deg, #feac5e, #c779d0, #4bc0c8);
 }
+
+html.dark .page.chatbot {
+	--accent-first:#8a2387;
+	--accent-second:#e94057;
+	--accent-third:#f27121;
+}
+html.dark .page.dashboard {
+	--accent-first:#4facfe;
+	--accent-second:#00bdc7;
+	--accent-third:#6499c7;
+}
+html.dark .page.market {
+	--accent-first:#c779d0;
+	--accent-second:#feac5e;
+	--accent-third:#4bc0c8;
+}
+html.dark .page.holdings {
+	--accent-first:#11998e;
+	--accent-second:#38ef7d;
+	--accent-third:#45b671;
+}
+html.dark .page.activity {
+	--accent-first:#667eea;
+	--accent-second:#764ba2;
+	--accent-third:#735e88;
+}
+html.dark .page.settings {
+	--accent-first:#d67054;
+	--accent-second:#cf995a;
+	--accent-third:#e7bc4f;
+}
