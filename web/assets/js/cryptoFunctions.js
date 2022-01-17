@@ -106,6 +106,73 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
+// TODO: Sort alphabetically.
+function createHoldingsListRows(marketData, holdingsData, currency) {
+	let output = { rows:[], totalValue:0 };
+
+	let ids = Object.keys(marketData);
+
+	for(let i = 0; i < ids.length; i++) {
+		try {
+			let id = ids[i];
+
+			let coin = marketData[id];
+
+			let coinID = coin.id;
+			let price = coin.current_price;
+			let icon = coin.image;
+			let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+			let name = coin.name;
+			let symbol = coin.symbol;
+			let rank = coin.market_cap_rank;
+
+			let holding = holdingsData[coinID];
+
+			let amount = holding.amount;
+			let value = parseFloat((amount * price).toFixed(2));
+
+			let div = document.createElement("div");
+			div.id = "holdings-list-crypto-" + coinID;
+			div.setAttribute("class", "holdings-list-row crypto noselect audible-pop");
+
+			div.innerHTML = `
+				<div class="icon-wrapper audible-pop">
+					<img class="icon" src="${icon}" draggable="false">
+				</div>
+				<div class="info-wrapper audible-pop">
+					<span class="name">${name}</span>
+					<div class="rank-container audible-pop">
+						<span class="rank">#${rank}</span>
+						<span class="symbol">${symbol.toUpperCase()}</span>
+					</div>
+					<div class="info-container">
+						<div class="top audible-pop">
+							<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
+							<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+						</div>
+						<div class="bottom audible-pop">
+							<span class="price-change">Amount: ${amount}</span>
+							<span class="price-change">24h Change: ${priceChangeDay}%</span>
+						</div>
+					</div>
+				</div>
+			`;
+
+			// TODO: Add functionality.
+			div.addEventListener("click", () => {
+
+			});
+
+			output.rows.push(div);
+			output.totalValue += value;
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	return output;
+}
+
 async function showCryptoMarketData(info) {
 	try {
 		showLoading(2500, "Fetching Market Data...");
@@ -208,6 +275,26 @@ function parseHistoricalCryptoData(data) {
 	});
 
 	return { labels:labels, tooltips:tooltips, prices:prices };
+}
+
+async function cryptoHoldingExists(id) {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
+
+	return new Promise(async (resolve, reject) => {
+		try {
+			let holdings = await readHolding(token, userID);
+
+			if(empty(holdings) || holdings?.data?.readHolding.length === 0) {
+				resolve(false);
+			} else {
+
+			}
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }
 
 async function getCoin(args) {

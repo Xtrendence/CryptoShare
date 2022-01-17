@@ -38,6 +38,15 @@ let buttonMarketNext = document.getElementById("button-market-next");
 
 let spanMarketPage = document.getElementById("span-market-page");
 
+let spanHoldingsUsername = document.getElementById("span-holdings-username");
+let spanHoldingsValue = document.getElementById("span-holdings-value");
+
+let buttonHoldingsPerformance = document.getElementById("button-holdings-performance");
+let buttonHoldingsAddCryptoAsset = document.getElementById("button-holdings-add-crypto-asset");
+let buttonHoldingsAddStockAsset = document.getElementById("button-holdings-add-stock-asset");
+
+let divHoldingsList = document.getElementById("holdings-list");
+
 let divSettingsNavbar = document.getElementById("settings-navbar");
 let divPageSettings = document.getElementById("settings-page");
 

@@ -16,6 +16,19 @@ function getProtocol() {
 	return window.location.protocol;
 }
 
+function encryptObjectValues(password, object) {
+	let encrypted = {};
+	let keys = Object.keys(object);
+
+	keys.map(key => {
+		let value = object[key];
+		let ciphertext = CryptoFN.encryptAES(value, password);
+		encrypted[key] = ciphertext;
+	});
+
+	return encrypted;
+}
+
 function refetchRequired(time) {
 	let refetchTime = 86400;
 	return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);

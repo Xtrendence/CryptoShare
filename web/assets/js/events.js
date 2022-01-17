@@ -222,6 +222,102 @@ buttonMarketNext.addEventListener("click", () => {
 	}
 });
 
+buttonHoldingsPerformance.addEventListener("click", () => {
+
+});
+
+// TODO: Add functionality.
+buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
+	try {
+		let html = `<input class="uppercase" id="popup-input-symbol-crypto" type="text" placeholder="Coin Symbol..."><input id="popup-input-amount-crypto" type="number" placeholder="Amount...">`;
+		let popup = new Popup(240, "auto", "Add Crypto Asset", html, { confirmText:"Add" });
+		popup.show();
+		popup.updateHeight();
+
+		popup.on("confirm", async () => {
+			let inputSymbol = document.getElementById("popup-input-symbol-crypto");
+			let inputAmount = document.getElementById("popup-input-amount-crypto");
+
+			let symbol = inputSymbol.value;
+			let amount = inputAmount.value;
+
+			if(!empty(symbol) && !empty(amount) && !isNaN(amount)) {
+				let userID = localStorage.getItem("userID");
+				let token = localStorage.getItem("token");
+				let key = localStorage.getItem("key");
+
+				let result = await getCoin({ symbol:symbol });
+
+				if("id" in result) {
+					showLoading(1000, "Adding...");
+
+					let id = result.id;
+
+					let exists = await cryptoHoldingExists(id);
+
+					let encrypted = encryptObjectValues(key, {
+						holdingAssetID: id,
+						holdingAssetSymbol: symbol,
+						holdingAssetAmount: amount,
+						holdingAssetType: "crypto"
+					});
+
+					console.log(encrypted);
+
+					if(exists) {
+						await updateHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					} else {
+						await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					}
+
+					popup.hide();
+				} else {
+					showCryptoMatches(inputAmount, result);
+					popup.setSize(360, "auto");
+					popup.updateHeight();
+
+					let rows = popup.element.getElementsByClassName("popup-list-row");
+
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							showLoading(1000, "Adding...");
+
+							let id = rows[i].getAttribute("data-id");
+
+							let exists = await cryptoHoldingExists(id);
+
+							let encrypted = encryptObjectValues(key, {
+								holdingAssetID: id,
+								holdingAssetSymbol: symbol,
+								holdingAssetAmount: amount,
+								holdingAssetType: "crypto"
+							});
+
+							if(exists) {
+								await updateHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+							} else {
+								await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+							}
+
+							popup.hide();
+						});
+					}
+				}
+			} else {
+				errorNotification("Please fill out both fields, and enter the amount as a number.");
+			}
+		});
+	} catch(error) {
+		errorNotification("Something went wrong...");
+		console.log(error);
+	}
+});
+
+// TODO: Add functionality.
+buttonHoldingsAddStockAsset.addEventListener("click", () => {
+	
+});
+
 settingsToggleTheme.addEventListener("click", () => {
 	if(settingsToggleTheme.classList.contains("active")) {
 		setTheme("dark");

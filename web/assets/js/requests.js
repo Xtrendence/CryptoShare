@@ -74,6 +74,59 @@ function changePassword(userID, token, currentPassword, newPassword) {
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
 }
 
+function readHolding(token, userID) {
+	let query = {
+		query: `query readHolding($token: String!, $userID: Int!) {
+			readHolding(token: $token, userID: $userID) {
+				holdingID, holdingAssetID, holdingAssetType, holdingAssetSymbol, holdingAssetAmount
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
+function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
+	let query = {
+		query: `mutation createHolding($token: String!, $userID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {
+			createHolding(token: $token, userID: $userID, holdingAssetID: $holdingAssetID, holdingAssetSymbol: $holdingAssetSymbol, holdingAssetAmount: $holdingAssetAmount, holdingAssetType: $holdingAssetType)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			holdingAssetID: holdingAssetID,
+			holdingAssetSymbol: holdingAssetSymbol,
+			holdingAssetAmount: holdingAssetAmount,
+			holdingAssetType: holdingAssetType
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
+function updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
+	let query = {
+		query: `mutation updateHolding($token: String!, $userID: Int!, $holdingID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {
+			updateHolding(token: $token, userID: $userID, holdingID: $holdingID, holdingAssetID: $holdingAssetID, holdingAssetSymbol: $holdingAssetSymbol, holdingAssetAmount: $holdingAssetAmount, holdingAssetType: $holdingAssetType)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			holdingID: parseInt(holdingID),
+			holdingAssetID: holdingAssetID,
+			holdingAssetSymbol: holdingAssetSymbol,
+			holdingAssetAmount: holdingAssetAmount,
+			holdingAssetType: holdingAssetType
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function readCoin(token, userID, assetID, assetSymbol, currency) {
 	let query = {
 		query: `query readCoin($token: String!, $userID: Int!, $assetID: String!, $assetSymbol: String!, $currency: String!) {

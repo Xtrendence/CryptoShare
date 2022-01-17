@@ -254,6 +254,8 @@ function setPage(page) {
 			populateMarketList(1, 1, true);
 			break;
 		case "holdings":
+			populateHoldingsList(true);
+			setHoldingsUsername();
 			break;
 		case "activity":
 			break;
@@ -294,15 +296,87 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 	}
 }
 
+async function populateHoldingsList(recreate) {
+	if(getActivePage().id === "holdings-page") {
+		if(recreate) {
+			divHoldingsList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
+		}
+
+		checkBackdrop();
+
+		try {
+			let currency = getCurrency();
+
+			// TODO: Fetch actual holdings.
+			let holdingsData = {
+				bitcoin: {
+					amount: 0.75
+				},
+				ethereum: {
+					amount: 1.25
+				},
+				loopring: {
+					amount: 500
+				},
+				polkadot: {
+					amount: 25
+				},
+				cardano: {
+					amount: 100
+				},
+			}
+
+			let ids = Object.keys(holdingsData);
+
+			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
+
+			let parsed = createHoldingsListRows(marketData, holdingsData, currency);
+
+			let rows = parsed.rows;
+			let totalValue = parsed.totalValue;
+
+			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
+			
+			if(divHoldingsList.getElementsByClassName("loading-icon").length > 0) {
+				divHoldingsList.innerHTML = "";
+			}
+
+			for(let i = 0; i < rows.length; i++) {
+				if(divHoldingsList.childElementCount >= i + 1) {
+					let current = divHoldingsList.getElementsByClassName("holdings-list-row")[i];
+					if(current.innerHTML !== rows[i].innerHTML) {
+						let currentIcon = current.getElementsByClassName("icon")[0];
+						let currentInfo = current.getElementsByClassName("info-wrapper")[0];
+
+						if(currentIcon !== rows[i].getElementsByClassName("icon")[0]) {
+							currentIcon.setAttribute("src", rows[i].getElementsByClassName("icon")[0].getAttribute("src"));
+						}
+
+						if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
+							currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
+						}
+					}
+				} else {
+					divHoldingsList.appendChild(rows[i]);
+				}
+			}
+		} catch(error) {
+			errorNotification("Couldn't fetch holdings.");
+		}
+	}
+}
+
 function checkBackdrop() {
 	let choices = getSettingsChoices();
 
 	if("assetIconBackdrop" in choices && choices.assetIconBackdrop === "enabled") {
 		divMarketListCrypto.classList.add("backdrop");
 		divMarketListStocks.classList.add("backdrop");
+		divHoldingsList.classList.add("backdrop");
 	} else {
 		divMarketListCrypto.classList.remove("backdrop");
 		divMarketListStocks.classList.remove("backdrop");
+		divHoldingsList.classList.remove("backdrop");
 	}
 }
 
@@ -613,6 +687,8 @@ function addTooltips() {
 	tippy(buttonMarketStocks, { content:"Stock Market", placement:"right" });
 	tippy(buttonMarketPrevious, { content:"Previous", placement:"top" });
 	tippy(buttonMarketNext, { content:"Next", placement:"top" });
+	tippy(".holdings-card.username", { content:"Account", placement:"right" });
+	tippy(".holdings-card.value", { content:"Total Portfolio Value", placement:"right" });
 	tippy(buttonSettingsLogoutEverywhere, { content:"Deletes all your active session tokens, causing you to get logged out on every device.", placement:"right" });
 }
 
@@ -663,6 +739,11 @@ function audibleElement(element) {
 	} catch(error) {
 		return { audible:false, error:error };
 	}
+}
+
+function setHoldingsUsername() {
+	let username = localStorage.getItem("username");
+	spanHoldingsUsername.textContent = username;
 }
 
 function errorNotification(description) {

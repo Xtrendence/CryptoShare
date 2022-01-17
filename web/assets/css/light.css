@@ -29,6 +29,8 @@ html.light {
 	--cosmic-gradient:linear-gradient(330deg, #ff00cc, #333399);
 	--playful-gradient:linear-gradient(340deg, #fc00ff, #27bcbe);
 	--atlas-gradient:linear-gradient(300deg, #feac5e, #c779d0, #4bc0c8);
+	--pale-gradient:linear-gradient(260deg, #2c74d8 15%, #7989d4 100%);
+	--ocean-gradient:linear-gradient(110deg, #04bde4 15%, #0253b9 100%);
 }
 
 html.light .page.chatbot {
@@ -48,8 +50,8 @@ html.light .page.market {
 }
 html.light .page.holdings {
 	--accent-first:#11998e;
-	--accent-second:#38ef7d;
-	--accent-third:#45b671;
+	--accent-second:#57b67b;
+	--accent-third:#306845;
 }
 html.light .page.activity {
 	--accent-first:#667eea;

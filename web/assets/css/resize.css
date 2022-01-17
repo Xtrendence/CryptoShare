@@ -11,15 +11,15 @@
 	}
 }
 
-@media screen and (min-width:1060px) {
+@media screen and (min-width:1160px) {
 	.page-container.holdings.half.top-left {
-		left:calc(50% - 300px - 180px - 30px);
+		left:calc(50% - 300px - 180px - 30px - 50px);
 	}
 	.page-container.holdings.half.bottom-left {
-		left:calc(50% - 300px - 180px - 30px);
+		left:calc(50% - 300px - 180px - 30px - 50px);
 	}
 	.page-container.holdings.half.right {
-		width:700px;
-		left:calc(50% - 700px / 2 + 180px - 20px);
+		width:800px;
+		left:calc(50% - 800px / 2 + 180px - 20px);
 	}
 }
