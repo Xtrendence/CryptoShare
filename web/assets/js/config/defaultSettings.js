@@ -1,6 +1,5 @@
 let defaultSettings = {
 	"theme": "dark",
-	"background": "animated",
 	"sounds": "enabled"
 };
 

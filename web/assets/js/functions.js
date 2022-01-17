@@ -21,7 +21,7 @@ function setTheme(theme) {
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
 
-		setBackground(applicationSettings.background, theme);
+		setBackground(applicationSettings.theme);
 	} else {
 		browserTheme.setAttribute("content", "#000000");
 
@@ -38,59 +38,12 @@ function setTheme(theme) {
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
 
-		setBackground(applicationSettings.background, theme);
+		setBackground(applicationSettings.theme);
 	}
 }
 
-function setBackground(background, theme) {
-	let backgroundToggles = document.getElementsByClassName("toggle-wrapper background");
-
-	if(background === "animated") {
-		applicationSettings.background = "animated";
-
-		for(let i = 0; i < backgroundToggles.length; i++) {
-			backgroundToggles[i].classList.add("active");
-		}
-
-		settingsToggleSimpleBackground.classList.remove("active");
-
-		localStorage.setItem("background", "animated");
-		divAnimatedBackground.classList.remove("hidden");
-		divStaticBackground.classList.add("hidden");
-		divSimpleBackground.classList.add("hidden");
-		particlesJS("animated-background", getParticlesConfig(theme, document.documentElement));
-	} else if(background === "static") {
-		applicationSettings.background = "static";
-
-		for(let i = 0; i < backgroundToggles.length; i++) {
-			backgroundToggles[i].classList.remove("active");
-		}
-
-		settingsToggleSimpleBackground.classList.remove("active");
-
-		localStorage.setItem("background", "static");
-		divAnimatedBackground.innerHTML = "";
-		divAnimatedBackground.classList.add("hidden");
-		divStaticBackground.classList.remove("hidden");
-		divStaticBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White-Gold.png")` : `url("./assets/img/BG-Black-Gold.png")`;
-		divSimpleBackground.classList.add("hidden");
-	} else if(background === "simple") {
-		applicationSettings.background = "simple";
-
-		for(let i = 0; i < backgroundToggles.length; i++) {
-			backgroundToggles[i].classList.remove("active");
-		}
-
-		settingsToggleSimpleBackground.classList.add("active");
-
-		localStorage.setItem("background", "simple");
-		divAnimatedBackground.innerHTML = "";
-		divAnimatedBackground.classList.add("hidden");
-		divStaticBackground.classList.add("hidden");
-		divStaticBackground.removeAttribute("style");
-		divSimpleBackground.classList.remove("hidden");
-		divSimpleBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
-	}
+function setBackground(theme) {
+	divBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
 }
 
 function setSounds(sounds) {
@@ -364,15 +317,13 @@ async function generateMarketChart(element, title, labels, tooltips, currency, d
 
 	let mainContrastDark = cssValue("--main-contrast-dark");
 
-	let accentFirst = cssValue("--accent-first");
-	let accentSecond = cssValue("--accent-second");
-	let accentThird = cssValue("--accent-third");
-
 	let gradientStroke = context.createLinearGradient(1000, 0, 300, 0);
-	gradientStroke.addColorStop(0, accentFirst);
-	gradientStroke.addColorStop(0.5, accentSecond);
-	gradientStroke.addColorStop(0.7, accentThird);
-	gradientStroke.addColorStop(1, accentFirst);
+
+	let colors = { 0:"#feac5e", 0.5:"#c779d0", 0.7:"#4bc0c8", 1:"#c779d0" };
+
+	Object.keys(colors).map(stop => {
+		gradientStroke.addColorStop(stop, colors[stop]);
+	});
 
 	new Chart(canvas, {
 		type: "line",
@@ -541,7 +492,6 @@ function getSettings() {
 	let settings = {};
 
 	settings["theme"] = empty(localStorage.getItem("theme")) ? defaultSettings.theme : localStorage.getItem("theme");
-	settings["background"] = empty(localStorage.getItem("background")) ? defaultSettings.background : localStorage.getItem("background");
 	settings["sounds"] = empty(localStorage.getItem("sounds")) ? defaultSettings.sounds : localStorage.getItem("sounds");
 
 	return settings;

@@ -116,22 +116,18 @@ input[type=number] {
 	color:rgb(255,255,255);
 }
 
-#animated-background, #static-background, #simple-background {
+#background {
 	pointer-events:none;
-	transform:scaleX(-1);
+	transform:rotate(180deg);
 	position:absolute;
 	top:0;
 	left:0;
 	width:100%;
 	height:100%;
-	opacity:0.5;
+	opacity:1;
 	background-size:cover;
 	background-attachment:fixed;
 	z-index:1;
-}
-#simple-background {
-	opacity:1;
-	transform:rotate(180deg);
 }
 
 .loading-screen {
@@ -661,6 +657,7 @@ html.light .toggle-container {
 	box-shadow:var(--shadow-smooth);
 }
 .navbar .item {
+	position:relative;
 	cursor:pointer;
 	width:104px;
 	height:74px;
@@ -668,26 +665,63 @@ html.light .toggle-container {
 	display:inline-block;
 	margin:10px 10px 0 10px;
 	box-sizing:border-box;
-	border-style:solid;
-	border-width:2px;
-	border-color:var(--accent-first);
 	padding:10px;
+	background:var(--main-first-transparent);
 	border-radius:var(--border-radius);
 }
 .navbar .item.active {
-	border-color:var(--accent-first);
-	background:var(--accent-first);
 	pointer-events:none;
 }
-#desktop .navbar .item:hover {
-	border-color:var(--accent-first);
-	background:var(--accent-first);
+.navbar .item .background {
+	position:absolute;
+	z-index:21;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	opacity:0;
+	transition:opacity 0.25s;
+	pointer-events:none;
+	border-radius:var(--border-radius);
+}
+.navbar .item.active .background, #desktop .navbar .item:hover .background {
+	opacity:0.9;
+}
+.navbar .item#navbar-chatbot .background {
+	background:var(--colorful-gradient);
+}
+.navbar .item#navbar-dashboard .background {
+	background:var(--blue-gradient);
+}
+.navbar .item#navbar-market .background {
+	background:var(--atlas-gradient);
+}
+.navbar .item#navbar-holdings .background {
+	background:var(--greener-gradient);
+}
+.navbar .item#navbar-activity .background {
+	background:var(--purple-gradient);
+}
+.navbar .item#navbar-settings .background {
+	background:var(--orange-gradient);
 }
 #desktop .navbar .item:hover span, .navbar .item.active span {
 	color:var(--accent-contrast);
 }
 #desktop .navbar .item:hover svg, .navbar .item.active svg {
 	fill:var(--accent-contrast);
+}
+.navbar .item .content {
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	z-index:22;
+	justify-content:center;
+	align-items:center;
+	display:flex;
+	flex-direction:column;
 }
 .navbar .item svg {
 	width:26px;

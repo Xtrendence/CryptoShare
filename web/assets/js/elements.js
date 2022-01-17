@@ -3,9 +3,7 @@ let DOMCache = document.getElementById("dom-cache");
 let audioPop = document.getElementById("audio-pop");
 let audioSwitch = document.getElementById("audio-switch");
 
-let divAnimatedBackground = document.getElementById("animated-background");
-let divStaticBackground = document.getElementById("static-background");
-let divSimpleBackground = document.getElementById("simple-background");
+let divBackground = document.getElementById("background");
 
 let divLoading = document.getElementById("loading-overlay");
 
@@ -44,8 +42,6 @@ let divSettingsNavbar = document.getElementById("settings-navbar");
 let divPageSettings = document.getElementById("settings-page");
 
 let settingsToggleTheme = document.getElementById("settings-toggle-theme");
-let settingsToggleBackground = document.getElementById("settings-toggle-background");
-let settingsToggleSimpleBackground = document.getElementById("settings-toggle-simple-background");
 let settingsToggleSounds = document.getElementById("settings-toggle-sounds");
 
 let buttonSettingsLogout = document.getElementById("button-settings-logout");

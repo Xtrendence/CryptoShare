@@ -68,29 +68,6 @@ async function accountSetup() {
 					break;
 				case 3:
 					popup.setSize(400, "auto");
-					popup.setHTML(`<span>Would you like the background to be animated? This uses more system resources, and may reduce battery life if your device runs on a battery.</span><div class="toggle-wrapper" id="popup-toggle-background"><div class="toggle-container"></div></div>`);
-
-					let toggleBackground = document.getElementById("popup-toggle-background");
-
-					if(applicationSettings.background === "animated") {
-						toggleBackground.classList.add("active");
-					}
-
-					toggleBackground.addEventListener("click", () => {
-						if(toggleBackground.classList.contains("active")) {
-							toggleBackground.classList.remove("active");
-							setBackground("static", applicationSettings.theme);
-						} else {
-							toggleBackground.classList.add("active");
-							setBackground("animated", applicationSettings.theme);
-						}
-					});
-
-					count++;
-
-					break;
-				case 4:
-					popup.setSize(400, "auto");
 					popup.setHTML(`<span>Would you like to enable sound effects that play when you interact with the application?</span><div class="toggle-wrapper" id="popup-toggle-sounds"><div class="toggle-container"></div></div>`);
 
 					let toggleSounds = document.getElementById("popup-toggle-sounds");
@@ -114,12 +91,12 @@ async function accountSetup() {
 					count++;
 
 					break;
-				case 5:
+				case 4:
 					popup.setOptions({ confirmText:"Finish" });
 					popup.setHTML(`<span>If you aren't hosting CryptoShare yourself, please be aware that whoever is hosting it can modify the code to steal your financial data, so make sure you trust them.</span>`);
 					count++;
 					break;
-				case 6:
+				case 5:
 					let key = CryptoFN.generateAESKey();
 					let encrypted = CryptoFN.encryptAES(key, inputCreatePassword.value);
 

@@ -11,25 +11,12 @@ export default class Utils {
 		defaultPage: "Dashboard"
 	}
 
-	static getBackground(theme: string, type: string) {
-		switch(theme) {
-			case "Light":
-				switch(type) {
-					case "static":
-						return require("../assets/img/BG-White-Gold.png");
-					case "simple":
-						return require("../assets/img/BG-White.png");
-				}
-				break;
-			case "Dark":
-				switch(type) {
-					case "static":
-						return require("../assets/img/BG-Black-Gold.png");
-					case "simple":
-						return require("../assets/img/BG-Black.png");
-				}
-				break;
+	static getBackground(theme: string) {
+		let background = require("../assets/img/BG-Black.png");
+		if(theme === "Light") {
+			background = require("../assets/img/BG-White.png");
 		}
+		return background;
 	}
 
 	static async setAccountInfo(info: any, updateKey: boolean) {

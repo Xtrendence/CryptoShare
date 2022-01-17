@@ -1,11 +1,3 @@
-let resizeTimeout;
-window.addEventListener("resize", () => {
-	clearTimeout(resizeTimeout);
-	resizeTimeout = setTimeout(() => {
-		particlesJS("animated-background", getParticlesConfig(applicationSettings.theme, document.documentElement));
-	}, 250);
-});
-
 document.addEventListener("click", (event) => {
 	let audible = audibleElement(event.target);
 	if(applicationSettings.sounds === "enabled" && audioPlayable && audible.audible) {
@@ -225,26 +217,6 @@ settingsToggleTheme.addEventListener("click", () => {
 		setTheme("dark");
 	} else {
 		setTheme("light");
-	}
-
-	syncSettings(true);
-});
-
-settingsToggleBackground.addEventListener("click", () => {
-	if(settingsToggleBackground.classList.contains("active")) {
-		setBackground("static", applicationSettings.theme);
-	} else {
-		setBackground("animated", applicationSettings.theme);
-	}
-
-	syncSettings(true);
-});
-
-settingsToggleSimpleBackground.addEventListener("click", () => {
-	if(settingsToggleSimpleBackground.classList.contains("active")) {
-		setBackground("static", applicationSettings.theme);
-	} else {
-		setBackground("simple", applicationSettings.theme);
 	}
 
 	syncSettings(true);
