@@ -3,3 +3,23 @@
 		max-width:110px;
 	}
 }
+
+@media screen and (min-width:1260px) {
+	.page-container.full {
+		width:1220px;
+		left:calc(50% - 1220px / 2);
+	}
+}
+
+@media screen and (min-width:1060px) {
+	.page-container.holdings.half.top-left {
+		left:calc(50% - 300px - 180px - 30px);
+	}
+	.page-container.holdings.half.bottom-left {
+		left:calc(50% - 300px - 180px - 30px);
+	}
+	.page-container.holdings.half.right {
+		width:700px;
+		left:calc(50% - 700px / 2 + 180px - 20px);
+	}
+}
