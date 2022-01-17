@@ -346,7 +346,7 @@ async function populateHoldingsList(recreate) {
 			let parsed = createHoldingsListRows(marketData, holdingsData, currency);
 
 			let rows = parsed.rows;
-			let totalValue = parsed.totalValue;
+			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
 			
@@ -767,4 +767,12 @@ function errorNotification(description) {
 		background: "var(--accent-second)",
 		color: "var(--accent-contrast)"
 	});
+}
+
+function addNavbarPattern() {
+	let items = divNavbarWrapper.getElementsByClassName("item");
+
+	for(let i = 0; i < items.length; i++) {
+		items[i].innerHTML += svgNavbarPattern;
+	}
 }
