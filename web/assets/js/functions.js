@@ -319,13 +319,14 @@ async function populateHoldingsList(recreate) {
 
 				if(empty(holdings?.data?.readHolding)) {
 					holdings = {};
+					divHoldingsList.innerHTML = `<span class="list-text noselect">No Holdings Found</span>`;
 				}
 			} else {
 				// TODO: Fetch activity and convert into holdings.
+				divHoldingsList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
 			}
 
 			if(empty(holdings)) {
-				divHoldingsList.innerHTML = `<span class="list-text noselect">No Holdings Found</span>`;
 				return;
 			}
 			
