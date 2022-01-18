@@ -62,11 +62,12 @@ buttonLoginAccount.addEventListener("click", () => {
 
 				let choices = JSON.parse(settings?.choices);
 
+				setSettings(settings);
+				setAccountInfo(result, true);
+
 				setPage(choices?.defaultPage);
 				setSettingsPage(choices?.defaultSettingsPage);
 
-				setSettings(settings);
-				setAccountInfo(result, true);
 				showApp();
 			}
 		}).catch(error => {
