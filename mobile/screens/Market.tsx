@@ -14,7 +14,7 @@ export default function Market({ navigation }: any) {
 	useFocusEffect(Utils.backHandler(navigation));
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme, "static")} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
 

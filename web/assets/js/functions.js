@@ -318,8 +318,7 @@ async function populateHoldingsList(recreate) {
 				holdings = await readHolding(token, userID);
 
 				if(empty(holdings?.data?.readHolding)) {
-					errorNotification("No holdings found.");
-					return;
+					holdings = {};
 				}
 			} else {
 				// TODO: Fetch activity and convert into holdings.

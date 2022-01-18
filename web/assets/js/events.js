@@ -243,11 +243,15 @@ buttonMarketNext.addEventListener("click", () => {
 	}
 });
 
+// TODO: Add functionality.
 buttonHoldingsPerformance.addEventListener("click", () => {
-
+	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
+		
+	} else {
+		errorNotification("Transactions must be set to affect holdings (this can be done in the settings).");
+	}
 });
 
-// TODO: Add functionality.
 buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 	try {
 		let html = `<input class="uppercase" id="popup-input-symbol-crypto" type="text" placeholder="Coin Symbol..."><input id="popup-input-amount-crypto" type="number" placeholder="Amount...">`;
