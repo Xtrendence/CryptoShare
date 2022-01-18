@@ -27,7 +27,7 @@ async function accountSetup() {
 		let popup = new Popup(300, "auto", "Account Creation", `<span>Would you like to create your new account, ${username}?</span>`);
 		popup.show();
 
-		DOMCache.innerHTML = `<div id="cache-content"><img class="hidden" src="./assets/img/BG-White-Gold.png"><img class="hidden" src="./assets/img/BG-Black-Gold.png"></div>`;
+		DOMCache.innerHTML = `<div id="cache-content"><img class="hidden" src="./assets/img/BG-White.png"><img class="hidden" src="./assets/img/BG-Black.png"></div>`;
 
 		let count = 0;
 
@@ -49,7 +49,7 @@ async function accountSetup() {
 				case 2:
 					popup.setSize(460, 695);
 					popup.setOptions({ cancelText:"Cancel", confirmText:"Continue" });
-					popup.setHTML(`<span>Which color theme would you like to use?</span><img class="clickable" id="popup-clickable-light" src="./assets/img/BG-White-Gold.png"><img class="clickable" id="popup-clickable-dark" src="./assets/img/BG-Black-Gold.png">`);
+					popup.setHTML(`<span>Which color theme would you like to use?</span><img class="clickable" id="popup-clickable-light" src="./assets/img/BG-White.png"><img class="clickable" id="popup-clickable-dark" src="./assets/img/BG-Black.png">`);
 
 					DOMCache.innerHTML = "";
 
