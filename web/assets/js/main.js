@@ -24,4 +24,5 @@ setInterval(() => {
 	let active = getActiveMarketPage();
 	populateMarketList(active.cryptoPage, active.stocksPage, false);
 	populateHoldingsList(false);
+	populateActivityList(false);
 }, 15000);

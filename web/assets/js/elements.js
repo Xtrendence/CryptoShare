@@ -47,6 +47,13 @@ let buttonHoldingsAddStockAsset = document.getElementById("button-holdings-add-s
 
 let divHoldingsList = document.getElementById("holdings-list");
 
+let divActivityList = document.getElementById("activity-list");
+
+let inputActivitySearch = document.getElementById("input-activity-search");
+
+let buttonActivityTools = document.getElementById("button-activity-tools");
+let buttonActivityAdd = document.getElementById("button-activity-add");
+
 let divSettingsNavbar = document.getElementById("settings-navbar");
 let divPageSettings = document.getElementById("settings-page");
 

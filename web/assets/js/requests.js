@@ -94,7 +94,7 @@ function readActivity(token, userID) {
 	let query = {
 		query: `query readActivity($token: String!, $userID: Int!) {
 			readActivity(token: $token, userID: $userID) {
-				activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo
+				activityID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo
 			}
 		}`,
 		variables: {

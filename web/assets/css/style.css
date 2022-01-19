@@ -1088,6 +1088,9 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 .page.activity .page-container.full .loading-icon {
 	top:calc(50% - 80px / 2 - 35px);
 }
+.page.activity .page-container.full .list-text {
+	top:calc(50% - 40px / 2 - 35px);
+}
 .page.activity .page-container-toolbar {
 	width:100%;
 	height:60px;
@@ -1107,7 +1110,7 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	width:200px;
 	top:10px;
 	left:10px;
-	background:var(--main-first);
+	background:var(--main-fourth);
 	color:var(--main-contrast);
 	font-size:16px;
 	font-weight:bold;
@@ -1120,7 +1123,10 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	border-width:2px;
 	border-color:transparent;
 }
-.page.activity .page-container-toolbar input:focus {
+.page.activity .page-container-toolbar input.active {
+	background:var(--main-first);
+}
+.page.activity .page-container-toolbar input.active:focus {
 	background:var(--main-first-transparent);
 }
 

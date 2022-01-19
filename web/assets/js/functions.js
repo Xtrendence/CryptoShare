@@ -258,6 +258,7 @@ function setPage(page) {
 			setHoldingsUsername();
 			break;
 		case "activity":
+			populateActivityList(true);
 			break;
 		case "settings":
 			syncSettings(false);
@@ -376,6 +377,45 @@ async function populateHoldingsList(recreate) {
 			}
 		} catch(error) {
 			errorNotification("Couldn't fetch holdings.");
+		}
+	}
+}
+
+async function populateActivityList(recreate) {
+	if(getActivePage().id === "activity-page") {
+		if(recreate) {
+			divActivityList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
+		}
+	
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let activity = await readActivity(token, userID);
+
+			if(empty(activity?.data?.readActivity)) {
+				activity = {};
+				divActivityList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
+				inputActivitySearch.classList.remove("active");
+				return;
+			}
+
+			inputActivitySearch.classList.add("active");
+
+			let activityData = {};
+	
+			let encrypted = activity?.data?.readActivity;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = decryptObjectValues(key, encrypted[index]);
+				decrypted.activityID = encrypted[index].activityID;
+				activityData[decrypted.activityTransactionID] = decrypted;
+			});
+
+			console.log(activityData);
+		} catch(error) {
+			errorNotification("Couldn't fetch activity data.");
 		}
 	}
 }
