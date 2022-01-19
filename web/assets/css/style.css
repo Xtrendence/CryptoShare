@@ -186,7 +186,7 @@ input[type=number] {
 }
 .loading-icon div {
 	position:absolute;
-	border:4px solid #fff;
+	border:4px solid var(--accent-first);
 	opacity:1;
 	border-radius:50%;
 	animation:loading-icon 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
@@ -1083,6 +1083,45 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	display:block;
 	margin:20px auto 0 auto;
 	width:calc(100% - 40px);
+}
+
+.page.activity .page-container.full .loading-icon {
+	top:calc(50% - 80px / 2 - 35px);
+}
+.page.activity .page-container-toolbar {
+	width:100%;
+	height:60px;
+	position:absolute;
+	bottom:0;
+	left:0;
+	background:var(--main-third);
+}
+.page.activity .page-container-toolbar .page-actions-wrapper {
+	position:absolute;
+	top:10px;
+	right:10px;
+	text-align:right;
+}
+.page.activity .page-container-toolbar input {
+	position:absolute;
+	width:200px;
+	top:10px;
+	left:10px;
+	background:var(--main-first);
+	color:var(--main-contrast);
+	font-size:16px;
+	font-weight:bold;
+	padding:0 10px 0 10px;
+	height:40px;
+	line-height:40px;
+	border-radius:var(--border-radius);
+	box-sizing:border-box;
+	border-style:solid;
+	border-width:2px;
+	border-color:transparent;
+}
+.page.activity .page-container-toolbar input:focus {
+	background:var(--main-first-transparent);
 }
 
 .page-container.settings {

@@ -90,6 +90,22 @@ function readHolding(token, userID) {
 	return request("POST", urlAPI, query);
 }
 
+function readActivity(token, userID) {
+	let query = {
+		query: `query readActivity($token: String!, $userID: Int!) {
+			readActivity(token: $token, userID: $userID) {
+				activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
 	let query = {
 		query: `mutation createHolding($token: String!, $userID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {
@@ -102,6 +118,33 @@ function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdin
 			holdingAssetSymbol: holdingAssetSymbol,
 			holdingAssetAmount: holdingAssetAmount,
 			holdingAssetType: holdingAssetType
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
+function createActivity(token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
+	let query = {
+		query: `mutation createActivity($token: String!, $userID: Int!, $activityAssetID: String!, $activityAssetSymbol: String!, $activityAssetType: String!, $activityDate: String!, $activityType: String!, $activityAssetAmount: String!, $activityFee: String!, $activityNotes: String!, $activityExchange: String!, $activityPair: String!, $activityPrice: String!, $activityFrom: String!, $activityTo: String!) {
+			createActivity(token: $token, userID: $userID, activityAssetID: $activityAssetID, activityAssetSymbol: $activityAssetSymbol, activityAssetType: $activityAssetType, activityDate: $activityDate, activityType: $activityType, activityAssetAmount: $activityAssetAmount, activityFee: $activityFee, activityNotes: $activityNotes, activityExchange: $activityExchange, activityPair: $activityPair, activityPrice: $activityPrice, activityFrom: $activityFrom, activityTo: $activityTo)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			activityAssetID: activityAssetID, 
+			activityAssetSymbol: activityAssetSymbol, 
+			activityAssetType: activityAssetType, 
+			activityDate: activityDate, 
+			activityType: activityType, 
+			activityAssetAmount: activityAssetAmount, 
+			activityFee: activityFee, 
+			activityNotes: activityNotes, 
+			activityExchange: activityExchange, 
+			activityPair: activityPair, 
+			activityPrice: activityPrice, 
+			activityFrom: activityFrom, 
+			activityTo: activityTo  
 		}
 	};
 
@@ -127,6 +170,34 @@ function updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSym
 	return request("POST", urlAPI, query);
 }
 
+function updateActivity(token, userID, activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
+	let query = {
+		query: `mutation updateActivity($token: String!, $userID: Int!, $activityID: Int!, $activityAssetID: String!, $activityAssetSymbol: String!, $activityAssetType: String!, $activityDate: String!, $activityType: String!, $activityAssetAmount: String!, $activityFee: String!, $activityNotes: String!, $activityExchange: String!, $activityPair: String!, $activityPrice: String!, $activityFrom: String!, $activityTo: String!) {
+			updateActivity(token: $token, userID: $userID, activityID: $activityID, activityAssetID: $activityAssetID, activityAssetSymbol: $activityAssetSymbol, activityAssetType: $activityAssetType, activityDate: $activityDate, activityType: $activityType, activityAssetAmount: $activityAssetAmount, activityFee: $activityFee, activityNotes: $activityNotes, activityExchange: $activityExchange, activityPair: $activityPair, activityPrice: $activityPrice, activityFrom: $activityFrom, activityTo: $activityTo)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			activityID: parseInt(activityID),
+			activityAssetID: activityAssetID, 
+			activityAssetSymbol: activityAssetSymbol, 
+			activityAssetType: activityAssetType, 
+			activityDate: activityDate, 
+			activityType: activityType, 
+			activityAssetAmount: activityAssetAmount, 
+			activityFee: activityFee, 
+			activityNotes: activityNotes, 
+			activityExchange: activityExchange, 
+			activityPair: activityPair, 
+			activityPrice: activityPrice, 
+			activityFrom: activityFrom, 
+			activityTo: activityTo  
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
 function deleteHolding(token, userID, holdingID) {
 	let query = {
 		query: `mutation deleteHolding($token: String!, $userID: Int!, $holdingID: Int!) {
@@ -136,6 +207,21 @@ function deleteHolding(token, userID, holdingID) {
 			token: token,
 			userID: parseInt(userID),
 			holdingID: parseInt(holdingID)
+		}
+	};
+
+	return request("POST", urlAPI, query);
+}
+
+function deleteActivity(token, userID, activityID) {
+	let query = {
+		query: `mutation deleteActivity($token: String!, $userID: Int!, $activityID: Int!) {
+			deleteActivity(token: $token, userID: $userID, activityID: $activityID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			activityID: parseInt(activityID)
 		}
 	};
 
