@@ -23,3 +23,10 @@
 		left:calc(50% - 800px / 2 + 180px - 20px);
 	}
 }
+
+@media screen and (min-width:1000px) {
+	.page-container.full.activity {
+		width:960px;
+		left:calc(50% - 960px / 2);
+	}
+}

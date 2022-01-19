@@ -513,6 +513,18 @@ html.light .toggle-container {
 	display:block;
 	margin-top:20px;
 }
+.popup-wrapper .bottom .popup-button-wrapper.margin-bottom {
+	margin-bottom:20px;
+}
+.popup-wrapper .bottom .popup-button-wrapper.three .choice {
+	width:calc(100% / 3 - 6.7px);
+}
+.popup-wrapper .bottom .popup-button-wrapper.three .choice.small {
+	width:calc(100% / 3 - 20px);
+}
+.popup-wrapper .bottom .popup-button-wrapper.three .choice.large {
+	width:calc(100% / 3 + 20px);
+}
 .popup-wrapper .bottom .popup-button-wrapper button:first-of-type {
 	margin-right:10px;
 }

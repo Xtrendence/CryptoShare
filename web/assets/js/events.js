@@ -356,6 +356,56 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 	
 });
 
+// TODO: Add functionality.
+buttonActivityTools.addEventListener("click", () => {
+
+});
+
+buttonActivityAdd.addEventListener("click", () => {
+	try {
+		// token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo
+
+		let html = `
+			<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol...">
+			<div class="popup-button-wrapper margin-bottom">
+				<button id="popup-choice-crypto" class="choice active">Crypto</button>
+				<button id="popup-choice-stock" class="choice">Stock</button>
+			</div>
+			<input id="popup-input-amount" type="number" placeholder="Amount...">
+			<input id="popup-input-date" type="text" placeholder="Date...">
+			<input id="popup-input-fee" type="number" placeholder="Fee...">
+			<input id="popup-input-notes" type="text" placeholder="Notes...">
+			<div class="popup-button-wrapper three margin-bottom">
+				<button id="popup-choice-buy" class="choice small active">Buy</button>
+				<button id="popup-choice-sell" class="choice small">Sell</button>
+				<button id="popup-choice-transfer" class="choice large">Transfer</button>
+			</div>
+			<div id="popup-wrapper-trade">
+				<input id="popup-input-exchange" type="text" placeholder="Exchange...">
+				<input id="popup-input-pair" type="text" placeholder="Pair...">
+				<input id="popup-input-price" type="number" placeholder="Price...">
+			</div>
+			<div id="popup-wrapper-transfer" class="hidden">
+				<input id="popup-input-from" type="text" placeholder="From...">
+				<input id="popup-input-to" type="text" placeholder="To...">
+			</div>
+		`;
+
+		let popup = new Popup(300, 500, "Add Activity", html, { confirmText:"Add" });
+		popup.show();
+		popup.updateHeight();
+
+		popup.on("confirm", async () => {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+		});
+	} catch(error) {
+		console.log(error);
+		errorNotification("Something went wrong...");
+	}
+});
+
 settingsToggleTheme.addEventListener("click", () => {
 	if(settingsToggleTheme.classList.contains("active")) {
 		setTheme("dark");
