@@ -8,5 +8,6 @@ let defaultChoices = {
 	"defaultSettingsPage": "behavior",
 	"currency": "usd",
 	"assetIconBackdrop": "disabled",
+	"navbarStyle": "normal",
 	"transactionsAffectHoldings": "enabled"
 };

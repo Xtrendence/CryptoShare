@@ -651,8 +651,20 @@ function setSettingsChoices(choices) {
 
 			if(value === choices[key]) {
 				button.classList.add("active");
+				processChoice(key, value);
 			}
 		}
+	}
+}
+
+function processChoice(key, value) {
+	switch(key) {
+		case "navbarStyle":
+			if(value === "compact") {
+				document.documentElement.classList.add("navbar-compact");
+			} else {
+				document.documentElement.classList.remove("navbar-compact");
+			}
 	}
 }
 
