@@ -35,8 +35,13 @@ function decryptObjectValues(password, object) {
 
 	keys.map(key => {
 		let value = object[key];
-		let plaintext = CryptoFN.decryptAES(value, password);
-		decrypted[key] = plaintext;
+
+		try {
+			let plaintext = CryptoFN.decryptAES(value, password);
+			decrypted[key] = plaintext;
+		} catch(error) {
+			decrypted[key] = value;
+		}
 	});
 
 	return decrypted;

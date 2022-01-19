@@ -106,7 +106,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-function createHoldingsListRows(marketData, holdingsData, currency) {
+function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 	let output = { rows:[], totalValue:0 };
 
 	let ids = Object.keys(marketData);
@@ -481,29 +481,5 @@ function findCryptoByID(coins, id, retry) {
 		} else {
 			return { error:"No coins were found with that symbol." };
 		}
-	}
-}
-
-function showCryptoMatches(referenceNode, list) {
-	if("matches" in list && list.matches.length > 1) {
-		let div = document.createElement("div");
-		div.setAttribute("class", "popup-list noselect");
-
-		Object.keys(list.matches).map(index => {
-			let match = list.matches[index];
-			let symbol = Object.keys(match)[0];
-			let id = match[symbol];
-
-			let row = document.createElement("div");
-			row.setAttribute("class", "popup-list-row");
-			row.setAttribute("data-id", id);
-			row.innerHTML = `<span class="symbol">${symbol.toUpperCase()}</span><span class="id">${id}</span>`;
-
-			div.appendChild(row);
-		});
-
-		insertAfter(div, referenceNode);
-	} else {
-		errorNotification("Invalid number of matches.");
 	}
 }

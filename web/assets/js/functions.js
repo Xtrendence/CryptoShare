@@ -345,7 +345,7 @@ async function populateHoldingsList(recreate) {
 
 			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
 
-			let parsed = createHoldingsListRows(marketData, holdingsData, currency);
+			let parsed = createHoldingsListCryptoRows(marketData, holdingsData, currency);
 
 			let rows = parsed.rows;
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
@@ -410,14 +410,218 @@ async function populateActivityList(recreate) {
 			Object.keys(encrypted).map(index => {
 				let decrypted = decryptObjectValues(key, encrypted[index]);
 				decrypted.activityID = encrypted[index].activityID;
+				decrypted.activityTransactionID = encrypted[index].activityTransactionID;
 				activityData[decrypted.activityTransactionID] = decrypted;
 			});
 
-			console.log(activityData);
+			let rows = createActivityListRows(activityData);
+
+			if(divActivityList.getElementsByClassName("loading-icon").length > 0) {
+				divActivityList.innerHTML = "";
+			}
+
+			for(let i = 0; i < rows.length; i++) {
+				if(divActivityList.childElementCount >= i + 1) {
+					let current = divActivityList.getElementsByClassName("activity-list-row")[i];
+					if(current.innerHTML !== rows[i].innerHTML) {
+						current.innerHTML = rows[i].innerHTML;
+					}
+				} else {
+					divActivityList.appendChild(rows[i]);
+				}
+			}
 		} catch(error) {
+			console.log(error);
 			errorNotification("Couldn't fetch activity data.");
 		}
 	}
+}
+
+function createActivityListRows(activityData) {
+	let transactionIDs = Object.keys(activityData);
+
+	let rows = [];
+
+	transactionIDs.map(txID => {
+		let activity = activityData[txID];
+
+		let div = document.createElement("div");
+		div.id = "activity-list-" + txID;
+		div.setAttribute("class", "activity-list-row noselect audible-pop");
+
+		div.innerHTML = `
+			<div class="info-wrapper audible-pop">
+				<div class="asset-container audible-pop">
+					<span>${activity.activityAssetSymbol}</span>
+				</div>
+				<div class="info-container">
+					<div class="top audible-pop">
+						
+					</div>
+					<div class="bottom audible-pop">
+						
+					</div>
+				</div>
+			</div>
+		`;
+
+		// TODO: Add functionality.
+		div.addEventListener("click", () => {
+
+		});
+
+		rows.push(div);
+	});
+
+	return rows;
+}
+
+// Add stock functionality.
+async function getActivityPopupAssetID(type, symbol) {
+	return new Promise(async (resolve, reject) => {
+		if(type === "crypto") {
+			let result = await getCoin({ symbol:symbol });
+			resolve(result);
+		} else {
+
+		}
+	});
+}
+
+function getActivityPopupElements() {
+	return {
+		popupInputSymbol: document.getElementById("popup-input-symbol"),
+		popupChoiceCrypto: document.getElementById("popup-choice-crypto"),
+		popupChoiceStock: document.getElementById("popup-choice-stock"),
+		popupInputAmount: document.getElementById("popup-input-amount"),
+		popupInputDate: document.getElementById("popup-input-date"),
+		popupInputFee: document.getElementById("popup-input-fee"),
+		popupInputNotes: document.getElementById("popup-input-notes"),
+		popupChoiceBuy: document.getElementById("popup-choice-buy"),
+		popupChoiceSell: document.getElementById("popup-choice-sell"),
+		popupChoiceTransfer: document.getElementById("popup-choice-transfer"),
+		popupInputExchange: document.getElementById("popup-input-exchange"),
+		popupInputPair: document.getElementById("popup-input-pair"),
+		popupInputPrice: document.getElementById("popup-input-price"),
+		popupInputFrom: document.getElementById("popup-input-from"),
+		popupInputTo: document.getElementById("popup-input-to"),
+		popupWrapperTrade: document.getElementById("popup-wrapper-trade"),
+		popupWrapperTransfer: document.getElementById("popup-wrapper-transfer")
+	};
+}
+
+function parseActivityPopupData(elements) {
+	try {
+		let activityAssetType = elements.popupChoiceCrypto.classList.contains("active") ? "crypto" : "stock";
+
+		let activityType = "buy";
+		if(elements.popupChoiceSell.classList.contains("active")) {
+			activityType = "sell";
+		} else if(elements.popupChoiceTransfer.classList.contains("active")) {
+			activityType = "transfer";
+		}
+
+		let values = {
+			activityAssetSymbol: elements.popupInputSymbol.value,
+			activityAssetType: activityAssetType,
+			activityAssetAmount: elements.popupInputAmount.value,
+			activityDate: elements.popupInputDate.value,
+			activityFee: elements.popupInputFee.value,
+			activityNotes: elements.popupInputNotes.value,
+			activityType: activityType,
+			activityExchange: elements.popupInputExchange.value,
+			activityPair: elements.popupInputPair.value,
+			activityPrice: elements.popupInputPrice.value,
+			activityFrom: elements.popupInputFrom.value,
+			activityTo: elements.popupInputTo.value
+		};
+
+		if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
+			return { error:"The values of the amount, fee, and price fields must be numbers."};
+		}
+
+		if(empty(values.activityAssetSymbol) || empty(values.activityAssetType) || empty(values.activityAssetAmount) || empty(values.activityDate) || empty(values.activityType)) {
+			return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
+		}
+
+		if(activityType === "buy" || activityType === "sell") {
+			if(empty(values.activityExchange)) {
+				values.activityExchange = "";
+			}
+
+			if(empty(values.activityPair)) {
+				values.activityPair = "";
+			}
+
+			if(empty(values.activityPrice)) {
+				values.activityPrice = 0;
+			}
+
+			values.activityFrom = "";
+			values.activityTo = "";
+		} else {
+			if(empty(values.activityFrom)) {
+				values.activityFrom = "";
+			}
+
+			if(empty(values.activityTo)) {
+				values.activityTo = "";
+			}
+
+			values.activityExchange = "";
+			values.activityPair = "";
+			values.activityPrice = 0;
+		}
+
+		if(empty(values.activityFee)) {
+			values.activityFee = 0;
+		}
+
+		if(empty(values.activityNotes)) {
+			values.activityNotes = "-";
+		}
+
+		return values;
+	} catch(error) {
+		console.log(error);
+		return { error:"Something went wrong..." };
+	}
+}
+
+function addActivityPopupListeners(elements) {
+	elements.popupChoiceCrypto.addEventListener("click", () => {
+		elements.popupChoiceCrypto.classList.add("active");
+		elements.popupChoiceStock.classList.remove("active");
+	});
+
+	elements.popupChoiceStock.addEventListener("click", () => {
+		elements.popupChoiceCrypto.classList.remove("active");
+		elements.popupChoiceStock.classList.add("active");
+	});
+
+	elements.popupChoiceBuy.addEventListener("click", () => {
+		elements.popupWrapperTrade.classList.remove("hidden");
+		elements.popupWrapperTransfer.classList.add("hidden");
+		elements.popupChoiceBuy.classList.add("active");
+		elements.popupChoiceSell.classList.remove("active");
+		elements.popupChoiceTransfer.classList.remove("active");
+	});
+
+	elements.popupChoiceSell.addEventListener("click", () => {
+		elements.popupWrapperTrade.classList.remove("hidden");
+		elements.popupWrapperTransfer.classList.add("hidden");
+		elements.popupChoiceBuy.classList.remove("active");
+		elements.popupChoiceSell.classList.add("active");
+		elements.popupChoiceTransfer.classList.remove("active");
+	});
+
+	elements.popupChoiceTransfer.addEventListener("click", () => {
+		elements.popupWrapperTrade.classList.add("hidden");
+		elements.popupWrapperTransfer.classList.remove("hidden");
+		elements.popupChoiceBuy.classList.remove("active");
+		elements.popupChoiceSell.classList.remove("active");
+		elements.popupChoiceTransfer.classList.add("active");
+	});
 }
 
 function checkBackdrop() {
@@ -431,6 +635,30 @@ function checkBackdrop() {
 		divMarketListCrypto.classList.remove("backdrop");
 		divMarketListStocks.classList.remove("backdrop");
 		divHoldingsList.classList.remove("backdrop");
+	}
+}
+
+function showAssetMatches(referenceNode, list) {
+	if("matches" in list && list.matches.length > 1) {
+		let div = document.createElement("div");
+		div.setAttribute("class", "popup-list noselect");
+
+		Object.keys(list.matches).map(index => {
+			let match = list.matches[index];
+			let symbol = Object.keys(match)[0];
+			let id = match[symbol];
+
+			let row = document.createElement("div");
+			row.setAttribute("class", "popup-list-row");
+			row.setAttribute("data-id", id);
+			row.innerHTML = `<span class="symbol">${symbol.toUpperCase()}</span><span class="id">${id}</span>`;
+
+			div.appendChild(row);
+		});
+
+		insertAfter(div, referenceNode);
+	} else {
+		errorNotification("Invalid number of matches.");
 	}
 }
 
