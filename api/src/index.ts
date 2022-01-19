@@ -1,4 +1,6 @@
 import API from "./utils/API";
 
-let api = new API();
-api.start();
+(async () => {
+	let api = new API();
+	await api.start();
+})();

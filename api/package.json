@@ -5,7 +5,7 @@
 	"main": "./build/server.js",
 	"scripts": {
 		"tsc": "tsc",
-		"test": "echo \"Error: no test specified\" && exit 1",
+		"test": "jest --verbose --detectOpenHandles ./tests/",
 		"start": "npm run ts-node",
 		"nodemon": "nodemon src/index.ts",
 		"ts-node": "ts-node --files src/index.ts",
@@ -28,7 +28,6 @@
 		"express": "^4.17.1",
 		"express-graphql": "^0.12.0",
 		"graphql": "^15.6.1",
-		"jest": "^27.4.3",
 		"node-forge": "^0.10.0",
 		"node-nlp": "^4.22.1",
 		"socket.io": "^4.3.1",
@@ -39,7 +38,10 @@
 	"devDependencies": {
 		"@types/bcrypt": "^5.0.0",
 		"@types/cors": "^2.8.12",
+		"@types/jest": "^27.4.0",
+		"jest": "^27.4.7",
 		"nodemon": "^2.0.14",
+		"ts-jest": "^27.1.3",
 		"ts-node": "^10.4.0",
 		"ts-node-dev": "^1.1.8",
 		"typescript": "^4.4.4"
