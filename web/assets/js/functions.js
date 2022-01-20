@@ -487,22 +487,146 @@ function createActivityListRows(activityData) {
 				</div>
 				<div class="info-container">
 					${ !empty(activity.activityNotes) && activity.activityNotes !== "-" &&
-						`<span class="notes">Notes: ${activity.activityNotes}</span>`
+						`<span class="notes">${activity.activityNotes}</span>`
 					}
 					<span class="amount">Amount: ${activity.activityAssetAmount}</span>
 				</div>
 			</div>
 		`;
 
-		// TODO: Add functionality.
-		div.addEventListener("click", () => {
-
-		});
+		addActivityListRowEvent(div, activity);
 
 		rows.push(div);
 	});
 
 	return rows;
+}
+
+function addActivityListRowEvent(div, activity) {
+	div.addEventListener("click", () => {
+		try {
+			let html = `
+				<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol...">
+				<div class="popup-button-wrapper margin-bottom">
+					<button id="popup-choice-crypto" class="choice active">Crypto</button>
+					<button id="popup-choice-stock" class="choice">Stock</button>
+				</div>
+				<input id="popup-input-amount" type="number" placeholder="Amount...">
+				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off">
+				<input id="popup-input-fee" type="number" placeholder="Fee...">
+				<input id="popup-input-notes" type="text" placeholder="Notes...">
+				<div class="popup-button-wrapper three margin-bottom">
+					<button id="popup-choice-buy" class="choice small active">Buy</button>
+					<button id="popup-choice-sell" class="choice small">Sell</button>
+					<button id="popup-choice-transfer" class="choice large">Transfer</button>
+				</div>
+				<div id="popup-wrapper-trade">
+					<input id="popup-input-exchange" type="text" placeholder="Exchange...">
+					<input id="popup-input-pair" type="text" placeholder="Pair...">
+					<input id="popup-input-price" type="number" placeholder="Price...">
+				</div>
+				<div id="popup-wrapper-transfer" class="hidden">
+					<input id="popup-input-from" type="text" placeholder="From...">
+					<input id="popup-input-to" type="text" placeholder="To...">
+				</div>
+			`;
+
+			let popup = new Popup(300, 500, "Update Activity", html, { confirmText:"Update" });
+			popup.show();
+
+			let popupElements = getActivityPopupElements();
+			addActivityPopupListeners(popupElements);
+			fillActivityPopupElements(popupElements, activity);
+
+			popupElements.popupInputSymbol.focus();
+
+			flatpickr(popupElements.popupInputDate, {
+				enableTime: true,
+				dateFormat: "Y-m-d H:i",
+				allowInput: true
+			});
+
+			popup.on("confirm", async () => {
+				let userID = localStorage.getItem("userID");
+				let token = localStorage.getItem("token");
+				let key = localStorage.getItem("key");
+
+				let data = parseActivityPopupData(popupElements);
+
+				if(empty(data)) {
+					errorNotification("Please fill out all fields.");
+					return;
+				}
+
+				if("error" in data) {
+					errorNotification(data.error);
+					return;
+				}
+
+				let result = await getActivityPopupAssetID(data.activityAssetType, data.activityAssetSymbol);
+
+				if("id" in result) {
+					showLoading(1000, "Updating...");
+				
+					data.activityAssetID = result.id;
+
+					let encrypted = encryptObjectValues(key, data);
+
+					await updateActivity(token, userID, activity.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+					populateActivityList(true);
+
+					popup.hide();
+				} else {
+					showAssetMatches(popupElements.popupWrapperTransfer, result);
+
+					let rows = popup.element.getElementsByClassName("popup-list-row");
+
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							showLoading(1000, "Updating...");
+
+							data.activityAssetID = rows[i].getAttribute("data-id");
+
+							let encrypted = encryptObjectValues(key, data);
+
+							await updateActivity(token, userID, activity.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+							populateActivityList(true);
+						
+							popup.hide();
+						});
+					}
+				}
+			});
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
+	});
+}
+
+function fillActivityPopupElements(elements, activity) {
+	elements.popupInputSymbol.value = activity.activityAssetSymbol;
+	elements.popupInputDate.value = activity.activityDate;
+	elements.popupInputAmount.value = activity.activityAssetAmount;
+	elements.popupInputFee.value = activity.activityFee;
+	elements.popupInputNotes.value = activity.activityNotes;
+	elements.popupInputExchange.value = activity.activityExchange;
+	elements.popupInputPair.value = activity.activityPair;
+	elements.popupInputPrice.value = activity.activityPrice;
+	elements.popupInputFrom.value = activity.activityFrom;
+	elements.popupInputTo.value = activity.activityTo;
+
+	activity.activityAssetType === "crypto" ? elements.popupChoiceCrypto.click() : elements.popupChoiceStock.click();
+
+	if(activity.activityType === "buy") {
+		elements.popupChoiceBuy.click();
+	} else if(activity.activityType === "sell") {
+		elements.popupChoiceSell.click();
+	} else {
+		elements.popupChoiceTransfer.click();
+	}
 }
 
 // Add stock functionality.
