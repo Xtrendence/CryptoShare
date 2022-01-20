@@ -648,6 +648,13 @@ html.light .toggle-container {
 	border:none;
 	color:var(--main-contrast);
 }
+.popup-wrapper .bottom .action-button.block {
+	display:block;
+	margin:0 auto 20px auto;
+}
+.popup-wrapper .bottom .action-button.block:last-of-type {
+	margin-bottom:0;
+}
 .popup-wrapper .bottom .action-button.delete {
 	display:block;
 	width:100%;

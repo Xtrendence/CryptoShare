@@ -6,9 +6,17 @@ inputActivitySearch.addEventListener("keyup", () => {
 	filterActivityList(inputActivitySearch.value);
 });
 
-// TODO: Add functionality.
+// TODO: Add functionality (and, in the future, additional income-related tools).
 buttonActivityTools.addEventListener("click", () => {
+	let html = `
+		<button class="action-button block" id="popup-button-staking">Staking Calculator</button>
+		<button class="action-button block" id="popup-button-mining">Mining Calculator</button>
+		<button class="action-button block" id="popup-button-mining">Dividends Calculator</button>
+	`;
 
+	let popup = new Popup(250, "auto", "Tools", html, { cancelText:"Dismiss", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
 });
 
 buttonActivityAdd.addEventListener("click", () => {

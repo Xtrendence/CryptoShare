@@ -1,5 +1,9 @@
 # CryptoShare
 
+### Disclaimer
+
+This is a piece of university coursework as part of my final year project. It is not finished yet and is intended to be released for public usage around July/August 2022.
+
 ### Project Supervisor
 
 The supervisor for this project is [Shirley Atkinson](https://www.github.com/shirleyatkinson).
