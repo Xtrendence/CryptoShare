@@ -26,24 +26,24 @@ a {
 	color:var(--accent-first);
 }
 .clickable {
-	cursor:pointer;
+	cursor:pointer !important;
 }
 .noselect {
-	-webkit-user-select:none;
-	-khtml-user-select:none;
-	-moz-user-select:none;
-	-ms-user-select:none;
-	user-select:none;
-	outline:none;
+	-webkit-user-select:none !important;
+	-khtml-user-select:none !important;
+	-moz-user-select:none !important;
+	-ms-user-select:none !important;
+	user-select:none !important;
+	outline:none !important;
 }
 .hidden {
-	display:none;
-	visibility:hidden;
-	position:absolute;
-	z-index:-1;
+	display:none !important;
+	visibility:hidden !important;
+	position:absolute !important;
+	z-index:-1 !important;
 }
 .uppercase {
-	text-transform:uppercase;
+	text-transform:uppercase !important;
 }
 
 #web .app-only {

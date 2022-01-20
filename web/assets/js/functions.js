@@ -437,6 +437,35 @@ async function populateActivityList(recreate) {
 	}
 }
 
+function filterActivityList(query) {
+	let rows = divActivityList.getElementsByClassName("activity-list-row");
+
+	if(empty(query)) {
+		for(let i = 0; i < rows.length; i++) {
+			rows[i].classList.remove("hidden");
+		}
+
+		return;
+	}
+
+	query = query.toLowerCase();
+
+	for(let i = 0; i < rows.length; i++) {
+		let spans = rows[i].getElementsByTagName("span");
+		let values = [];
+
+		for(let j = 0; j < spans.length; j++) {
+			values.push(spans[j].textContent.toLowerCase());
+		}
+
+		if(values.join(",").includes(query)) {
+			rows[i].classList.remove("hidden");
+		} else {
+			rows[i].classList.add("hidden");
+		}
+	}
+}
+
 function createActivityListRows(activityData) {
 	let transactionIDs = Object.keys(activityData).reverse();
 

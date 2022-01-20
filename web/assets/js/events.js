@@ -356,6 +356,14 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 	
 });
 
+inputActivitySearch.addEventListener("keydown", () => {
+	filterActivityList(inputActivitySearch.value);
+});
+
+inputActivitySearch.addEventListener("keyup", () => {
+	filterActivityList(inputActivitySearch.value);
+});
+
 // TODO: Add functionality.
 buttonActivityTools.addEventListener("click", () => {
 
