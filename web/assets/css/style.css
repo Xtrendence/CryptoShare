@@ -1074,6 +1074,7 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 }
 .activity-list-row .type.transfer {
 	background:var(--main-first);
+	color:var(--main-contrast);
 }
 .activity-list-row .info-container .amount {
 	max-width:none;

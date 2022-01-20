@@ -157,7 +157,7 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 				</div>
 			`;
 
-			addHoldingListRowEvent(div, holding.holdingID, coinID, symbol);
+			addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol);
 
 			output.rows.push(div);
 			output.totalValue += value;
@@ -169,7 +169,7 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 	return output;
 }
 
-function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol) {
+function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol) {
 	div.addEventListener("click", () => {
 		try {
 			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount..."><button class="action-button delete" id="popup-button-delete-crypto">Delete Asset</button>`;

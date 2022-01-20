@@ -486,7 +486,9 @@ function createActivityListRows(activityData) {
 					<span class="type ${activity.activityType}">${capitalizeFirstLetter(activity.activityType)}</span>
 				</div>
 				<div class="info-container">
-					<span class="notes">Notes: ${activity.activityNotes}</span>
+					${ !empty(activity.activityNotes) && activity.activityNotes !== "-" &&
+						`<span class="notes">Notes: ${activity.activityNotes}</span>`
+					}
 					<span class="amount">Amount: ${activity.activityAssetAmount}</span>
 				</div>
 			</div>
