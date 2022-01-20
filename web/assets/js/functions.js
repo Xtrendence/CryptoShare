@@ -529,6 +529,7 @@ function addActivityListRowEvent(div, activity) {
 					<input id="popup-input-from" type="text" placeholder="From...">
 					<input id="popup-input-to" type="text" placeholder="To...">
 				</div>
+				<button class="action-button delete" id="popup-button-delete-activity">Delete Activity</button>
 			`;
 
 			let popup = new Popup(300, 500, "Update Activity", html, { confirmText:"Update" });
@@ -545,6 +546,8 @@ function addActivityListRowEvent(div, activity) {
 				dateFormat: "Y-m-d H:i",
 				allowInput: true
 			});
+
+			addActivityPopupDeleteEvent(popup, document.getElementById("popup-button-delete-activity"), activity.activityID);
 
 			popup.on("confirm", async () => {
 				let userID = localStorage.getItem("userID");
@@ -603,6 +606,35 @@ function addActivityListRowEvent(div, activity) {
 			console.log(error);
 			errorNotification("Something went wrong...");
 		}
+	});
+}
+
+function addActivityPopupDeleteEvent(previousPopup, buttonDelete, activityID) {
+	buttonDelete.addEventListener("click", () => {
+		previousPopup.hide();
+		
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let popup = new Popup(300, "auto", "Delete Activity", `<span>Are you sure you want to remove this activity?</span>`);
+		popup.show();
+
+		popup.on("confirm", async () => {
+			try {
+				showLoading(1500, "Deleting...");
+
+				await deleteActivity(token, userID, activityID);
+
+				populateActivityList(true);
+
+				hideLoading();
+
+				popup.hide();
+			} catch(error) {
+				console.log(error);
+				errorNotification("Couldn't delete activity.");
+			}
+		});
 	});
 }
 
