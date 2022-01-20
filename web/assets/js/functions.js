@@ -352,7 +352,7 @@ async function populateHoldingsList(recreate) {
 
 			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
 			
-			if(divHoldingsList.getElementsByClassName("loading-icon").length > 0) {
+			if(divHoldingsList.getElementsByClassName("loading-icon").length > 0 || divHoldingsList.childElementCount !== rows.length) {
 				divHoldingsList.innerHTML = "";
 			}
 
@@ -416,7 +416,7 @@ async function populateActivityList(recreate) {
 
 			let rows = createActivityListRows(activityData);
 
-			if(divActivityList.getElementsByClassName("loading-icon").length > 0) {
+			if(divActivityList.getElementsByClassName("loading-icon").length > 0 || divActivityList.childElementCount !== rows.length) {
 				divActivityList.innerHTML = "";
 			}
 
@@ -438,7 +438,7 @@ async function populateActivityList(recreate) {
 }
 
 function createActivityListRows(activityData) {
-	let transactionIDs = Object.keys(activityData);
+	let transactionIDs = Object.keys(activityData).reverse();
 
 	let rows = [];
 
@@ -452,15 +452,13 @@ function createActivityListRows(activityData) {
 		div.innerHTML = `
 			<div class="info-wrapper audible-pop">
 				<div class="asset-container audible-pop">
-					<span>${activity.activityAssetSymbol}</span>
+					<span class="date">${activity.activityDate}</span>
+					<span class="symbol">${activity.activityAssetSymbol.toUpperCase()}</span>
+					<span class="type ${activity.activityType}">${capitalizeFirstLetter(activity.activityType)}</span>
 				</div>
 				<div class="info-container">
-					<div class="top audible-pop">
-						
-					</div>
-					<div class="bottom audible-pop">
-						
-					</div>
+					<span class="notes">Notes: ${activity.activityNotes}</span>
+					<span class="amount">Amount: ${activity.activityAssetAmount}</span>
 				</div>
 			</div>
 		`;

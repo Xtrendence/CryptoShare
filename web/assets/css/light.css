@@ -19,8 +19,11 @@ html.light {
 	--accent-second:#824f8a;
 	--accent-third:#5f46a7;
 
-	--danger-first:rgb(190,40,50);
-	--danger-second:rgb(150,30,30);
+	--negative-first:rgb(190,40,50);
+	--negative-second:rgb(150,30,30);
+
+	--positive-first:rgb(50,140,80);
+	--positive-second:rgb(35,120,60);
 
 	--colorful-gradient:linear-gradient(300deg, #8a2387, #e94057, #f27121);
 	--orange-gradient:linear-gradient(150deg, rgb(245,175,25) 30%, rgb(241,39,17) 100%);
