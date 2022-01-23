@@ -55,9 +55,9 @@ async function getCoin(args) {
 				reject("Only symbol or ID must be provided, not both.");
 				return;
 			} else if(!empty(args.symbol)) {
-				coin = findCryptoBySymbol(list, args.symbol, true);
+				coin = findCryptoBySymbol(list, args.symbol.toLowerCase(), true);
 			} else if(!empty(args.id)) {
-				coin = findCryptoByID(list, args.id, true);
+				coin = findCryptoByID(list, args.id.toLowerCase(), true);
 			}
 
 			resolve(coin);
