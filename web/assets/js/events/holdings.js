@@ -57,7 +57,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 
 						popup.hide();
 					} else {
-						showAssetMatches(inputAmount, result);
+						showAssetMatches(inputAmount, result, false);
 						popup.setSize(360, "auto");
 						popup.updateHeight();
 

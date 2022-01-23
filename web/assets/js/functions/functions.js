@@ -103,10 +103,25 @@ function checkBackdrop() {
 	}
 }
 
-function showAssetMatches(referenceNode, list) {
+function sortMarketDataByCoinID(marketData) {
+	let prices = {};
+
+	Object.keys(marketData).map(index => {
+		let coin = marketData[index];
+		prices[coin.id] = coin;
+	});
+
+	return prices;
+}
+
+function showAssetMatches(referenceNode, list, marginBottom) {
 	if("matches" in list && list.matches.length > 1) {
 		let div = document.createElement("div");
 		div.setAttribute("class", "popup-list noselect");
+
+		if(marginBottom) {
+			div.classList.add("margin-bottom");
+		}
 
 		Object.keys(list.matches).map(index => {
 			let match = list.matches[index];

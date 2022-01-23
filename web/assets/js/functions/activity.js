@@ -248,7 +248,7 @@ function addActivityListRowEvent(div, activity) {
 
 					popup.hide();
 				} else {
-					showAssetMatches(popupElements.popupWrapperTransfer, result);
+					showAssetMatches(popupElements.popupWrapperTransfer, result, true);
 
 					let rows = popup.element.getElementsByClassName("popup-list-row");
 
@@ -500,7 +500,7 @@ function showActivityStakingPopup() {
 		let amount = popupInputAmount.value;
 		let apy = popupInputAPY.value;
 
-		if(!empty(symbol) && !empty(amount) && !isNaN(amount) && !isNaN(apy) && apy > 0) {
+		if(!empty(symbol) && !empty(amount) && !isNaN(amount) && amount > 0 && !isNaN(apy) && apy > 0) {
 			let result = await getCoin({ symbol:symbol });
 
 			if("id" in result) {
@@ -515,7 +515,7 @@ function showActivityStakingPopup() {
 				popupSpanOutput.innerHTML = "";
 				popupSpanOutput.classList.add("hidden");
 
-				showAssetMatches(popupInputAPY, result);
+				showAssetMatches(popupInputAPY, result, false);
 				popup.setSize(360, "auto");
 				popup.updateHeight();
 
@@ -569,7 +569,7 @@ function showActivityMiningPopup() {
 		let dailyAmount = popupInputDailyAmount.value;
 		let dailyPowerCost = popupInputDailyPowerCost.value;
 
-		if(!empty(symbol) && !isNaN(equipmentCost) && equipmentCost > 0 && !isNaN(dailyAmount) && !isNaN(dailyPowerCost)) {
+		if(!empty(symbol) && !isNaN(equipmentCost) && equipmentCost > 0 && !isNaN(dailyAmount) && dailyAmount > 0 && !isNaN(dailyPowerCost)) {
 			let result = await getCoin({ symbol:symbol });
 
 			if("id" in result) {
@@ -584,7 +584,7 @@ function showActivityMiningPopup() {
 				popupSpanOutput.innerHTML = "";
 				popupSpanOutput.classList.add("hidden");
 
-				showAssetMatches(popupInputDailyPowerCost, result);
+				showAssetMatches(popupInputDailyPowerCost, result, false);
 				popup.setSize(360, "auto");
 				popup.updateHeight();
 

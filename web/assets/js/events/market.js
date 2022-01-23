@@ -10,8 +10,8 @@ buttonMarketInfo.addEventListener("click", async () => {
 			hideLoading();
 		}, 250);
 
-		let volume = parseInt(data.data.total_volume[currency].toFixed(2));
-		let marketCap = parseInt(data.data.total_market_cap[currency].toFixed(2));
+		let volume = parseFloat(data.data.total_volume[currency].toFixed(2));
+		let marketCap = parseFloat(data.data.total_market_cap[currency].toFixed(2));
 		let marketCapChangeDay = formatPercentage(data.data.market_cap_change_percentage_24h_usd);
 		let updated = formatDateHuman(new Date(data.data.updated_at * 1000));
 
@@ -61,7 +61,7 @@ buttonMarketSearch.addEventListener("click", () => {
 					showCryptoMarketData(info);
 					popup.hide();
 				} else {
-					showAssetMatches(inputSearch, result);
+					showAssetMatches(inputSearch, result, false);
 					popup.setSize(360, "auto");
 					popup.updateHeight();
 

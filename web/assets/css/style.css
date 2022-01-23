@@ -627,6 +627,9 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 }
+.popup-wrapper .bottom .popup-list.margin-bottom {
+	margin-bottom:20px;
+}
 .popup-wrapper .bottom .popup-list div {
 	display:block;
 	background:var(--main-first);
@@ -936,7 +939,11 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	top:80px;
 	overflow:hidden auto;
 }
-.holdings-list, .activity-list {
+.holdings-list {
+	top:0;
+	height:100%;
+}
+.activity-list {
 	top:0;
 	height:calc(100% - 60px);
 }
@@ -1229,8 +1236,11 @@ html.light .page.activity .page-container-toolbar {
 .page.activity .page-container-toolbar input.active:focus {
 	background:var(--main-first-transparent);
 }
-.activity-list-row {
-
+.page.activity .page-container-toolbar svg {
+	width:20px;
+	height:20px;
+	padding:10px 0 10px 0;
+	fill:var(--accent-contrast);
 }
 
 .page-container.settings {

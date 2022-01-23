@@ -6,6 +6,11 @@ inputActivitySearch.addEventListener("keyup", () => {
 	filterActivityList(inputActivitySearch.value);
 });
 
+// TODO: Add functionality.
+buttonActivityHelp.addEventListener("click", () => {
+
+});
+
 // TODO: Add functionality (and, in the future, additional income-related tools).
 buttonActivityTools.addEventListener("click", () => {
 	let html = `
@@ -108,7 +113,7 @@ buttonActivityAdd.addEventListener("click", () => {
 
 				popup.hide();
 			} else {
-				showAssetMatches(popupElements.popupWrapperTransfer, result);
+				showAssetMatches(popupElements.popupWrapperTransfer, result, false);
 
 				let rows = popup.element.getElementsByClassName("popup-list-row");
 

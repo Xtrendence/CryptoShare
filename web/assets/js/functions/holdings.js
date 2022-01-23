@@ -44,7 +44,11 @@ async function populateHoldingsList(recreate) {
 
 			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
 
-			let parsed = createHoldingsListCryptoRows(marketData, holdingsData, currency);
+			sortedHoldingsData = sortHoldingsDataByValue(holdingsData, marketData);
+
+			holdingsData = sortedHoldingsData.holdingsData;
+
+			let parsed = createHoldingsListCryptoRows(marketData, holdingsData, sortedHoldingsData.order, currency);
 
 			let rows = parsed.rows;
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
@@ -80,10 +84,12 @@ async function populateHoldingsList(recreate) {
 	}
 }
 
-function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
+function createHoldingsListCryptoRows(marketData, holdingsData, order, currency) {
 	let output = { rows:[], totalValue:0 };
 
-	let ids = Object.keys(marketData);
+	let ids = order;
+
+	marketData = sortMarketDataByCoinID(marketData);
 
 	for(let i = 0; i < ids.length; i++) {
 		try {
@@ -103,6 +109,10 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 
 			let amount = parseFloat(holding.holdingAssetAmount);
 			let value = parseFloat((amount * price).toFixed(2));
+
+			if(amount <= 0) {
+				continue;
+			}
 
 			let div = document.createElement("div");
 			div.id = "holdings-list-crypto-" + coinID;
@@ -131,7 +141,11 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 				</div>
 			`;
 
-			addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol, amount);
+			if(holding.holdingID === "-") {
+				addHoldingListChartCryptoRowEvent(div, coinID, symbol, amount);
+			} else {
+				addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol, amount);
+			}
 
 			output.rows.push(div);
 			output.totalValue += value;
@@ -141,6 +155,11 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 	}
 
 	return output;
+}
+
+// TODO: Add functionality.
+function addHoldingListChartCryptoRowEvent(div, coinID, symbol, amount) {
+
 }
 
 function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount) {
@@ -236,10 +255,87 @@ function parseActivityAsHoldings() {
 				return;
 			}
 
-			
+			let transactionIDs = Object.keys(activityData);
+			let holdings = {};
+
+			for(let i = 0; i < transactionIDs.length; i++) {
+				let activity = activityData[transactionIDs[i]];
+
+				let activityAssetID = activity.activityAssetID;
+				let activityAssetSymbol = activity.activityAssetSymbol;
+				let activityAssetAmount = parseFloat(activity.activityAssetAmount);
+				let activityAssetType = activity.activityAssetType;
+				let activityType = activity.activityType;
+				let activityFrom = activity.activityFrom;
+				let activityTo = activity.activityTo;
+				let activityFromAndTo = activityFrom + activityTo;
+
+				if(!(activityAssetID in holdings) && (activityType !== "transfer" || (activityType === "transfer" && activityFromAndTo.match(/(\+|\-)/gi)))) {
+					holdings[activityAssetID] = {
+						holdingAssetAmount: activityAssetAmount,
+						holdingAssetID: activityAssetID,
+						holdingAssetSymbol: activityAssetSymbol,
+						holdingAssetType: activityAssetType,
+						holdingID: "-"
+					};
+
+					if(activityType === "sell") {
+						holdings[activityAssetID].holdingAssetAmount = -activityAssetAmount;
+					}
+
+					if(activityFromAndTo.match(/(\+)/gi)) {
+						holdings[activityAssetID].holdingAssetAmount = activityAssetAmount;
+					} else if(activityFromAndTo.match(/\-/gi)) {
+						holdings[activityAssetID].holdingAssetAmount = -activityAssetAmount;
+					}
+
+					continue;
+				}
+
+				if(activityType === "sell") {
+					holdings[activityAssetID].holdingAssetAmount -= activityAssetAmount;
+				} else if(activityType === "buy") {
+					holdings[activityAssetID].holdingAssetAmount += activityAssetAmount;
+				} else if(activityType === "transfer") {
+					if(activityFromAndTo.match(/(\+)/gi)) {
+						holdings[activityAssetID].holdingAssetAmount += activityAssetAmount;
+					} else if(activityFromAndTo.match(/\-/gi)) {
+						holdings[activityAssetID].holdingAssetAmount -= activityAssetAmount;
+					}
+				}
+			}
+
+			resolve(holdings);
 		} catch(error) {
 			console.log(error);
 			reject(error);
 		}
 	});
+}
+
+function sortHoldingsDataByValue(holdingsData, marketData) {
+	let sorted = {};
+	let array = [];
+	let order = [];
+
+	marketData = sortMarketDataByCoinID(marketData);
+
+	for(let holding in holdingsData) {
+		let value = holdingsData[holding].holdingAssetAmount * marketData[holding].current_price;
+
+		if(value > 0) {
+			array.push([holding, value]);
+		}
+	}
+
+	array.sort(function(a, b) {
+		return a[1] - b[1];
+	});
+
+	array.reverse().map(item => {
+		order.push(item[0]);
+		sorted[item[0]] = holdingsData[item[0]];
+	});
+
+	return { holdingsData:sorted, order:order };
 }
