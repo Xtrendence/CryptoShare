@@ -63,12 +63,33 @@ function fetchActivity() {
 				activityData[decrypted.activityTransactionID] = decrypted;
 			});
 
-			resolve(activityData);
+			let sortedByDate = sortActivityDataByDate(activityData);
+
+			resolve(sortedByDate);
 		} catch(error) {
 			console.log(error);
 			reject(error);
 		}
 	});
+}
+
+function sortActivityDataByDate(activityData) {
+	let sorted = {};
+	let array = [];
+
+	for(let activity in activityData) {
+		array.push([activity, activityData[activity].activityDate]);
+	}
+
+	array.sort(function(a, b) {
+		return new Date(a[1]).getTime() - new Date(b[1]).getTime();
+	});
+
+	array.map(item => {
+		sorted[item[0]] = activityData[item[0]];
+	});
+
+	return sorted;
 }
 
 function filterActivityList(query) {
