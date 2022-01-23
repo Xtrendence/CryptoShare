@@ -32,7 +32,8 @@ async function populateHoldingsList(recreate) {
 					holdingsData[decrypted.holdingAssetID] = decrypted;
 				});
 			} else {
-				holdingsData = await parseActivityAsHoldings();
+				let parsedData = await parseActivityAsHoldings();
+				holdingsData = parsedData.holdingsData;
 
 				if(empty(holdingsData)) {
 					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;
@@ -306,7 +307,7 @@ function parseActivityAsHoldings() {
 				}
 			}
 
-			resolve(holdings);
+			resolve({ holdingsData:holdings, activityData:activityData });
 		} catch(error) {
 			console.log(error);
 			reject(error);
@@ -350,7 +351,8 @@ function fetchHoldingsHistoricalData() {
 			let currency = getCurrency();
 
 			let prices = {};
-			let holdings = await parseActivityAsHoldings();
+			let parsedData = await parseActivityAsHoldings();
+			let holdings = parsedData.holdingsData;
 
 			let coinIDs = Object.keys(holdings);
 
@@ -370,7 +372,8 @@ function fetchHoldingsHistoricalData() {
 					}
 
 					if(Object.keys(prices).length === coinIDs.length) {
-						resolve({ coinIDs:coinIDs, prices:prices, holdings:holdings });
+						hideLoading();
+						resolve({ coinIDs:coinIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
 					}
 				}, i * 2000);
 			}
@@ -379,4 +382,201 @@ function fetchHoldingsHistoricalData() {
 			reject(error);
 		}
 	});
+}
+
+function parseActivityAsDatedValue(ids, days, prices, holdings, activities) {
+	let dates = {
+		[days[0]]: {
+			holdings: {},
+			totalValue: 0,
+			modified: false
+		}
+	};
+
+	let transactionIDs = Object.keys(activities);
+
+	// Loop over days.
+	for(let i = 0; i < days.length; i++) {
+		let day = days[i];
+
+		// Copy the previous day's data to the current one so it can build up over time to the current day.
+		if(i - 1 >= 0) {
+			// Object must be copied by value rather than reference, otherwise the content would be the same throughout.
+			let previous = JSON.parse(JSON.stringify(dates[days[i - 1]]));
+			dates[day] = previous;
+		}
+
+		// Loop over activities in case there's one on the day being looped over.
+		for(let j = 0; j < transactionIDs.length; j++) {
+			let txID = transactionIDs[j];
+			let activity = activities[txID];
+
+			let activityType = activity.activityType;
+			let activityFromAndTo = activity.activityFrom + activity.activityTo;
+
+			// Format the activity's date to be the same as the ones stored in the "dates" object.
+			let activityDate = formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
+			// To prevent activities outside the desired date range from being added.
+			if(day === activityDate) {
+				let assetID = activity.activityAssetID;
+				let amount = parseFloat(activity.activityAssetAmount);
+				let price = prices[assetID][i][1];
+				let value = parseFloat((price * amount).toFixed(3));
+
+				if(!(assetID in dates[day].holdings)) {
+					dates[day].holdings[assetID] = {
+						amount: amount,
+						value: value,
+						price: price
+					};
+
+					dates[day].modified = true;
+
+					continue;
+				}
+
+				if(activityType === "sell") {
+					subtract();
+				} else if(activityType === "buy") {
+					add();
+				} else if(activityType === "transfer") {
+					if(activityFromAndTo.match(/(\+)/gi)) {
+						add();
+					} else if(activityFromAndTo.match(/\-/gi)) {
+						subtract();
+					}
+				}
+
+				function add() {
+					dates[day].holdings[assetID].amount += amount;
+					dates[day].modified = true;
+				}
+
+				function subtract() {
+					dates[day].holdings[assetID].amount -= amount;
+					dates[day].modified = true;
+				}
+			}
+		}
+
+		let ids = Object.keys(dates[day].holdings);
+		let total = 0;
+		for(let j = 0; j < ids.length; j++) {
+			let id = ids[j];
+			let price = prices[id][i][1];
+			let value =  dates[day].holdings[id].amount * price;
+			dates[day].holdings[id].value = value;
+			total += value;
+		}
+
+		dates[day].totalValue = total;
+	}
+
+	return dates;
+}
+
+function showHoldingsPerformanceChart(dates) {
+	let currency = getCurrency();
+
+	let popup = new Popup("full", "full", `Portfolio Performance`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+
+	popup.show();
+
+	let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
+
+	let colors = { 0:"#11998e", 0.5:"#4db675", 1:"#296941" };
+
+	dates = filterHoldingsPerformanceData(dates);
+
+	let parsed = parseHoldingsDateData(dates);
+
+	generateChart(divChart, `Portfolio Value`, parsed.labels, parsed.tooltips, getCurrency(), parsed.values, colors);
+
+	let stats = getHoldingsPerformanceData(currency, parsed.values);
+
+	let divStats = document.createElement("div");
+	divStats.setAttribute("class", "info-wrapper noselect");
+
+	divStats.innerHTML = `<div class="info-container">${stats}</div>`;
+
+	insertAfter(divStats, divChart);
+}
+
+function getHoldingsPerformanceData(currency, values) {
+	let value0d = values.length >= 1 ? values[values.length - 1] : "-";
+	let value1d = values.length >= 2 ? values[values.length - 2] : "-";
+	let value1w = values.length >= 7 ? values[values.length - 8] : "-";
+	let value1m = values.length >= 30 ? values[values.length - 31] : "-";
+	let value3m = values.length >= 90 ? values[values.length - 91] : "-";
+	let value6m = values.length >= 180 ? values[values.length - 181] : "-";
+	let value1y = values.length >= 365 ? values[values.length - 366] : "-";
+
+	let stats = "";
+
+	let currentValue = values[values.length - 1];
+
+	if(!isNaN(value0d) && value0d > 1) {
+		value0d = separateThousands(value0d.toFixed(2));
+		stats += '<span>Current (' + currencySymbols[currency] + '): ' + value0d + '</span>';
+	}
+	if(!isNaN(value1d) && value1d > 1) {
+		let spanClass = (currentValue - value1d) === 0 ? "" : (currentValue - value1d) > 0 ? "positive" : "negative";
+		value1d = separateThousands((currentValue - value1d).toFixed(2));
+		stats += `<span class="${spanClass}">1D (${currencySymbols[currency]}): ${value1d}</span>`;
+	}
+	if(!isNaN(value1w) && value1w > 1) {
+		let spanClass = (currentValue - value1w) === 0 ? "" : (currentValue - value1w) > 0 ? "positive" : "negative";
+		value1w = separateThousands((currentValue - value1w).toFixed(2));
+		stats += `<span class="${spanClass}">1W (${currencySymbols[currency]}): ${value1w}</span>`;
+	}
+	if(!isNaN(value1m) && value1m > 1) {
+		let spanClass = (currentValue - value1m) === 0 ? "" : (currentValue - value1m) > 0 ? "positive" : "negative";
+		value1m = separateThousands((currentValue - value1m).toFixed(2));
+		stats += `<span class="${spanClass}">1M (${currencySymbols[currency]}): ${value1m}</span>`;
+	}
+	if(!isNaN(value3m) && value3m > 1) {
+		let spanClass = (currentValue - value3m) === 0 ? "" : (currentValue - value3m) > 0 ? "positive" : "negative";
+		value3m = separateThousands((currentValue - value3m).toFixed(2));
+		stats += `<span class="${spanClass}">3M (${currencySymbols[currency]}): ${value3m}</span>`;
+	}
+	if(!isNaN(value6m) && value6m > 1) {
+		let spanClass = (currentValue - value6m) === 0 ? "" : (currentValue - value6m) > 0 ? "positive" : "negative";
+		value6m = separateThousands((currentValue - value6m).toFixed(2));
+		stats += `<span class="${spanClass}">6M (${currencySymbols[currency]}): ${value6m}</span>`;
+	}
+	if(!isNaN(value1y) && value1y > 1) {
+		let spanClass = (currentValue - value1y) === 0 ? "" : (currentValue - value1y) > 0 ? "positive" : "negative";
+		value1y = separateThousands((currentValue - value1y).toFixed(2));
+		stats += `<span class="${spanClass}">1Y (${currencySymbols[currency]}): ${value1y}</span>`;
+	}
+
+	return stats;
+}
+
+function filterHoldingsPerformanceData(dates) {
+	Object.keys(dates).map(date => {
+		let day = dates[date];
+		if(!day.modified) {
+			delete dates[date];
+		}
+	});
+
+	return dates;
+}
+
+function parseHoldingsDateData(data) {
+	let labels = [];
+	let tooltips = [];
+	let values = [];
+
+	let dates = Object.keys(data);
+
+	dates.map(date => {
+		labels.push(new Date(Date.parse(date)));
+		tooltips.push(formatDateHuman(new Date(Date.parse(date))));
+		values.push(data[date].totalValue);
+	});
+
+	return { labels:labels, tooltips:tooltips, values:values };
 }

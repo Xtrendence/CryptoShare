@@ -2,8 +2,6 @@
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
 		try {
-			showLoading(5000);
-
 			let currency = getCurrency();
 
 			let days = dayRangeArray(previousYear(new Date()), new Date());
@@ -13,8 +11,11 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 			let ids = data.coinIDs;
 			let prices = data.prices;
 			let holdings = data.holdings;
+			let activities = data.activities;
 
-			
+			let dates = parseActivityAsDatedValue(ids, days, prices, holdings, activities);
+
+			showHoldingsPerformanceChart(dates);
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");

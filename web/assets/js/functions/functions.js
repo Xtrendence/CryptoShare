@@ -233,3 +233,95 @@ function addPattern() {
 		items[i].innerHTML += svgNavbarPattern;
 	}
 }
+
+async function generateChart(element, title, labels, tooltips, currency, data, colors) {
+	let canvas = document.createElement("canvas");
+	canvas.id = "chart-canvas";
+	canvas.classList.add("chart-canvas");
+
+	let context = canvas.getContext("2d");
+
+	let mainSecond = cssValue("--main-second");
+
+	let mainContrastDark = cssValue("--main-contrast-dark");
+
+	let gradientStroke = context.createLinearGradient(1000, 0, 300, 0);
+
+	Object.keys(colors).map(stop => {
+		gradientStroke.addColorStop(stop, colors[stop]);
+	});
+
+	new Chart(canvas, {
+		type: "line",
+		data: {
+			labels: labels,
+			datasets:[{
+				label: title,
+				backgroundColor: "rgba(0,0,0,0)",
+				borderColor: gradientStroke,
+				data: data,
+				pointRadius: 1,
+				pointHoverRadius: 6,
+			}],
+		},
+		options: {
+			events: ["mousemove", "mouseout", "touchstart", "touchmove"],
+			responsive: true,
+			legend: {
+				display: false
+			},
+			hover: {
+				mode: "index",
+				intersect: false,
+			},
+			scales: {
+				xAxes: [{
+					beginAtZero: true,
+					gridLines: {
+						zeroLineColor: mainSecond,
+						color: mainSecond,
+					},
+					ticks: {
+						autoSkip: true,
+						maxTicksLimit: 12,
+						fontColor: mainContrastDark
+					},
+					type: "time",
+					time: {
+						unit: "month"
+					}
+				}],
+				yAxes: [{
+					beginAtZero: true,
+					gridLines: {
+						color: mainSecond
+					},
+					ticks: {
+						fontColor: mainContrastDark
+					}
+				}]
+			},
+			tooltips: {
+				displayColors: false,
+				intersect: false,
+				callbacks: {
+					title: function() {
+						return "";
+					},
+					label: function(item) {
+						let price = data[item.index];
+
+						if(price > 1) {
+							price = separateThousands(price.toFixed(2));
+						}
+
+						return [tooltips[item.index], currencySymbols[currency] + price];
+					}
+				}
+			}
+		}
+	});
+
+	element.innerHTML = "";
+	element.appendChild(canvas);
+}

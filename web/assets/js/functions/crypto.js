@@ -1,17 +1,3 @@
-function parseHistoricalCryptoData(data) {
-	let labels = [];
-	let tooltips = [];
-	let prices = [];
-
-	data.map(day => {
-		labels.push(new Date(day[0]));
-		tooltips.push(formatDateHuman(new Date(day[0])));
-		prices.push(day[1]);
-	});
-
-	return { labels:labels, tooltips:tooltips, prices:prices };
-}
-
 async function cryptoHoldingExists(id) {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");

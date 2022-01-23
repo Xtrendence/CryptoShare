@@ -46,6 +46,13 @@ a {
 	text-transform:uppercase !important;
 }
 
+span.positive {
+	color:var(--positive-first) !important;
+}
+span.negative {
+	color:var(--negative-first) !important;
+}
+
 #web .app-only {
 	display:none;
 }
@@ -609,6 +616,8 @@ html.light .toggle-container {
 }
 .popup-wrapper .bottom .info-container {
 	text-align:center;
+}
+.popup-wrapper .bottom .info-container.margin-bottom {
 	margin-bottom:10px;
 }
 .popup-wrapper .bottom .info-container span {

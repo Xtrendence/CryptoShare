@@ -137,107 +137,13 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-async function generateMarketChart(element, title, labels, tooltips, currency, data) {
-	let canvas = document.createElement("canvas");
-	canvas.id = "chart-canvas";
-	canvas.classList.add("chart-canvas");
-
-	let context = canvas.getContext("2d");
-
-	let mainSecond = cssValue("--main-second");
-
-	let mainContrastDark = cssValue("--main-contrast-dark");
-
-	let gradientStroke = context.createLinearGradient(1000, 0, 300, 0);
-
-	let colors = { 0:"#feac5e", 0.5:"#c779d0", 0.7:"#4bc0c8", 1:"#c779d0" };
-
-	Object.keys(colors).map(stop => {
-		gradientStroke.addColorStop(stop, colors[stop]);
-	});
-
-	new Chart(canvas, {
-		type: "line",
-		data: {
-			labels: labels,
-			datasets:[{
-				label: title,
-				backgroundColor: "rgba(0,0,0,0)",
-				borderColor: gradientStroke,
-				data: data,
-				pointRadius: 1,
-				pointHoverRadius: 6,
-			}],
-		},
-		options: {
-			events: ["mousemove", "mouseout", "touchstart", "touchmove"],
-			responsive: true,
-			legend: {
-				display: false
-			},
-			hover: {
-				mode: "index",
-				intersect: false,
-			},
-			scales: {
-				xAxes: [{
-					beginAtZero: true,
-					gridLines: {
-						zeroLineColor: mainSecond,
-						color: mainSecond,
-					},
-					ticks: {
-						autoSkip: true,
-						maxTicksLimit: 12,
-						fontColor: mainContrastDark
-					},
-					type: "time",
-					time: {
-						unit: "month"
-					}
-				}],
-				yAxes: [{
-					beginAtZero: true,
-					gridLines: {
-						color: mainSecond
-					},
-					ticks: {
-						fontColor: mainContrastDark
-					}
-				}]
-			},
-			tooltips: {
-				displayColors: false,
-				intersect: false,
-				callbacks: {
-					title: function() {
-						return "";
-					},
-					label: function(item) {
-						let price = data[item.index];
-
-						if(price > 1) {
-							price = separateThousands(price.toFixed(2));
-						}
-
-						return [tooltips[item.index], currencySymbols[currency] + price];
-					}
-				}
-			}
-		}
-	});
-
-	element.innerHTML = "";
-	element.appendChild(canvas);
-}
-
 // TODO: Add watchlist, holdings, and activity buttons.
 function addMarketCryptoData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
 
 	div.innerHTML = `
-		<div class="info-container">
+		<div class="info-container margin-bottom">
 			<span class="rank">Rank: #${info.rank}</span>
 			<span class="name">Name: ${info.name}</span>
 			<span class="symbol">Symbol: ${info.symbol.toUpperCase()}</span>
@@ -304,7 +210,9 @@ async function showCryptoMarketData(info) {
 
 				let parsed = parseHistoricalCryptoData(historicalData);
 
-				generateMarketChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices);
+				let colors = { 0:"#feac5e", 0.5:"#c779d0", 0.7:"#4bc0c8", 1:"#c779d0" };
+
+				generateChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices, colors);
 
 				addMarketCryptoData(divChart, info);
 			} else {
@@ -319,4 +227,18 @@ async function showCryptoMarketData(info) {
 		errorNotification(`Couldn't fetch market data for ${info.name}`);
 		console.log(error);
 	}
+}
+
+function parseHistoricalCryptoData(data) {
+	let labels = [];
+	let tooltips = [];
+	let prices = [];
+
+	data.map(day => {
+		labels.push(new Date(day[0]));
+		tooltips.push(formatDateHuman(new Date(day[0])));
+		prices.push(day[1]);
+	});
+
+	return { labels:labels, tooltips:tooltips, prices:prices };
 }

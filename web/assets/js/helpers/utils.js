@@ -162,7 +162,7 @@ function formatDateHyphenated(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;
 	let year = date.getFullYear();
-	return day + "-" + month + "-" + year;
+	return year + "-" + month + "-" + day;
 }
 
 function dayRangeArray(from, to) {
