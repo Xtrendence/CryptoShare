@@ -67,7 +67,11 @@ function filterActivityList(query) {
 
 	query = query.toLowerCase();
 
+	let firstFound;
+
 	for(let i = 0; i < rows.length; i++) {
+		rows[i].removeAttribute("style");
+
 		let spans = rows[i].getElementsByTagName("span");
 		let values = [];
 
@@ -76,6 +80,14 @@ function filterActivityList(query) {
 		}
 
 		if(values.join(",").includes(query)) {
+			if(empty(firstFound)) {
+				firstFound = rows[i];
+			}
+
+			if(rows[i] !== rows[0] && rows[i] === firstFound) {
+				firstFound.style.marginTop = "20px";
+			}
+
 			rows[i].classList.remove("hidden");
 		} else {
 			rows[i].classList.add("hidden");
