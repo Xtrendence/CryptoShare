@@ -136,6 +136,8 @@ function showAssetMatches(referenceNode, list, marginBottom) {
 			div.appendChild(row);
 		});
 
+		errorNotification("Two or more assets have the same symbol. Please choose an asset from the list.");
+
 		insertAfter(div, referenceNode);
 	} else {
 		errorNotification("Invalid number of matches.");

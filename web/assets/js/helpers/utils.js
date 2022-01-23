@@ -165,6 +165,20 @@ function formatDateHyphenated(date) {
 	return day + "-" + month + "-" + year;
 }
 
+function pastYearObject() {
+	let dayInSeconds = 86400;
+	let previousYearTime = previousYear(new Date()).getTime();
+	let days = {};
+
+	for(let i = 0; i < 365; i++) {
+		let time = previousYearTime + (dayInSeconds * i);
+		let date = formatDateHyphenated(new Date(time));
+		days[date] = {};
+	}
+
+	return days;
+}
+
 function previousYear(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;

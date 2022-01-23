@@ -61,6 +61,8 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 						popup.setSize(360, "auto");
 						popup.updateHeight();
 
+						popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+
 						let rows = popup.element.getElementsByClassName("popup-list-row");
 
 						for(let i = 0; i < rows.length; i++) {
