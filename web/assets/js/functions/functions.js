@@ -309,13 +309,13 @@ async function generateChart(element, title, labels, tooltips, currency, data, c
 						return "";
 					},
 					label: function(item) {
-						let price = data[item.index];
+						let value = data[item.index];
 
-						if(price > 1) {
-							price = separateThousands(price.toFixed(2));
+						if(value > 1) {
+							value = separateThousands(value.toFixed(2));
 						}
 
-						return [tooltips[item.index], currencySymbols[currency] + price];
+						return [tooltips[item.index], currencySymbols[currency] + value];
 					}
 				}
 			}
