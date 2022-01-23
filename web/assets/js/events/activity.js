@@ -11,12 +11,27 @@ buttonActivityTools.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-staking">Staking Calculator</button>
 		<button class="action-button block" id="popup-button-mining">Mining Calculator</button>
-		<button class="action-button block" id="popup-button-mining">Dividends Calculator</button>
+		<button class="action-button block" id="popup-button-dividends">Dividends Calculator</button>
 	`;
 
 	let popup = new Popup(250, "auto", "Tools", html, { cancelText:"Dismiss", confirmText:"-" });
 	popup.show();
 	popup.updateHeight();
+
+	document.getElementById("popup-button-staking").addEventListener("click", () => {
+		popup.hide();
+		showActivityStakingPopup();
+	});
+
+	document.getElementById("popup-button-mining").addEventListener("click", () => {
+		popup.hide();
+		showActivityMiningPopup();
+	});
+
+	// TODO: Add functionality.
+	document.getElementById("popup-button-dividends").addEventListener("click", () => {
+		popup.hide();
+	});
 });
 
 buttonActivityAdd.addEventListener("click", () => {
