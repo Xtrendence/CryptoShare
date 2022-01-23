@@ -462,7 +462,7 @@ function showActivityStakingPopup() {
 		let amount = popupInputAmount.value;
 		let apy = popupInputAPY.value;
 
-		if(!empty(symbol) && !empty(amount) && !isNaN(amount) && amount > 0 && !isNaN(apy) && apy > 0) {
+		if(!empty(symbol) && !empty(amount) && !isNaN(amount) && !isNaN(apy) && apy > 0) {
 			let result = await getCoin({ symbol:symbol });
 
 			if("id" in result) {
@@ -534,10 +534,99 @@ function calculateStakingRewards(currency, symbol, amount, apy, price) {
 
 function showActivityMiningPopup() {
 	let html = `
-		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Staked Asset Symbol...">
+		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Mining Asset Symbol...">
+		<input type="number" id="popup-input-equipment-cost" placeholder="Equipment Cost...">
+		<input type="number" id="popup-input-daily-amount" placeholder="Daily Amount...">
+		<input type="number" id="popup-input-daily-power-cost" placeholder="Daily Power Cost...">
+		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(300, "auto", "Staking Calculator", html, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup(340, "auto", "Mining Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
 	popup.show();
 	popup.updateHeight();
+	
+	let popupInputSymbol = document.getElementById("popup-input-symbol");
+	let popupInputEquipmentCost = document.getElementById("popup-input-equipment-cost");
+	let popupInputDailyAmount = document.getElementById("popup-input-daily-amount");
+	let popupInputDailyPowerCost = document.getElementById("popup-input-daily-power-cost");
+	let popupSpanOutput = document.getElementById("popup-span-output");
+
+	popup.on("confirm", async () => {
+		let currency = getCurrency();
+
+		let symbol = popupInputSymbol.value;
+		let equipmentCost = popupInputEquipmentCost.value;
+		let dailyAmount = popupInputDailyAmount.value;
+		let dailyPowerCost = popupInputDailyPowerCost.value;
+
+		if(!empty(symbol) && !isNaN(equipmentCost) && equipmentCost > 0 && !isNaN(dailyAmount) && !isNaN(dailyPowerCost)) {
+			let result = await getCoin({ symbol:symbol });
+
+			if("id" in result) {
+				let id = result.id;
+
+				let marketData = await cryptoAPI.getMarketByID(currency, id);
+				let price = marketData[0].current_price;
+				popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
+				popupSpanOutput.classList.remove("hidden");
+				popup.updateHeight();
+			} else {
+				popupSpanOutput.innerHTML = "";
+				popupSpanOutput.classList.add("hidden");
+
+				showAssetMatches(popupInputDailyPowerCost, result);
+				popup.setSize(360, "auto");
+				popup.updateHeight();
+
+				let rows = popup.element.getElementsByClassName("popup-list-row");
+
+				for(let i = 0; i < rows.length; i++) {
+					rows[i].addEventListener("click", async () => {
+						let id = rows[i].getAttribute("data-id");
+
+						let marketData = await cryptoAPI.getMarketByID(currency, id);
+						let price = marketData[0].current_price;
+						popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
+						popupSpanOutput.classList.remove("hidden");
+						popup.updateHeight();
+					});
+				}
+			}
+		} else {
+			popupSpanOutput.innerHTML = "";
+			popupSpanOutput.classList.add("hidden");
+			popup.updateHeight();
+			errorNotification("Please fill out all fields, and enter the amount and APY as numbers.");
+		}
+	});
+}
+
+function calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost) {
+	let currencySymbol = currencySymbols[currency];
+
+	let dailyValue = (dailyAmount * price) - dailyPowerCost;
+	
+	let weeklyAmount = dailyAmount * 7;
+	let weeklyValue = dailyValue * 7;
+
+	let monthlyAmount = dailyAmount * 30;
+	let monthlyValue = dailyValue * 30;
+
+	let yearlyAmount = dailyAmount * 365;
+	let yearlyValue = dailyValue * 365;
+
+	let roi = equipmentCost / monthlyValue;
+
+	return `
+		If ${symbol.toUpperCase()} remains at its current price of ${currencySymbol + separateThousands(price)}:<br><br>
+		Yearly Amount: ${yearlyAmount} ${symbol.toUpperCase()}<br>
+		Yearly Value: ${currencySymbol + separateThousands(yearlyValue)}<br><br>
+		Monthly Amount: ${monthlyAmount} ${symbol.toUpperCase()}<br>
+		Monthly Value: ${currencySymbol + separateThousands(monthlyValue)}<br><br>
+		Weekly Amount: ${weeklyAmount} ${symbol.toUpperCase()}<br>
+		Weekly Value: ${currencySymbol + separateThousands(weeklyValue)}<br><br>
+		Daily Amount: ${dailyAmount} ${symbol.toUpperCase()}<br>
+		Daily Value: ${currencySymbol + separateThousands(dailyValue)}<br><br>
+		Your ROI (Return on Investment) would be ${roi} months.
+	`;
 }
