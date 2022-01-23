@@ -5,31 +5,15 @@ async function populateActivityList(recreate) {
 		}
 	
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let activityData = await fetchActivity();
 
-			let activity = await readActivity(token, userID);
-
-			if(empty(activity?.data?.readActivity)) {
-				activity = {};
+			if(empty(activityData)) {
 				divActivityList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
 				inputActivitySearch.classList.remove("active");
 				return;
 			}
 
 			inputActivitySearch.classList.add("active");
-
-			let activityData = {};
-	
-			let encrypted = activity?.data?.readActivity;
-	
-			Object.keys(encrypted).map(index => {
-				let decrypted = decryptObjectValues(key, encrypted[index]);
-				decrypted.activityID = encrypted[index].activityID;
-				decrypted.activityTransactionID = encrypted[index].activityTransactionID;
-				activityData[decrypted.activityTransactionID] = decrypted;
-			});
 
 			let rows = createActivityListRows(activityData);
 
@@ -52,6 +36,39 @@ async function populateActivityList(recreate) {
 			errorNotification("Couldn't fetch activity data.");
 		}
 	}
+}
+
+function fetchActivity() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let activity = await readActivity(token, userID);
+
+			if(empty(activity?.data?.readActivity)) {
+				resolve();
+				return;
+			}
+
+			let activityData = {};
+	
+			let encrypted = activity?.data?.readActivity;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = decryptObjectValues(key, encrypted[index]);
+				decrypted.activityID = encrypted[index].activityID;
+				decrypted.activityTransactionID = encrypted[index].activityTransactionID;
+				activityData[decrypted.activityTransactionID] = decrypted;
+			});
+
+			resolve(activityData);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }
 
 function filterActivityList(query) {

@@ -1096,6 +1096,12 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	display:inline-block;
 }
 
+.page.holdings .page-container.half.right .loading-icon {
+	top:calc(50% - 80px / 2 + 30px);
+}
+.page.holdings .page-container.half.right .list-text {
+	top:calc(50% - 40px / 2 + 30px);
+}
 .page-container.holdings.half.top-left {
 	width:300px;
 	height:240px;

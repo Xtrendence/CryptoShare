@@ -14,33 +14,31 @@ async function populateHoldingsList(recreate) {
 
 			let currency = getCurrency();
 
-			let holdings;
+			let holdingsData = {};
 			
 			if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
-				holdings = await readHolding(token, userID);
+				let holdings = await readHolding(token, userID);
 
 				if(empty(holdings?.data?.readHolding)) {
-					holdings = {};
 					divHoldingsList.innerHTML = `<span class="list-text noselect">No Holdings Found</span>`;
+					return;
 				}
+
+				let encrypted = holdings?.data?.readHolding;
+
+				Object.keys(encrypted).map(index => {
+					let decrypted = decryptObjectValues(key, encrypted[index]);
+					decrypted.holdingID = encrypted[index].holdingID;
+					holdingsData[decrypted.holdingAssetID] = decrypted;
+				});
 			} else {
-				// TODO: Fetch activity and convert into holdings.
-				divHoldingsList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
+				holdingsData = await parseActivityAsHoldings();
+
+				if(empty(holdingsData)) {
+					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
+					return;
+				}
 			}
-
-			if(empty(holdings)) {
-				return;
-			}
-			
-			let holdingsData = {};
-
-			let encrypted = holdings?.data?.readHolding;
-
-			Object.keys(encrypted).map(index => {
-				let decrypted = decryptObjectValues(key, encrypted[index]);
-				decrypted.holdingID = encrypted[index].holdingID;
-				holdingsData[decrypted.holdingAssetID] = decrypted;
-			});
 
 			let ids = Object.keys(holdingsData);
 
@@ -133,7 +131,7 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 				</div>
 			`;
 
-			addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol);
+			addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol, amount);
 
 			output.rows.push(div);
 			output.totalValue += value;
@@ -145,10 +143,10 @@ function createHoldingsListCryptoRows(marketData, holdingsData, currency) {
 	return output;
 }
 
-function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol) {
+function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount) {
 	div.addEventListener("click", () => {
 		try {
-			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount..."><button class="action-button delete" id="popup-button-delete-crypto">Delete Asset</button>`;
+			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount..." value="${amount}"><button class="action-button delete" id="popup-button-delete-crypto">Delete Asset</button>`;
 			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
 			popup.show();
 			popup.updateHeight();
@@ -226,4 +224,22 @@ function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID) {
 function setHoldingsUsername() {
 	let username = localStorage.getItem("username");
 	spanHoldingsUsername.textContent = username;
+}
+
+function parseActivityAsHoldings() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let activityData = await fetchActivity();
+
+			if(empty(activityData)) {
+				resolve();
+				return;
+			}
+
+			
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }
