@@ -2,8 +2,6 @@
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
 		try {
-			let currency = getCurrency();
-
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
 			let data = await fetchHoldingsHistoricalData();

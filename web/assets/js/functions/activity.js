@@ -156,7 +156,7 @@ function createActivityListRows(activityData) {
 					${ !empty(activity.activityNotes) && activity.activityNotes !== "-" &&
 						`<span class="notes">${activity.activityNotes}</span>`
 					}
-					<span class="amount">Amount: ${activity.activityAssetAmount}</span>
+					<span class="amount">Amount: ${separateThousands(activity.activityAssetAmount)}</span>
 				</div>
 			</div>
 		`;

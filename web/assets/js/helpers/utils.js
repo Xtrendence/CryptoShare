@@ -165,6 +165,11 @@ function formatDateHyphenated(date) {
 	return year + "-" + month + "-" + day;
 }
 
+function addDays(date, days) {
+	date.setDate(date.getDate() + days);
+	return date;
+}
+
 function dayRangeArray(from, to) {
 	let dayInSeconds = 86400 * 1000;
 	let fromTime = from.getTime();
