@@ -1,7 +1,24 @@
 // TODO: Add functionality.
-buttonHoldingsPerformance.addEventListener("click", () => {
+buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
-		
+		try {
+			showLoading(5000);
+
+			let currency = getCurrency();
+
+			let days = dayRangeArray(previousYear(new Date()), new Date());
+
+			let data = await fetchHoldingsHistoricalData();
+
+			let ids = data.coinIDs;
+			let prices = data.prices;
+			let holdings = data.holdings;
+
+			
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
 	} else {
 		errorNotification("Transactions must be set to affect holdings (this can be done in the settings).");
 	}

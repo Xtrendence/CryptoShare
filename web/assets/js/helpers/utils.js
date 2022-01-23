@@ -165,16 +165,18 @@ function formatDateHyphenated(date) {
 	return day + "-" + month + "-" + year;
 }
 
-function pastYearObject() {
-	let dayInSeconds = 86400;
-	let previousYearTime = previousYear(new Date()).getTime();
-	let days = {};
+function dayRangeArray(from, to) {
+	let dayInSeconds = 86400 * 1000;
+	let fromTime = from.getTime();
+	let toTime = to.getTime();
+	let days = [];
 
-	for(let i = 0; i < 365; i++) {
-		let time = previousYearTime + (dayInSeconds * i);
-		let date = formatDateHyphenated(new Date(time));
-		days[date] = {};
+	for(let i = fromTime; i < toTime; i += dayInSeconds) {
+		let date = formatDateHyphenated(new Date(i));
+		days.push(date);
 	}
+
+	days.length = 365;
 
 	return days;
 }

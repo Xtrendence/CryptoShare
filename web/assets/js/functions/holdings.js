@@ -35,7 +35,7 @@ async function populateHoldingsList(recreate) {
 				holdingsData = await parseActivityAsHoldings();
 
 				if(empty(holdingsData)) {
-					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
+					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;
 					return;
 				}
 			}
@@ -339,4 +339,44 @@ function sortHoldingsDataByValue(holdingsData, marketData) {
 	});
 
 	return { holdingsData:sorted, order:order };
+}
+
+function fetchHoldingsHistoricalData() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+
+			let currency = getCurrency();
+
+			let prices = {};
+			let holdings = await parseActivityAsHoldings();
+
+			let coinIDs = Object.keys(holdings);
+
+			for(let i = 0; i < coinIDs.length; i++) {
+				setTimeout(async () => {
+					showLoading(5000, `Getting Data... (${i + 1}/${coinIDs.length})`);
+
+					let holding = holdings[coinIDs[i]];
+
+					let request = await readCoin(token, userID, coinIDs[i], holding.holdingAssetSymbol, currency);
+
+					let historicalData = request?.data?.readCoin?.data;
+
+					if(validJSON(historicalData)) {
+						historicalData = JSON.parse(historicalData)?.historicalData?.prices;
+						prices[coinIDs[i]] = historicalData;
+					}
+
+					if(Object.keys(prices).length === coinIDs.length) {
+						resolve({ coinIDs:coinIDs, prices:prices, holdings:holdings });
+					}
+				}, i * 2000);
+			}
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }

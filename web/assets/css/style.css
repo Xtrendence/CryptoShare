@@ -1103,12 +1103,6 @@ html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	display:inline-block;
 }
 
-.page.holdings .page-container.half.right .loading-icon {
-	top:calc(50% - 80px / 2 + 30px);
-}
-.page.holdings .page-container.half.right .list-text {
-	top:calc(50% - 40px / 2 + 30px);
-}
 .page-container.holdings.half.top-left {
 	width:300px;
 	height:240px;
@@ -1185,12 +1179,6 @@ html.navbar-compact .page-container.holdings.half.right {
 	width:calc(100% - 40px);
 }
 
-.page.activity .page-container.full .loading-icon {
-	top:calc(50% - 80px / 2 - 35px);
-}
-.page.activity .page-container.full .list-text {
-	top:calc(50% - 40px / 2 - 35px);
-}
 .page.activity .page-container-toolbar {
 	width:100%;
 	height:60px;

@@ -8,7 +8,7 @@ async function populateActivityList(recreate) {
 			let activityData = await fetchActivity();
 
 			if(empty(activityData)) {
-				divActivityList.innerHTML = `<span class="list-text noselect">No Activity Found</span>`;
+				divActivityList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;
 				inputActivitySearch.classList.remove("active");
 				return;
 			}
