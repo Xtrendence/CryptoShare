@@ -285,6 +285,7 @@ function addActivityPopupDeleteEvent(previousPopup, buttonDelete, activityID) {
 
 		let popup = new Popup(300, "auto", "Delete Activity", `<span>Are you sure you want to remove this activity?</span>`);
 		popup.show();
+		popup.updateHeight();
 
 		popup.on("confirm", async () => {
 			try {

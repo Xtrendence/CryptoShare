@@ -107,5 +107,14 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 
 // TODO: Add functionality.
 buttonHoldingsAddStockAsset.addEventListener("click", () => {
-	
+	try {
+		if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+
+		} else {
+			errorNotification("You cannot modify your holdings this way while transactions are affecting them. Add an activity/transaction instead.");
+		}
+	} catch(error) {
+		errorNotification("Something went wrong...");
+		console.log(error);
+	}
 });

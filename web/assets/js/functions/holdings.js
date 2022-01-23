@@ -220,6 +220,7 @@ function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID) {
 
 		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove this asset from your portfolio?</span>`);
 		popup.show();
+		popup.updateHeight();
 
 		popup.on("confirm", async () => {
 			try {
