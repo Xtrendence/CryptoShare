@@ -160,7 +160,9 @@ function createHoldingsListCryptoRows(marketData, holdingsData, order, currency)
 
 // TODO: Add functionality.
 function addHoldingListChartCryptoRowEvent(div, coinID, symbol, amount) {
-
+	div.addEventListener("click", async () => {
+		
+	});
 }
 
 function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount) {
@@ -448,7 +450,7 @@ function getInitialDatedValue(activities, futureDays) {
 	return last;
 }
 
-function parseActivityAsDatedValue(ids, days, prices, holdings, activities) {
+function parseActivityAsDatedValue(days, prices, activities) {
 	let dates = {
 		[days[0]]: {
 			holdings: {},
@@ -548,8 +550,6 @@ function parseActivityAsDatedValue(ids, days, prices, holdings, activities) {
 		dates[day].totalValue = total;
 	}
 
-	
-
 	return dates;
 }
 
@@ -559,6 +559,7 @@ function showHoldingsPerformanceChart(dates) {
 	let popup = new Popup("full", "full", `Portfolio Performance`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
 
 	popup.show();
+	popup.bottom.classList.add("less-margin");
 
 	let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
 

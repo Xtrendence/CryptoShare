@@ -524,6 +524,9 @@ html.light .toggle-container {
 	display:block;
 	margin-top:20px;
 }
+.popup-wrapper .bottom.less-margin .popup-button-wrapper {
+	margin-top:10px;
+}
 .popup-wrapper .bottom .popup-button-wrapper.margin-bottom {
 	margin-bottom:20px;
 }

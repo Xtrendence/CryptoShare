@@ -6,12 +6,10 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 
 			let data = await fetchHoldingsHistoricalData();
 
-			let ids = data.coinIDs;
 			let prices = data.prices;
-			let holdings = data.holdings;
 			let activities = data.activities;
 
-			let dates = parseActivityAsDatedValue(ids, days, prices, holdings, activities);
+			let dates = parseActivityAsDatedValue(days, prices, activities);
 
 			showHoldingsPerformanceChart(dates);
 		} catch(error) {
