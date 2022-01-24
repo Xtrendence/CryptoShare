@@ -124,33 +124,6 @@ export default class Utils {
 		return Object.keys(content);
 	}
 
-	// TODO: Get settings before updating.
-	static async syncSettings() {
-		let theme: any = await AsyncStorage.getItem("theme");
-		let url = await AsyncStorage.getItem("api");
-		let userID = await AsyncStorage.getItem("userID");
-		let token = await AsyncStorage.getItem("token");
-
-		let key: any = await AsyncStorage.getItem("key");
-
-		let settings = JSON.stringify({
-			theme: await AsyncStorage.getItem("theme"),
-			defaultPage: await AsyncStorage.getItem("defaultPage"),
-		});
-
-		let encrypted = CryptoFN.encryptAES(settings, key);
-
-		new Requests(url).updateSetting(token, userID, encrypted).then(result => {
-			if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
-				Utils.notify(theme, "Couldn't update / sync setting.");
-				console.log(result);
-			}
-		}).catch(error => {
-			Utils.notify(theme, error);
-			console.log(error);
-		});
-	}
-
 	static notify(theme: string, message: string) {
 		showMessage({
 			message: message,

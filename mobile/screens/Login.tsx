@@ -256,15 +256,7 @@ export default function Login({ navigation }: any) {
 
 						await Utils.setAccountInfo(response, true);
 
-						let settings = Utils.defaultSettings;
-						if(!Utils.empty(response.settings)) {
-							let decryptedSettings = CryptoFN.decryptAES(response.settings.userSettings, decrypted);
-							if(Utils.validJSON(decryptedSettings)) {
-								settings = JSON.parse(decryptedSettings);
-							}
-						}
-						
-						await Utils.setSettings(dispatch, settings);
+						let settings = await Utils.getSettings(dispatch);
 
 						navigation.navigate(settings.defaultPage);
 					} catch(error) {

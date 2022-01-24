@@ -7,17 +7,13 @@ export const settingsSlice = createSlice({
 	name: "settings",
 	initialState: {
 		settings: {
-			defaultPage: "Dashboard"
+			...Utils.defaultSettings
 		}
 	},
 	reducers: {
 		changeSetting: (state: any, data) => {
 			state.settings[data.payload.key] = data.payload.value;
-			AsyncStorage.setItem(data.payload.key, data.payload.value).then(() => {
-				Utils.syncSettings();
-			}).catch(error => {
-				console.log(error);
-			});
+			AsyncStorage.setItem(data.payload.key, data.payload.value);
 		},
 		setSettingsState: (state: any, data) => {
 			state.settings = data.payload;

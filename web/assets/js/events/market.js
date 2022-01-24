@@ -13,7 +13,6 @@ buttonMarketInfo.addEventListener("click", async () => {
 		let volume = parseFloat(data.data.total_volume[currency].toFixed(2));
 		let marketCap = parseFloat(data.data.total_market_cap[currency].toFixed(2));
 		let marketCapChangeDay = formatPercentage(data.data.market_cap_change_percentage_24h_usd);
-		let updated = formatDateHuman(new Date(data.data.updated_at * 1000));
 
 		let html = `
 			<div class="info-wrapper noselect">
