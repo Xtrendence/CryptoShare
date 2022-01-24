@@ -143,7 +143,7 @@ function createHoldingsListCryptoRows(marketData, holdingsData, order, currency)
 			`;
 
 			if(holding.holdingID === "-") {
-				addHoldingListChartCryptoRowEvent(div, coinID, symbol, amount);
+				addHoldingListChartCryptoRowEvent(div, coinID, symbol);
 			} else {
 				addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol, amount);
 			}
@@ -159,9 +159,23 @@ function createHoldingsListCryptoRows(marketData, holdingsData, order, currency)
 }
 
 // TODO: Add functionality.
-function addHoldingListChartCryptoRowEvent(div, coinID, symbol, amount) {
+function addHoldingListChartCryptoRowEvent(div, coinID, symbol) {
 	div.addEventListener("click", async () => {
-		
+		try {
+			let days = dayRangeArray(previousYear(new Date()), new Date());
+
+			let data = await fetchHoldingsHistoricalData([coinID]);
+
+			let prices = data.prices;
+			let activities = filterActivitiesByAssetID(data.activities, coinID);
+
+			let dates = parseActivityAsDatedValue(days, prices, activities);
+
+			showHoldingsPerformanceChart(dates, { symbol:symbol });
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
 	});
 }
 
@@ -344,7 +358,7 @@ function sortHoldingsDataByValue(holdingsData, marketData) {
 	return { holdingsData:sorted, order:order };
 }
 
-function fetchHoldingsHistoricalData() {
+function fetchHoldingsHistoricalData(ids = null) {
 	return new Promise(async (resolve, reject) => {
 		try {
 			let userID = localStorage.getItem("userID");
@@ -357,6 +371,9 @@ function fetchHoldingsHistoricalData() {
 			let holdings = parsedData.holdingsData;
 
 			let coinIDs = Object.keys(holdings);
+			if(!empty(ids)) {
+				coinIDs = ids;
+			}
 
 			for(let i = 0; i < coinIDs.length; i++) {
 				setTimeout(async () => {
@@ -553,10 +570,10 @@ function parseActivityAsDatedValue(days, prices, activities) {
 	return dates;
 }
 
-function showHoldingsPerformanceChart(dates) {
+function showHoldingsPerformanceChart(dates, args = {}) {
 	let currency = getCurrency();
 
-	let popup = new Popup("full", "full", `Portfolio Performance`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup("full", "full", ("symbol" in args ? `${args.symbol.toUpperCase()} Performance` : `Portfolio Performance`), `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
 
 	popup.show();
 	popup.bottom.classList.add("less-margin");
@@ -569,7 +586,7 @@ function showHoldingsPerformanceChart(dates) {
 
 	let parsed = parseHoldingsDateData(dates);
 
-	generateChart(divChart, `Portfolio Value`, parsed.labels, parsed.tooltips, getCurrency(), parsed.values, colors);
+	generateChart(divChart, ("symbol" in args ? `${args.symbol.toUpperCase()} Value` : `Portfolio Value`), parsed.labels, parsed.tooltips, getCurrency(), parsed.values, colors);
 
 	let stats = getHoldingsPerformanceData(currency, parsed.values);
 
@@ -675,4 +692,14 @@ function parseHoldingsDateData(data) {
 	});
 
 	return { labels:labels, tooltips:tooltips, values:values };
+}
+
+function filterActivitiesByAssetID(activities, assetID) {
+	Object.keys(activities).map(txID => {
+		if(activities[txID].activityAssetID !== assetID) {
+			delete activities[txID];
+		}
+	});
+
+	return activities;
 }

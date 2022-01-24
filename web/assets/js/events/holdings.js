@@ -4,14 +4,14 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 		try {
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
-			let data = await fetchHoldingsHistoricalData();
+			let data = await fetchHoldingsHistoricalData(undefined);
 
 			let prices = data.prices;
 			let activities = data.activities;
 
 			let dates = parseActivityAsDatedValue(days, prices, activities);
 
-			showHoldingsPerformanceChart(dates);
+			showHoldingsPerformanceChart(dates, undefined);
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");
