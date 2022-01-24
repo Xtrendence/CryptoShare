@@ -124,7 +124,7 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast,
 	},
 	actionButton: {
-		backgroundColor: Colors.Dark.Settings.accentFirst
+		backgroundColor: Colors.Dark.Settings.accentSecond
 	},
 	actionButtonLight: {
 		backgroundColor: Colors.Light.Settings.accentSecond
@@ -136,13 +136,13 @@ export default createStyle<any>({
 	},
 	choiceButtonLight: {
 		backgroundColor: "transparent",
-		borderColor: Colors.Light.Settings.accentSecond
+		borderColor: Colors.Light.Settings.accentFirst
 	},
 	choiceButtonActiveDark: {
 		backgroundColor: Colors.Dark.Settings.accentFirst
 	},
 	choiceButtonActiveLight: {
-		backgroundColor: Colors.Light.Settings.accentSecond
+		backgroundColor: Colors.Light.Settings.accentFirst
 	},
 	choiceText: {
 		fontSize: 16,

@@ -4,7 +4,7 @@ import Utils from "../utils/Utils";
 
 export default function Loading(props: any) {
 	return (
-		<View style={[props.active ? styles.overlay : styles.hidden]}>
+		<View style={[props.active ? styles.overlay : styles.hidden, props.opaque ? { backgroundColor:"rgb(0,0,0)" } : null]}>
 			<ActivityIndicator color="rgb(255,255,255)" size={32}/>
 			<Text style={styles.text}>{ Utils.empty(props.text) ? "Loading..." : props.text }</Text>
 		</View>

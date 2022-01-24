@@ -90,7 +90,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 			let name = coin.name;
 			let symbol = coin.symbol;
 
-			let info = { coinID:coinID, currency:currency, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
+			let info = { coinID:coinID, currency:currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
 
 			let div = document.createElement("div");
 			div.id = "market-list-crypto-" + coinID;

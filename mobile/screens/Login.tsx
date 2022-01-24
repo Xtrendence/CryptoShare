@@ -197,7 +197,7 @@ export default function Login({ navigation }: any) {
 					</View>
 				</ModalContent>
 			</BottomModal>
-			<Loading active={loading}/>
+			<Loading active={loading} opaque={true}/>
 		</ImageBackground>
 	);
 

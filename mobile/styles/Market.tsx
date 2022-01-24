@@ -3,15 +3,6 @@ import { Colors, GlobalStyle } from "./Global";
 import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
 export default createStyle<any>({
-	scrollView: {
-		width: "100%",
-		height: "100%",
-	},
-	scrollViewContent: {
-		justifyContent: "center", 
-		alignItems: "center", 
-		flexGrow: 1
-	},
 	area: {
 		width: "100%",
 		height: "100%",
@@ -160,4 +151,33 @@ export default createStyle<any>({
 	choiceTextActiveLight: {
 		color: Colors.Light.accentContrast
 	},
+	itemCard: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginRight: 10,
+		marginLeft: 10,
+		marginBottom: 10,
+		padding: 20,
+		backgroundColor: Colors.Dark.mainFirst,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	itemCardLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	itemIcon: {
+		width: 32,
+		height: 32,
+		marginRight: 20,
+	},
+	itemText: {
+		color: Colors.Dark.mainContrast
+	},
+	itemTextLight: {
+		color: Colors.Light.mainContrast
+	}
 });

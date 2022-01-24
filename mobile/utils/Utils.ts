@@ -8,7 +8,8 @@ import CryptoFN from "./CryptoFN";
 import Requests from "./Requests";
 export default class Utils {
 	static defaultSettings: any = {
-		defaultPage: "Dashboard"
+		defaultPage: "Dashboard",
+		currency: "usd"
 	}
 
 	static getBackground(theme: string) {
@@ -70,6 +71,22 @@ export default class Utils {
 
 			return () => BackHandler.removeEventListener("hardwareBackPress", onBackPress);
 		}, []);
+	}
+
+	static getCurrency() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let currency = await AsyncStorage.getItem("currency");
+				if(this.empty(currency)) {
+					currency = this.defaultSettings.currency;
+				}
+
+				resolve(currency);
+			} catch(error) {
+				console.log(error);
+				resolve(this.defaultSettings.currency);
+			}
+		});
 	}
 
 	static async getSettings(dispatch: any) {
@@ -164,6 +181,14 @@ export default class Utils {
 				resolve();
 			}, duration);
 		});
+	}
+
+	static formatPercentage(number: number) {
+		if(!this.empty(number)) {
+			return number.toFixed(2).includes("-") ? number.toFixed(2) : "+" + number.toFixed(2);
+		} else {
+			return "-";
+		}
 	}
 
 	static replaceAll(find: string, replace: string, string: string, ignore: boolean = false) {
