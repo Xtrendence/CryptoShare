@@ -147,7 +147,7 @@ export default function Market({ navigation }: any) {
 					<View style={[styles.modalChartWrapper, styles[`modalChartWrapper${theme}`]]}>
 						<View style={[styles.modalChartLeft, styles[`modalChartLeft${theme}`]]}>
 							{
-								chartVerticalLabels.sort().slice(-5).map((label: any) => {
+								sortLabels(chartVerticalLabels).map((label: any) => {
 									return (
 										<Text key={`label-${chartVerticalLabels.indexOf(label) + Utils.randomBetween(0, 9999999)}`} style={[styles.modalChartText, styles[`modalChartText${theme}`]]}>{Utils.currencySymbols[settings.currency] + Utils.separateThousands(parseFloat(label))}</Text>
 									);
@@ -264,6 +264,9 @@ export default function Market({ navigation }: any) {
 	}
 
 	function hideModal() {
+		labelsRef.current = [];
+		setChartVerticalLabels([]);
+		
 		setModal(false);
 	}
 
@@ -354,5 +357,19 @@ export default function Market({ navigation }: any) {
 		});
 
 		return parsed;
+	}
+
+	function sortLabels(labels: any) {
+		let floats: any = [];
+
+		labels = labels.slice(-5);
+
+		labels.map((label: any) => {
+			floats.push(parseFloat(label));
+		});
+
+		floats.sort().reverse();
+		
+		return floats;
 	}
 }
