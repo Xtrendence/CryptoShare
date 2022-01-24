@@ -23,11 +23,11 @@ buttonMarketInfo.addEventListener("click", async () => {
 					<span>24 Change: ${marketCapChangeDay}%</span>
 				</div>
 			</div>
-			<span>Last Update: ${updated}</span>
 		`;
 
 		let popup = new Popup(400, "auto", "Global Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
 		popup.show();
+		popup.bottom.classList.add("less-margin");
 		popup.updateHeight();
 	} catch(error) {
 		errorNotification("Could not fetch global market data.");
