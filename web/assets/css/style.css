@@ -231,7 +231,7 @@ input[type=number] {
 	margin:0;
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:0 0 0 2px;
+	border-width:0 0 0 3px;
 	border-color:var(--accent-first);
 	border-top-left-radius:0;
 	border-top-right-radius:var(--border-radius);
@@ -316,7 +316,7 @@ input[type=number] {
 	background:var(--main-first);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 	color:var(--main-contrast);
 	border-radius:var(--border-radius);
@@ -351,7 +351,7 @@ input[type=number] {
 .login-wrapper button.action:first-of-type {
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 	background:var(--main-third);
 	color:var(--main-contrast-darker);
@@ -491,7 +491,7 @@ html.light .toggle-container {
 	border-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 }
 .popup-wrapper .bottom span.detail {
@@ -568,7 +568,7 @@ html.light .toggle-container {
 	color:var(--main-contrast-darker);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 }
 #desktop .popup-wrapper .bottom button.button-cancel:hover {
@@ -609,7 +609,7 @@ html.light .toggle-container {
 	border-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 	margin:0 auto 20px auto;
 	max-width:138vh;
@@ -636,7 +636,7 @@ html.light .toggle-container {
 	border-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 }
 .popup-wrapper .bottom .popup-list.margin-bottom {
@@ -957,7 +957,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .activity-list {
 	top:0;
-	height:calc(100% - 60px);
+	height:calc(100% - 62px);
 }
 .market-list-row, .holdings-list-row, .activity-list-row {
 	position:relative;
@@ -1193,7 +1193,7 @@ html.navbar-compact .page-container.holdings.half.right {
 
 .page.activity .page-container-toolbar {
 	width:100%;
-	height:60px;
+	height:62px;
 	position:absolute;
 	bottom:0;
 	left:0;
@@ -1227,7 +1227,7 @@ html.light .page.activity .page-container-toolbar {
 	border-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:transparent;
 }
 .page.activity .page-container-toolbar input.active {
@@ -1246,7 +1246,7 @@ html.light .page.activity .page-container-toolbar {
 .page-container.settings {
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 }
 .settings-navbar {
@@ -1259,7 +1259,7 @@ html.light .page.activity .page-container-toolbar {
 	border-bottom-left-radius:var(--border-radius);
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:0 2px 0 0;
+	border-width:0 3px 0 0;
 	border-color:var(--accent-first);
 }
 .settings-navbar .item {
@@ -1268,7 +1268,7 @@ html.light .page.activity .page-container-toolbar {
 	padding:20px 0 20px 20px;
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:0 0 2px 0;
+	border-width:0 0 3px 0;
 	border-color:var(--accent-first);
 }
 .settings-navbar .item.active {
@@ -1302,7 +1302,7 @@ html.light .page.activity .page-container-toolbar {
 .settings-section {
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-second);
 	display:inline-flex;
 	flex-direction:column;
@@ -1356,7 +1356,7 @@ html.light .page.activity .page-container-toolbar {
 .choice-button {
 	box-sizing:border-box;
 	border-style:solid;
-	border-width:2px;
+	border-width:3px;
 	border-color:var(--accent-first);
 	background:none;
 	color:var(--main-contrast);
