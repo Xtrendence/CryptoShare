@@ -567,6 +567,8 @@ function parseActivityAsDatedValue(days, prices, activities) {
 		dates[day].totalValue = total;
 	}
 
+	// TODO: Add current day's data.
+
 	return dates;
 }
 

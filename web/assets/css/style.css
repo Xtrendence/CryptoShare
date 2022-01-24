@@ -612,7 +612,7 @@ html.light .toggle-container {
 	border-width:2px;
 	border-color:var(--accent-first);
 	margin:0 auto 20px auto;
-	max-width:1300px;
+	max-width:138vh;
 }
 .popup-wrapper .bottom .info-wrapper {
 	display:block;

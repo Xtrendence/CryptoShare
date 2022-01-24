@@ -1,3 +1,9 @@
+@media screen and (max-height:600px) {
+	.popup-wrapper .bottom .chart-wrapper {
+		max-width:80%;
+	}
+}
+
 @media screen and (max-width:1300px) {
 	.market-list-row .name, .market-list-row .symbol {
 		max-width:110px;
