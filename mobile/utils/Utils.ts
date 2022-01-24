@@ -9,7 +9,8 @@ import Requests from "./Requests";
 export default class Utils {
 	static defaultSettings: any = {
 		defaultPage: "Dashboard",
-		currency: "usd"
+		currency: "usd",
+		assetIconBackdrop: "disabled",
 	}
 
 	static currencySymbols: any = {
@@ -108,6 +109,12 @@ export default class Utils {
 			dispatch(changeSetting({ key:"defaultPage", value:defaultPage }));
 		}
 
+		let assetIconBackdrop = await AsyncStorage.getItem("assetIconBackdrop");
+		if(!this.empty(assetIconBackdrop)) {
+			settings.assetIconBackdrop = assetIconBackdrop;
+			dispatch(changeSetting({ key:"assetIconBackdrop", value:assetIconBackdrop }));
+		}
+
 		return settings;
 	}
 
@@ -128,7 +135,8 @@ export default class Utils {
 		let content: any = {
 			appearance: ["theme", "dark", "light", "mode", "appearance", "looks"],
 			account: ["logout", "token", "user", "account"],
-			defaultPage: ["page", "default", "login", "area", "section", "load"]
+			defaultPage: ["page", "default", "login", "area", "section", "load"],
+			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 		};
 
 		if(!this.empty(query)) {
@@ -199,6 +207,73 @@ export default class Utils {
 		} else {
 			return "-";
 		}
+	}
+
+	static formatHour(date: Date) {
+		let hours = ("00" + date.getHours()).slice(-2);
+		let minutes = ("00" + date.getMinutes()).slice(-2);
+		return hours + ":" + minutes;
+	}
+
+	static formatDate(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		return year + " / " + month + " / " + day;
+	}
+
+	static formatDateHuman(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		return day + " / " + month + " / " + year;
+	}
+
+	static formatDateHyphenated(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		return year + "-" + month + "-" + day;
+	}
+
+	static addDays(date: Date, days: number) {
+		date.setDate(date.getDate() + days);
+		return date;
+	}
+
+	static dayRangeArray(from: Date, to: Date) {
+		let dayInSeconds = 86400 * 1000;
+		let fromTime = from.getTime();
+		let toTime = to.getTime();
+		let days = [];
+
+		for(let i = fromTime; i < toTime; i += dayInSeconds) {
+			let date = this.formatDateHyphenated(new Date(i));
+			days.push(date);
+		}
+
+		days.length = 365;
+
+		return days;
+	}
+
+	static previousYear(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear() - 1;
+		return new Date(Date.parse(year + "-" + month + "-" + day));
+	}
+
+	static previousMonth(date: Date) {
+		return new Date(date.getTime() - 2592000 * 1000);
+	}
+
+	static previousWeek(date: Date) {
+		return new Date(date.getTime() - (60 * 60 * 24 * 6 * 1000));
+	}
+
+	static randomBetween(min: number, max: number) {
+		return min + Math.floor(Math.random() * (max - min + 1));
 	}
 
 	static separateThousands(number: number) {

@@ -103,6 +103,17 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("assetIconBackdrop") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Asset Icon Backdrop</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<ChoiceButton setting="disabled" active={settings.assetIconBackdrop} text="Disabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"assetIconBackdrop", value:"disabled" }))}/>
+									<ChoiceButton setting="enabled" active={settings.assetIconBackdrop} text="Enabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"assetIconBackdrop", value:"enabled" }))}/>
+								</View>
+							</View>
+						}
 					</ScrollView>
 				</SafeAreaView>
 			</ScrollView>

@@ -1,6 +1,18 @@
+import React from "react";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
+import { Stop, LinearGradient as SVGLinearGradient } from "react-native-svg";
+
+export const gradientColor = () => {
+	return (
+		<SVGLinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+			<Stop offset="0" stopColor={Colors.Dark.Market.accentFirst} stopOpacity="1" />
+			<Stop offset="0.5" stopColor={Colors.Dark.Market.accentSecond} stopOpacity="1" />
+			<Stop offset="1" stopColor={Colors.Dark.Market.accentThird} stopOpacity="1" />
+		</SVGLinearGradient>
+	);
+}
 
 export default createStyle<any>({
 	area: {
@@ -177,6 +189,13 @@ export default createStyle<any>({
 		flexDirection: "column",
 		alignItems: "center"
 	},
+	itemIconWrapper: {
+		padding: 4,
+	},
+	itemIconWrapperBackdrop: {
+		backgroundColor: "rgb(255,255,255)",
+		borderRadius: GlobalStyle.borderRadius
+	},
 	itemIcon: {
 		width: 32,
 		height: 32,
@@ -225,5 +244,54 @@ export default createStyle<any>({
 		width: "100%",
 		alignItems: "center",
 		justifyContent: "center"
+	},
+	modal: {
+
+	},
+	modalOverlay: {
+		zIndex: 2,
+		position: "absolute",
+		top: 0,
+		left: 0,
+		width: "100%",
+		height: "100%",
+		backgroundColor: "rgba(0,0,0,0.9)"
+	},
+	modalWrapper: {
+		zIndex: 3,
+		position: "absolute",
+		top: 0,
+		left: 0,
+	},
+	modalChartWrapper: {
+		flexDirection: "row",
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		overflow: "hidden"
+	},
+	modalChartWrapperLight: {
+
+	},
+	modalChartLeft: {
+		height: "100%",
+		position: "absolute",
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		paddingTop: 16,
+		paddingRight: 10,
+		paddingLeft: 10,
+		zIndex: 4,
+	},
+	modalChartLeftLight: {
+
+	},
+	modalChartText: {
+		color: Colors.Dark.mainContrast,
+		marginBottom: 36
+	},
+	modalChartTextLight: {
+
+	},
+	modalScrollView: {
+		paddingLeft: 50,
+		paddingTop: 10
 	}
 });
