@@ -1,28 +1,42 @@
 import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import LinearGradient from "react-native-linear-gradient";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors, GlobalStyle } from "../../styles/Global";
 import styles from "../../styles/NavigationBar";
+import PatternIcon from "../Icons/PatternIcon";
 
 export default function BottomBar({ screen, navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	
 	const [left, setLeft] = React.useState("0%");
+	const [gradient, setGradient] = React.useState(Colors.getGradient(theme, getActive()));
 
 	useEffect(() => {
 		checkActive();
 	}, [screen.active]);
 
+	useEffect(() => {
+		setGradient(Colors.getGradient(theme, getActive()));
+	}, [left]);
+
 	return (
 		<View style={[styles.bar, styles[`bar${theme}`]]}>
 			<View style={styles.background}>
-				<View style={[styles.backdrop, styles[`backdrop${theme}`], { left:left }]}></View>
+				<LinearGradient
+					style={[styles.backdrop, styles[`backdrop${theme}`], { left:left }]}
+					colors={gradient}
+					useAngle={true}
+					angle={45}
+				>
+					<PatternIcon style={[styles.pattern, styles[`pattern${getActive()}`]]} fill={Colors[theme].accentContrast} opacity={0.2}/>
+				</LinearGradient>
 			</View>
 			<View style={styles.foreground}>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Chat Bot") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Chat Bot" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="comment-dots" 
 								size={iconSize} 
@@ -33,7 +47,7 @@ export default function BottomBar({ screen, navigation }: any) {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Dashboard") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Dashboard" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="th-large" 
 								size={iconSize} 
@@ -44,7 +58,7 @@ export default function BottomBar({ screen, navigation }: any) {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Market") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Market" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="university" 
 								size={iconSize} 
@@ -55,7 +69,7 @@ export default function BottomBar({ screen, navigation }: any) {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Holdings") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Holdings" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="wallet" 
 								size={iconSize} 
@@ -66,7 +80,7 @@ export default function BottomBar({ screen, navigation }: any) {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Activity") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Activity" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="exchange-alt" 
 								size={iconSize} 
@@ -77,7 +91,7 @@ export default function BottomBar({ screen, navigation }: any) {
 				</TouchableOpacity>
 				<TouchableOpacity style={styles.tab} onPress={() => { screen.setActive("Settings") }}>
 					<View style={styles.itemWrapper}>
-						<View style={styles.iconWrapper}>
+						<View style={[styles.iconWrapper, styles[`iconWrapper${theme}`], screen.active === "Settings" ? styles.iconWrapperActive : null]}>
 							<Icon
 								name="cog" 
 								size={iconSize} 
@@ -89,6 +103,10 @@ export default function BottomBar({ screen, navigation }: any) {
 			</View>
 		</View>
 	);
+
+	function getActive() {
+		return screen.active.replace(" ", "");
+	}
 
 	async function checkActive() {
 		let amount = 100 / 6;

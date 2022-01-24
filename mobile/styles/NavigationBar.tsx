@@ -20,9 +20,8 @@ export default createStyle<any>({
 		left: 20,
 		width: screenWidth - 40,
 		height: barHeight,
-		borderWidth: 2,
+		overflow: "hidden",
 		borderRadius: GlobalStyle.borderRadius,
-		borderColor: Colors.Dark.accentFirst,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
 		shadowOffset: GlobalStyle.shadowOffset,
@@ -41,13 +40,14 @@ export default createStyle<any>({
 		flexDirection: "row",
 		alignItems: "center",
 		position: "absolute",
-		zIndex: 3,
+		zIndex: 4,
 	},
 	background: {
 		zIndex: 2,
 		width: "100%",
 		height: "100%",
-		position: "absolute"
+		position: "absolute",
+		overflow: "hidden"
 	},
 	backdrop: {
 		top: "15%",
@@ -55,10 +55,32 @@ export default createStyle<any>({
 		borderRadius: GlobalStyle.borderRadius,
 		marginLeft: "2.5%",
 		height: "70%",
-		backgroundColor: Colors.Dark.accentFirst
+		backgroundColor: Colors.Dark.accentFirst,
+		overflow: "hidden"
 	},
 	backdropLight: {
 		backgroundColor: Colors.Light.accentFirst
+	},
+	pattern: {
+		transform: [{ scale:2.5 }]
+	},
+	patternChatBot: {
+		transform: [{ scale:2.5 }, { rotate:"30deg" }]
+	},
+	patternDashboard: {
+		transform: [{ scale:2.5 }, { rotate:"200deg" }]
+	},
+	patternMarket: {
+		transform: [{ scale:2.5 }, { rotate:"120deg" }]
+	},
+	patternHoldings: {
+		transform: [{ scale:2.5 }, { rotate:"10deg" }]
+	},
+	patternActivity: {
+		transform: [{ scale:2.5 }, { rotate:"50deg" }]
+	},
+	patternSettings: {
+		transform: [{ scale:2.5 }, { rotate:"150deg" }]
 	},
 	tab: {
 		width: `${100 / 6}%`
@@ -72,11 +94,20 @@ export default createStyle<any>({
 		marginRight: 10,
 		justifyContent: "center",
 		alignItems: "center",
-		borderRadius: 40
+		borderRadius: 40,
 	},
 	iconWrapper: {
-		height: "100%",
+		height: 40,
+		width: 40,
+		borderRadius: GlobalStyle.borderRadius,
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
+		backgroundColor: Colors.Dark.mainFirstTransparent
+	},
+	iconWrapperLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent
+	},
+	iconWrapperActive: {
+		backgroundColor: "rgba(0,0,0,0)"
 	}
 });

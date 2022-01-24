@@ -12,11 +12,55 @@ export const Colors: any = {
 		mainContrastDark: "rgb(75,75,75)",
 		mainContrastDarker: "rgb(100,100,100)",
 
-		accentFirst: "#c4a383",
-		accentSecond: "#a3805e",
-		accentThird: "#866849",
+		accentFirst: "#8a60aa",
+		accentSecond: "#824f8a",
+		accentThird: "#5f46a7",
 	
 		accentContrast: "rgb(255,255,255)",
+
+		colorfulGradient: ["#8a2387", "#e94057", "#f27121"],
+		orangeGradient: ["#f57552", "#f8c74a"],
+		greenGradient: ["#67b26f", "#4ca2cd"],
+		calmGradient: ["#5f2c82", "#49a09d"],
+		blueGradient: ["#4facfe", "#00bdc7"],
+		purpleGradient: ["#667eea", "#764ba2"],
+		greenerGradient: ["#11998e", "#38ef7d"],
+		cosmicGradient: ["#ff00cc", "#333399"],
+		playfulGradient: ["#fc00ff", "#27bcbe"],
+		atlasGradient: ["#feac5e", "#c779d0", "#4bc0c8"],
+		paleGradient: ["#2c74d8", "#7989d4"],
+		oceanGradient: ["#04bde4", "#0253b9"],
+
+		ChatBot: {
+			accentFirst: "#8a2387",
+			accentSecond: "#e94057",
+			accentThird: "#f27121"
+		},
+		Dashboard: {
+			accentFirst: "#4facfe",
+			accentSecond: "#00bdc7",
+			accentThird: "#6499c7"
+		},
+		Market: {
+			accentFirst: "#c779d0",
+			accentSecond: "#feac5e",
+			accentThird: "#4bc0c8",
+		},
+		Holdings: {
+			accentFirst: "#11998e",
+			accentSecond: "#4db675",
+			accentThird: "#296941"
+		},
+		Activity: {
+			accentFirst: "#667eea",
+			accentSecond: "#764ba2",
+			accentThird: "#735e88"
+		},
+		Settings: {
+			accentFirst: "#d67054",
+			accentSecond: "#cf995a",
+			accentThird: "#e7bc4f"
+		}
 	},
 	Dark: {
 		mainFirst: "rgb(20,20,20)",
@@ -31,11 +75,72 @@ export const Colors: any = {
 		mainContrastDark: "rgb(230,230,230)",
 		mainContrastDarker: "rgb(200,200,200)",
 
-		accentFirst: "#c4a383",
-		accentSecond: "#a3805e",
-		accentThird: "#866849",
+		accentFirst: "#8a60aa",
+		accentSecond: "#824f8a",
+		accentThird: "#5f46a7",
 	
-		accentContrast: "rgb(255,255,255)"
+		accentContrast: "rgb(255,255,255)",
+
+		colorfulGradient: ["#8a2387", "#e94057", "#f27121"],
+		orangeGradient: ["#f57552", "#f8c74a"],
+		greenGradient: ["#67b26f", "#4ca2cd"],
+		calmGradient: ["#5f2c82", "#49a09d"],
+		blueGradient: ["#4facfe", "#00bdc7"],
+		purpleGradient: ["#667eea", "#764ba2"],
+		greenerGradient: ["#11998e", "#38ef7d"],
+		cosmicGradient: ["#ff00cc", "#333399"],
+		playfulGradient: ["#fc00ff", "#27bcbe"],
+		atlasGradient: ["#feac5e", "#c779d0", "#4bc0c8"],
+		paleGradient: ["#2c74d8", "#7989d4"],
+		oceanGradient: ["#04bde4", "#0253b9"],
+
+		ChatBot: {
+			accentFirst: "#8a2387",
+			accentSecond: "#e94057",
+			accentThird: "#f27121"
+		},
+		Dashboard: {
+			accentFirst: "#4facfe",
+			accentSecond: "#00bdc7",
+			accentThird: "#6499c7"
+		},
+		Market: {
+			accentFirst: "#c779d0",
+			accentSecond: "#feac5e",
+			accentThird: "#4bc0c8"
+		},
+		Holdings: {
+			accentFirst: "#11998e",
+			accentSecond: "#4db675",
+			accentThird: "#296941"
+		},
+		Activity: {
+			accentFirst: "#667eea",
+			accentSecond: "#764ba2",
+			accentThird: "#735e88"
+		},
+		Settings: {
+			accentFirst: "#d67054",
+			accentSecond: "#cf995a",
+			accentThird: "#e7bc4f"
+		}
+	},
+
+	getGradient(theme: string, page: string) {
+		switch(page) {
+			case "ChatBot":
+				return this[theme].colorfulGradient;
+			case "Dashboard":
+				return this[theme].blueGradient;
+			case "Market":
+				return this[theme].atlasGradient;
+			case "Holdings":
+				return this[theme].greenerGradient;
+			case "Activity":
+				return this[theme].purpleGradient;
+			case "Settings":
+				return this[theme].orangeGradient;
+		}
 	}
 };
 
