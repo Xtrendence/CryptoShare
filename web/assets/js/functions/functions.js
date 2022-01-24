@@ -103,17 +103,6 @@ function checkBackdrop() {
 	}
 }
 
-function sortMarketDataByCoinID(marketData) {
-	let prices = {};
-
-	Object.keys(marketData).map(index => {
-		let coin = marketData[index];
-		prices[coin.id] = coin;
-	});
-
-	return prices;
-}
-
 function showAssetMatches(referenceNode, list, marginBottom) {
 	if("matches" in list && list.matches.length > 1) {
 		let div = document.createElement("div");

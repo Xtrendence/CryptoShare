@@ -130,3 +130,28 @@ function findCryptoByID(coins, id, retry) {
 		}
 	}
 }
+
+function sortMarketDataByCoinID(marketData) {
+	let prices = {};
+
+	Object.keys(marketData).map(index => {
+		let coin = marketData[index];
+		prices[coin.id] = coin;
+	});
+
+	return prices;
+}
+
+function parseHistoricalCryptoData(data) {
+	let labels = [];
+	let tooltips = [];
+	let prices = [];
+
+	data.map(day => {
+		labels.push(new Date(day[0]));
+		tooltips.push(formatDateHuman(new Date(day[0])));
+		prices.push(day[1]);
+	});
+
+	return { labels:labels, tooltips:tooltips, prices:prices };
+}
