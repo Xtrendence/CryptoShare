@@ -13,30 +13,41 @@ import { cryptoAPI } from "../utils/Requests";
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
 
 	const [symbol, setSymbol] = useState<string>("");
 	const [type, setType] = useState<string>("crypto");
 
 	const [firstFetch, setFirstFetch] = useState<boolean>(true);
-	const [marketRows, setMarketRows] = useState<any>({});
+	const [marketRowsCrypto, setMarketRowsCrypto] = useState<any>({});
 
-	const Item = ({ icon, name }: any) => {
+	// TODO: Add "onPress" functionality.
+	const Item = ({ info }: any) => {
 		return (
 			<TouchableOpacity style={[styles.itemCard, styles[`itemCard${theme}`]]}>
-				<Image source={{ uri:icon }} style={styles.itemIcon}/>
-				<Text style={[styles.itemText, styles[`itemText${theme}`]]}>{name}</Text>
+				<View style={styles.itemTop}>
+					<Image source={{ uri:info.icon }} style={styles.itemIcon}/>
+					<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.name} ({info.symbol.toUpperCase()})</Text>
+				</View>
+				<View style={styles.itemBottom}>
+					<ScrollView style={[styles.itemScrollView]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">24h: {info.priceChangeDay}%</Text>
+						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Volume: {Utils.currencySymbols[settings.currency] + Utils.abbreviateNumber(info.volume, 2)}</Text>
+					</ScrollView>
+					<ScrollView style={[styles.itemScrollView, { marginBottom:10 }]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
+						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(info.price)}</Text>
+						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Market Cap: {Utils.currencySymbols[settings.currency] + Utils.abbreviateNumber(info.marketCap, 2)}</Text>
+					</ScrollView>
+				</View>
 			</TouchableOpacity>
 		);
 	}
 
 	const renderItem = ({ item }: any) => {
-		let info = marketRows[item];
+		let info = marketRowsCrypto[item];
 
 		return (
-			<Item 
-				icon={info.icon}
-				name={info.name}
-			/>
+			<Item info={info}/>
 		);
 	}
 	
@@ -86,13 +97,15 @@ export default function Market({ navigation }: any) {
 						<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>
 					</TouchableOpacity>
 				</View>
-				<FlatList
-					contentContainerStyle={{ paddingTop:10 }}
-					data={Object.keys(marketRows)}
-					renderItem={renderItem}
-					keyExtractor={item => marketRows[item].coinID}
-					style={[styles.wrapper, styles[`wrapper${theme}`]]
-				}/>
+				{ type === "crypto" &&
+					<FlatList
+						contentContainerStyle={{ paddingTop:10 }}
+						data={Object.keys(marketRowsCrypto)}
+						renderItem={renderItem}
+						keyExtractor={item => marketRowsCrypto[item].coinID}
+						style={[styles.wrapper, styles[`wrapper${theme}`]]
+					}/>
+				}
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
 					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
@@ -118,8 +131,7 @@ export default function Market({ navigation }: any) {
 
 	async function populateMarketListCrypto() {
 		try {
-			let currency = await Utils.getCurrency();
-			let marketData = await cryptoAPI.getMarket(currency, 100, 1);
+			let marketData = await cryptoAPI.getMarket(settings.currency, 100, 1);
 
 			let rows: any = {};
 
@@ -147,7 +159,7 @@ export default function Market({ navigation }: any) {
 					let name = coin.name;
 					let symbol = coin.symbol;
 	
-					let info = { coinID:coinID, currency:currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
+					let info = { coinID:coinID, currency:settings.currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
 
 					rows[i] = info;
 				} catch(error) {
@@ -155,7 +167,7 @@ export default function Market({ navigation }: any) {
 				}
 			}
 
-			setMarketRows(rows);
+			setMarketRowsCrypto(rows);
 		} catch(error) {
 			console.log(error);
 			Utils.notify(theme, "Something went wrong...");

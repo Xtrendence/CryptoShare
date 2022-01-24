@@ -152,12 +152,11 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast
 	},
 	itemCard: {
-		flexDirection: "row",
+		flexDirection: "column",
 		alignItems: "center",
 		marginRight: 10,
 		marginLeft: 10,
 		marginBottom: 10,
-		padding: 20,
 		backgroundColor: Colors.Dark.mainFirst,
 		borderRadius: GlobalStyle.borderRadius,
 		shadowColor: GlobalStyle.shadowColor,
@@ -169,15 +168,54 @@ export default createStyle<any>({
 	itemCardLight: {
 		backgroundColor: Colors.Light.mainFirst
 	},
+	itemTop: {
+		marginTop: 10,
+		flexDirection: "row",
+		alignItems: "center"
+	},
+	itemBottom: {
+		flexDirection: "column",
+		alignItems: "center"
+	},
 	itemIcon: {
 		width: 32,
 		height: 32,
-		marginRight: 20,
 	},
 	itemText: {
-		color: Colors.Dark.mainContrast
+		maxWidth: (screenWidth / 2) + 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		lineHeight: 40,
+		marginRight: 5,
+		marginLeft: 5,
+		backgroundColor: Colors.Dark.mainSecond,
+		color: Colors.Dark.mainContrast,
+		borderRadius: GlobalStyle.borderRadius
 	},
 	itemTextLight: {
+		backgroundColor: Colors.Light.mainSecond,
 		color: Colors.Light.mainContrast
+	},
+	itemTextName: {
+		maxWidth: "90%",
+		backgroundColor: "transparent",
+		color: Colors.Dark.mainContrast
+	},
+	itemTextNameLight: {
+		color: Colors.Light.mainContrast
+	},
+	itemScrollView: {
+		flexGrow: 0,
+		flexDirection: "row",
+		width: "100%",
+		height: 40,
+		marginRight: 10,
+		marginLeft: 10,
+		marginTop: 10,
+	},
+	itemScrollViewContent: {
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "center"
 	}
 });
