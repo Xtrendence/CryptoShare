@@ -1,19 +1,22 @@
 import React from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native";
 import Utils from "../utils/Utils";
 
 export default function Loading(props: any) {
 	return (
-		<View style={[props.active ? styles.overlay : styles.hidden, props.opaque ? { backgroundColor:"rgb(0,0,0)" } : null]}>
-			<ActivityIndicator color="rgb(255,255,255)" size={32}/>
-			<Text style={styles.text}>{ Utils.empty(props.text) ? "Loading..." : props.text }</Text>
-		</View>
+		<Modal transparent={true} visible={props.active} style={styles.modal}>
+			<View style={[styles.overlay, props.opaque ? { backgroundColor:"rgb(0,0,0)" } : null]}>
+				<ActivityIndicator color="rgb(255,255,255)" size={32}/>
+				<Text style={styles.text}>{ Utils.empty(props.text) ? "Loading..." : props.text }</Text>
+			</View>
+		</Modal>
 	);
 }
 
 let styles = StyleSheet.create({
-	hidden: {
-		display: "none"
+	modal: {
+		width: "100%",
+		height: "100%"
 	},
 	overlay: {
 		position: "absolute",

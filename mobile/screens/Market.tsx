@@ -142,8 +142,8 @@ export default function Market({ navigation }: any) {
 				</View>
 			</SafeAreaView>
 			<Modal style={styles.modal} visible={modal} onRequestClose={hideModal} transparent={true}>
-				<View style={styles.modalOverlay}></View>
-				<View style={styles.modalWrapper}>
+				<View style={[styles.modalOverlay, loading ? { opacity:0 } : null]}></View>
+				<View style={[styles.modalWrapper, loading ? { opacity:0 } : null]}>
 					<View style={[styles.modalChartWrapper, styles[`modalChartWrapper${theme}`]]}>
 						<View style={[styles.modalChartLeft, styles[`modalChartLeft${theme}`]]}>
 							{
@@ -220,6 +220,8 @@ export default function Market({ navigation }: any) {
 
 	async function showModal(assetID: string, assetSymbol: string, currentPrice: number) {
 		try {
+			setLoading(true);
+
 			labelsRef.current = [];
 
 			let api = await AsyncStorage.getItem("api");
@@ -248,6 +250,7 @@ export default function Market({ navigation }: any) {
 					setTimeout(() => {
 						setChartVerticalLabels(labelsRef.current);
 						clearInterval(check);
+						setLoading(false);
 					}, 250);
 				}
 			}, 100);
