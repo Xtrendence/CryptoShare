@@ -210,7 +210,12 @@ async function showCryptoMarketData(info) {
 
 				let parsed = parseHistoricalCryptoData(historicalData);
 
-				let colors = { 0:"#feac5e", 0.5:"#c779d0", 0.7:"#4bc0c8", 1:"#c779d0" };
+				let colors = {
+					0: cssValue(divPageMarket, "--accent-second"), 
+					0.3: cssValue(divPageMarket, "--accent-first"), 
+					0.6: cssValue(divPageMarket, "--accent-third"),
+					1: cssValue(divPageMarket, "--accent-first")
+				};
 
 				generateChart(divChart, `${info.name} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices, colors);
 

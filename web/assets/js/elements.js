@@ -26,6 +26,7 @@ let loginToggleTheme = document.getElementById("login-toggle-theme");
 let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
+let divPageMarket = document.getElementById("market-page");
 let divMarketListCrypto = document.getElementById("market-list-crypto");
 let divMarketListStocks = document.getElementById("market-list-stocks");
 
@@ -45,8 +46,10 @@ let buttonHoldingsPerformance = document.getElementById("button-holdings-perform
 let buttonHoldingsAddCryptoAsset = document.getElementById("button-holdings-add-crypto-asset");
 let buttonHoldingsAddStockAsset = document.getElementById("button-holdings-add-stock-asset");
 
+let divPageHoldings = document.getElementById("holdings-page");
 let divHoldingsList = document.getElementById("holdings-list");
 
+let divPageActivity = document.getElementById("activity-page");
 let divActivityList = document.getElementById("activity-list");
 
 let inputActivitySearch = document.getElementById("input-activity-search");

@@ -9,7 +9,13 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 			let prices = data.prices;
 			let activities = data.activities;
 
-			let dates = parseActivityAsDatedValue(days, prices, activities);
+			showLoading(5000, "Parsing...");
+
+			let dates = await parseActivityAsDatedValue(days, prices, activities);
+
+			setTimeout(() => {
+				hideLoading();
+			}, 500);
 
 			showHoldingsPerformanceChart(dates, undefined);
 		} catch(error) {

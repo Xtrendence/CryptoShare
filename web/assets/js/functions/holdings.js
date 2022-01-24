@@ -169,7 +169,13 @@ function addHoldingListChartCryptoRowEvent(div, coinID, symbol) {
 			let prices = data.prices;
 			let activities = filterActivitiesByAssetID(data.activities, coinID);
 
-			let dates = parseActivityAsDatedValue(days, prices, activities);
+			showLoading(5000, "Parsing...");
+
+			let dates = await parseActivityAsDatedValue(days, prices, activities);
+
+			setTimeout(() => {
+				hideLoading();
+			}, 500);
 
 			showHoldingsPerformanceChart(dates, { symbol:symbol });
 		} catch(error) {
@@ -468,108 +474,135 @@ function getInitialDatedValue(activities, futureDays) {
 }
 
 function parseActivityAsDatedValue(days, prices, activities) {
-	let dates = {
-		[days[0]]: {
-			holdings: {},
-			totalValue: 0,
-			modified: false
-		}
-	};
+	return new Promise(async (resolve, reject) => {
+		try {
+			let dates = {
+				[days[0]]: {
+					holdings: {},
+					totalValue: 0,
+					modified: false
+				}
+			};
 
-	let transactionIDs = Object.keys(activities);
-	
-	// If the first activity was more than a year ago, then activities before then must be taken into account.
-	if(new Date(Date.parse(activities[transactionIDs[0]].activityDate)) < previousYear(new Date())) {
-		dates = {
-			[days[0]]: {
-				...getInitialDatedValue(activities, days),
-				totalValue: 0,
-				modified: true
+			let transactionIDs = Object.keys(activities);
+			
+			// If the first activity was more than a year ago, then activities before then must be taken into account.
+			if(new Date(Date.parse(activities[transactionIDs[0]].activityDate)) < previousYear(new Date())) {
+				dates = {
+					[days[0]]: {
+						...getInitialDatedValue(activities, days),
+						totalValue: 0,
+						modified: true
+					}
+				};
 			}
-		};
-	}
 
-	// Loop over days.
-	for(let i = 0; i < days.length; i++) {
-		let day = days[i];
+			// Loop over days.
+			for(let i = 0; i < days.length; i++) {
+				let day = days[i];
 
-		// Copy the previous day's data to the current one so it can build up over time to the current day.
-		if(i - 1 >= 0) {
-			// Object must be copied by value rather than reference, otherwise the content would be the same throughout.
-			let previous = JSON.parse(JSON.stringify(dates[days[i - 1]]));
-			dates[day] = previous;
-		}
-
-		// Loop over activities in case there's one on the day being looped over.
-		for(let j = 0; j < transactionIDs.length; j++) {
-			let txID = transactionIDs[j];
-			let activity = activities[txID];
-
-			let activityType = activity.activityType;
-			let activityFromAndTo = activity.activityFrom + activity.activityTo;
-
-			// Format the activity's date to be the same as the ones stored in the "dates" object.
-			let activityDate = formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
-
-			// To prevent activities outside the desired date range from being added.
-			if(day === activityDate) {
-				let assetID = activity.activityAssetID;
-				let amount = parseFloat(activity.activityAssetAmount);
-				let price = prices[assetID][i][1];
-				let value = parseFloat((price * amount).toFixed(3));
-
-				if(!(assetID in dates[day].holdings)) {
-					dates[day].holdings[assetID] = {
-						amount: amount,
-						value: value,
-						price: price
-					};
-
-					dates[day].modified = true;
-
-					continue;
+				// Copy the previous day's data to the current one so it can build up over time to the current day.
+				if(i - 1 >= 0) {
+					// Object must be copied by value rather than reference, otherwise the content would be the same throughout.
+					let previous = JSON.parse(JSON.stringify(dates[days[i - 1]]));
+					dates[day] = previous;
 				}
 
-				if(activityType === "sell") {
-					subtract();
-				} else if(activityType === "buy") {
-					add();
-				} else if(activityType === "transfer") {
-					if(activityFromAndTo.match(/(\+)/gi)) {
-						add();
-					} else if(activityFromAndTo.match(/\-/gi)) {
-						subtract();
+				// Loop over activities in case there's one on the day being looped over.
+				for(let j = 0; j < transactionIDs.length; j++) {
+					let txID = transactionIDs[j];
+					let activity = activities[txID];
+
+					let activityType = activity.activityType;
+					let activityFromAndTo = activity.activityFrom + activity.activityTo;
+
+					// Format the activity's date to be the same as the ones stored in the "dates" object.
+					let activityDate = formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
+					// To prevent activities outside the desired date range from being added.
+					if(day === activityDate) {
+						let assetID = activity.activityAssetID;
+						let amount = parseFloat(activity.activityAssetAmount);
+						let price = prices[assetID][i][1];
+						let value = parseFloat((price * amount).toFixed(3));
+
+						// If the asset doesn't already exist, then its values are set directly instead of being incremented or decremented.
+						if(!(assetID in dates[day].holdings)) {
+							dates[day].holdings[assetID] = {
+								amount: amount,
+								value: value,
+								price: price
+							};
+
+							dates[day].modified = true;
+
+							continue;
+						}
+
+						if(activityType === "sell") {
+							subtract();
+						} else if(activityType === "buy") {
+							add();
+						} else if(activityType === "transfer") {
+							if(activityFromAndTo.match(/(\+)/gi)) {
+								add();
+							} else if(activityFromAndTo.match(/\-/gi)) {
+								subtract();
+							}
+						}
+
+						function add() {
+							dates[day].holdings[assetID].amount += amount;
+							dates[day].modified = true;
+						}
+
+						function subtract() {
+							dates[day].holdings[assetID].amount -= amount;
+							dates[day].modified = true;
+						}
 					}
 				}
 
-				function add() {
-					dates[day].holdings[assetID].amount += amount;
-					dates[day].modified = true;
+				// Update the total value on each date.
+				let ids = Object.keys(dates[day].holdings);
+				let total = 0;
+				for(let j = 0; j < ids.length; j++) {
+					let id = ids[j];
+					let price = prices[id][i][1];
+					let value =  dates[day].holdings[id].amount * price;
+					dates[day].holdings[id].value = value;
+					total += value;
 				}
 
-				function subtract() {
-					dates[day].holdings[assetID].amount -= amount;
-					dates[day].modified = true;
-				}
+				dates[day].totalValue = total;
 			}
+
+			// If the current day's data isn't found in the "dates" object, then the current prices are fetched, and the data is added.
+			let today = formatDateHyphenated(new Date());
+			if(!(today in dates)) {
+				let currency = getCurrency();
+				let keys = Object.keys(dates);
+				let previous = dates[keys[keys.length - 1]];
+				dates[today] = JSON.parse(JSON.stringify(previous));
+				dates[today].totalValue = 0;
+				let ids = Object.keys(dates[today].holdings);
+				let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
+				let currentPrices = sortMarketDataByCoinID(marketData);
+				Object.keys(dates[today].holdings).map(assetID => {
+					let amount = dates[today].holdings[assetID].amount;
+					let value = amount * currentPrices[assetID].current_price;
+					dates[today].holdings[assetID].value = value;
+					dates[today].totalValue += value;
+				});
+			}
+
+			resolve(dates);
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			reject(error);
 		}
-
-		let ids = Object.keys(dates[day].holdings);
-		let total = 0;
-		for(let j = 0; j < ids.length; j++) {
-			let id = ids[j];
-			let price = prices[id][i][1];
-			let value =  dates[day].holdings[id].amount * price;
-			dates[day].holdings[id].value = value;
-			total += value;
-		}
-
-		dates[day].totalValue = total;
-	}
-
-	// TODO: Add current day's data.
-
-	return dates;
+	});
 }
 
 function showHoldingsPerformanceChart(dates, args = {}) {
@@ -582,7 +615,12 @@ function showHoldingsPerformanceChart(dates, args = {}) {
 
 	let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
 
-	let colors = { 0:"#11998e", 0.5:"#4db675", 1:"#296941" };
+	let colors = { 
+		0: cssValue(divPageHoldings, "--accent-first"), 
+		0.35: cssValue(divPageHoldings, "--accent-second"), 
+		0.6: cssValue(divPageHoldings, "--accent-third"),
+		1: cssValue(divPageHoldings, "--accent-first"),
+	};
 
 	dates = filterHoldingsPerformanceData(dates);
 

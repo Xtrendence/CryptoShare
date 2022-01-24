@@ -241,9 +241,9 @@ async function generateChart(element, title, labels, tooltips, currency, data, c
 
 	let context = canvas.getContext("2d");
 
-	let mainSecond = cssValue("--main-second");
+	let mainSecond = cssValue(document.documentElement, "--main-second");
 
-	let mainContrastDark = cssValue("--main-contrast-dark");
+	let mainContrastDark = cssValue(document.documentElement, "--main-contrast-dark");
 
 	let gradientStroke = context.createLinearGradient(1000, 0, 300, 0);
 

@@ -126,8 +126,8 @@ function abbreviateNumber(num, digits) {
 	return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 }
 
-function cssValue(variable) {
-	return getComputedStyle(document.documentElement).getPropertyValue(variable);
+function cssValue(element, variable) {
+	return getComputedStyle(element).getPropertyValue(variable);
 }
 
 function getLocalStorageUsedSize() {
