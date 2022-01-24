@@ -57,7 +57,7 @@ export default function Login({ navigation }: any) {
 			dispatch(switchTheme(savedTheme));
 
 			Utils.wait(250).then(() => {
-				setLoading(false);
+				attemptLogin();
 			});
 		});
 	}, []);
@@ -232,6 +232,44 @@ export default function Login({ navigation }: any) {
 
 	function hideBottomModal() {
 		setBottomModal(false);
+	}
+
+	async function attemptLogin() {
+		let api = await AsyncStorage.getItem("api");
+		let userID = await AsyncStorage.getItem("userID");
+		let token = await AsyncStorage.getItem("token");
+
+		if(Utils.empty(api) || Utils.empty(userID) || Utils.empty(token)) {
+			setLoading(false);
+			return;
+		}
+
+		let requests = new Requests(api);
+
+		requests.verifyToken(userID, token).then(async result => {
+			setTimeout(() => {
+				setLoading(false);
+			}, 1000);
+
+			if("error" in result) {
+				if(result.error.includes("Invalid")) {
+					Utils.removeAccountInfo();
+				}
+				
+				Utils.notify(theme, result.error);
+
+				setLoading(false);
+			} else {
+				Utils.setAccountInfo(result, false);
+
+				let settings = await Utils.getSettings(dispatch);
+
+				navigation.navigate(settings.defaultPage);
+			}
+		}).catch(error => {
+			setLoading(false);
+			Utils.notify(theme, error);
+		});
 	}
 
 	async function login(url: string, username: string, password: string) {

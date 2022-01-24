@@ -24,7 +24,6 @@ export default function Settings({ navigation }: any) {
 	
 	useFocusEffect(Utils.backHandler(navigation));
 
-	// TODO: Fetch settings from server.
 	useEffect(() => {
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {
@@ -111,11 +110,11 @@ export default function Settings({ navigation }: any) {
 	);
 
 	async function logout() {
-		let url = await AsyncStorage.getItem("api");
+		let api = await AsyncStorage.getItem("api");
 		let userID = await AsyncStorage.getItem("userID");
 		let token = await AsyncStorage.getItem("token");
 
-		let requests = new Requests(url);
+		let requests = new Requests(api);
 
 		requests.logout(userID, token).then(result => {
 			if("error" in result) {
