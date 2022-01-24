@@ -27,7 +27,7 @@ export default createStyle<any>({
 		paddingRight: 14,
 		borderWidth: 2,
 		borderRadius: GlobalStyle.borderRadius,
-		borderColor: Colors.Dark.accentFirst,
+		borderColor: Colors.Dark.Settings.accentSecond,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
 		shadowOffset: GlobalStyle.shadowOffset,
@@ -40,7 +40,7 @@ export default createStyle<any>({
 	},
 	searchLight: {
 		backgroundColor: Colors.Light.mainThird,
-		borderColor: Colors.Light.accentFirst,
+		borderColor: Colors.Light.Settings.accentFirst,
 		color: Colors.Light.mainContrast
 	},
 	wrapper: {
@@ -51,7 +51,7 @@ export default createStyle<any>({
 		height: windowHeight - barHeight - statusBarHeight - 20 - 70,
 		borderWidth: 2,
 		borderRadius: GlobalStyle.borderRadius,
-		borderColor: Colors.Dark.accentFirst,
+		borderColor: Colors.Dark.Settings.accentSecond,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
 		shadowOffset: GlobalStyle.shadowOffset,
@@ -61,7 +61,7 @@ export default createStyle<any>({
 	},
 	wrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
-		borderColor: Colors.Light.accentFirst
+		borderColor: Colors.Light.Settings.accentFirst
 	},
 	wrapperContent: {
 		paddingBottom: 20
@@ -89,9 +89,6 @@ export default createStyle<any>({
 	},
 	sectionRight: {
 		alignItems: "flex-end",
-	},
-	sectionTop: {
-
 	},
 	sectionBottom: {
 		flexDirection: "row",
@@ -132,25 +129,25 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast,
 	},
 	actionButton: {
-		backgroundColor: Colors.Dark.accentFirst
+		backgroundColor: Colors.Dark.Settings.accentFirst
 	},
 	actionButtonLight: {
-		backgroundColor: Colors.Light.accentFirst
+		backgroundColor: Colors.Light.Settings.accentSecond
 	},
 	choiceButton: {
 		backgroundColor: "transparent",
 		borderWidth: 2,
-		borderColor: Colors.Dark.accentFirst
+		borderColor: Colors.Dark.Settings.accentFirst
 	},
 	choiceButtonLight: {
 		backgroundColor: "transparent",
-		borderColor: Colors.Light.accentFirst
+		borderColor: Colors.Light.Settings.accentSecond
 	},
 	choiceButtonActiveDark: {
-		backgroundColor: Colors.Dark.accentFirst
+		backgroundColor: Colors.Dark.Settings.accentFirst
 	},
 	choiceButtonActiveLight: {
-		backgroundColor: Colors.Light.accentFirst
+		backgroundColor: Colors.Light.Settings.accentSecond
 	},
 	choiceText: {
 		fontSize: 16,
@@ -167,10 +164,10 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast
 	},
 	trackBar: {
-		activeBackgroundColor: Colors.Light.accentFirst,
+		activeBackgroundColor: Colors.Light.Settings.accentFirst,
 		inActiveBackgroundColor: Colors.Dark.mainFirst,
-		borderActiveColor: Colors.Light.accentFirst,
-		borderInActiveColor: Colors.Dark.accentFirst,
+		borderActiveColor: Colors.Light.Settings.accentFirst,
+		borderInActiveColor: Colors.Dark.Settings.accentFirst,
 		borderWidth: 0,
 		width: 80,
 		height: 35

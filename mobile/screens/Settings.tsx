@@ -59,10 +59,10 @@ export default function Settings({ navigation }: any) {
 										value={theme === "Dark" ? false : true}
 										onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
 										thumbActiveComponent={
-											<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
+											<Icon name="sun" size={20} color={Colors[theme].Settings.accentFirst} style={{ padding:12, paddingLeft:13 }}/>
 										}
 										thumbInActiveComponent={
-											<Icon name="moon" size={20} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
+											<Icon name="moon" size={20} color={Colors[theme].Settings.accentFirst} style={{ padding:12 }}/>
 										}
 										trackBar={styles.trackBar}
 										thumbButton={styles.thumbButton}
