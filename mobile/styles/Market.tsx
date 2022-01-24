@@ -204,6 +204,14 @@ export default createStyle<any>({
 	itemTextNameLight: {
 		color: Colors.Light.mainContrast
 	},
+	itemTextRank: {
+		backgroundColor: Colors.Dark.Market.accentSecond,
+		color: Colors.Dark.accentContrast
+	},
+	itemTextRankLight: {
+		backgroundColor: Colors.Light.Market.accentSecond,
+		color: Colors.Light.accentContrast
+	},
 	itemScrollView: {
 		flexGrow: 0,
 		flexDirection: "row",

@@ -43,8 +43,8 @@ export const Colors: any = {
 		},
 		Market: {
 			accentFirst: "#c779d0",
-			accentSecond: "#feac5e",
-			accentThird: "#4bc0c8",
+			accentSecond: "#b98350",
+			accentThird: "#3c8b91",
 		},
 		Holdings: {
 			accentFirst: "#11998e",
@@ -106,8 +106,8 @@ export const Colors: any = {
 		},
 		Market: {
 			accentFirst: "#c779d0",
-			accentSecond: "#feac5e",
-			accentThird: "#4bc0c8"
+			accentSecond: "#b98350",
+			accentThird: "#3c8b91"
 		},
 		Holdings: {
 			accentFirst: "#11998e",
