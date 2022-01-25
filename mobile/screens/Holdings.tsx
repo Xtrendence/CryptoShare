@@ -10,6 +10,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { Colors } from "../styles/Global";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Requests, { cryptoAPI } from "../utils/Requests";
+import { fetchActivity } from "./Activity";
 
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -178,13 +179,13 @@ export default function Holdings({ navigation }: any) {
 					holdingsData[decrypted.holdingAssetID] = decrypted;
 				});
 			} else {
-				// let parsedData = await parseActivityAsHoldings();
-				// holdingsData = parsedData.holdingsData;
+				let parsedData: any = await parseActivityAsHoldings();
+				holdingsData = parsedData.holdingsData;
 
-				// if(empty(holdingsData)) {
-				// 	divHoldingsList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;
-				// 	return;
-				// }
+				// TODO: Add message about no activities being found.
+				if(Utils.empty(holdingsData)) {
+					return;
+				}
 			}
 
 			let ids = Object.keys(holdingsData);
@@ -287,5 +288,73 @@ export default function Holdings({ navigation }: any) {
 		});
 
 		return { holdingsData:sorted, order:order };
+	}
+
+	function parseActivityAsHoldings() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let activityData: any = await fetchActivity();
+
+				if(Utils.empty(activityData)) {
+					resolve(null);
+					return;
+				}
+
+				let transactionIDs = Object.keys(activityData);
+				let holdings: any = {};
+
+				for(let i = 0; i < transactionIDs.length; i++) {
+					let activity = activityData[transactionIDs[i]];
+
+					let activityAssetID = activity.activityAssetID;
+					let activityAssetSymbol = activity.activityAssetSymbol;
+					let activityAssetAmount = parseFloat(activity.activityAssetAmount);
+					let activityAssetType = activity.activityAssetType;
+					let activityType = activity.activityType;
+					let activityFrom = activity.activityFrom;
+					let activityTo = activity.activityTo;
+					let activityFromAndTo = activityFrom + activityTo;
+
+					if(!(activityAssetID in holdings) && (activityType !== "transfer" || (activityType === "transfer" && activityFromAndTo.match(/(\+|\-)/gi)))) {
+						holdings[activityAssetID] = {
+							holdingAssetAmount: activityAssetAmount,
+							holdingAssetID: activityAssetID,
+							holdingAssetSymbol: activityAssetSymbol,
+							holdingAssetType: activityAssetType,
+							holdingID: "-"
+						};
+
+						if(activityType === "sell") {
+							holdings[activityAssetID].holdingAssetAmount = -activityAssetAmount;
+						}
+
+						if(activityFromAndTo.match(/(\+)/gi)) {
+							holdings[activityAssetID].holdingAssetAmount = activityAssetAmount;
+						} else if(activityFromAndTo.match(/\-/gi)) {
+							holdings[activityAssetID].holdingAssetAmount = -activityAssetAmount;
+						}
+
+						continue;
+					}
+
+					if(activityType === "sell") {
+						holdings[activityAssetID].holdingAssetAmount -= activityAssetAmount;
+					} else if(activityType === "buy") {
+						holdings[activityAssetID].holdingAssetAmount += activityAssetAmount;
+					} else if(activityType === "transfer") {
+						if(activityFromAndTo.match(/(\+)/gi)) {
+							holdings[activityAssetID].holdingAssetAmount += activityAssetAmount;
+						} else if(activityFromAndTo.match(/\-/gi)) {
+							holdings[activityAssetID].holdingAssetAmount -= activityAssetAmount;
+						}
+					}
+				}
+
+				resolve({ holdingsData:holdings, activityData:activityData });
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
 	}
 }
