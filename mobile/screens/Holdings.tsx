@@ -54,7 +54,7 @@ export default function Holdings({ navigation }: any) {
 				onPress={() => {
 					let settings: any = store.getState().settings.settings;
 					if(settings.transactionsAffectHoldings === "enabled") {
-						showModal(info);
+						showHoldingChart(info);
 					} else {
 						showHoldingPopup("crypto", "updateHolding", info);
 					}
@@ -118,7 +118,7 @@ export default function Holdings({ navigation }: any) {
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
 				<View style={[styles.areaCardWrapper, styles[`areaCardWrapper${theme}`]]}>
-					<TouchableOpacity>
+					<TouchableOpacity onPress={() => showPortfolioChart()}>
 						<LinearGradient
 							style={styles.areaCard}
 							colors={Colors[theme].oceanGradient}
@@ -488,11 +488,70 @@ export default function Holdings({ navigation }: any) {
 		setPopupContent(null);
 	}
 
+	async function showPortfolioChart() {
+		let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
+
+		let data: any = await fetchHoldingsHistoricalData(undefined);
+
+		let prices = data.prices;
+		let activities = data.activities;
+
+		setLoading(true);
+
+		let dates = await parseActivityAsDatedValue(days, prices, activities);
+
+		showModal(dates, undefined);
+	}
+
+	async function showHoldingChart(info: any) {
+		try {
+			let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
+
+			let data: any = await fetchHoldingsHistoricalData([info.coinID]);
+
+			let prices = data.prices;
+			let activities = filterActivitiesByAssetID(data.activities, info.coinID);
+
+			setLoading(true);
+
+			let dates = await parseActivityAsDatedValue(days, prices, activities);
+
+			showModal(dates, { symbol:info.symbol });
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
 	// TODO: Add functionality.
-	function showModal(info: any) {
+	function showModal(dates: any, args: any) {
 		Keyboard.dismiss();
 
 		try {
+			dates = filterHoldingsPerformanceData(dates);
+
+			let parsed = parseHoldingsDateData(dates);
+
+			setChartVerticalLabels([]);
+
+			setChartLabels(parsed.months);
+			setChartData(parsed.values);
+			setChartSegments(4);
+
+			// TODO: Show stats.
+
+			let check = setInterval(() => {
+				if(!Utils.empty(labelsRef.current)) {
+					labelsRef.current.length = 5;
+					setTimeout(() => {
+						setChartVerticalLabels(labelsRef.current);
+						clearInterval(check);
+						setLoading(false);
+					}, 250);
+				}
+			}, 100);
+
 			setModal(true);
 		} catch(error) {
 			setLoading(false);
@@ -759,7 +818,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
-	function fetchHoldingsHistoricalData(ids = null) {
+	function fetchHoldingsHistoricalData(ids: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let settings: any = store.getState().settings.settings;
@@ -1018,19 +1077,42 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	function parseHoldingsDateData(data: any) {
+		let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
 		let labels: any = [];
 		let tooltips: any = [];
 		let values: any = [];
+		let months: any = [];
 
 		let dates = Object.keys(data);
 
-		dates.map(date => {
-			labels.push(new Date(Date.parse(date)));
+		let day = 0;
+
+		dates.map((date: any) => {
+			let dateObject = new Date(Date.parse(date));
+
+			labels.push(dateObject);
 			tooltips.push(Utils.formatDateHuman(new Date(Date.parse(date))));
 			values.push(data[date].totalValue);
+
+			let month = dateObject.getMonth();
+			let monthName = monthNames[month];
+
+			let lastMonth = months.slice(day - 31, day);
+			if(day - 31 < 0) {
+				lastMonth = months.slice(0, day);
+			}
+
+			if(!lastMonth.includes(monthName)) {
+				months.push(monthName);
+			} else {
+				months.push("");
+			}
+
+			day++;
 		});
 
-		return { labels:labels, tooltips:tooltips, values:values };
+		return { labels:labels, tooltips:tooltips, values:values, months:months };
 	}
 
 	function filterActivitiesByAssetID(activities: any, assetID: any) {

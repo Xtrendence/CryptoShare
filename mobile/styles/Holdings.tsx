@@ -1,3 +1,4 @@
+import React from "react";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";

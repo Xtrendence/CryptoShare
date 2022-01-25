@@ -373,9 +373,11 @@ export default class Utils {
 			}
 		});
 
-		floats.sort().reverse();
+		floats.sort(function(a: number, b: number) {
+			return a - b;
+		});
 
-		floats.map((float: any) => {
+		floats.reverse().map((float: any) => {
 			let format = this.currencySymbols[currency] + Utils.separateThousands(float);
 			sorted.push(format);
 		});
