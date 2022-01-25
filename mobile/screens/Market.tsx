@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Image, ImageBackground, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, Image, ImageBackground, Keyboard, Linking, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Utils from "../utils/Utils";
@@ -13,6 +13,8 @@ import Requests, { cryptoAPI } from "../utils/Requests";
 import Chart from "../components/Charts/Chart";
 import { screenWidth } from "../styles/NavigationBar";
 import Loading from "../components/Loading";
+import CryptoFinder from "../utils/CryptoFinder";
+import MatchList from "../components/MatchList";
 
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -21,10 +23,14 @@ export default function Market({ navigation }: any) {
 
 	const [loading, setLoading] = useState<boolean>(false);
 
+	const [popup, setPopup] = useState<boolean>(false);
+	const [popupContent, setPopupContent] = useState<any>(null);
+
 	const [symbol, setSymbol] = useState<string>("");
 	const [type, setType] = useState<string>("crypto");
 
 	const [modal, setModal] = useState<boolean>(false);
+	const [modalInfo, setModalInfo] = useState<any>(null);
 	const [modalDescription, setModalDescription] = useState<string>("");
 
 	const labelsRef = useRef<any>(null);
@@ -114,7 +120,14 @@ export default function Market({ navigation }: any) {
 						onChangeText={(value) => setSymbol(value)}
 						value={symbol}
 					/>
-					<TouchableOpacity style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
+					<TouchableOpacity 
+						onPress={() => { 
+							if(!Utils.empty(symbol)) { 
+								searchMarket({ symbol:symbol })
+							}
+						}} 
+						style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}
+					>
 						<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>
 					</TouchableOpacity>
 				</View>
@@ -216,7 +229,50 @@ export default function Market({ navigation }: any) {
 					</View>
 					<ScrollView style={[styles.modalWrapperScrollView, styles[`modalWrapperScrollView${theme}`]]} contentContainerStyle={styles.modalWrapperScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={true} nestedScrollEnabled={true}>
 						<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
+							{ !Utils.empty(modalInfo) &&
+								<View style={styles.modalInfoWrapper}>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Name: {modalInfo.name} ({modalInfo.symbol.toUpperCase()})
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Rank: #{modalInfo.rank}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Market Cap: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.marketCap)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Volume: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.volume)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Supply: {Utils.separateThousands(modalInfo.supply)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										ATH: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.ath)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										ATH Change: {modalInfo.athChange}%
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										24h High: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.high24h)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										24h Low: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.low24h)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										24h Change: {modalInfo.priceChangeDay}%
+									</Text>
+								</View>
+							}
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
 							<HTML 
+								renderersProps={{
+									a: {
+										onPress(event: any, url: any, htmlAttribs: any, target: any) {
+											Linking.openURL(url);
+										}
+									}
+								}}
 								contentWidth={screenWidth - 40}
 								source={{ html:modalDescription }} 
 								tagsStyles={{ 
@@ -235,11 +291,99 @@ export default function Market({ navigation }: any) {
 					</ScrollView>
 				</View>
 			</Modal>
+			<Modal style={styles.popup} visible={popup} onRequestClose={hidePopup} transparent={true}>
+				<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+			</Modal>
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
 
+	function hidePopup() {
+		Keyboard.dismiss();
+		setPopup(false);
+		setPopupContent(null);
+	}
+
+	function showPopup(content: any) {
+		Keyboard.dismiss();
+		setPopup(true);
+		setPopupContent(content);
+	}
+
+	function selectMatch(id: string) {
+		hidePopup();
+		searchMarket({ id:id });
+	}
+
+	async function searchMarket(args: any) {
+		try {
+			setLoading(true);
+
+			setSymbol("");
+
+			let assetSymbol: string;
+			let asset: any;
+
+			if("symbol" in args) {
+				assetSymbol = args.symbol.toLowerCase();
+				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+			} else {
+				asset = await CryptoFinder.getCoin({ id:args.id });
+				assetSymbol = asset.symbol;
+			}
+
+			if("matches" in asset) {
+				let content = () => {
+					return (
+						<View style={styles.popupContent}>
+							<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+						</View>
+					);
+				}
+
+				showPopup(content);
+
+				setLoading(false);
+
+				return;
+			}
+
+			let coinID = asset.id;
+
+			let data: any = await cryptoAPI.getCoinData(coinID);
+
+			let marketData = data?.market_data;
+			
+			let rank = data?.market_cap_rank;
+			let price = marketData?.current_price[settings.currency];
+			let icon = data?.image;
+			let marketCap = marketData?.market_cap[settings.currency];
+			let priceChangeDay = Utils.formatPercentage(marketData?.market_cap_change_percentage_24h);
+			let athChange = Utils.formatPercentage(marketData?.ath_change_percentage[settings.currency]);
+			let ath = marketData?.ath[settings.currency];
+			let high24h = marketData?.high_24h[settings.currency];
+			let low24h = marketData?.low_24h[settings.currency];
+			let volume = marketData?.total_volume[settings.currency];
+			let supply = marketData?.circulating_supply;
+			let name = data?.name;
+			let symbol = data?.symbol;
+	
+			let info = { coinID:coinID, currency:settings.currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
+
+			showModal(coinID, symbol, price, info);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
 	async function showModal(assetID: string, assetSymbol: string, currentPrice: number, info: any) {
+		Keyboard.dismiss();
+
 		try {
 			setLoading(true);
 
@@ -268,6 +412,7 @@ export default function Market({ navigation }: any) {
 			let coinData = await cryptoAPI.getCoinData(assetID);
 			let description = Utils.empty(coinData?.description?.en) ? "<span>No description found.</span>" : `<span>${coinData?.description?.en}</span>`;
 
+			setModalInfo(info);
 			setModalDescription(description);
 
 			let check = setInterval(() => {
@@ -290,9 +435,11 @@ export default function Market({ navigation }: any) {
 	}
 
 	function hideModal() {
+		Keyboard.dismiss();
 		labelsRef.current = [];
 		setChartVerticalLabels([]);
 		setModalDescription("");
+		setModalInfo(null);
 		setModal(false);
 	}
 

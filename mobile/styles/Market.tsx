@@ -245,9 +245,6 @@ export default createStyle<any>({
 		alignItems: "center",
 		justifyContent: "center"
 	},
-	modal: {
-
-	},
 	modalOverlay: {
 		zIndex: 2,
 		position: "absolute",
@@ -312,11 +309,12 @@ export default createStyle<any>({
 	modalWrapperScrollViewContent: {
 		paddingTop: 20,
 		paddingRight: 25,
-		paddingBottom: 30,
+		paddingBottom: 10,
 		paddingLeft: 25
 	},
 	modalSection: {
 		padding: 20,
+		marginBottom: 20,
 		backgroundColor: Colors.Dark.mainFirst,
 		borderRadius: GlobalStyle.borderRadius,
 		shadowColor: GlobalStyle.shadowColor,
@@ -327,5 +325,31 @@ export default createStyle<any>({
 	},
 	modalSectionLight: {
 		backgroundColor: Colors.Light.mainFirst,
+	},
+	modalInfoWrapper: {
+		flexDirection: "column",
+		justifyContent: "center",
+	},
+	modalInfo: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.mainContrast,
+		padding: 4,
+	},
+	modalInfoLight: {
+		color: Colors.Light.mainContrast
+	},
+	popupWrapper: {
+		backgroundColor: Colors.Dark.mainFirst,
+		height: "100%",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	popupWrapperLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	popupContent: {
+		alignItems: "center",
+		justifyContent: "center"
 	}
 });

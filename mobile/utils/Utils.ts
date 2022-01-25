@@ -272,8 +272,17 @@ export default class Utils {
 		return new Date(date.getTime() - (60 * 60 * 24 * 6 * 1000));
 	}
 
+	static isEven(n: any) {
+		return /^-?\d*[02468]$/.test(n);
+	}
+
 	static randomBetween(min: number, max: number) {
 		return min + Math.floor(Math.random() * (max - min + 1));
+	}
+
+	static refetchRequired(time: string) {
+		let refetchTime = 86400;
+		return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
 	}
 
 	static separateThousands(number: number) {
