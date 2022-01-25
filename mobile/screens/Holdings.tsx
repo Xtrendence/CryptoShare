@@ -1,17 +1,19 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Image, ImageBackground, ScrollView, Text, View } from "react-native";
+import { FlatList, Image, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, View, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/Holdings";
+import styles, { gradientColor } from "../styles/Holdings";
 import { useDispatch, useSelector } from "react-redux";
 import LinearGradient from "react-native-linear-gradient";
 import { Colors } from "../styles/Global";
-import { TouchableOpacity } from "react-native-gesture-handler";
 import Requests, { cryptoAPI } from "../utils/Requests";
 import { fetchActivity } from "./Activity";
 import store from "../store/store";
+import Loading from "../components/Loading";
+import { screenWidth } from "../styles/NavigationBar";
+import Chart from "../components/Charts/Chart";
 
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -22,6 +24,9 @@ export default function Holdings({ navigation }: any) {
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
+
+	const [popupSymbol, setPopupSymbol] = useState<string>("");
+	const [popupAmount, setPopupAmount] = useState<string>("");
 
 	const [modal, setModal] = useState<boolean>(false);
 	const [modalStats, setModalStats] = useState<any>(null);
@@ -38,7 +43,17 @@ export default function Holdings({ navigation }: any) {
 
 	const Item = ({ info }: any) => {
 		return (
-			<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
+			<TouchableOpacity 
+				onPress={() => {
+					let settings: any = store.getState().settings.settings;
+					if(settings.transactionsAffectHoldings === "enabled") {
+						showModal(info.coinID, info.symbol, info.price, info);
+					} else {
+						showHoldingPopup("update", info);
+					}
+				}}
+				style={[styles.itemCard, styles[`itemCard${theme}`]]}
+			>
 				<View style={styles.itemTop}>
 					<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
 						<Image source={{ uri:info.icon }} style={styles.itemIcon}/>
@@ -115,7 +130,7 @@ export default function Holdings({ navigation }: any) {
 					style={[styles.wrapper, styles[`wrapper${theme}`]]
 				}/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity onPress={() => showHoldingPopup("create", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Crypto</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
@@ -123,23 +138,182 @@ export default function Holdings({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
+			<Modal style={styles.modal} visible={modal} onRequestClose={hideModal} transparent={true}>
+				<View style={[styles.modalOverlay, loading ? { opacity:0 } : null]}></View>
+				<View style={[styles.modalWrapper, loading ? { opacity:0 } : null]}>
+					<View style={[styles.modalChartWrapper, styles[`modalChartWrapper${theme}`]]}>
+						<View style={[styles.modalChartLeft, styles[`modalChartLeft${theme}`]]}>
+							{
+								Utils.sortLabels(settings.currency, chartVerticalLabels).map((label: any) => {
+									return (
+										<Text key={`label-${chartVerticalLabels.indexOf(label) + Utils.randomBetween(0, 9999999)}`} style={[styles.modalChartText, styles[`modalChartText${theme}`]]}>{label}</Text>
+									);
+								})
+							}
+						</View>
+						<ScrollView horizontal={true} style={[styles.modalScrollView, styles[`modalScrollView${theme}`]]}>
+							{ !Utils.empty(chartData) && !Utils.empty(chartLabels) ? 
+								<Chart
+									data={{ labels:chartLabels, datasets:[{ data:chartData }]}}
+									width={1400}
+									height={300}
+									segments={chartSegments}
+									withHorizontalLines={true}
+									withVerticalLines={false}
+									withVerticalLabels={true}
+									yAxisInterval={500}
+									formatYLabel={(label): any => {
+										if(Utils.empty(labelsRef.current)) {
+											labelsRef.current = [];
+										}
+										let current = labelsRef.current;
+										current.push(label);
+										labelsRef.current = current;
+										return "";
+									}}
+									withShadow={false}
+									chartConfig={{
+										backgroundColor: "rgba(0,0,0,0)",
+										backgroundGradientFrom: "rgba(0,0,0,0)",
+										backgroundGradientTo: "rgba(0,0,0,0)",
+										decimalPlaces: 6,
+										color: () => "url(#gradient)",
+										labelColor: () => Colors[theme].mainContrast,
+										style: {
+											borderRadius: 0
+										},
+										propsForDots: {
+											r: "0",
+											strokeWidth: "2",
+											stroke: Colors[theme].mainFifth
+										},
+										propsForVerticalLabels: {
+											fontSize: 12,
+											rotation: 0,
+											fontWeight: "bold",
+										},
+										propsForBackgroundLines: {
+											strokeWidth: 2,
+											stroke: Colors[theme].mainSecond
+										}
+									}}
+									bezier
+									style={{
+										backgroundColor: "rgba(255,255,255,0)",
+									}}
+									// @ts-ignore
+									gradient={gradientColor()}
+								/>
+							: 
+								<View style={{ height:320, width:screenWidth }}></View>
+							}
+						</ScrollView>
+					</View>
+					<ScrollView style={[styles.modalWrapperScrollView, styles[`modalWrapperScrollView${theme}`]]} contentContainerStyle={styles.modalWrapperScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={true} nestedScrollEnabled={true}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>{modalStats}</View>
+					</ScrollView>
+				</View>
+			</Modal>
+			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
+				<View style={styles.popup}>
+					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
+					<View style={styles.popupForeground}>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+					</View>
+				</View>
+			</Modal>
+			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
 
-	function showPopup() {
+	function showHoldingPopup(action: string, info: any = {}) {
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+							{ action === "create" ? "Add Asset" : "Update Asset" }
+						</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						{ action === "create" &&
+							<TextInput 
+								placeholder="Symbol..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => setPopupSymbol(value)}
+								value={popupSymbol}
+							/>
+						}
+						<TextInput 
+							keyboardType="decimal-pad"
+							placeholder="Amount..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => setPopupAmount(value)}
+							value={popupAmount}
+						/>
+						{ action === "update" &&
+							<TouchableOpacity onPress={() => showConfirmationPopup("delete")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`]]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Asset</Text>
+							</TouchableOpacity>
+						}
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
 
+		showPopup(content);
+	}
+
+	function showConfirmationPopup(action: string) {
+
+	}
+
+	function showPopup(content: any) {
+		Keyboard.dismiss();
+		setPopup(true);
+		setPopupContent(content);
 	}
 
 	function hidePopup() {
-
+		Keyboard.dismiss();
+		setPopup(false);
+		setPopupContent(null);
 	}
 
+	// TODO: Add functionality.
 	function showModal(assetID: string, assetSymbol: string, currentPrice: number, info: any) {
+		Keyboard.dismiss();
 
+		try {
+			setModal(true);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	function hideModal() {
-
+		Keyboard.dismiss();
+		labelsRef.current = [];
+		setChartVerticalLabels([]);
+		setChartLabels(null);
+		setChartData(null);
+		setChartSegments(1);
+		setModalStats(null);
+		setModal(false);
 	}
 
 	async function populateHoldingsList() {

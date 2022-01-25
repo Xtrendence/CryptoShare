@@ -282,8 +282,13 @@ export default function Market({ navigation }: any) {
 					</ScrollView>
 				</View>
 			</Modal>
-			<Modal style={styles.popup} visible={popup} onRequestClose={hidePopup} transparent={true}>
-				<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
+				<View style={styles.popup}>
+					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
+					<View style={styles.popupForeground}>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+					</View>
+				</View>
 			</Modal>
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
@@ -472,6 +477,9 @@ export default function Market({ navigation }: any) {
 		Keyboard.dismiss();
 		labelsRef.current = [];
 		setChartVerticalLabels([]);
+		setChartLabels(null);
+		setChartData(null);
+		setChartSegments(1);
 		setModalDescription("");
 		setModalInfo(null);
 		setModal(false);

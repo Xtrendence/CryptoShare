@@ -342,11 +342,34 @@ export default createStyle<any>({
 	modalInfoLight: {
 		color: Colors.Light.mainContrast
 	},
-	popupWrapper: {
-		backgroundColor: Colors.Dark.mainFirst,
+	popup: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: "100%",
 		height: "100%",
+	},
+	popupBackground: {
+		position: "absolute",
+		zIndex: 2,
+		width: "100%",
+		height: "100%",
+		backgroundColor: "rgba(0,0,0,0.9)",
 		justifyContent: "center",
 		alignItems: "center"
+	},
+	popupForeground: {
+		position: "absolute",
+		zIndex: 3,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	popupWrapper: {
+		backgroundColor: Colors.Dark.mainFirst,
+		justifyContent: "center",
+		alignItems: "center",
+		width: screenWidth - 80,
+		padding: 20,
+		borderRadius: GlobalStyle.borderRadius
 	},
 	popupWrapperLight: {
 		backgroundColor: Colors.Light.mainFirst
