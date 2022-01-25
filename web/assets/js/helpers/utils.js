@@ -21,7 +21,7 @@ function encryptObjectValues(password, object) {
 	let keys = Object.keys(object);
 
 	keys.map(key => {
-		let value = object[key];
+		let value = object[key].toString();
 		let ciphertext = CryptoFN.encryptAES(value, password);
 		encrypted[key] = ciphertext;
 	});

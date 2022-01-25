@@ -14,6 +14,8 @@ import store from "../store/store";
 import Loading from "../components/Loading";
 import { screenWidth } from "../styles/NavigationBar";
 import Chart from "../components/Charts/Chart";
+import CryptoFinder from "../utils/CryptoFinder";
+import MatchList from "../components/MatchList";
 
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -25,10 +27,13 @@ export default function Holdings({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
-	const [popupHoldingID, setPopupHoldingID] = useState<number>(0);
-	const [popupAssetID, setPopupAssetID] = useState<string>("");
-	const [popupSymbol, setPopupSymbol] = useState<string>("");
-	const [popupAmount, setPopupAmount] = useState<string>("");
+	const popupRef = useRef<any>({
+		holdingID: null,
+		assetID: "",
+		assetSymbol: "",
+		assetAmount: "",
+		assetType: ""
+	});
 
 	const [modal, setModal] = useState<boolean>(false);
 	const [modalStats, setModalStats] = useState<any>(null);
@@ -51,7 +56,7 @@ export default function Holdings({ navigation }: any) {
 					if(settings.transactionsAffectHoldings === "enabled") {
 						showModal(info.coinID, info.symbol, info.price, info);
 					} else {
-						showHoldingPopup("update", info);
+						showHoldingPopup("crypto", "updateHolding", info);
 					}
 				}}
 				style={[styles.itemCard, styles[`itemCard${theme}`]]}
@@ -132,7 +137,7 @@ export default function Holdings({ navigation }: any) {
 					style={[styles.wrapper, styles[`wrapper${theme}`]]
 				}/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity onPress={() => showHoldingPopup("create", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity onPress={() => showHoldingPopup("crypto", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Crypto</Text>
 					</TouchableOpacity>
 					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
@@ -228,15 +233,75 @@ export default function Holdings({ navigation }: any) {
 		</ImageBackground>
 	);
 
-	async function createHolding(holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: number, holdingAssetType: string) {
+	function selectMatch(id: string) {
+		hidePopup();
+		let data = popupRef.current;
+		createHolding(parseFloat(data.assetAmount), data.assetType, { id:id });
+	}
+
+	async function createHolding(holdingAssetAmount: number, holdingAssetType: string, args: any) {
 		try {
 			setLoading(true);
 
+			let assetSymbol: string;
+			let asset: any;
+
+			if("symbol" in args) {
+				assetSymbol = args.symbol.toLowerCase();
+				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+			} else {
+				asset = await CryptoFinder.getCoin({ id:args.id });
+				assetSymbol = asset.symbol;
+			}
+
+			if(Utils.empty(assetSymbol) || Utils.empty(holdingAssetAmount) || isNaN(holdingAssetAmount) || holdingAssetAmount < 0) {
+				setLoading(false);
+				Utils.notify(theme, "Invalid data.");
+				return;
+			}
+
+			if("matches" in asset) {
+				let content = () => {
+					return (
+						<View style={styles.popupContent}>
+							<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+						</View>
+					);
+				}
+
+				showPopup(content);
+
+				setLoading(false);
+
+				return;
+			}
+
 			let userID = await AsyncStorage.getItem("userID");
 			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
 			let api = await AsyncStorage.getItem("api");
 
 			let requests = new Requests(api);
+
+			let exists: any = await cryptoHoldingExists(asset.id);
+
+			let encrypted = Utils.encryptObjectValues(key, {
+				holdingAssetID: asset.id,
+				holdingAssetSymbol: assetSymbol,
+				holdingAssetAmount: holdingAssetAmount.toString(),
+				holdingAssetType: holdingAssetType
+			});
+
+			if(exists.exists) {
+				// await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+
+				Utils.notify(theme, "Asset was already part of your holdings, but the amount was updated.");
+			} else {
+				await requests.createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+			}
 
 			populateHoldingsList();
 
@@ -289,38 +354,43 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
-	function showHoldingPopup(action: string, info: any = {}) {
-		setPopupHoldingID(info.holdingID);
+	function showHoldingPopup(assetType: string, action: string, info: any = {}) {
+		popupRef.current.assetID = "";
+		popupRef.current.assetSymbol = "";
+		popupRef.current.assetAmount = info.amount;
+		popupRef.current.assetType = assetType;
+		popupRef.current.holdingID = info.holdingID;
 
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-							{ action === "create" ? "Add Asset" : "Update Asset" }
+							{ action === "createHolding" ? "Add Asset" : "Update Asset" }
 						</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						{ action === "create" &&
+						{ action === "createHolding" &&
 							<TextInput 
+								autoCorrect={false}
+								autoCapitalize="characters"
 								placeholder="Symbol..." 
 								selectionColor={Colors[theme].mainContrast} 
 								placeholderTextColor={Colors[theme].mainContrastDarker} 
 								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-								onChangeText={(value) => setPopupSymbol(value)}
-								value={popupSymbol}
+								onChangeText={(value) => popupRef.current.assetSymbol = value}
 							/>
 						}
 						<TextInput 
+							autoCorrect={false}
 							keyboardType="decimal-pad"
 							placeholder="Amount..." 
 							selectionColor={Colors[theme].mainContrast} 
 							placeholderTextColor={Colors[theme].mainContrastDarker} 
 							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
-							onChangeText={(value) => setPopupAmount(value)}
-							value={popupAmount}
+							onChangeText={(value) => popupRef.current.assetAmount = value}
 						/>
-						{ action === "update" &&
+						{ action === "updateHolding" &&
 							<TouchableOpacity onPress={() => showConfirmationPopup("deleteHolding", { holdingID:info.holdingID })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`]]}>
 								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Asset</Text>
 							</TouchableOpacity>
@@ -330,7 +400,7 @@ export default function Holdings({ navigation }: any) {
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+						<TouchableOpacity onPress={() => processAction(action, {})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
 						</TouchableOpacity>
 					</View>
@@ -339,6 +409,27 @@ export default function Holdings({ navigation }: any) {
 		};
 
 		showPopup(content);
+	}
+
+	function processAction(action: string, args: any) {
+		try {
+			switch(action) {
+				case "createHolding":
+					let data = popupRef.current;
+					createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
+					break;
+				case "updateHolding":
+					break;
+				case "deleteHolding":
+					deleteHolding(args.holdingID);
+					break;
+			}
+			
+			hidePopup();
+		} catch(error) {
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	function showConfirmationPopup(action: string, args: any) {
@@ -355,23 +446,13 @@ export default function Holdings({ navigation }: any) {
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => processAction()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+						<TouchableOpacity onPress={() => processAction(action, args)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
 						</TouchableOpacity>
 					</View>
 				</View>
 			);
 		};
-
-		function processAction() {
-			switch(action) {
-				case "deleteHolding":
-					deleteHolding(args.holdingID);
-					break;
-			}
-
-			hidePopup();
-		}
 
 		setPopupContent(content);
 	}
@@ -430,10 +511,9 @@ export default function Holdings({ navigation }: any) {
 			if(settings.transactionsAffectHoldings === "disabled") {
 				let holdings = await requests.readHolding(token, userID);
 
-				// TODO: Add message about no holdings being found.
 				if(Utils.empty(holdings?.data?.readHolding)) {
 					setHoldingsRows({});
-					setHoldingsTotalValue("-");
+					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
 				}
 
@@ -448,10 +528,9 @@ export default function Holdings({ navigation }: any) {
 				let parsedData: any = await parseActivityAsHoldings();
 				holdingsData = parsedData.holdingsData;
 
-				// TODO: Add message about no activities being found.
 				if(Utils.empty(holdingsData)) {
 					setHoldingsRows({});
-					setHoldingsTotalValue("-");
+					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
 				}
 			}
@@ -620,6 +699,40 @@ export default function Holdings({ navigation }: any) {
 				}
 
 				resolve({ holdingsData:holdings, activityData:activityData });
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
+	async function cryptoHoldingExists(id: string) {
+		let userID = await AsyncStorage.getItem("userID");
+		let token = await AsyncStorage.getItem("token");
+		let key = await AsyncStorage.getItem("key") || "";
+		let api = await AsyncStorage.getItem("api");
+
+		return new Promise(async (resolve, reject) => {
+			try {
+				let requests = new Requests(api);
+				let holdings = await requests.readHolding(token, userID);
+
+				if(Utils.empty(holdings) || holdings?.data?.readHolding.length === 0) {
+					resolve({ exists:false });
+				} else {
+					let encrypted = holdings?.data?.readHolding;
+
+					Object.keys(encrypted).map(index => {
+						let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
+
+						if(decrypted.holdingAssetID === id) {
+							resolve({ exists:true, holdingID:encrypted[index].holdingID });
+							return;
+						}
+					});
+
+					resolve({ exists:false });
+				}
 			} catch(error) {
 				console.log(error);
 				reject(error);

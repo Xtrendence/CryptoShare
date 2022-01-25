@@ -301,6 +301,7 @@ export default createStyle<any>({
 		paddingLeft: 25
 	},
 	modalSection: {
+		maxWidth: screenWidth - 80,
 		padding: 20,
 		marginBottom: 20,
 		backgroundColor: Colors.Dark.mainFirst,

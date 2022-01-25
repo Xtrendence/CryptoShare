@@ -34,7 +34,7 @@ export default function MatchList(props: any) {
 
 let styles: any = StyleSheet.create({
 	messageWrapper: {
-		width: 300,
+		width: 280,
 		padding: 10,
 		marginBottom: 20,
 		backgroundColor: Colors.Dark.mainThird,
@@ -57,7 +57,7 @@ let styles: any = StyleSheet.create({
 	},
 	scrollView: {
 		maxWidth: screenWidth - 40,
-		minWidth: 300,
+		minWidth: 280,
 		flexGrow: 0,
 		backgroundColor: Colors.Dark.mainThird,
 		borderRadius: GlobalStyle.borderRadius,
