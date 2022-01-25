@@ -1,19 +1,20 @@
 import React from "react";
 import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native";
+import { Colors } from "../styles/Global";
 import Utils from "../utils/Utils";
 
 export default function Loading(props: any) {
 	return (
 		<Modal transparent={true} visible={props.active} style={styles.modal}>
-			<View style={[styles.overlay, props.opaque ? { backgroundColor:"rgb(0,0,0)" } : null]}>
-				<ActivityIndicator color="rgb(255,255,255)" size={32}/>
-				<Text style={styles.text}>{ Utils.empty(props.text) ? "Loading..." : props.text }</Text>
+			<View style={[styles.overlay, styles[`background${props.theme}`], props.opaque ? styles[`backgroundOpaque${props.theme}`] : null]}>
+				<ActivityIndicator color={Colors[props.theme].accentFirst} size={32}/>
+				<Text style={[styles.text, styles[`text${props.theme}`]]}>{ Utils.empty(props.text) ? "Loading..." : props.text }</Text>
 			</View>
 		</Modal>
 	);
 }
 
-let styles = StyleSheet.create({
+let styles: any = StyleSheet.create({
 	modal: {
 		width: "100%",
 		height: "100%"
@@ -25,14 +26,28 @@ let styles = StyleSheet.create({
 		width: "100%",
 		height: "100%",
 		zIndex: 50,
-		backgroundColor: "rgba(0,0,0,0.9)",
 		justifyContent: "center",
 		alignItems: "center"
+	},
+	backgroundOpaqueDark: {
+		backgroundColor: "rgb(15,15,15)"
+	},
+	backgroundOpaqueLight: {
+		backgroundColor: "rgb(255,255,255)"
+	},
+	backgroundDark: {
+		backgroundColor: "rgba(0,0,0,0.9)"
+	},
+	backgroundLight: {
+		backgroundColor: "rgba(255,255,255,0.9)"
 	},
 	text: {
 		fontSize: 20,
 		fontWeight: "bold",
-		color: "rgb(255,255,255)",
+		color: Colors.Dark.mainContrast,
 		marginTop: 20
-	}
+	},
+	textLight: {
+		color: Colors.Light.mainContrast
+	},
 });
