@@ -1,7 +1,7 @@
 import React from "react";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
+import { barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 import { Stop, LinearGradient as SVGLinearGradient } from "react-native-svg";
 
 export const gradientColor = () => {
@@ -266,10 +266,10 @@ export default createStyle<any>({
 	modalChartWrapper: {
 		flexDirection: "row",
 		backgroundColor: Colors.Dark.mainFirstTransparent,
-		overflow: "hidden"
+		overflow: "hidden",
 	},
 	modalChartWrapperLight: {
-
+		backgroundColor: Colors.Light.mainFirst,
 	},
 	modalChartLeft: {
 		height: "100%",
@@ -279,19 +279,53 @@ export default createStyle<any>({
 		paddingRight: 10,
 		paddingLeft: 10,
 		zIndex: 4,
+		borderBottomWidth: 5,
+		borderColor: Colors.Dark.mainFifth
 	},
 	modalChartLeftLight: {
-
+		backgroundColor: Colors.Light.mainSecond,
+		borderColor: Colors.Light.mainFifth
 	},
 	modalChartText: {
 		color: Colors.Dark.mainContrast,
 		marginBottom: 36
 	},
 	modalChartTextLight: {
-
+		color: Colors.Light.mainContrast
 	},
 	modalScrollView: {
 		paddingLeft: 50,
-		paddingTop: 10
+		paddingTop: 10,
+		borderBottomWidth: 5,
+		borderColor: Colors.Dark.mainFifth
+	},
+	modalScrollViewLight: {
+		borderColor: Colors.Light.mainFifth
+	},
+	modalWrapperScrollView: {
+		height: screenHeight - barHeight - 40 - 280,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	modalWrapperScrollViewLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent
+	},
+	modalWrapperScrollViewContent: {
+		paddingTop: 20,
+		paddingRight: 25,
+		paddingBottom: 30,
+		paddingLeft: 25
+	},
+	modalSection: {
+		padding: 20,
+		backgroundColor: Colors.Dark.mainFirst,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	modalSectionLight: {
+		backgroundColor: Colors.Light.mainFirst,
 	}
 });

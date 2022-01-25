@@ -306,6 +306,15 @@ export default class Utils {
 		return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 	}
 
+	static rgbToHex(rgb: string) {
+		let numbers = rgb.split("(")[1].split(")")[0].split(",");
+		let hexArray = numbers.map((number) => {
+			number = parseInt(number).toString(16);
+			return (number.length === 1) ? "0" + number : number;
+		});
+		return "#" + hexArray.join("");
+	}
+
 	static replaceAll(find: string, replace: string, string: string, ignore: boolean = false) {
 		return string.replace(new RegExp(find.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(replace)=="string")?replace.replace(/\$/g,"$$$$"):replace);
 	}

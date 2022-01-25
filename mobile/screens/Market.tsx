@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
+import HTML from "react-native-render-html";
 import styles, { gradientColor } from "../styles/Market";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../styles/Global";
@@ -24,6 +25,7 @@ export default function Market({ navigation }: any) {
 	const [type, setType] = useState<string>("crypto");
 
 	const [modal, setModal] = useState<boolean>(false);
+	const [modalDescription, setModalDescription] = useState<string>("");
 
 	const labelsRef = useRef<any>(null);
 
@@ -38,7 +40,7 @@ export default function Market({ navigation }: any) {
 	// TODO: Add "onPress" functionality.
 	const Item = ({ info }: any) => {
 		return (
-			<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
+			<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
 				<View style={styles.itemTop}>
 					<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
 						<Image source={{ uri:info.icon }} style={styles.itemIcon}/>
@@ -134,10 +136,10 @@ export default function Market({ navigation }: any) {
 						/>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => changeType("crypto")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], type === "crypto" ? styles[`choiceButtonActive${theme}`] : null]}>
-						<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Crypto</Text>
+						<Text style={[styles.choiceText, styles[`choiceText${theme}`], type === "crypto" ? styles[`choiceTextActive${theme}`] : null]}>Crypto</Text>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => changeType("stocks")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], type === "stocks" ? styles[`choiceButtonActive${theme}`] : null]}>
-						<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Stocks</Text>
+						<Text style={[styles.choiceText, styles[`choiceText${theme}`], type === "stocks" ? styles[`choiceTextActive${theme}`] : null]}>Stocks</Text>
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
@@ -154,7 +156,7 @@ export default function Market({ navigation }: any) {
 								})
 							}
 						</View>
-						<ScrollView horizontal={true} style={styles.modalScrollView}>
+						<ScrollView horizontal={true} style={[styles.modalScrollView, styles[`modalScrollView${theme}`]]}>
 							{ !Utils.empty(chartData) && !Utils.empty(chartLabels) ? 
 								<Chart
 									data={{ labels:chartLabels, datasets:[{ data:chartData }]}}
@@ -212,13 +214,32 @@ export default function Market({ navigation }: any) {
 							}
 						</ScrollView>
 					</View>
+					<ScrollView style={[styles.modalWrapperScrollView, styles[`modalWrapperScrollView${theme}`]]} contentContainerStyle={styles.modalWrapperScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={true} nestedScrollEnabled={true}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
+							<HTML 
+								contentWidth={screenWidth - 40}
+								source={{ html:modalDescription }} 
+								tagsStyles={{ 
+									a: { 
+										color: Colors[theme].Market.accentFirst,
+										textDecorationLine: "none",
+										fontSize: 16
+									}, 
+									span: { 
+										color: Colors[theme].mainContrast, 
+										fontSize: 16 
+									}
+								}}
+							/>
+						</View>
+					</ScrollView>
 				</View>
 			</Modal>
-			<Loading active={loading} opaque={true}/>
+			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
 
-	async function showModal(assetID: string, assetSymbol: string, currentPrice: number) {
+	async function showModal(assetID: string, assetSymbol: string, currentPrice: number, info: any) {
 		try {
 			setLoading(true);
 
@@ -244,6 +265,11 @@ export default function Market({ navigation }: any) {
 			setChartData(prices);
 			setChartSegments(4);
 
+			let coinData = await cryptoAPI.getCoinData(assetID);
+			let description = Utils.empty(coinData?.description?.en) ? "<span>No description found.</span>" : `<span>${coinData?.description?.en}</span>`;
+
+			setModalDescription(description);
+
 			let check = setInterval(() => {
 				if(!Utils.empty(labelsRef.current)) {
 					labelsRef.current.length = 5;
@@ -266,7 +292,7 @@ export default function Market({ navigation }: any) {
 	function hideModal() {
 		labelsRef.current = [];
 		setChartVerticalLabels([]);
-		
+		setModalDescription("");
 		setModal(false);
 	}
 
