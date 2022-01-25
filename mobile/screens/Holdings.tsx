@@ -296,7 +296,7 @@ export default function Holdings({ navigation }: any) {
 			});
 
 			if(exists.exists) {
-				// await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+				await requests.updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 
 				Utils.notify(theme, "Asset was already part of your holdings, but the amount was updated.");
 			} else {
@@ -338,11 +338,27 @@ export default function Holdings({ navigation }: any) {
 		try {
 			setLoading(true);
 
+			if(Utils.empty(holdingAssetID) || Utils.empty(holdingAssetSymbol) || Utils.empty(holdingAssetAmount) || isNaN(holdingAssetAmount) || holdingAssetAmount < 0) {
+				setLoading(false);
+				Utils.notify(theme, "Invalid data.");
+				return;
+			}
+
 			let userID = await AsyncStorage.getItem("userID");
 			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
 			let api = await AsyncStorage.getItem("api");
 
 			let requests = new Requests(api);
+
+			let encrypted = Utils.encryptObjectValues(key, {
+				holdingAssetID: holdingAssetID,
+				holdingAssetSymbol: holdingAssetSymbol,
+				holdingAssetAmount: holdingAssetAmount.toString(),
+				holdingAssetType: holdingAssetType
+			});
+
+			await requests.updateHolding(token, userID, holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 
 			populateHoldingsList();
 
@@ -355,8 +371,8 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	function showHoldingPopup(assetType: string, action: string, info: any = {}) {
-		popupRef.current.assetID = "";
-		popupRef.current.assetSymbol = "";
+		popupRef.current.assetID = info.coinID;
+		popupRef.current.assetSymbol = info.symbol;
 		popupRef.current.assetAmount = info.amount;
 		popupRef.current.assetType = assetType;
 		popupRef.current.holdingID = info.holdingID;
@@ -400,7 +416,7 @@ export default function Holdings({ navigation }: any) {
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => processAction(action, {})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+						<TouchableOpacity onPress={() => processAction(action)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
 						</TouchableOpacity>
 					</View>
@@ -411,17 +427,19 @@ export default function Holdings({ navigation }: any) {
 		showPopup(content);
 	}
 
-	function processAction(action: string, args: any) {
+	function processAction(action: string) {
 		try {
+			let data = popupRef.current;
+
 			switch(action) {
 				case "createHolding":
-					let data = popupRef.current;
 					createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
 					break;
 				case "updateHolding":
+					updateHolding(data.holdingID, data.assetID, data.assetSymbol, data.assetAmount, data.assetType);
 					break;
 				case "deleteHolding":
-					deleteHolding(args.holdingID);
+					deleteHolding(data.holdingID);
 					break;
 			}
 			
@@ -446,7 +464,7 @@ export default function Holdings({ navigation }: any) {
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => processAction(action, args)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+						<TouchableOpacity onPress={() => processAction(action)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
 						</TouchableOpacity>
 					</View>
