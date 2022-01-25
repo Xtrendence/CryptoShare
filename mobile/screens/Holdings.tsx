@@ -398,6 +398,7 @@ export default function Holdings({ navigation }: any) {
 							/>
 						}
 						<TextInput 
+							defaultValue={info?.amount?.toString()}
 							autoCorrect={false}
 							keyboardType="decimal-pad"
 							placeholder="Amount..." 
@@ -756,5 +757,289 @@ export default function Holdings({ navigation }: any) {
 				reject(error);
 			}
 		});
+	}
+
+	function fetchHoldingsHistoricalData(ids = null) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let settings: any = store.getState().settings.settings;
+
+				let userID = await AsyncStorage.getItem("userID");
+				let token = await AsyncStorage.getItem("token");
+				let api = await AsyncStorage.getItem("api");
+
+				let requests = new Requests(api);
+
+				let currency = settings.currency;
+
+				let prices: any = {};
+				let parsedData: any = await parseActivityAsHoldings();
+				let holdings: any = parsedData.holdingsData;
+
+				let coinIDs: any = Object.keys(holdings);
+				if(!Utils.empty(ids)) {
+					coinIDs = ids;
+				}
+
+				for(let i = 0; i < coinIDs.length; i++) {
+					setTimeout(async () => {
+						setLoading(true);
+
+						let holding = holdings[coinIDs[i]];
+
+						let request = await requests.readCoin(token, userID, coinIDs[i], holding.holdingAssetSymbol, currency);
+
+						let historicalData = request?.data?.readCoin?.data;
+
+						if(Utils.validJSON(historicalData)) {
+							historicalData = JSON.parse(historicalData)?.historicalData?.prices;
+							prices[coinIDs[i]] = historicalData;
+						}
+
+						if(Object.keys(prices).length === coinIDs.length) {
+							setLoading(false);
+							resolve({ coinIDs:coinIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
+						}
+					}, i * 2000);
+				}
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
+	function getInitialDatedValue(activities: any, futureDays: any) {
+		let transactionIDs = Object.keys(activities);
+
+		let firstActivity = activities[transactionIDs[0]];
+		let firstDate = new Date(Date.parse(firstActivity.activityDate));
+
+		let days = Utils.dayRangeArray(firstDate, Utils.addDays(Utils.previousYear(new Date()), 1));
+
+		let dates: any = { [days[0]]:{ holdings:{} }};
+
+		for(let i = 0; i < days.length; i++) {
+			let day = days[i];
+
+			if(i - 1 >= 0) {
+				let previous = JSON.parse(JSON.stringify(dates[days[i - 1]]));
+				dates[day] = previous;
+			}
+
+			for(let j = 0; j < transactionIDs.length; j++) {
+				let txID = transactionIDs[j];
+				let activity = activities[txID];
+
+				let activityType = activity.activityType;
+				let activityFromAndTo = activity.activityFrom + activity.activityTo;
+
+				let activityDate = Utils.formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
+				if(day === activityDate) {
+					let assetID = activity.activityAssetID;
+					let amount = parseFloat(activity.activityAssetAmount);
+
+					if(!(assetID in dates[day].holdings)) {
+						dates[day].holdings[assetID] = { amount:amount };
+						continue;
+					}
+
+					if(activityType === "sell") {
+						subtract();
+					} else if(activityType === "buy") {
+						add();
+					} else if(activityType === "transfer") {
+						if(activityFromAndTo.match(/(\+)/gi)) {
+							add();
+						} else if(activityFromAndTo.match(/\-/gi)) {
+							subtract();
+						}
+					}
+
+					function add() {
+						dates[day].holdings[assetID].amount += amount;
+					}
+
+					function subtract() {
+						dates[day].holdings[assetID].amount -= amount;
+					}
+				}
+			}
+		}
+
+		let last = dates[futureDays[0]]
+
+		return last;
+	}
+
+	function parseActivityAsDatedValue(days: any, prices: any, activities: any) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let dates: any = {
+					[days[0]]: {
+						holdings: {},
+						totalValue: 0,
+						modified: false
+					}
+				};
+
+				let transactionIDs = Object.keys(activities);
+			
+				// If the first activity was more than a year ago, then activities before then must be taken into account.
+				if(new Date(Date.parse(activities[transactionIDs[0]].activityDate)) < Utils.previousYear(new Date())) {
+					dates = {
+						[days[0]]: {
+							...getInitialDatedValue(activities, days),
+							totalValue: 0,
+							modified: true
+						}
+					};
+				}
+
+				// Loop over days.
+				for(let i = 0; i < days.length; i++) {
+					let day = days[i];
+
+					// Copy the previous day's data to the current one so it can build up over time to the current day.
+					if(i - 1 >= 0) {
+						// Object must be copied by value rather than reference, otherwise the content would be the same throughout.
+						let previous = JSON.parse(JSON.stringify(dates[days[i - 1]]));
+						dates[day] = previous;
+					}
+
+					// Loop over activities in case there's one on the day being looped over.
+					for(let j = 0; j < transactionIDs.length; j++) {
+						let txID = transactionIDs[j];
+						let activity = activities[txID];
+
+						let activityType = activity.activityType;
+						let activityFromAndTo = activity.activityFrom + activity.activityTo;
+
+						// Format the activity's date to be the same as the ones stored in the "dates" object.
+						let activityDate = Utils.formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
+						// To prevent activities outside the desired date range from being added.
+						if(day === activityDate) {
+							let assetID = activity.activityAssetID;
+							let amount = parseFloat(activity.activityAssetAmount);
+							let price = prices[assetID][i][1];
+							let value = parseFloat((price * amount).toFixed(3));
+
+							// If the asset doesn't already exist, then its values are set directly instead of being incremented or decremented.
+							if(!(assetID in dates[day].holdings)) {
+								dates[day].holdings[assetID] = {
+									amount: amount,
+									value: value,
+									price: price
+								};
+
+								dates[day].modified = true;
+
+								continue;
+							}
+
+							if(activityType === "sell") {
+								subtract();
+							} else if(activityType === "buy") {
+								add();
+							} else if(activityType === "transfer") {
+								if(activityFromAndTo.match(/(\+)/gi)) {
+									add();
+								} else if(activityFromAndTo.match(/\-/gi)) {
+									subtract();
+								}
+							}
+
+							function add() {
+								dates[day].holdings[assetID].amount += amount;
+								dates[day].modified = true;
+							}
+
+							function subtract() {
+								dates[day].holdings[assetID].amount -= amount;
+								dates[day].modified = true;
+							}
+						}
+					}
+
+					// Update the total value on each date.
+					let ids = Object.keys(dates[day].holdings);
+					let total = 0;
+					for(let j = 0; j < ids.length; j++) {
+						let id = ids[j];
+						let price = prices[id][i][1];
+						let value =  dates[day].holdings[id].amount * price;
+						dates[day].holdings[id].value = value;
+						total += value;
+					}
+
+					dates[day].totalValue = total;
+				}
+
+				// If the current day's data isn't found in the "dates" object, then the current prices are fetched, and the data is added.
+				let today = Utils.formatDateHyphenated(new Date());
+				if(!(today in dates)) {
+					let settings: any = store.getState().settings.settings;
+					let currency = settings.currency;
+					let keys = Object.keys(dates);
+					let previous = dates[keys[keys.length - 1]];
+					dates[today] = JSON.parse(JSON.stringify(previous));
+					dates[today].totalValue = 0;
+					let ids = Object.keys(dates[today].holdings);
+					let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
+					let currentPrices = sortMarketDataByCoinID(marketData);
+					Object.keys(dates[today].holdings).map(assetID => {
+						let amount = dates[today].holdings[assetID].amount;
+						let value = amount * currentPrices[assetID].current_price;
+						dates[today].holdings[assetID].value = value;
+						dates[today].totalValue += value;
+					});
+				}
+
+				resolve(dates);
+			} catch(error) {
+				console.log(error);
+				Utils.notify(theme, "Something went wrong...");
+				reject(error);
+			}
+		});
+	}
+
+	function filterHoldingsPerformanceData(dates: any) {
+		Object.keys(dates).map(date => {
+			let day = dates[date];
+			if(!day.modified) {
+				delete dates[date];
+			}
+		});
+
+		return dates;
+	}
+
+	function parseHoldingsDateData(data: any) {
+		let labels: any = [];
+		let tooltips: any = [];
+		let values: any = [];
+
+		let dates = Object.keys(data);
+
+		dates.map(date => {
+			labels.push(new Date(Date.parse(date)));
+			tooltips.push(Utils.formatDateHuman(new Date(Date.parse(date))));
+			values.push(data[date].totalValue);
+		});
+
+		return { labels:labels, tooltips:tooltips, values:values };
+	}
+
+	function filterActivitiesByAssetID(activities: any, assetID: any) {
+		Object.keys(activities).map(txID => {
+			if(activities[txID].activityAssetID !== assetID) {
+				delete activities[txID];
+			}
+		});
+
+		return activities;
 	}
 }
