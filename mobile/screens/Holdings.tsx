@@ -25,6 +25,8 @@ export default function Holdings({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
+	const [popupHoldingID, setPopupHoldingID] = useState<number>(0);
+	const [popupAssetID, setPopupAssetID] = useState<string>("");
 	const [popupSymbol, setPopupSymbol] = useState<string>("");
 	const [popupAmount, setPopupAmount] = useState<string>("");
 
@@ -226,7 +228,70 @@ export default function Holdings({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	async function createHolding(holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: number, holdingAssetType: string) {
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			populateHoldingsList();
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function deleteHolding(holdingID: number) {
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+			await requests.deleteHolding(token, userID, holdingID);
+
+			populateHoldingsList();
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function updateHolding(holdingID: number, holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: number, holdingAssetType: string) {
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			populateHoldingsList();
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
 	function showHoldingPopup(action: string, info: any = {}) {
+		setPopupHoldingID(info.holdingID);
+
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
@@ -256,7 +321,7 @@ export default function Holdings({ navigation }: any) {
 							value={popupAmount}
 						/>
 						{ action === "update" &&
-							<TouchableOpacity onPress={() => showConfirmationPopup("delete")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`]]}>
+							<TouchableOpacity onPress={() => showConfirmationPopup("deleteHolding", { holdingID:info.holdingID })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`]]}>
 								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Asset</Text>
 							</TouchableOpacity>
 						}
@@ -276,8 +341,39 @@ export default function Holdings({ navigation }: any) {
 		showPopup(content);
 	}
 
-	function showConfirmationPopup(action: string) {
+	function showConfirmationPopup(action: string, args: any) {
+		Keyboard.dismiss();
+		setPopup(true);
 
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => processAction()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		function processAction() {
+			switch(action) {
+				case "deleteHolding":
+					deleteHolding(args.holdingID);
+					break;
+			}
+
+			hidePopup();
+		}
+
+		setPopupContent(content);
 	}
 
 	function showPopup(content: any) {
@@ -336,6 +432,8 @@ export default function Holdings({ navigation }: any) {
 
 				// TODO: Add message about no holdings being found.
 				if(Utils.empty(holdings?.data?.readHolding)) {
+					setHoldingsRows({});
+					setHoldingsTotalValue("-");
 					return;
 				}
 
@@ -352,6 +450,8 @@ export default function Holdings({ navigation }: any) {
 
 				// TODO: Add message about no activities being found.
 				if(Utils.empty(holdingsData)) {
+					setHoldingsRows({});
+					setHoldingsTotalValue("-");
 					return;
 				}
 			}
@@ -400,6 +500,7 @@ export default function Holdings({ navigation }: any) {
 
 				let holding = holdingsData[coinID];
 
+				let holdingID = parseFloat(holding.holdingID);
 				let amount = parseFloat(holding.holdingAssetAmount);
 				let value = parseFloat((amount * price).toFixed(2));
 
@@ -407,7 +508,7 @@ export default function Holdings({ navigation }: any) {
 					continue;
 				}
 
-				let info = { coinID:coinID, price:price, icon:icon, priceChangeDay:priceChangeDay, name:name, symbol:symbol, rank:rank, holding:holding, amount:amount, value:value };
+				let info = { holdingID:holdingID, coinID:coinID, price:price, icon:icon, priceChangeDay:priceChangeDay, name:name, symbol:symbol, rank:rank, holding:holding, amount:amount, value:value };
 
 				output.rows.push(info);
 
