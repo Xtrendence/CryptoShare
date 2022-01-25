@@ -103,6 +103,17 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("transactionsAffectHoldings") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Transactions Affect Holdings</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<ChoiceButton setting="disabled" active={settings.transactionsAffectHoldings} text="Disabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"transactionsAffectHoldings", value:"disabled" }))}/>
+									<ChoiceButton setting="enabled" active={settings.transactionsAffectHoldings} text="Enabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"transactionsAffectHoldings", value:"enabled" }))}/>
+								</View>
+							</View>
+						}
 						{ Utils.filterSettings(search).includes("assetIconBackdrop") &&
 							<View style={[styles.section, styles[`section${theme}`]]}>
 								<View style={styles.sectionTop}>

@@ -96,7 +96,7 @@ export default function Market({ navigation }: any) {
 		
 		let refresh = setInterval(() => {
 			if(navigation.isFocused()) {
-
+				populateMarketListCrypto();
 			}
 		}, 15000);
 

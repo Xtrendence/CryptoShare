@@ -10,6 +10,7 @@ export default class Utils {
 	static defaultSettings: any = {
 		defaultPage: "Dashboard",
 		currency: "usd",
+		transactionsAffectHoldings: "disabled",
 		assetIconBackdrop: "disabled",
 	}
 
@@ -109,6 +110,12 @@ export default class Utils {
 			dispatch(changeSetting({ key:"defaultPage", value:defaultPage }));
 		}
 
+		let transactionsAffectHoldings = await AsyncStorage.getItem("transactionsAffectHoldings");
+		if(!this.empty(transactionsAffectHoldings)) {
+			settings.transactionsAffectHoldings = transactionsAffectHoldings;
+			dispatch(changeSetting({ key:"transactionsAffectHoldings", value:transactionsAffectHoldings }));
+		}
+
 		let assetIconBackdrop = await AsyncStorage.getItem("assetIconBackdrop");
 		if(!this.empty(assetIconBackdrop)) {
 			settings.assetIconBackdrop = assetIconBackdrop;
@@ -136,6 +143,7 @@ export default class Utils {
 			appearance: ["theme", "dark", "light", "mode", "appearance", "looks"],
 			account: ["logout", "token", "user", "account"],
 			defaultPage: ["page", "default", "login", "area", "section", "load"],
+			transactionsAffectHoldings: ["transactions", "affect", "holdings", "activity", "record", "base"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 		};
 
