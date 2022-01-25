@@ -523,8 +523,6 @@ export default function Holdings({ navigation }: any) {
 			Utils.notify(theme, "Something went wrong...");
 		}
 	}
-
-	// TODO: Add functionality.
 	function showModal(dates: any, args: any) {
 		Keyboard.dismiss();
 
@@ -539,7 +537,7 @@ export default function Holdings({ navigation }: any) {
 			setChartData(parsed.values);
 			setChartSegments(4);
 
-			// TODO: Show stats.
+			getModalStats(parsed.values);
 
 			let check = setInterval(() => {
 				if(!Utils.empty(labelsRef.current)) {
@@ -569,6 +567,87 @@ export default function Holdings({ navigation }: any) {
 		setChartSegments(1);
 		setModalStats(null);
 		setModal(false);
+	}
+
+	function getModalStats(values: any) {
+		let settings: any = store.getState().settings.settings;
+
+		let currentValue = values[values.length - 1];
+
+		let value0d = values.length >= 1 ? values[values.length - 1] : "-";
+		let value1d = values.length >= 2 ? values[values.length - 2] : "-";
+		let value1w = values.length >= 7 ? values[values.length - 8] : "-";
+		let value1m = values.length >= 30 ? values[values.length - 31] : "-";
+		let value3m = values.length >= 90 ? values[values.length - 91] : "-";
+		let value6m = values.length >= 180 ? values[values.length - 181] : "-";
+		let value1y = values.length >= 365 ? values[values.length - 366] : "-";
+
+		let stats = [];
+
+		if(!isNaN(value0d) && value0d > 1) {
+			value0d = Utils.separateThousands(value0d.toFixed(2));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value0d">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Current ({Utils.currencySymbols[settings.currency]}): {value0d}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value1d) && value1d > 1) {
+			let style = (currentValue - value1d) === 0 ? "" : (currentValue - value1d) > 0 ? "Positive" : "Negative";
+			value1d = Utils.separateThousands(parseFloat((currentValue - value1d).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value1d">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>1D ({Utils.currencySymbols[settings.currency]}): {value1d}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value1w) && value1w > 1) {
+			let style = (currentValue - value1w) === 0 ? "" : (currentValue - value1w) > 0 ? "Positive" : "Negative";
+			value1w = Utils.separateThousands(parseFloat((currentValue - value1w).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value1w">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>1W ({Utils.currencySymbols[settings.currency]}): {value1w}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value1m) && value1m > 1) {
+			let style = (currentValue - value1m) === 0 ? "" : (currentValue - value1m) > 0 ? "Positive" : "Negative";
+			value1m = Utils.separateThousands(parseFloat((currentValue - value1m).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value1m">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>1M ({Utils.currencySymbols[settings.currency]}): {value1m}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value3m) && value3m > 1) {
+			let style = (currentValue - value3m) === 0 ? "" : (currentValue - value3m) > 0 ? "Positive" : "Negative";
+			value3m = Utils.separateThousands(parseFloat((currentValue - value3m).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value3m">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>3M ({Utils.currencySymbols[settings.currency]}): {value3m}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value6m) && value6m > 1) {
+			let style = (currentValue - value6m) === 0 ? "" : (currentValue - value6m) > 0 ? "Positive" : "Negative";
+			value6m = Utils.separateThousands(parseFloat((currentValue - value6m).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value6m">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>6M ({Utils.currencySymbols[settings.currency]}): {value6m}</Text>
+				</View>
+			);
+		}
+		if(!isNaN(value1y) && value1y > 1) {
+			let style = (currentValue - value1y) === 0 ? "" : (currentValue - value1y) > 0 ? "Positive" : "Negative";
+			value1y = Utils.separateThousands(parseFloat((currentValue - value1y).toFixed(2)));
+			stats.push(
+				<View style={[styles.modalInfoWrapper, styles[`modalInfoWrapper${theme}`]]} key="value1y">
+					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`], styles[`modalInfo${style + theme}`]]}>1Y ({Utils.currencySymbols[settings.currency]}): {value1y}</Text>
+				</View>
+			);
+		}
+
+		setModalStats(stats);
 	}
 
 	async function populateHoldingsList() {

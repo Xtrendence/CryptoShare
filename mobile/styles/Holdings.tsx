@@ -325,6 +325,18 @@ export default createStyle<any>({
 	modalInfoLight: {
 		color: Colors.Light.mainContrast
 	},
+	modalInfoPositiveDark: {
+		color: Colors.Dark.positiveFirst,
+	},
+	modalInfoPositiveLight: {
+		color: Colors.Light.positiveFirst
+	},
+	modalInfoNegativeDark: {
+		color: Colors.Dark.negativeFirst,
+	},
+	modalInfoNegativeLight: {
+		color: Colors.Light.negativeFirst
+	},
 	popup: {
 		justifyContent: "center",
 		alignItems: "center",
