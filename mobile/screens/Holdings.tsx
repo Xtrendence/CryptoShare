@@ -54,7 +54,7 @@ export default function Holdings({ navigation }: any) {
 				onPress={() => {
 					let settings: any = store.getState().settings.settings;
 					if(settings.transactionsAffectHoldings === "enabled") {
-						showModal(info.coinID, info.symbol, info.price, info);
+						showModal(info);
 					} else {
 						showHoldingPopup("crypto", "updateHolding", info);
 					}
@@ -75,7 +75,7 @@ export default function Holdings({ navigation }: any) {
 					</ScrollView>
 					<ScrollView style={[styles.itemScrollView, { marginBottom:10 }]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Value: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(info.value)}</Text>
-						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Amount: {info.amount}</Text>
+						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Amount: {Utils.separateThousands(info.amount)}</Text>
 					</ScrollView>
 				</View>
 			</TouchableOpacity>
@@ -382,7 +382,7 @@ export default function Holdings({ navigation }: any) {
 				<View style={styles.popupContent}>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-							{ action === "createHolding" ? "Add Asset" : "Update Asset" }
+							{ action === "createHolding" ? "Add Asset" : `Update Asset (${info.symbol.toUpperCase()})` }
 						</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
@@ -488,7 +488,7 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	// TODO: Add functionality.
-	function showModal(assetID: string, assetSymbol: string, currentPrice: number, info: any) {
+	function showModal(info: any) {
 		Keyboard.dismiss();
 
 		try {
