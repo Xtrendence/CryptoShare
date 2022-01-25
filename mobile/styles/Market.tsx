@@ -141,13 +141,13 @@ export default createStyle<any>({
 	},
 	choiceButtonLight: {
 		backgroundColor: "transparent",
-		borderColor: Colors.Light.Market.accentSecond
+		borderColor: Colors.Light.Market.accentFirst
 	},
 	choiceButtonActiveDark: {
 		backgroundColor: Colors.Dark.Market.accentFirst
 	},
 	choiceButtonActiveLight: {
-		backgroundColor: Colors.Light.Market.accentSecond
+		backgroundColor: Colors.Light.Market.accentFirst
 	},
 	choiceText: {
 		fontSize: 16,
@@ -269,6 +269,8 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.mainFirst,
 	},
 	modalChartLeft: {
+		alignItems: "center",
+		minWidth: 80,
 		height: "100%",
 		position: "absolute",
 		backgroundColor: Colors.Dark.mainFirstTransparent,

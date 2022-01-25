@@ -315,6 +315,35 @@ export default class Utils {
 		return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 	}
 
+	static sortLabels(currency: string, labels: any) {
+		let floats: any = [];
+		let sorted: any = [];
+
+		labels = labels.slice(-5);
+
+		labels.map((label: any) => {
+			let float = parseFloat(label);
+			if(float < 1) {
+				floats.push(float);
+			} else if(float > 100) {
+				floats.push(parseFloat(float.toFixed(0)));
+			} else if(float > 1 && float < 10) {
+				floats.push(parseFloat(float.toFixed(4)));
+			} else {
+				floats.push(parseFloat(float.toFixed(2)));
+			}
+		});
+
+		floats.sort().reverse();
+
+		floats.map((float: any) => {
+			let format = this.currencySymbols[currency] + Utils.separateThousands(float);
+			sorted.push(format);
+		});
+		
+		return sorted;
+	}
+
 	static rgbToHex(rgb: string) {
 		let numbers = rgb.split("(")[1].split(")")[0].split(",");
 		let hexArray = numbers.map((number) => {

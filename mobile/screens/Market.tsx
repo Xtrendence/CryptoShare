@@ -141,7 +141,7 @@ export default function Market({ navigation }: any) {
 					}/>
 				}
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
+					<TouchableOpacity onPress={() => showGlobal()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="chart-line" 
 							size={24} 
@@ -162,9 +162,9 @@ export default function Market({ navigation }: any) {
 					<View style={[styles.modalChartWrapper, styles[`modalChartWrapper${theme}`]]}>
 						<View style={[styles.modalChartLeft, styles[`modalChartLeft${theme}`]]}>
 							{
-								sortLabels(chartVerticalLabels).map((label: any) => {
+								Utils.sortLabels(settings.currency, chartVerticalLabels).map((label: any) => {
 									return (
-										<Text key={`label-${chartVerticalLabels.indexOf(label) + Utils.randomBetween(0, 9999999)}`} style={[styles.modalChartText, styles[`modalChartText${theme}`]]}>{Utils.currencySymbols[settings.currency] + Utils.separateThousands(parseFloat(label))}</Text>
+										<Text key={`label-${chartVerticalLabels.indexOf(label) + Utils.randomBetween(0, 9999999)}`} style={[styles.modalChartText, styles[`modalChartText${theme}`]]}>{label}</Text>
 									);
 								})
 							}
@@ -194,7 +194,7 @@ export default function Market({ navigation }: any) {
 										backgroundColor: "rgba(0,0,0,0)",
 										backgroundGradientFrom: "rgba(0,0,0,0)",
 										backgroundGradientTo: "rgba(0,0,0,0)",
-										decimalPlaces: 2,
+										decimalPlaces: 6,
 										color: () => "url(#gradient)",
 										labelColor: () => Colors[theme].mainContrast,
 										style: {
@@ -297,6 +297,43 @@ export default function Market({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	async function showGlobal() {
+		try {
+			setLoading(true);
+
+			let data = await cryptoAPI.getGlobal();
+
+			let volume = parseFloat(data.data.total_volume[settings.currency].toFixed(0));
+			let marketCap = parseFloat(data.data.total_market_cap[settings.currency].toFixed(0));
+			let marketCapChangeDay = Utils.formatPercentage(data.data.market_cap_change_percentage_24h_usd);
+
+			let content = () => {
+				return (
+					<View style={styles.popupContent}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Global Market Data</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Volume: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(volume)}</Text>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Market Cap: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(marketCap)}</Text>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>24 Change: {marketCapChangeDay}%</Text>
+						</View>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`]]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
+						</TouchableOpacity>
+					</View>
+				);
+			};
+
+			showPopup(content);
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
 
 	function hidePopup() {
 		Keyboard.dismiss();
@@ -530,19 +567,5 @@ export default function Market({ navigation }: any) {
 		});
 
 		return parsed;
-	}
-
-	function sortLabels(labels: any) {
-		let floats: any = [];
-
-		labels = labels.slice(-5);
-
-		labels.map((label: any) => {
-			floats.push(parseFloat(label));
-		});
-
-		floats.sort().reverse();
-		
-		return floats;
 	}
 }

@@ -10,7 +10,7 @@ export default function MatchList(props: any) {
 	return (
 		<View>
 			<View style={[styles.messageWrapper, styles[`messageWrapper${theme}`]]}>
-				<Text style={[styles.message, styles[`message${theme}`]]}>Two or more assets had the same symbol. Please choose the desired asset from the list below.</Text>
+				<Text style={[styles.message, styles[`message${theme}`]]}>Two or more assets have the same symbol. Please choose the desired asset from the list below.</Text>
 			</View>
 			<ScrollView style={[styles.scrollView, styles[`scrollView${theme}`]]} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				{ !Utils.empty(props.matches) &&
