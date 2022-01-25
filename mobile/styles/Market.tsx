@@ -282,10 +282,11 @@ export default createStyle<any>({
 		borderColor: Colors.Dark.mainFifth
 	},
 	modalChartLeftLight: {
-		backgroundColor: Colors.Light.mainSecond,
+		backgroundColor: Colors.Light.mainFirstTransparent,
 		borderColor: Colors.Light.mainFifth
 	},
 	modalChartText: {
+		fontWeight: "bold",
 		color: Colors.Dark.mainContrast,
 		marginBottom: 36
 	},
