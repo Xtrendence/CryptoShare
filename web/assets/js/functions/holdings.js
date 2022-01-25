@@ -45,7 +45,7 @@ async function populateHoldingsList(recreate) {
 
 			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
 
-			sortedHoldingsData = sortHoldingsDataByValue(holdingsData, marketData);
+			let sortedHoldingsData = sortHoldingsDataByValue(holdingsData, marketData);
 
 			holdingsData = sortedHoldingsData.holdingsData;
 

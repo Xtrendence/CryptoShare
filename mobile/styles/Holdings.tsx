@@ -1,17 +1,19 @@
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
+import { Stop, LinearGradient as SVGLinearGradient } from "react-native-svg";
+
+export const gradientColor = () => {
+	return (
+		<SVGLinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+			<Stop offset="0" stopColor={Colors.Dark.Holdings.accentFirst} stopOpacity="1" />
+			<Stop offset="0.5" stopColor={Colors.Dark.Holdings.accentSecond} stopOpacity="1" />
+			<Stop offset="1" stopColor={Colors.Dark.Holdings.accentThird} stopOpacity="1" />
+		</SVGLinearGradient>
+	);
+}
 
 export default createStyle<any>({
-	scrollView: {
-		width: "100%",
-		height: "100%",
-	},
-	scrollViewContent: {
-		justifyContent: "center", 
-		alignItems: "center", 
-		flexGrow: 1
-	},
 	area: {
 		width: "100%",
 		height: "100%",
@@ -116,5 +118,87 @@ export default createStyle<any>({
 	},
 	actionButtonLight: {
 		backgroundColor: Colors.Light.Holdings.accentSecond
+	},
+	itemCard: {
+		flexDirection: "column",
+		alignItems: "center",
+		marginRight: 10,
+		marginLeft: 10,
+		marginBottom: 10,
+		backgroundColor: Colors.Dark.mainFirst,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	itemCardLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	itemTop: {
+		marginTop: 10,
+		flexDirection: "row",
+		alignItems: "center"
+	},
+	itemBottom: {
+		flexDirection: "column",
+		alignItems: "center"
+	},
+	itemIconWrapper: {
+		padding: 4,
+	},
+	itemIconWrapperBackdrop: {
+		backgroundColor: "rgb(255,255,255)",
+		borderRadius: GlobalStyle.borderRadius
+	},
+	itemIcon: {
+		width: 32,
+		height: 32,
+	},
+	itemText: {
+		maxWidth: (screenWidth / 2) + 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		lineHeight: 40,
+		marginRight: 5,
+		marginLeft: 5,
+		backgroundColor: Colors.Dark.mainSecond,
+		color: Colors.Dark.mainContrast,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	itemTextLight: {
+		backgroundColor: Colors.Light.mainSecond,
+		color: Colors.Light.mainContrast
+	},
+	itemTextName: {
+		maxWidth: "90%",
+		backgroundColor: "transparent",
+		color: Colors.Dark.mainContrast
+	},
+	itemTextNameLight: {
+		color: Colors.Light.mainContrast
+	},
+	itemTextRank: {
+		backgroundColor: Colors.Dark.Holdings.accentThird,
+		color: Colors.Dark.accentContrast
+	},
+	itemTextRankLight: {
+		backgroundColor: Colors.Light.Holdings.accentThird,
+		color: Colors.Light.accentContrast
+	},
+	itemScrollView: {
+		flexGrow: 0,
+		flexDirection: "row",
+		width: "100%",
+		height: 40,
+		marginRight: 10,
+		marginLeft: 10,
+		marginTop: 10,
+	},
+	itemScrollViewContent: {
+		width: "100%",
+		alignItems: "center",
+		justifyContent: "center"
 	},
 });

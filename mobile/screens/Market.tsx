@@ -43,7 +43,6 @@ export default function Market({ navigation }: any) {
 	const [firstFetch, setFirstFetch] = useState<boolean>(true);
 	const [marketRowsCrypto, setMarketRowsCrypto] = useState<any>({});
 
-	// TODO: Add "onPress" functionality.
 	const Item = ({ info }: any) => {
 		return (
 			<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>

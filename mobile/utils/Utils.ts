@@ -167,6 +167,24 @@ export default class Utils {
 		return Object.keys(content);
 	}
 
+	static decryptObjectValues(password: string, object: any) {
+		let decrypted: any = {};
+		let keys = Object.keys(object);
+
+		keys.map(key => {
+			let value = object[key];
+
+			try {
+				let plaintext = CryptoFN.decryptAES(value, password);
+				decrypted[key] = plaintext;
+			} catch(error) {
+				decrypted[key] = value;
+			}
+		});
+
+		return decrypted;
+	}
+
 	static notify(theme: string, message: string) {
 		showMessage({
 			message: message,
