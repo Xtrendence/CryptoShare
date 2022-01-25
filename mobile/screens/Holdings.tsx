@@ -11,6 +11,7 @@ import { Colors } from "../styles/Global";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Requests, { cryptoAPI } from "../utils/Requests";
 import { fetchActivity } from "./Activity";
+import store from "../store/store";
 
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -32,7 +33,6 @@ export default function Holdings({ navigation }: any) {
 	const [chartData, setChartData] = useState<any>();
 	const [chartSegments, setChartSegments] = useState<any>(1);
 
-	const [firstFetch, setFirstFetch] = useState<boolean>(true);
 	const [holdingsRows, setHoldingsRows] = useState<any>({});
 	const [holdingsTotalValue, setHoldingsTotalValue] = useState<string>("-");
 
@@ -71,17 +71,10 @@ export default function Holdings({ navigation }: any) {
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
-		if(firstFetch) {
-			populateHoldingsList();
-			setFirstFetch(false);
-		}
-
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {
 				setTimeout(() => {
-					if(!firstFetch) {
-						populateHoldingsList();
-					}
+					populateHoldingsList();
 				}, 500);
 			}
 		});
@@ -93,7 +86,6 @@ export default function Holdings({ navigation }: any) {
 		}, 15000);
 
 		return () => {
-			setFirstFetch(true);
 			setChartVerticalLabels([]);
 			labelsRef.current = [];
 			clearInterval(refresh);
@@ -152,6 +144,8 @@ export default function Holdings({ navigation }: any) {
 
 	async function populateHoldingsList() {
 		try {
+			let settings: any = store.getState().settings.settings;
+
 			let userID = await AsyncStorage.getItem("userID");
 			let token = await AsyncStorage.getItem("token");
 			let key = await AsyncStorage.getItem("key") || "";

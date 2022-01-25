@@ -15,6 +15,7 @@ import { screenWidth } from "../styles/NavigationBar";
 import Loading from "../components/Loading";
 import CryptoFinder from "../utils/CryptoFinder";
 import MatchList from "../components/MatchList";
+import store from "../store/store";
 
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -40,7 +41,6 @@ export default function Market({ navigation }: any) {
 	const [chartData, setChartData] = useState<any>();
 	const [chartSegments, setChartSegments] = useState<any>(1);
 
-	const [firstFetch, setFirstFetch] = useState<boolean>(true);
 	const [marketRowsCrypto, setMarketRowsCrypto] = useState<any>({});
 
 	const Item = ({ info }: any) => {
@@ -78,17 +78,10 @@ export default function Market({ navigation }: any) {
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
-		if(firstFetch) {
-			populateMarketListCrypto();
-			setFirstFetch(false);
-		}
-
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {
 				setTimeout(() => {
-					if(!firstFetch) {
-						populateMarketListCrypto();
-					}
+					populateMarketListCrypto();
 				}, 500);
 			}
 		});
@@ -100,7 +93,6 @@ export default function Market({ navigation }: any) {
 		}, 15000);
 
 		return () => {
-			setFirstFetch(true);
 			setChartVerticalLabels([]);
 			labelsRef.current = [];
 			clearInterval(refresh);
@@ -299,6 +291,8 @@ export default function Market({ navigation }: any) {
 
 	async function showGlobal() {
 		try {
+			let settings: any = store.getState().settings.settings;
+			
 			setLoading(true);
 
 			let data = await cryptoAPI.getGlobal();
@@ -353,6 +347,8 @@ export default function Market({ navigation }: any) {
 
 	async function searchMarket(args: any) {
 		try {
+			let settings: any = store.getState().settings.settings;
+
 			setLoading(true);
 
 			setSymbol("");
@@ -421,6 +417,8 @@ export default function Market({ navigation }: any) {
 		Keyboard.dismiss();
 
 		try {
+			let settings: any = store.getState().settings.settings;
+
 			setLoading(true);
 
 			labelsRef.current = [];
@@ -485,6 +483,8 @@ export default function Market({ navigation }: any) {
 
 	async function populateMarketListCrypto() {
 		try {
+			let settings: any = store.getState().settings.settings;
+
 			let marketData = await cryptoAPI.getMarket(settings.currency, 100, 1);
 
 			let rows: any = {};

@@ -14,9 +14,11 @@ export const settingsSlice = createSlice({
 		changeSetting: (state: any, data) => {
 			state.settings[data.payload.key] = data.payload.value;
 			AsyncStorage.setItem(data.payload.key, data.payload.value);
+			return state;
 		},
 		setSettingsState: (state: any, data) => {
 			state.settings = data.payload;
+			return state;
 		}
 	}
 });

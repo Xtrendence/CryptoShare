@@ -18,6 +18,8 @@ export const themeSlice = createSlice({
 				AsyncStorage.setItem("theme", "Dark");
 				TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
 			}
+
+			return state;
 		}
 	}
 });
