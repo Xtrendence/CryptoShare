@@ -52,6 +52,6 @@ function calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmo
 		Weekly Value: ${currencySymbol + separateThousands(weeklyValue)}<br><br>
 		Daily Amount: ${dailyAmount} ${symbol.toUpperCase()}<br>
 		Daily Value: ${currencySymbol + separateThousands(dailyValue)}<br><br>
-		Your ROI (Return on Investment) would be ${roi} months.
+		Your ROI (Return on Investment) would be ${roi.toFixed(2)} months.
 	`;
 }

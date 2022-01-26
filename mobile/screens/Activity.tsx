@@ -6,11 +6,16 @@ import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/Activity";
 import { useDispatch, useSelector } from "react-redux";
+import HTML from "react-native-render-html";
 import LinearGradient from "react-native-linear-gradient";
 import { Colors } from "../styles/Global";
-import Requests from "../utils/Requests";
+import Requests, { cryptoAPI } from "../utils/Requests";
 import Loading from "../components/Loading";
 import Item from "../components/ActivityItem";
+import CryptoFinder from "../utils/CryptoFinder";
+import MatchList from "../components/MatchList";
+import store from "../store/store";
+import { screenWidth } from "../styles/NavigationBar";
 
 export default function Activity({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -27,7 +32,23 @@ export default function Activity({ navigation }: any) {
 	const [activityRows, setActivityRows] = useState<any>({});
 
 	const popupRef = useRef<any>({
-		
+		staking: {
+			symbol: "",
+			amount: "",
+			apy: ""
+		},
+		mining: {
+			symbol: "",
+			equipmentCost: "",
+			amount: "",
+			powerCost: ""
+		},
+		dividends: {
+
+		},
+		activity: {
+
+		}
 	});
 
 	const renderItem = ({ item }: any) => {
@@ -117,11 +138,241 @@ export default function Activity({ navigation }: any) {
 	}
 
 	function showStakingPopup() {
+		popupRef.current.staking = {
+			symbol: "",
+			amount: "",
+			apy: ""
+		};
+
 		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Staking Calculator</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TextInput 
+							autoCorrect={false}
+							autoCapitalize="characters"
+							placeholder="Symbol..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.staking.symbol = value}
+						/>
+						<TextInput 
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Amount..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.staking.amount = value}
+						/>
+						<TextInput 
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="APY..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.staking.apy = value}
+						/>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showStakingOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	function selectStakingMatch(id: string) {
+		hidePopup();
+		showStakingOutput({ id:id });
+	}
+
+	function selectMiningMatch(id: string) {
+		hidePopup();
+		showMiningOutput({ id:id });
+	}
+
+	async function showStakingOutput(args: any) {
+		try {
+			let settings: any = store.getState().settings.settings;
+			
+			let { symbol, amount, apy } = popupRef.current.staking;
+
+			if(!Utils.empty(symbol) && !Utils.empty(amount) && !isNaN(amount) && amount > 0 && !isNaN(apy) && apy > 0) {
+				let assetSymbol: string;
+				let asset: any;
+
+				if("id" in args) {
+					asset = await CryptoFinder.getCoin({ id:args.id });
+					assetSymbol = asset.symbol;
+				} else {
+					assetSymbol = symbol.toLowerCase();
+					asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+				}
+
+				if("matches" in asset) {
+					let content = () => {
+						return (
+							<View style={styles.popupContent}>
+								<MatchList onPress={selectStakingMatch} theme={theme} matches={asset.matches}/>
+								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+								</TouchableOpacity>
+							</View>
+						);
+					}
+
+					showPopup(content);
+
+					setLoading(false);
+
+					return;
+				}
+
+				let marketData = await cryptoAPI.getMarketByID(settings.currency, asset.id);
+				let price = marketData[0].current_price;
+				let results = calculateStakingRewards(settings.currency, symbol, amount, apy, price);
+
+				showPopup(outputHTML(`<span>${results}</span>`));
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	function showMiningPopup() {
+		popupRef.current.mining = {
+			symbol: "",
+			equipmentCost: "",
+			amount: "",
+			powerCost: ""
+		};
+
 		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Mining Calculator</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TextInput 
+							autoCorrect={false}
+							autoCapitalize="characters"
+							placeholder="Symbol..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.mining.symbol = value}
+						/>
+						<TextInput 
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Equipment Cost..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.mining.equipmentCost = value}
+						/>
+						<TextInput 
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Daily Amount..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.mining.amount = value}
+						/>
+						<TextInput 
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Power Cost..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.mining.powerCost = value}
+						/>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showMiningOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function showMiningOutput(args: any) {
+		try {
+			let settings: any = store.getState().settings.settings;
+			
+			let { symbol, equipmentCost, amount, powerCost } = popupRef.current.mining;
+
+			if(!Utils.empty(symbol) && !isNaN(equipmentCost) && equipmentCost > 0 && !isNaN(amount) && amount > 0 && !isNaN(powerCost)) {
+				let assetSymbol: string;
+				let asset: any;
+
+				if("id" in args) {
+					asset = await CryptoFinder.getCoin({ id:args.id });
+					assetSymbol = asset.symbol;
+				} else {
+					assetSymbol = symbol.toLowerCase();
+					asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+				}
+
+				if("matches" in asset) {
+					let content = () => {
+						return (
+							<View style={styles.popupContent}>
+								<MatchList onPress={selectMiningMatch} theme={theme} matches={asset.matches}/>
+								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+								</TouchableOpacity>
+							</View>
+						);
+					}
+
+					showPopup(content);
+
+					setLoading(false);
+
+					return;
+				}
+
+				let marketData = await cryptoAPI.getMarketByID(settings.currency, asset.id);
+				let price = marketData[0].current_price;
+				let results = calculateMiningRewards(settings.currency, symbol, price, equipmentCost, amount, powerCost);
+
+				showPopup(outputHTML(`<span>${results}</span>`));
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	// TODO: Add functionality.
@@ -140,6 +391,79 @@ export default function Activity({ navigation }: any) {
 		setPopup(false);
 		setPopupContent(null);
 	}
+
+	function outputHTML(html: string) {
+		return (
+			<HTML 
+				contentWidth={screenWidth - 40}
+				source={{ html:html }} 
+				tagsStyles={{ 
+					span: { 
+						color: Colors[theme].mainContrast, 
+						fontSize: 16 
+					}
+				}}
+			/>
+		);
+	}
+}
+
+function calculateStakingRewards(currency: string, symbol: string, amount: number, apy: number, price: number) {
+	let currencySymbol = Utils.currencySymbols[currency];
+
+	let yearlyAmount = amount * (apy / 100);
+	let yearlyValue = parseFloat((yearlyAmount * price).toFixed(3));
+
+	let monthlyAmount = (yearlyAmount / 12).toFixed(3);
+	let monthlyValue = parseFloat((yearlyValue / 12).toFixed(3));
+
+	let weeklyAmount = (yearlyAmount / (365 / 7)).toFixed(3);
+	let weeklyValue = parseFloat((yearlyValue / (365 / 7)).toFixed(3));
+
+	let dailyAmount = (yearlyAmount / 365).toFixed(3);
+	let dailyValue = parseFloat((yearlyValue / 365).toFixed(3));
+
+	return `
+		If ${symbol.toUpperCase()} remains at its current price of ${currencySymbol + Utils.separateThousands(price)}:<br><br>
+		Yearly Amount: ${yearlyAmount} ${symbol.toUpperCase()}<br>
+		Yearly Value: ${currencySymbol + Utils.separateThousands(yearlyValue)}<br><br>
+		Monthly Amount: ${monthlyAmount} ${symbol.toUpperCase()}<br>
+		Monthly Value: ${currencySymbol + Utils.separateThousands(monthlyValue)}<br><br>
+		Weekly Amount: ${weeklyAmount} ${symbol.toUpperCase()}<br>
+		Weekly Value: ${currencySymbol + Utils.separateThousands(weeklyValue)}<br><br>
+		Daily Amount: ${dailyAmount} ${symbol.toUpperCase()}<br>
+		Daily Value: ${currencySymbol + Utils.separateThousands(dailyValue)}
+	`;
+}
+
+function calculateMiningRewards(currency: string, symbol: string, price: number, equipmentCost: number, dailyAmount: number, dailyPowerCost: number) {
+	let currencySymbol = Utils.currencySymbols[currency];
+
+	let dailyValue = (dailyAmount * price) - dailyPowerCost;
+	
+	let weeklyAmount = dailyAmount * 7;
+	let weeklyValue = dailyValue * 7;
+
+	let monthlyAmount = dailyAmount * 30;
+	let monthlyValue = dailyValue * 30;
+
+	let yearlyAmount = dailyAmount * 365;
+	let yearlyValue = dailyValue * 365;
+
+	let roi = equipmentCost / monthlyValue;
+
+	return `
+		If ${symbol.toUpperCase()} remains at its current price of ${currencySymbol + Utils.separateThousands(price)}:<br><br>
+		Yearly Amount: ${yearlyAmount} ${symbol.toUpperCase()}<br>
+		Yearly Value: ${currencySymbol + Utils.separateThousands(yearlyValue)}<br><br>
+		Monthly Amount: ${monthlyAmount} ${symbol.toUpperCase()}<br>
+		Monthly Value: ${currencySymbol + Utils.separateThousands(monthlyValue)}<br><br>
+		Weekly Amount: ${weeklyAmount} ${symbol.toUpperCase()}<br>
+		Weekly Value: ${currencySymbol + Utils.separateThousands(weeklyValue)}<br><br>
+		Daily Amount: ${dailyAmount} ${symbol.toUpperCase()}<br>
+		Daily Value: ${currencySymbol + Utils.separateThousands(dailyValue)}<br><br>
+		Your ROI (Return on Investment) would be ${roi.toFixed(2)} months.
+	`;
 }
 
 export function fetchActivity() {

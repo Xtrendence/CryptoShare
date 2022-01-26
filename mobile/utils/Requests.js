@@ -1,5 +1,5 @@
 function request(method, url, body) {
-	console.log("Request", url);
+	console.log(new Date().toLocaleTimeString(), "Request", url);
 
 	return new Promise((resolve, reject) => {
 		try {
