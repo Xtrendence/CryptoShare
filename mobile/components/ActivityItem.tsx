@@ -63,7 +63,7 @@ let styles: any = StyleSheet.create({
 	},
 	itemTextLight: {
 		color: Colors.Light.mainContrast,
-		backgroundColor: Colors.Light.mainFifth
+		backgroundColor: Colors.Light.mainThird
 	},
 	itemTextBuyDark: {
 		backgroundColor: Colors.Dark.positiveFirst,
@@ -83,10 +83,10 @@ let styles: any = StyleSheet.create({
 	},
 	itemTextTransferDark: {
 		backgroundColor: Colors.Dark.mainSecond,
-		color: Colors.Dark.accentContrast,
+		color: Colors.Dark.mainContrast,
 	},
 	itemTextTransferLight: {
-		backgroundColor: Colors.Light.mainSecond,
-		color: Colors.Light.accentContrast,
+		backgroundColor: Colors.Light.mainThird,
+		color: Colors.Light.mainContrast,
 	},
 });

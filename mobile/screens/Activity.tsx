@@ -30,6 +30,7 @@ export default function Activity({ navigation }: any) {
 	const [popupContent, setPopupContent] = useState<any>(null);
 
 	const [activityRows, setActivityRows] = useState<any>({});
+	const [filteredRows, setFilteredRows] = useState<any>({});
 
 	const popupRef = useRef<any>({
 		staking: {
@@ -81,6 +82,12 @@ export default function Activity({ navigation }: any) {
 		};
 	}, []);
 
+	useEffect(() => {
+		if(Object.keys(activityRows).length < 2 || Utils.empty(query)) {
+			searchActivity(query);
+		}
+	}, [query]);
+
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
@@ -93,13 +100,13 @@ export default function Activity({ navigation }: any) {
 						onChangeText={(value) => setQuery(value)}
 						value={query}
 					/>
-					<TouchableOpacity style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
+					<TouchableOpacity onPress={() => searchActivity(query)} style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
 						<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>
 					</TouchableOpacity>
 				</View>
 				<FlatList
 					contentContainerStyle={{ paddingTop:10 }}
-					data={Object.keys(activityRows).reverse()}
+					data={Utils.empty(filteredRows) ? Object.keys(activityRows).reverse() : Object.keys(filteredRows)}
 					renderItem={renderItem}
 					keyExtractor={item => activityRows[item].activityTransactionID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
@@ -134,6 +141,28 @@ export default function Activity({ navigation }: any) {
 		}
 
 		setActivityRows(activityData);
+	}
+
+	function searchActivity(query: string) {
+		if(Utils.empty(query)) {
+			setFilteredRows(activityRows);
+			return;
+		}
+
+		query = query.toLowerCase();
+
+		let filtered: any = {};
+
+		Object.keys(activityRows).map(txID => {
+			let activity = activityRows[txID];
+			let data = [activity.activityDate, activity.activityType, activity.activityAssetSymbol, activity.activityAssetAmount];
+
+			if(data.join("|").toLowerCase().includes(query)) {
+				filtered[txID] = activity;
+			}
+		});
+
+		setFilteredRows(filtered);
 	}
 
 	function showActivityPopup() {
