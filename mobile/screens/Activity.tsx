@@ -17,6 +17,7 @@ import CryptoFinder from "../utils/CryptoFinder";
 import MatchList from "../components/MatchList";
 import store from "../store/store";
 import { screenWidth } from "../styles/NavigationBar";
+import ActivityPopup from "../components/ActivityPopup";
 
 export default function Activity({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -49,7 +50,20 @@ export default function Activity({ navigation }: any) {
 
 		},
 		activity: {
-
+			activityID: "", 
+			activityAssetID: "", 
+			activityAssetSymbol: "", 
+			activityAssetType: "crypto", 
+			activityDate: "", 
+			activityType: "buy", 
+			activityAssetAmount: "", 
+			activityFee: "", 
+			activityNotes: "", 
+			activityExchange: "", 
+			activityPair: "", 
+			activityPrice: "", 
+			activityFrom: "", 
+			activityTo: ""
 		}
 	});
 
@@ -79,12 +93,13 @@ export default function Activity({ navigation }: any) {
 		}, 15000);
 
 		return () => {
+			setFilteredRows({});
 			clearInterval(refresh);
 		};
 	}, []);
 
 	useEffect(() => {
-		if(Object.keys(activityRows).length < 2 || Utils.empty(query)) {
+		if(Object.keys(activityRows).length < 100 || Utils.empty(query)) {
 			searchActivity(query);
 		}
 	}, [query]);
@@ -107,7 +122,7 @@ export default function Activity({ navigation }: any) {
 				</View>
 				<FlatList
 					contentContainerStyle={{ paddingTop:10 }}
-					data={Utils.empty(filteredRows) ? Object.keys(activityRows).reverse() : Object.keys(filteredRows)}
+					data={Object.keys(filteredRows).length > 0 ? Object.keys(filteredRows).reverse() : Object.keys(activityRows).reverse()}
 					renderItem={renderItem}
 					keyExtractor={item => activityRows[item].activityTransactionID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
@@ -123,7 +138,7 @@ export default function Activity({ navigation }: any) {
 					<TouchableOpacity onPress={() => showToolsPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Tools</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
+					<TouchableOpacity onPress={() => showActivityPopup("createActivity", {})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Activity</Text>
 					</TouchableOpacity>
 				</View>
@@ -173,7 +188,41 @@ export default function Activity({ navigation }: any) {
 		setFilteredRows(filtered);
 	}
 
-	function showActivityPopup() {
+	function showActivityPopup(action: string, info: any) {
+		try {
+			popupRef.current.activity = {
+				activityID: info.activityID, 
+				activityAssetID: info.activityAssetID, 
+				activityAssetSymbol: info.activityAssetSymbol, 
+				activityAssetType: info.activityAssetType || "crypto", 
+				activityDate: info.activityDate, 
+				activityType: info.activityType || "buy", 
+				activityAssetAmount: info.activityAssetAmount, 
+				activityFee: info.activityFee, 
+				activityNotes: info.activityNotes, 
+				activityExchange: info.activityExchange, 
+				activityPair: info.activityPair, 
+				activityPrice: info.activityPrice, 
+				activityFrom: info.activityFrom, 
+				activityTo: info.activityTo
+			};
+
+			let data = popupRef.current.activity;
+
+			hidePopup();
+
+			let content = () => {
+				return <ActivityPopup action={action} theme={theme} popupRef={popupRef} data={data} hidePopup={hidePopup} showActivityPopup={showActivityPopup} processAction={processAction}/>
+			};
+
+			showPopup(content);
+		} catch(error) {
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function processAction(action: string) {
 
 	}
 

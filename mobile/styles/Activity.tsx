@@ -1,17 +1,8 @@
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
+import { barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
 export default createStyle<any>({
-	scrollView: {
-		width: "100%",
-		height: "100%",
-	},
-	scrollViewContent: {
-		justifyContent: "center", 
-		alignItems: "center", 
-		flexGrow: 1
-	},
 	area: {
 		width: "100%",
 		height: "100%",
@@ -227,6 +218,7 @@ export default createStyle<any>({
 		justifyContent: "center",
 		alignItems: "center",
 		width: screenWidth - 80,
+		maxHeight: windowHeight - 200,
 		padding: 20,
 		borderRadius: GlobalStyle.borderRadius
 	},
@@ -237,6 +229,11 @@ export default createStyle<any>({
 		alignItems: "center",
 		justifyContent: "center"
 	},
+	popupChoicesWrapper: {
+		flexDirection: "column",
+		flexWrap: "nowrap",
+		width: 180
+	},
 	popupButtonWrapper: {
 		flexDirection: "row",
 	},
@@ -244,6 +241,11 @@ export default createStyle<any>({
 		width: 100,
 		marginLeft: 10,
 		marginRight: 10
+	},
+	popupChoiceButton: {
+		width: "100%",
+		marginLeft: 0,
+		marginBottom: 10
 	},
 	popupInput: {
 		width: 180,
@@ -271,5 +273,14 @@ export default createStyle<any>({
 	},
 	dangerButtonLight: {
 		backgroundColor: Colors.Light.negativeFirst
-	}
+	},
+	scrollView: {
+		width: "100%",
+		height: "100%"
+	},
+	scrollViewContent: {
+		justifyContent: "center", 
+		alignItems: "center", 
+		flexGrow: 1,
+	},
 });

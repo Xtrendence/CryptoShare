@@ -8,7 +8,7 @@ import Utils from "../utils/Utils";
 export default function Item({ info, showActivityPopup, theme }: any) {
 	return (
 		<TouchableOpacity
-			onPress={() => showActivityPopup(info)}
+			onPress={() => showActivityPopup("updateActivity", info)}
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemLeft}>
