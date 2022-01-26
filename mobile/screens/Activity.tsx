@@ -30,6 +30,7 @@ export default function Activity({ navigation }: any) {
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
+	const [popupType, setPopupType] = useState<any>(null);
 
 	const [activityRows, setActivityRows] = useState<any>({});
 	const [filteredRows, setFilteredRows] = useState<any>({});
@@ -147,7 +148,7 @@ export default function Activity({ navigation }: any) {
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
-						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], popupType === "activity" ? { padding:0 } : null]}>{popupContent}</View>
 					</View>
 				</View>
 			</Modal>
@@ -188,6 +189,31 @@ export default function Activity({ navigation }: any) {
 		setFilteredRows(filtered);
 	}
 
+	function showConfirmationPopup(action: string, args: any) {
+		Keyboard.dismiss();
+		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => processAction(action)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
 	function showActivityPopup(action: string, info: any) {
 		try {
 			popupRef.current.activity = {
@@ -212,10 +238,11 @@ export default function Activity({ navigation }: any) {
 			hidePopup();
 
 			let content = () => {
-				return <ActivityPopup action={action} theme={theme} popupRef={popupRef} data={data} hidePopup={hidePopup} showActivityPopup={showActivityPopup} processAction={processAction}/>
+				return <ActivityPopup action={action} theme={theme} popupRef={popupRef} data={data} hidePopup={hidePopup} showActivityPopup={showActivityPopup} showConfirmationPopup={showConfirmationPopup} processAction={processAction}/>
 			};
 
 			showPopup(content);
+			setPopupType("activity");
 		} catch(error) {
 			console.log(error);
 			Utils.notify(theme, "Something went wrong...");
@@ -223,10 +250,52 @@ export default function Activity({ navigation }: any) {
 	}
 
 	function processAction(action: string) {
+		try {
+			let data = popupRef.current.activity;
 
+			switch(action) {
+				case "createActivity":
+					// createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
+					break;
+				case "updateActivity":
+					// updateHolding(data.holdingID, data.assetID, data.assetSymbol, data.assetAmount, data.assetType);
+					break;
+				case "deleteActivity":
+					deleteActivity(data.activityID);
+					break;
+			}
+			
+			hidePopup();
+		} catch(error) {
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function deleteActivity(activityID: number) {
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+			await requests.deleteActivity(token, userID, activityID);
+
+			populateActivityList();
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	function showToolsPopup() {
+		setPopupType("tools");
+
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
@@ -255,6 +324,8 @@ export default function Activity({ navigation }: any) {
 	}
 
 	function showStakingPopup() {
+		setPopupType("tools");
+
 		popupRef.current.staking = {
 			symbol: "",
 			amount: "",
@@ -374,6 +445,8 @@ export default function Activity({ navigation }: any) {
 	}
 
 	function showMiningPopup() {
+		setPopupType("tools");
+
 		popupRef.current.mining = {
 			symbol: "",
 			equipmentCost: "",
@@ -494,6 +567,8 @@ export default function Activity({ navigation }: any) {
 
 	// TODO: Add functionality.
 	function showDividendsPopup() {
+		setPopupType("tools");
+
 		hidePopup();
 	}
 
@@ -507,6 +582,7 @@ export default function Activity({ navigation }: any) {
 		Keyboard.dismiss();
 		setPopup(false);
 		setPopupContent(null);
+		setPopupType(null);
 	}
 
 	function outputHTML(html: string) {

@@ -3,11 +3,11 @@ import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-nativ
 import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
 
-export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, processAction }: any) {
+export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
 	return (
 		<View style={styles.popupContent}>
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
-				<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+				<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird, marginTop:20 }]}>
 					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
 						{ action === "createActivity" ? "Add Activity" : "Update Activity" }
 					</Text>
@@ -134,8 +134,13 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 							/>
 						</View>
 					}
+					{ action === "updateActivity" &&
+						<TouchableOpacity onPress={() => showConfirmationPopup("deleteActivity", { activityID:popupRef.current.activity.activityID })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`], styles.sectionButton, { marginBottom:0 }]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Activity</Text>
+						</TouchableOpacity>
+					}
 				</View>
-				<View style={styles.popupButtonWrapper}>
+				<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
 					<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 						<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 					</TouchableOpacity>

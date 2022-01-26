@@ -227,7 +227,8 @@ export default createStyle<any>({
 	},
 	popupContent: {
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
+		width: "100%"
 	},
 	popupChoicesWrapper: {
 		flexDirection: "column",
