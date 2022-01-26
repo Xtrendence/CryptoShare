@@ -385,6 +385,10 @@ export default class Utils {
 		return sorted;
 	}
 
+	static capitalizeFirstLetter(string: string) {
+		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
 	static rgbToHex(rgb: string) {
 		let numbers = rgb.split("(")[1].split(")")[0].split(",");
 		let hexArray = numbers.map((number) => {

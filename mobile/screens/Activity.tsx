@@ -1,5 +1,5 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
@@ -61,6 +61,26 @@ export default function Activity({ navigation }: any) {
 	
 	useFocusEffect(Utils.backHandler(navigation));
 
+	useEffect(() => {
+		navigation.addListener("focus", () => {
+			if(navigation.isFocused()) {
+				setTimeout(() => {
+					populateActivityList();
+				}, 500);
+			}
+		});
+		
+		let refresh = setInterval(() => {
+			if(navigation.isFocused()) {
+				populateActivityList();
+			}
+		}, 15000);
+
+		return () => {
+			clearInterval(refresh);
+		};
+	}, []);
+
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
@@ -79,9 +99,9 @@ export default function Activity({ navigation }: any) {
 				</View>
 				<FlatList
 					contentContainerStyle={{ paddingTop:10 }}
-					data={Object.keys(activityRows)}
+					data={Object.keys(activityRows).reverse()}
 					renderItem={renderItem}
-					keyExtractor={item => activityRows[item].coinID}
+					keyExtractor={item => activityRows[item].activityTransactionID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
@@ -104,6 +124,17 @@ export default function Activity({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	async function populateActivityList() {
+		let activityData = await fetchActivity();
+
+		if(Utils.empty(activityData)) {
+			setActivityRows({});
+			return;
+		}
+
+		setActivityRows(activityData);
+	}
 
 	function showActivityPopup() {
 
