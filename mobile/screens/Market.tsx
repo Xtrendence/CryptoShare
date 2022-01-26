@@ -16,6 +16,7 @@ import Loading from "../components/Loading";
 import CryptoFinder from "../utils/CryptoFinder";
 import MatchList from "../components/MatchList";
 import store from "../store/store";
+import Item from "../components/MarketItem";
 
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -43,35 +44,11 @@ export default function Market({ navigation }: any) {
 
 	const [marketRowsCrypto, setMarketRowsCrypto] = useState<any>({});
 
-	const Item = ({ info }: any) => {
-		return (
-			<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
-				<View style={styles.itemTop}>
-					<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
-						<Image source={{ uri:info.icon }} style={styles.itemIcon}/>
-					</View>
-					<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.name} ({info.symbol.toUpperCase()})</Text>
-				</View>
-				<View style={styles.itemBottom}>
-					<ScrollView style={[styles.itemScrollView]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
-						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">#{info.rank}</Text>
-						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">24h: {info.priceChangeDay}%</Text>
-						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Volume: {Utils.currencySymbols[settings.currency] + Utils.abbreviateNumber(info.volume, 2)}</Text>
-					</ScrollView>
-					<ScrollView style={[styles.itemScrollView, { marginBottom:10 }]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
-						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(info.price)}</Text>
-						<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Market Cap: {Utils.currencySymbols[settings.currency] + Utils.abbreviateNumber(info.marketCap, 2)}</Text>
-					</ScrollView>
-				</View>
-			</TouchableOpacity>
-		);
-	}
-
 	const renderItem = ({ item }: any) => {
 		let info = marketRowsCrypto[item];
 
 		return (
-			<Item info={info}/>
+			<Item info={info} showModal={showModal} theme={theme} settings={settings}/>
 		);
 	}
 	
