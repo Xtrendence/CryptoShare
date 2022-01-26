@@ -101,8 +101,8 @@ export default function Holdings({ navigation }: any) {
 					data={Object.keys(holdingsRows)}
 					renderItem={renderItem}
 					keyExtractor={item => holdingsRows[item].coinID}
-					style={[styles.wrapper, styles[`wrapper${theme}`]]
-				}/>
+					style={[styles.wrapper, styles[`wrapper${theme}`]]}
+				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
 					<TouchableOpacity onPress={() => showHoldingPopup("crypto", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Crypto</Text>

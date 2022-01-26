@@ -105,8 +105,8 @@ export default function Market({ navigation }: any) {
 						data={Object.keys(marketRowsCrypto)}
 						renderItem={renderItem}
 						keyExtractor={item => marketRowsCrypto[item].coinID}
-						style={[styles.wrapper, styles[`wrapper${theme}`]]
-					}/>
+						style={[styles.wrapper, styles[`wrapper${theme}`]]}
+					/>
 				}
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
 					<TouchableOpacity onPress={() => showGlobal()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>

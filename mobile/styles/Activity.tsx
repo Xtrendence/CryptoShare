@@ -138,4 +138,128 @@ export default createStyle<any>({
 	actionButtonLight: {
 		backgroundColor: Colors.Light.Activity.accentSecond
 	},
+	choiceButton: {
+		backgroundColor: "transparent",
+		borderWidth: 3,
+		borderColor: Colors.Dark.Activity.accentFirst
+	},
+	choiceButtonLight: {
+		backgroundColor: "transparent",
+		borderColor: Colors.Light.Activity.accentFirst
+	},
+	choiceButtonActiveDark: {
+		backgroundColor: Colors.Dark.Activity.accentFirst
+	},
+	choiceButtonActiveLight: {
+		backgroundColor: Colors.Light.Activity.accentFirst
+	},
+	choiceText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.accentContrast,
+	},
+	choiceTextLight: {
+		color: Colors.Light.mainContrast,
+	},
+	choiceTextActiveDark: {
+		color: Colors.Dark.accentContrast
+	},
+	choiceTextActiveLight: {
+		color: Colors.Light.accentContrast
+	},
+	modalSection: {
+		maxWidth: screenWidth - 40,
+		padding: 20,
+		marginBottom: 20,
+		backgroundColor: Colors.Dark.mainFirst,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	modalSectionLight: {
+		backgroundColor: Colors.Light.mainFirst,
+	},
+	modalInfo: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.mainContrast,
+		padding: 4,
+	},
+	modalInfoLight: {
+		color: Colors.Light.mainContrast
+	},
+	popup: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: "100%",
+		height: "100%",
+	},
+	popupBackground: {
+		position: "absolute",
+		zIndex: 2,
+		width: "100%",
+		height: "100%",
+		backgroundColor: "rgba(0,0,0,0.9)",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	popupForeground: {
+		position: "absolute",
+		zIndex: 3,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	popupWrapper: {
+		backgroundColor: Colors.Dark.mainFirst,
+		justifyContent: "center",
+		alignItems: "center",
+		width: screenWidth - 80,
+		padding: 20,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	popupWrapperLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	popupContent: {
+		alignItems: "center",
+		justifyContent: "center"
+	},
+	popupButtonWrapper: {
+		flexDirection: "row",
+	},
+	popupButton: {
+		width: 100,
+		marginLeft: 10,
+		marginRight: 10
+	},
+	popupInput: {
+		width: 180,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		color: Colors.Dark.mainContrast,
+		paddingLeft: 10,
+		paddingRight: 10,
+		height: 40,
+		marginBottom: 20,
+	},
+	popupInputLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent,
+		color: Colors.Light.mainContrast,
+	},
+	sectionButton: {
+		width: 180,
+		marginLeft: 0,
+		marginRight: 0,
+		marginBottom: 20
+	},
+	dangerButton: {
+		backgroundColor: Colors.Dark.negativeFirst,
+		marginTop: 20
+	},
+	dangerButtonLight: {
+		backgroundColor: Colors.Light.negativeFirst
+	}
 });

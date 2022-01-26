@@ -15,7 +15,7 @@ export default function Item({ info, showHoldingChart, showHoldingPopup, theme, 
 				} else {
 					showHoldingPopup("crypto", "updateHolding", info);
 				}
-			} }
+			}}
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemTop}>
