@@ -33,7 +33,7 @@ async function populateHoldingsList(recreate) {
 				});
 			} else {
 				let parsedData = await parseActivityAsHoldings();
-				holdingsData = parsedData.holdingsData;
+				holdingsData = parsedData?.holdingsData;
 
 				if(empty(holdingsData)) {
 					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;

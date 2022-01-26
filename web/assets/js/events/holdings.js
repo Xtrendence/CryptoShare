@@ -2,6 +2,12 @@
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
 		try {
+			let activityData = await fetchActivity();
+			if(empty(activityData)) {
+				errorNotification("No activities found.");
+				return;
+			}
+
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
 			let data = await fetchHoldingsHistoricalData(undefined);

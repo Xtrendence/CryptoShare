@@ -217,20 +217,20 @@ export default function Activity({ navigation }: any) {
 	function showActivityPopup(action: string, info: any) {
 		try {
 			popupRef.current.activity = {
-				activityID: info.activityID, 
-				activityAssetID: info.activityAssetID, 
-				activityAssetSymbol: info.activityAssetSymbol, 
+				activityID: info.activityID || "", 
+				activityAssetID: info.activityAssetID || "", 
+				activityAssetSymbol: Utils.empty(info.activityAssetSymbol) ? "" : info.activityAssetSymbol.toUpperCase(), 
 				activityAssetType: info.activityAssetType || "crypto", 
-				activityDate: info.activityDate, 
+				activityDate: info.activityDate || "", 
 				activityType: info.activityType || "buy", 
-				activityAssetAmount: info.activityAssetAmount, 
-				activityFee: info.activityFee, 
-				activityNotes: info.activityNotes, 
-				activityExchange: info.activityExchange, 
-				activityPair: info.activityPair, 
-				activityPrice: info.activityPrice, 
-				activityFrom: info.activityFrom, 
-				activityTo: info.activityTo
+				activityAssetAmount: info.activityAssetAmount || "", 
+				activityFee: info.activityFee || "", 
+				activityNotes: info.activityNotes || "", 
+				activityExchange: info.activityExchange || "", 
+				activityPair: info.activityPair || "", 
+				activityPrice: info.activityPrice || "", 
+				activityFrom: info.activityFrom || "", 
+				activityTo: info.activityTo || ""
 			};
 
 			let data = popupRef.current.activity;
@@ -255,10 +255,10 @@ export default function Activity({ navigation }: any) {
 
 			switch(action) {
 				case "createActivity":
-					// createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
+					createActivity({ symbol:data.activityAssetSymbol });
 					break;
 				case "updateActivity":
-					updateActivity();
+					updateActivity({ symbol:data.activityAssetSymbol });
 					break;
 				case "deleteActivity":
 					deleteActivity(data.activityID);
@@ -272,15 +272,55 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
-	async function updateActivity() {
+	function selectMatchCreate(id: string) {
+		hidePopup();
+		createActivity({ id:id });
+	}
+
+	function selectMatchUpdate(id: string) {
+		hidePopup();
+		updateActivity({ id:id });
+	}
+
+	async function createActivity(args: any) {
 		try {
 			setLoading(true);
+
+			let assetSymbol: string;
+			let asset: any;
+
+			if("symbol" in args) {
+				assetSymbol = args.symbol.toLowerCase();
+				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+			} else {
+				asset = await CryptoFinder.getCoin({ id:args.id });
+				assetSymbol = asset.symbol;
+			}
 
 			let data = parseActivityPopupData(popupRef.current.activity);
 
 			if("error" in data) {
 				setLoading(false);
-				Utils.notify(theme, "Invalid data.");
+				Utils.notify(theme, data.error);
+				return;
+			}
+
+			if("matches" in asset) {
+				let content = () => {
+					return (
+						<View style={styles.popupContent}>
+							<MatchList onPress={selectMatchCreate} theme={theme} matches={asset.matches}/>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+						</View>
+					);
+				}
+
+				showPopup(content);
+
+				setLoading(false);
+
 				return;
 			}
 
@@ -291,13 +331,84 @@ export default function Activity({ navigation }: any) {
 
 			let requests = new Requests(api);
 
+			data.activityAssetID = asset.id;
+			data.activityAssetSymbol = asset.symbol.toUpperCase();
+
+			let encrypted = Utils.encryptObjectValues(key, data);
+
+			await requests.createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+			setTimeout(() => {
+				populateActivityList();
+				setLoading(false);
+			}, 500);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function updateActivity(args: any) {
+		try {
+			setLoading(true);
+
+			let assetSymbol: string;
+			let asset: any;
+
+			if("symbol" in args) {
+				assetSymbol = args.symbol.toLowerCase();
+				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+			} else {
+				asset = await CryptoFinder.getCoin({ id:args.id });
+				assetSymbol = asset.symbol;
+			}
+
+			let data = parseActivityPopupData(popupRef.current.activity);
+
+			if("error" in data) {
+				setLoading(false);
+				Utils.notify(theme, data.error);
+				return;
+			}
+
+			if("matches" in asset) {
+				let content = () => {
+					return (
+						<View style={styles.popupContent}>
+							<MatchList onPress={selectMatchUpdate} theme={theme} matches={asset.matches}/>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+						</View>
+					);
+				}
+
+				showPopup(content);
+
+				setLoading(false);
+
+				return;
+			}
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			data.activityAssetID = asset.id;
+			data.activityAssetSymbol = asset.symbol.toUpperCase();
+
 			let encrypted = Utils.encryptObjectValues(key, data);
 
 			await requests.updateActivity(token, userID, data.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
 
-			populateActivityList();
-
-			setLoading(false);
+			setTimeout(() => {
+				populateActivityList();
+				setLoading(false);
+			}, 500);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
@@ -316,9 +427,10 @@ export default function Activity({ navigation }: any) {
 			let requests = new Requests(api);
 			await requests.deleteActivity(token, userID, activityID);
 
-			populateActivityList();
-
-			setLoading(false);
+			setTimeout(() => {
+				populateActivityList();
+				setLoading(false);
+			}, 500);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
@@ -620,6 +732,16 @@ export default function Activity({ navigation }: any) {
 
 	function parseActivityPopupData(values: any) {
 		try {
+			values.activityAssetAmount = parseFloat(values.activityAssetAmount);
+
+			if(Utils.empty(values.activityFee)) {
+				values.activityFee = 0;
+			}
+
+			if(Utils.empty(values.activityPrice)) {
+				values.activityFee = 0;
+			}
+
 			if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
 				return { error:"The values of the amount, fee, and price fields must be numbers."};
 			}
@@ -637,10 +759,6 @@ export default function Activity({ navigation }: any) {
 					values.activityPair = "";
 				}
 
-				if(Utils.empty(values.activityPrice)) {
-					values.activityPrice = 0;
-				}
-
 				values.activityFrom = "";
 				values.activityTo = "";
 			} else {
@@ -655,10 +773,6 @@ export default function Activity({ navigation }: any) {
 				values.activityExchange = "";
 				values.activityPair = "";
 				values.activityPrice = 0;
-			}
-
-			if(Utils.empty(values.activityFee)) {
-				values.activityFee = 0;
 			}
 
 			if(Utils.empty(values.activityNotes)) {

@@ -279,9 +279,10 @@ export default function Holdings({ navigation }: any) {
 				await requests.createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 			}
 
-			populateHoldingsList();
-
-			setLoading(false);
+			setTimeout(() => {
+				populateHoldingsList();
+				setLoading(false);
+			}, 500);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
@@ -300,9 +301,10 @@ export default function Holdings({ navigation }: any) {
 			let requests = new Requests(api);
 			await requests.deleteHolding(token, userID, holdingID);
 
-			populateHoldingsList();
-
-			setLoading(false);
+			setTimeout(() => {
+				populateHoldingsList();
+				setLoading(false);
+			}, 500);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
@@ -336,9 +338,10 @@ export default function Holdings({ navigation }: any) {
 
 			await requests.updateHolding(token, userID, holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 
-			populateHoldingsList();
-
-			setLoading(false);
+			setTimeout(() => {
+				populateHoldingsList();
+				setLoading(false);
+			}, 500);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
@@ -466,6 +469,12 @@ export default function Holdings({ navigation }: any) {
 
 	async function showPortfolioChart() {
 		setLoadingText("This might take a while...");
+
+		let activityData = await fetchActivity();
+		if(Utils.empty(activityData)) {
+			Utils.notify(theme, "No activities found.");
+			return;
+		}
 
 		let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
 
@@ -663,7 +672,7 @@ export default function Holdings({ navigation }: any) {
 				});
 			} else {
 				let parsedData: any = await parseActivityAsHoldings();
-				holdingsData = parsedData.holdingsData;
+				holdingsData = parsedData?.holdingsData;
 
 				if(Utils.empty(holdingsData)) {
 					setHoldingsRows({});
