@@ -24,6 +24,7 @@ export default function Holdings({ navigation }: any) {
 	const { settings } = useSelector((state: any) => state.settings);
 
 	const [loading, setLoading] = useState<boolean>(false);
+	const [loadingText, setLoadingText] = useState<string>("");
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
@@ -196,7 +197,7 @@ export default function Holdings({ navigation }: any) {
 					</View>
 				</View>
 			</Modal>
-			<Loading active={loading} theme={theme} opaque={true}/>
+			<Loading active={loading} theme={theme} opaque={true} text={loadingText}/>
 		</ImageBackground>
 	);
 
@@ -456,6 +457,8 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	async function showPortfolioChart() {
+		setLoadingText("This might take a while...");
+
 		let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
 
 		let data: any = await fetchHoldingsHistoricalData(undefined);
@@ -466,6 +469,8 @@ export default function Holdings({ navigation }: any) {
 		setLoading(true);
 
 		let dates = await parseActivityAsDatedValue(days, prices, activities);
+
+		setLoadingText("");
 
 		showModal(dates, undefined);
 	}
