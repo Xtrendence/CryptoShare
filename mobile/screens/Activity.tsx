@@ -258,7 +258,7 @@ export default function Activity({ navigation }: any) {
 					// createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
 					break;
 				case "updateActivity":
-					// updateHolding(data.holdingID, data.assetID, data.assetSymbol, data.assetAmount, data.assetType);
+					updateActivity();
 					break;
 				case "deleteActivity":
 					deleteActivity(data.activityID);
@@ -267,6 +267,39 @@ export default function Activity({ navigation }: any) {
 			
 			hidePopup();
 		} catch(error) {
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function updateActivity() {
+		try {
+			setLoading(true);
+
+			let data = parseActivityPopupData(popupRef.current.activity);
+
+			if("error" in data) {
+				setLoading(false);
+				Utils.notify(theme, "Invalid data.");
+				return;
+			}
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let encrypted = Utils.encryptObjectValues(key, data);
+
+			await requests.updateActivity(token, userID, data.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+			populateActivityList();
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
 			console.log(error);
 			Utils.notify(theme, "Something went wrong...");
 		}
@@ -583,6 +616,60 @@ export default function Activity({ navigation }: any) {
 		setPopup(false);
 		setPopupContent(null);
 		setPopupType(null);
+	}
+
+	function parseActivityPopupData(values: any) {
+		try {
+			if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
+				return { error:"The values of the amount, fee, and price fields must be numbers."};
+			}
+
+			if(Utils.empty(values.activityAssetSymbol) || Utils.empty(values.activityAssetType) || Utils.empty(values.activityAssetAmount) || Utils.empty(values.activityDate) || Utils.empty(values.activityType)) {
+				return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
+			}
+
+			if(values.activityType === "buy" || values.activityType === "sell") {
+				if(Utils.empty(values.activityExchange)) {
+					values.activityExchange = "";
+				}
+
+				if(Utils.empty(values.activityPair)) {
+					values.activityPair = "";
+				}
+
+				if(Utils.empty(values.activityPrice)) {
+					values.activityPrice = 0;
+				}
+
+				values.activityFrom = "";
+				values.activityTo = "";
+			} else {
+				if(Utils.empty(values.activityFrom)) {
+					values.activityFrom = "";
+				}
+
+				if(Utils.empty(values.activityTo)) {
+					values.activityTo = "";
+				}
+
+				values.activityExchange = "";
+				values.activityPair = "";
+				values.activityPrice = 0;
+			}
+
+			if(Utils.empty(values.activityFee)) {
+				values.activityFee = 0;
+			}
+
+			if(Utils.empty(values.activityNotes)) {
+				values.activityNotes = "-";
+			}
+
+			return values;
+		} catch(error) {
+			console.log(error);
+			return { error:"Something went wrong..." };
+		}
 	}
 
 	function outputHTML(html: string) {
