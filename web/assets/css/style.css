@@ -1236,6 +1236,11 @@ html.light .page.activity .page-container-toolbar {
 .page.activity .page-container-toolbar input.active:focus {
 	background:var(--main-first-transparent);
 }
+.page.activity .page-container-toolbar .action-button.search {
+	position:absolute;
+	top:10px;
+	left:210px;
+}
 .page.activity .page-container-toolbar svg {
 	width:20px;
 	height:20px;

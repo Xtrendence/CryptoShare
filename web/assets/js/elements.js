@@ -53,6 +53,7 @@ let divPageActivity = document.getElementById("activity-page");
 let divActivityList = document.getElementById("activity-list");
 
 let inputActivitySearch = document.getElementById("input-activity-search");
+let buttonActivitySearch = document.getElementById("button-activity-search");
 
 let buttonActivityHelp = document.getElementById("button-activity-help");
 let buttonActivityTools = document.getElementById("button-activity-tools");

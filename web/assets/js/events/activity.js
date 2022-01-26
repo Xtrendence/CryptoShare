@@ -1,8 +1,16 @@
 inputActivitySearch.addEventListener("keydown", () => {
-	filterActivityList(inputActivitySearch.value);
+	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
+		filterActivityList(inputActivitySearch.value);
+	}
 });
 
 inputActivitySearch.addEventListener("keyup", () => {
+	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
+		filterActivityList(inputActivitySearch.value);
+	}
+});
+
+buttonActivitySearch.addEventListener("click", () => {
 	filterActivityList(inputActivitySearch.value);
 });
 
