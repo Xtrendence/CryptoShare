@@ -468,6 +468,12 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	async function showPortfolioChart() {
+		let settings: any = store.getState().settings.settings;
+		if(settings.transactionsAffectHoldings !== "enabled") {
+			Utils.notify(theme, "Transactions need to be affecting holdings.", 5000);
+			return;
+		}
+
 		setLoadingText("This might take a while...");
 
 		let activityData = await fetchActivity();

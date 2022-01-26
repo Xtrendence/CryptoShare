@@ -198,14 +198,15 @@ export default class Utils {
 		return decrypted;
 	}
 
-	static notify(theme: string, message: string) {
+	static notify(theme: string, message: string, duration: number = 4000) {
 		showMessage({
 			message: message,
 			type: "info",
 			floating: true,
 			hideStatusBar: true,
 			backgroundColor: Colors[theme].accentSecond,
-			color: Colors[theme].accentContrast
+			color: Colors[theme].accentContrast,
+			duration: duration
 		});
 	}
 
