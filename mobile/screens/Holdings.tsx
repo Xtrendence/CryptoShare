@@ -894,6 +894,7 @@ export default function Holdings({ navigation }: any) {
 				for(let i = 0; i < coinIDs.length; i++) {
 					setTimeout(async () => {
 						setLoading(true);
+						setLoadingText(`Getting Data... (${i + 1}/${coinIDs.length})`);
 
 						let holding = holdings[coinIDs[i]];
 
