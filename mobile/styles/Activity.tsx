@@ -124,6 +124,16 @@ export default createStyle<any>({
 		marginLeft: 5,
 		marginRight: 5
 	},
+	iconButton: {
+		width: 40,
+		backgroundColor: Colors.Dark.Activity.accentFirst
+	},
+	iconButtonLight: {
+		backgroundColor: Colors.Light.Activity.accentFirst
+	},
+	smallerButton: {
+		width: ((screenWidth / 2) - 35) - 25,
+	},
 	actionText: {
 		fontSize: 16,
 		fontWeight: "bold",

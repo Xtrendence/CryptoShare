@@ -6,6 +6,7 @@ import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles, { gradientColor } from "../styles/Holdings";
 import { useDispatch, useSelector } from "react-redux";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import LinearGradient from "react-native-linear-gradient";
 import { Colors } from "../styles/Global";
 import Requests, { cryptoAPI } from "../utils/Requests";
@@ -105,10 +106,17 @@ export default function Holdings({ navigation }: any) {
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity onPress={() => showHoldingPopup("crypto", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity onPress={() => showPortfolioChart()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
+						<Icon
+							name="chart-area" 
+							size={24} 
+							color={Colors[theme].accentContrast}
+						/>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => showHoldingPopup("crypto", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Crypto</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Stock</Text>
 					</TouchableOpacity>
 				</View>

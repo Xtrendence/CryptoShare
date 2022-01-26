@@ -5,10 +5,10 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
-export default function Item({ info, showActivityPopup, theme, settings }: any) {
+export default function Item({ info, showActivityPopup, theme }: any) {
 	return (
 		<TouchableOpacity
-			onPress={() => {}}
+			onPress={() => showActivityPopup(info)}
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemLeft}>

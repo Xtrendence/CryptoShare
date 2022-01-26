@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../styles/Activity";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
 import HTML from "react-native-render-html";
 import LinearGradient from "react-native-linear-gradient";
@@ -56,7 +57,7 @@ export default function Activity({ navigation }: any) {
 		let info = activityRows[item];
 
 		return (
-			<Item info={info} showActivityPopup={showActivityPopup} theme={theme} settings={settings}/>
+			<Item info={info} showActivityPopup={showActivityPopup} theme={theme}/>
 		);
 	}
 	
@@ -112,10 +113,17 @@ export default function Activity({ navigation }: any) {
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity onPress={() => showToolsPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
+						<Icon
+							name="question" 
+							size={24} 
+							color={Colors[theme].accentContrast}
+						/>
+					</TouchableOpacity>
+					<TouchableOpacity onPress={() => showToolsPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Tools</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Activity</Text>
 					</TouchableOpacity>
 				</View>
