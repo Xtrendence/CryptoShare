@@ -1058,6 +1058,11 @@ export default function Holdings({ navigation }: any) {
 							let assetID = activity.activityAssetID;
 							let amount = parseFloat(activity.activityAssetAmount);
 							let price = prices[assetID][i][1];
+
+							if(!Utils.empty(activity.activityPrice) && parseFloat(activity.activityPrice) > 0) {
+								price = parseFloat(activity.activityPrice);
+							}
+							
 							let value = parseFloat((price * amount).toFixed(3));
 
 							// If the asset doesn't already exist, then its values are set directly instead of being incremented or decremented.
