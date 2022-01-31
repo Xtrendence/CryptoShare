@@ -164,6 +164,26 @@ function addMarketCryptoData(previousElement, info) {
 	insertAfter(div, previousElement);
 }
 
+// TODO: Add watchlist, holdings, and activity buttons.
+function addMarketStockData(previousElement, info) {
+	let div = document.createElement("div");
+	div.setAttribute("class", "info-wrapper noselect");
+
+	div.innerHTML = `
+		<div class="info-container margin-bottom">
+			<span class="name">Name: ${info.shortName}</span>
+			<span class="symbol">Symbol: ${info.symbol.toUpperCase()}</span>
+			<span class="price">Price: ${currencySymbols[info.currency] + separateThousands(info.price)}</span>
+			<span class="high-1y">1Y High: ${currencySymbols[info.currency] + separateThousands(info.high1y)}</span>
+			<span class="low-1y">1Y Low: ${currencySymbols[info.currency] + separateThousands(info.low1y)}</span>
+			<span class="market-cap">Market Cap: ${currencySymbols[info.currency] + separateThousands(info.marketCap)}</span>
+			<span class="price-change">24h Change: ${formatPercentage(info.change)}%</span>
+		</div>
+	`;
+
+	insertAfter(div, previousElement);
+}
+
 function parseCryptoMarketData(currency, coin) {
 	let coinID = coin.id;
 	let price = coin.current_price;
@@ -236,11 +256,11 @@ async function showCryptoMarketData(info) {
 	}
 }
 
-function showStockMarketData(info) {
+function showStockMarketData(infoPrice, infoHistorical) {
 	try {
 		showLoading(2500, "Parsing Market Data...");
 
-		let popup = new Popup("full", "full", `${info.meta.symbol} - Market Data`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+		let popup = new Popup("full", "full", `${infoHistorical.meta.symbol} - Market Data`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
 
 		popup.show();
 
@@ -251,8 +271,8 @@ function showStockMarketData(info) {
 		}, 250);
 
 		try {
-			let timestamps = info.timestamp;
-			let prices = info.indicators.quote[0].close;
+			let timestamps = infoHistorical.timestamp;
+			let prices = infoHistorical.indicators.quote[0].close;
 
 			let parsed = parseHistoricalStockData(timestamps, prices);
 
@@ -263,16 +283,16 @@ function showStockMarketData(info) {
 				1: cssValue(divPageMarket, "--accent-first")
 			};
 
-			generateChart(divChart, `${info.meta.symbol} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices, colors);
+			generateChart(divChart, `${infoHistorical.meta.symbol} Price`, parsed.labels, parsed.tooltips, infoHistorical.currency, parsed.prices, colors);
 
-			// addMarketCryptoData(divChart, info);
+			addMarketStockData(divChart, infoPrice);
 		} catch(error) {
 			errorNotification("Couldn't parse historical data.");
 
 			console.log(error);
 		}
 	} catch(error) {
-		errorNotification(`Couldn't fetch market data for ${info.meta.symbol}`);
+		errorNotification(`Couldn't fetch market data for ${infoHistorical.meta.symbol}`);
 		console.log(error);
 	}
 }
@@ -315,16 +335,28 @@ async function showMarketSearchResult(popup, symbol, currency, type) {
 	} else {
 		showLoading(1000, "Loading...");
 
-		let result = await fetchStockHistorical(symbol);
+		let resultPrice = await fetchStockPrice([symbol]);
 
-		if("error" in result) {
-			errorNotification(result.error);
+		if("error" in resultPrice) {
+			errorNotification(resultPrice.error);
 			return;
 		}
 
-		let info = result.data.historicalData.chart.result[0];
-		info.currency = getCurrency();
+		let infoPrice = resultPrice[Object.keys(resultPrice)[0]].priceData;
+		infoPrice.currency = getCurrency();
 
-		showStockMarketData(info);
+		let resultHistorical = await fetchStockHistorical(symbol);
+
+		if("error" in resultHistorical) {
+			errorNotification(resultHistorical.error);
+			return;
+		}
+
+		let infoHistorical = resultHistorical.data.historicalData.chart.result[0];
+		infoHistorical.currency = getCurrency();
+
+		showStockMarketData(infoPrice, infoHistorical);
+
+		popup.hide();
 	}
 }
