@@ -513,6 +513,7 @@ function showActivityStakingPopup() {
 				let price = marketData[0].current_price;
 				popupSpanOutput.innerHTML = calculateStakingRewards(currency, symbol, amount, apy, price);
 				popupSpanOutput.classList.remove("hidden");
+				popupSpanOutput.classList.remove("margin-top");
 				popup.updateHeight();
 			} else {
 				popupSpanOutput.innerHTML = "";
@@ -534,6 +535,7 @@ function showActivityStakingPopup() {
 						let price = marketData[0].current_price;
 						popupSpanOutput.innerHTML = calculateStakingRewards(currency, symbol, amount, apy, price);
 						popupSpanOutput.classList.remove("hidden");
+						popupSpanOutput.classList.add("margin-top");
 						popup.updateHeight();
 					});
 				}
@@ -584,6 +586,7 @@ function showActivityMiningPopup() {
 				let price = marketData[0].current_price;
 				popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
 				popupSpanOutput.classList.remove("hidden");
+				popupSpanOutput.classList.remove("margin-top");
 				popup.updateHeight();
 			} else {
 				popupSpanOutput.innerHTML = "";
@@ -605,6 +608,7 @@ function showActivityMiningPopup() {
 						let price = marketData[0].current_price;
 						popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
 						popupSpanOutput.classList.remove("hidden");
+						popupSpanOutput.classList.add("margin-top");
 						popup.updateHeight();
 					});
 				}

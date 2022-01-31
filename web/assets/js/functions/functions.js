@@ -105,8 +105,13 @@ function checkBackdrop() {
 
 function showAssetMatches(referenceNode, list, marginBottom) {
 	if("matches" in list && list.matches.length > 1) {
+		let current = document.getElementsByClassName("popup-list asset-matches");
+		for(let i = 0; i < current.length; i++) {
+			current[i].remove();
+		}
+		
 		let div = document.createElement("div");
-		div.setAttribute("class", "popup-list noselect");
+		div.setAttribute("class", "popup-list asset-matches noselect");
 
 		if(marginBottom) {
 			div.classList.add("margin-bottom");
