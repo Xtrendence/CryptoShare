@@ -99,6 +99,31 @@ buttonSettingsPassword.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsStockAPIKey.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Set Stock API Key", `<input type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
+	popup.show();
+
+	let inputStockAPIKey = document.getElementById("popup-input-stock-api-key");
+
+	inputStockAPIKey.focus();
+
+	popup.on("confirm", () => {
+		if(!empty(inputStockAPIKey.value)) {
+			localStorage.setItem("keyAPI", inputStockAPIKey.value);
+
+			Notify.success({
+				title: "Stock API Key Set",
+				description: "API key has been set.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
+
+			popup.hide();
+		}
+	});
+});
+
 buttonSettingsReset.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`);
 	popup.show();

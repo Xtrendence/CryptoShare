@@ -53,6 +53,10 @@ span.negative {
 	color:var(--negative-first) !important;
 }
 
+.margin-top {
+	margin-top:20px;
+}
+
 #web .app-only {
 	display:none;
 }
