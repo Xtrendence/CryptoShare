@@ -19,7 +19,8 @@ async function fetchStockPrice(currency, symbols) {
 				parsedOutput[parsedData.priceData.symbol] = parsedData;
 			});
 
-			return convertStockPrice(currency, parsedOutput);
+			let converted = await convertStockPrice(currency, parsedOutput);
+			return converted;
 		}
 
 		return { error:"No data found." };
@@ -44,7 +45,9 @@ async function fetchStockHistorical(currency, assetSymbol) {
 			let result = data?.data?.readStockHistorical;
 			let historicalData = JSON.parse(result.historicalData);
 
-			return { data:convertStockHistorical(currency, historicalData) };
+			let converted = await convertStockHistorical(currency, historicalData);
+
+			return { data:converted };
 		}
 
 		return { error:"No data found." };
@@ -138,17 +141,31 @@ async function convertStockPrice(currency, data) {
 
 	symbols.map(async symbol => {
 		let priceData = data[symbol].priceData;
-
-		priceData.high1y = await convertCurrency("usd", currency, priceData.high1y, exchangeRates);
-		priceData.low1y = await convertCurrency("usd", currency, priceData.low1y, exchangeRates);
-		priceData.marketCap = await convertCurrency("usd", currency, priceData.marketCap, exchangeRates);
-		priceData.price = await convertCurrency("usd", currency, priceData.price, exchangeRates);
+		
+		data[symbol].priceData.high1y = await convertCurrency("usd", currency, priceData.high1y, exchangeRates);
+		data[symbol].priceData.low1y = await convertCurrency("usd", currency, priceData.low1y, exchangeRates);
+		data[symbol].priceData.marketCap = await convertCurrency("usd", currency, priceData.marketCap, exchangeRates);
+		data[symbol].priceData.price = await convertCurrency("usd", currency, priceData.price, exchangeRates);
 	});
 
 	return data;
 }
 
-function convertStockHistorical(currency, data) {
+async function convertStockHistorical(currency, data) {
+	let exchangeRates = await fetchExchangeRates();
+
 	console.log(data);
+
+	let prices = data.historicalData.chart.result[0].indicators.quote[0].close;
+
+	let convertedPrices = [];
+
+	prices.map(async price => {
+		let converted = await convertCurrency("usd", currency, price, exchangeRates);
+		convertedPrices.push(converted);
+	});
+
+	data.historicalData.chart.result[0].indicators.quote[0].close = convertedPrices;
+
 	return data;
 }
