@@ -9,7 +9,7 @@ function userExists(username) {
 		}`
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function createAccount(username, password, key) {
@@ -24,7 +24,7 @@ function createAccount(username, password, key) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function login(username, password) {
@@ -33,7 +33,7 @@ function login(username, password) {
 		password: password
 	};
 
-	return request("POST", urlAPI.replace("graphql", "login"), body);
+	return request("POST", urlAPI.replace("graphql", "login"), body, null);
 }
 
 function logout(userID, token) {
@@ -42,7 +42,7 @@ function logout(userID, token) {
 		token: token
 	};
 
-	return request("POST", urlAPI.replace("graphql", "logout"), body);
+	return request("POST", urlAPI.replace("graphql", "logout"), body, null);
 }
 
 function logoutEverywhere(userID, token) {
@@ -51,7 +51,7 @@ function logoutEverywhere(userID, token) {
 		token: token
 	};
 
-	return request("POST", urlAPI.replace("graphql", "logoutEverywhere"), body);
+	return request("POST", urlAPI.replace("graphql", "logoutEverywhere"), body, null);
 }
 
 function verifyToken(userID, token) {
@@ -60,7 +60,7 @@ function verifyToken(userID, token) {
 		token: token
 	};
 
-	return request("POST", urlAPI.replace("graphql", "verifyToken"), body);
+	return request("POST", urlAPI.replace("graphql", "verifyToken"), body, null);
 }
 
 function changePassword(userID, token, currentPassword, newPassword) {
@@ -71,7 +71,43 @@ function changePassword(userID, token, currentPassword, newPassword) {
 		newPassword: newPassword
 	};
 
-	return request("POST", urlAPI.replace("graphql", "changePassword"), body);
+	return request("POST", urlAPI.replace("graphql", "changePassword"), body, null);
+}
+
+function readStockPrice(token, userID, keyAPI, symbols) {
+	let query = {
+		query: `query readStockPrice($token: String!, $userID: Int!, $keyAPI: String!, $symbols: [String]!) {
+			readStockPrice(token: $token, userID: $userID, keyAPI: $keyAPI, symbols: $symbols) {
+				priceData, historicalData
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			keyAPI: keyAPI,
+			symbols: symbols
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function readStockHistorical(token, userID, keyAPI, assetSymbol) {
+	let query = {
+		query: `query readStockHistorical($token: String!, $userID: Int!, $keyAPI: String!, $assetSymbol: String!) {
+			readStockHistorical(token: $token, userID: $userID, keyAPI: $keyAPI, assetSymbol: $assetSymbol) {
+				priceData, historicalData
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			keyAPI: keyAPI,
+			assetSymbol: assetSymbol
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
 }
 
 function readHolding(token, userID) {
@@ -87,7 +123,7 @@ function readHolding(token, userID) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function readActivity(token, userID) {
@@ -103,7 +139,7 @@ function readActivity(token, userID) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
@@ -121,7 +157,7 @@ function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdin
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function createActivity(token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
@@ -148,7 +184,7 @@ function createActivity(token, userID, activityAssetID, activityAssetSymbol, act
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
@@ -167,7 +203,7 @@ function updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSym
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function updateActivity(token, userID, activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
@@ -195,7 +231,7 @@ function updateActivity(token, userID, activityID, activityAssetID, activityAsse
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function deleteHolding(token, userID, holdingID) {
@@ -210,7 +246,7 @@ function deleteHolding(token, userID, holdingID) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function deleteActivity(token, userID, activityID) {
@@ -225,7 +261,7 @@ function deleteActivity(token, userID, activityID) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function readCoin(token, userID, assetID, assetSymbol, currency) {
@@ -244,7 +280,7 @@ function readCoin(token, userID, assetID, assetSymbol, currency) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function readSetting(token, userID) {
@@ -260,7 +296,7 @@ function readSetting(token, userID) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function updateSetting(token, userID, userSettings) {
@@ -275,7 +311,7 @@ function updateSetting(token, userID, userSettings) {
 		}
 	};
 
-	return request("POST", urlAPI, query);
+	return request("POST", urlAPI, query, null);
 }
 
 function request(method, url, body, headers) {
@@ -325,31 +361,31 @@ function request(method, url, body, headers) {
 
 const cryptoAPI = {
 	getGlobal() {
-		return request("GET", "https://api.coingecko.com/api/v3/global", null);
+		return request("GET", "https://api.coingecko.com/api/v3/global", null, null);
 	},
 
 	getCoinList() {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null, null);
 	},
 
 	getCoinData(id) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null, null);
 	},
 
 	getCoinDataByDate(id, date) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null, null);
 	},
 
 	getCoinHistoricalData(currency, id, from, to) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + to, null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + to, null, null);
 	},
 
 	getMarketByID(currency, ids) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&ids=" + ids + "&order=market_cap_desc&per_page=250&page=1&sparkline=false", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&ids=" + ids + "&order=market_cap_desc&per_page=250&page=1&sparkline=false", null, null);
 	},
 
 	getMarket(currency, amount, page) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&order=market_cap_desc&per_page=" + amount + "&page=" + page + "&sparkline=false", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&order=market_cap_desc&per_page=" + amount + "&page=" + page + "&sparkline=false", null, null);
 	},
 };
 

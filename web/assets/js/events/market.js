@@ -36,10 +36,30 @@ buttonMarketInfo.addEventListener("click", async () => {
 
 buttonMarketSearch.addEventListener("click", () => {
 	try {
-		let html = `<input class="uppercase" id="popup-input-search" type="text" placeholder="Coin Symbol...">`;
+		let html = `
+			<input class="uppercase" id="popup-input-search" type="text" placeholder="Asset Symbol...">
+			<div class="popup-button-wrapper margin-bottom">
+				<button id="popup-choice-crypto" class="choice active">Crypto</button>
+				<button id="popup-choice-stock" class="choice">Stock</button>
+			</div>
+		`;
+
 		let popup = new Popup(240, "auto", "Market Search", html, { confirmText:"Search" });
 		popup.show();
 		popup.updateHeight();
+
+		let popupChoiceCrypto = document.getElementById("popup-choice-crypto");
+		let popupChoiceStock = document.getElementById("popup-choice-stock");
+
+		popupChoiceCrypto.addEventListener("click", () => {
+			popupChoiceCrypto.classList.add("active");
+			popupChoiceStock.classList.remove("active");
+		});
+
+		popupChoiceStock.addEventListener("click", () => {
+			popupChoiceCrypto.classList.remove("active");
+			popupChoiceStock.classList.add("active");
+		});
 
 		let inputSearch = document.getElementById("popup-input-search");
 
@@ -50,37 +70,9 @@ buttonMarketSearch.addEventListener("click", () => {
 			let symbol = inputSearch.value;
 
 			if(!empty(symbol)) {
-				let result = await getCoin({ symbol:symbol });
+				let type = popupChoiceCrypto.classList.contains("active") ? "crypto" : "stock";
 
-				if("id" in result) {
-					showLoading(1000, "Loading...");
-
-					let data = await cryptoAPI.getMarketByID(currency, result.id);
-					let info = parseCryptoMarketData(currency, data[0]);
-					showCryptoMarketData(info);
-					popup.hide();
-				} else {
-					showAssetMatches(inputSearch, result, false);
-					popup.setSize(360, "auto");
-					popup.updateHeight();
-
-					popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
-
-					let rows = popup.element.getElementsByClassName("popup-list-row");
-
-					for(let i = 0; i < rows.length; i++) {
-						rows[i].addEventListener("click", async () => {
-							showLoading(1000, "Loading...");
-
-							let id = rows[i].getAttribute("data-id");
-
-							let data = await cryptoAPI.getMarketByID(currency, id);
-							let info = parseCryptoMarketData(currency, data[0]);
-							showCryptoMarketData(info);
-							popup.hide();
-						});
-					}
-				}
+				showMarketSearchResult(popup, symbol, currency, type);
 			} else {
 				errorNotification("Please provide a symbol/ticker to search for.");
 			}

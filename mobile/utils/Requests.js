@@ -78,7 +78,7 @@ export default class Requests {
 			}`
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	createAccount(username, password, key) {
@@ -93,7 +93,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	login(username, password) {
@@ -102,7 +102,7 @@ export default class Requests {
 			password: password
 		};
 
-		return request("POST", this.urlAPI.replace("graphql", "login"), body);
+		return request("POST", this.urlAPI.replace("graphql", "login"), body, null);
 	}
 
 	logout(userID, token) {
@@ -111,7 +111,7 @@ export default class Requests {
 			token: token
 		};
 
-		return request("POST", this.urlAPI.replace("graphql", "logout"), body);
+		return request("POST", this.urlAPI.replace("graphql", "logout"), body, null);
 	}
 
 	logoutEverywhere(userID, token) {
@@ -120,7 +120,7 @@ export default class Requests {
 			token: token
 		};
 
-		return request("POST", this.urlAPI.replace("graphql", "logoutEverywhere"), body);
+		return request("POST", this.urlAPI.replace("graphql", "logoutEverywhere"), body, null);
 	}
 
 	verifyToken(userID, token) {
@@ -129,7 +129,7 @@ export default class Requests {
 			token: token
 		};
 
-		return request("POST", this.urlAPI.replace("graphql", "verifyToken"), body);
+		return request("POST", this.urlAPI.replace("graphql", "verifyToken"), body, null);
 	}
 
 	changePassword(userID, token, currentPassword, newPassword) {
@@ -140,7 +140,7 @@ export default class Requests {
 			newPassword: newPassword
 		};
 
-		return request("POST", this.urlAPI.replace("graphql", "changePassword"), body);
+		return request("POST", this.urlAPI.replace("graphql", "changePassword"), body, null);
 	}
 
 	readHolding(token, userID) {
@@ -156,7 +156,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	readActivity(token, userID) {
@@ -172,7 +172,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
@@ -190,7 +190,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	createActivity(token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
@@ -217,7 +217,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	updateHolding(token, userID, holdingID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
@@ -236,7 +236,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	updateActivity(token, userID, activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) {
@@ -264,7 +264,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	deleteHolding(token, userID, holdingID) {
@@ -279,7 +279,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	deleteActivity(token, userID, activityID) {
@@ -294,7 +294,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	readCoin(token, userID, assetID, assetSymbol, currency) {
@@ -313,7 +313,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	readSetting(token, userID) {
@@ -329,7 +329,7 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 
 	updateSetting(token, userID, userSettings) {
@@ -344,36 +344,36 @@ export default class Requests {
 			}
 		};
 
-		return request("POST", this.urlAPI, query);
+		return request("POST", this.urlAPI, query, null);
 	}
 }
 
 export const cryptoAPI = {
 	getGlobal() {
-		return request("GET", "https://api.coingecko.com/api/v3/global", null);
+		return request("GET", "https://api.coingecko.com/api/v3/global", null, null);
 	},
 
 	getCoinList() {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null, null);
 	},
 
 	getCoinData(id) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null, null);
 	},
 
 	getCoinDataByDate(id, date) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/history?date=" + date, null, null);
 	},
 
 	getCoinHistoricalData(currency, id, from, to) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + to, null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + to, null, null);
 	},
 
 	getMarketByID(currency, ids) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&ids=" + ids + "&order=market_cap_desc&per_page=250&page=1&sparkline=false", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&ids=" + ids + "&order=market_cap_desc&per_page=250&page=1&sparkline=false", null, null);
 	},
 
 	getMarket(currency, amount, page) {
-		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&order=market_cap_desc&per_page=" + amount + "&page=" + page + "&sparkline=false", null);
+		return request("GET", "https://api.coingecko.com/api/v3/coins/markets?vs_currency=" + currency + "&order=market_cap_desc&per_page=" + amount + "&page=" + page + "&sparkline=false", null, null);
 	},
 };

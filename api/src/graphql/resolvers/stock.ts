@@ -10,6 +10,8 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 			let valid = await Utils.verifyToken(userID, token);
 
 			if(valid) {
+				assetSymbol = assetSymbol.toUpperCase();
+				
 				db.db?.get("SELECT * FROM Stock WHERE assetSymbol = ?", [assetSymbol], async (error, row) => {
 					if(error) {
 						console.log(error);
@@ -19,16 +21,16 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 							try {
 								let historicalData: any = await getHistoricalData(assetSymbol, keyAPI);
 
-								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData, priceData) VALUES (?, ?, ?)", [assetSymbol, historicalData, row.priceData]);
+								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData) VALUES (?, ?)", [assetSymbol, historicalData]);
 
-								let stock = new Stock(assetSymbol, historicalData, row.priceData);
+								let stock = new Stock(assetSymbol, historicalData, row?.priceData || "");
 								resolve(stock);
 							} catch(error) {
 								console.log(error);
 								reject(error);
 							}
 						} else {
-							let stock = new Stock(row.assetSymbol, row.historicalData, row.priceData);
+							let stock = new Stock(row.assetSymbol, row.historicalData, row.priceData || "");
 							resolve(stock);
 						}
 					}
@@ -93,7 +95,7 @@ function getStocks(symbols: any) {
 			let output: any = [];
 
 			for(let i = 0; i < symbols.length; i++) {
-				let symbol = symbols[i];
+				let symbol = symbols[i].toUpperCase();
 
 				db.db?.get("SELECT * FROM Stock WHERE assetSymbol = ?", [symbol], async (error, row) => {
 					if(error) {
@@ -152,7 +154,7 @@ function getSymbolsToRefetch(symbols: any) {
 async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 	let now = Math.floor(new Date().getTime() / 1000);
 
-	let historicalData: any = await Utils.request("GET", "https://yfapi.net/v8/finance/chart/" + assetSymbol + "?range=1y&interval=1d&lang=en", null, [["X-API-KEY", keyAPI]]);
+	let historicalData: any = await Utils.request("GET", "https://yfapi.net/v8/finance/chart/" + assetSymbol.toUpperCase() + "?range=1y&interval=1d&lang=en", null, [["X-API-KEY", keyAPI]]);
 
 	if("chart" in historicalData) {
 		return JSON.stringify({ time:now, historicalData:historicalData });
@@ -170,7 +172,7 @@ function getPriceData(symbols: any, keyAPI: string) {
 
 			for(let i = 0; i < symbols.length; i++) {
 				let chunk = symbols[i];
-				let joinedSymbols = chunk.join("%2C");
+				let joinedSymbols = chunk.join("%2C").toUpperCase();
 
 				let priceData: any = await Utils.request("GET", "https://yfapi.net/v6/finance/quote?lang=en&symbols=" + joinedSymbols, null, [["X-API-KEY", keyAPI]]);
 

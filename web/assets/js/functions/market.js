@@ -1,5 +1,5 @@
 function getActiveMarketPage() {
-	return { 
+	return {
 		type: buttonMarketCrypto.classList.contains("active") ? "crypto" : "stocks", 
 		cryptoPage: parseInt(divMarketListCrypto.getAttribute("data-page")),
 		stocksPage: parseInt(divMarketListStocks.getAttribute("data-page"))
@@ -15,9 +15,11 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 			let active = getActiveMarketPage();
 
 			if(active.type === "crypto") {
+				divMarketPageNavigationWrapper.classList.remove("hidden");
 				divMarketListCrypto.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 				spanMarketPage.textContent = `Page ${active.cryptoPage}`;
 			} else {
+				divMarketPageNavigationWrapper.classList.add("hidden");
 				divMarketListStocks.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 				spanMarketPage.textContent = `Page ${active.stocksPage}`;
 			}
@@ -231,5 +233,98 @@ async function showCryptoMarketData(info) {
 	} catch(error) {
 		errorNotification(`Couldn't fetch market data for ${info.name}`);
 		console.log(error);
+	}
+}
+
+function showStockMarketData(info) {
+	try {
+		showLoading(2500, "Parsing Market Data...");
+
+		let popup = new Popup("full", "full", `${info.meta.symbol} - Market Data`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+
+		popup.show();
+
+		let divChart = popup.element.getElementsByClassName("chart-wrapper")[0];
+
+		setTimeout(() => {
+			hideLoading();
+		}, 250);
+
+		try {
+			let timestamps = info.timestamp;
+			let prices = info.indicators.quote[0].close;
+
+			let parsed = parseHistoricalStockData(timestamps, prices);
+
+			let colors = {
+				0: cssValue(divPageMarket, "--accent-second"), 
+				0.3: cssValue(divPageMarket, "--accent-first"), 
+				0.6: cssValue(divPageMarket, "--accent-third"),
+				1: cssValue(divPageMarket, "--accent-first")
+			};
+
+			generateChart(divChart, `${info.meta.symbol} Price`, parsed.labels, parsed.tooltips, info.currency, parsed.prices, colors);
+
+			// addMarketCryptoData(divChart, info);
+		} catch(error) {
+			errorNotification("Couldn't parse historical data.");
+
+			console.log(error);
+		}
+	} catch(error) {
+		errorNotification(`Couldn't fetch market data for ${info.meta.symbol}`);
+		console.log(error);
+	}
+}
+
+async function showMarketSearchResult(popup, symbol, currency, type) {
+	if(type === "crypto") {
+		showLoading(1000, "Loading...");
+
+		let result = await getCoin({ symbol:symbol });
+
+		if("id" in result) {
+			showLoading(1000, "Loading...");
+
+			let data = await cryptoAPI.getMarketByID(currency, result.id);
+			let info = parseCryptoMarketData(currency, data[0]);
+			showCryptoMarketData(info);
+			popup.hide();
+		} else {
+			showAssetMatches(inputSearch, result, false);
+			popup.setSize(360, "auto");
+			popup.updateHeight();
+
+			popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+
+			let rows = popup.element.getElementsByClassName("popup-list-row");
+
+			for(let i = 0; i < rows.length; i++) {
+				rows[i].addEventListener("click", async () => {
+					showLoading(1000, "Loading...");
+
+					let id = rows[i].getAttribute("data-id");
+
+					let data = await cryptoAPI.getMarketByID(currency, id);
+					let info = parseCryptoMarketData(currency, data[0]);
+					showCryptoMarketData(info);
+					popup.hide();
+				});
+			}
+		}
+	} else {
+		showLoading(1000, "Loading...");
+
+		let result = await fetchStockHistorical(symbol);
+
+		if("error" in result) {
+			errorNotification(result.error);
+			return;
+		}
+
+		let info = result.data.historicalData.chart.result[0];
+		info.currency = getCurrency();
+
+		showStockMarketData(info);
 	}
 }

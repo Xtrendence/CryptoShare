@@ -27,6 +27,7 @@ let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
 let divPageMarket = document.getElementById("market-page");
+let divMarketPageNavigationWrapper = document.getElementById("market-page-navigation-wrapper");
 let divMarketListCrypto = document.getElementById("market-list-crypto");
 let divMarketListStocks = document.getElementById("market-list-stocks");
 
@@ -68,4 +69,5 @@ let settingsToggleSounds = document.getElementById("settings-toggle-sounds");
 let buttonSettingsLogout = document.getElementById("button-settings-logout");
 let buttonSettingsLogoutEverywhere = document.getElementById("button-settings-logout-everywhere");
 let buttonSettingsPassword = document.getElementById("button-settings-password");
+let buttonSettingsStockAPIKey = document.getElementById("button-settings-stock-api-key");
 let buttonSettingsReset = document.getElementById("button-settings-reset");
