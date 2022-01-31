@@ -121,26 +121,28 @@ buttonActivityAdd.addEventListener("click", () => {
 
 				popup.hide();
 			} else {
-				showAssetMatches(popupElements.popupWrapperTransfer, result, false);
+				let showMatches = showAssetMatches(popupElements.popupWrapperTransfer, result, false);
 
-				popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+				if(showMatches) {
+					popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-				let rows = popup.element.getElementsByClassName("popup-list-row");
+					let rows = popup.element.getElementsByClassName("popup-list-row");
 
-				for(let i = 0; i < rows.length; i++) {
-					rows[i].addEventListener("click", async () => {
-						showLoading(1000, "Adding...");
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							showLoading(1000, "Adding...");
 
-						data.activityAssetID = rows[i].getAttribute("data-id");
+							data.activityAssetID = rows[i].getAttribute("data-id");
 
-						let encrypted = encryptObjectValues(key, data);
+							let encrypted = encryptObjectValues(key, data);
 
-						await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+							await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
 
-						populateActivityList(true);
-						
-						popup.hide();
-					});
+							populateActivityList(true);
+							
+							popup.hide();
+						});
+					}
 				}
 			}
 		});

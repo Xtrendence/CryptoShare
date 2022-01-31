@@ -1165,6 +1165,11 @@ html.navbar-compact .page-container.holdings.half.right {
 	display:block;
 	border-radius:var(--border-radius);
 	background:var(--accent-first);
+	cursor:pointer;
+	transition:transform 0.25s;
+}
+#desktop .holdings-card:hover {
+	transform:scale(0.98);
 }
 .holdings-card.username {
 	background:var(--ocean-gradient);
@@ -1173,6 +1178,7 @@ html.navbar-compact .page-container.holdings.half.right {
 	background:var(--pale-gradient);
 }
 .holdings-card span {
+	pointer-events:none;
 	font-size:20px;
 	font-weight:bold;
 	line-height:50px;
@@ -1194,6 +1200,7 @@ html.navbar-compact .page-container.holdings.half.right {
 	display:inline-block;
 	vertical-align:middle;
 	margin-right:20px;
+	pointer-events:none;
 }
 .page-container.holdings.half.bottom-left .action-button {
 	display:block;

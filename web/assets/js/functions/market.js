@@ -321,7 +321,7 @@ function showStockMarketData(infoPrice, infoHistorical) {
 	}
 }
 
-async function showMarketSearchResult(popup, symbol, currency, type) {
+async function showMarketSearchResult(popup, inputSearch, symbol, currency, type) {
 	if(type === "crypto") {
 		showLoading(1000, "Loading...");
 
@@ -335,25 +335,28 @@ async function showMarketSearchResult(popup, symbol, currency, type) {
 			showCryptoMarketData(info);
 			popup.hide();
 		} else {
-			showAssetMatches(inputSearch, result, false);
-			popup.setSize(360, "auto");
-			popup.updateHeight();
+			let showMatches = showAssetMatches(inputSearch, result, false);
 
-			popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+			if(showMatches) {
+				popup.setSize(360, "auto");
+				popup.updateHeight();
 
-			let rows = popup.element.getElementsByClassName("popup-list-row");
+				popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-			for(let i = 0; i < rows.length; i++) {
-				rows[i].addEventListener("click", async () => {
-					showLoading(1000, "Loading...");
+				let rows = popup.element.getElementsByClassName("popup-list-row");
 
-					let id = rows[i].getAttribute("data-id");
+				for(let i = 0; i < rows.length; i++) {
+					rows[i].addEventListener("click", async () => {
+						showLoading(1000, "Loading...");
 
-					let data = await cryptoAPI.getMarketByID(currency, id);
-					let info = parseCryptoMarketData(currency, data[0]);
-					showCryptoMarketData(info);
-					popup.hide();
-				});
+						let id = rows[i].getAttribute("data-id");
+
+						let data = await cryptoAPI.getMarketByID(currency, id);
+						let info = parseCryptoMarketData(currency, data[0]);
+						showCryptoMarketData(info);
+						popup.hide();
+					});
+				}
 			}
 		}
 	} else {

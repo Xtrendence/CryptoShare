@@ -248,26 +248,28 @@ function addActivityListRowEvent(div, activity) {
 
 					popup.hide();
 				} else {
-					showAssetMatches(popupElements.popupWrapperTransfer, result, true);
+					let showMatches = showAssetMatches(popupElements.popupWrapperTransfer, result, true);
 
-					popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+					if(showMatches) {
+						popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-					let rows = popup.element.getElementsByClassName("popup-list-row");
+						let rows = popup.element.getElementsByClassName("popup-list-row");
 
-					for(let i = 0; i < rows.length; i++) {
-						rows[i].addEventListener("click", async () => {
-							showLoading(1000, "Updating...");
+						for(let i = 0; i < rows.length; i++) {
+							rows[i].addEventListener("click", async () => {
+								showLoading(1000, "Updating...");
 
-							data.activityAssetID = rows[i].getAttribute("data-id");
+								data.activityAssetID = rows[i].getAttribute("data-id");
 
-							let encrypted = encryptObjectValues(key, data);
+								let encrypted = encryptObjectValues(key, data);
 
-							await updateActivity(token, userID, activity.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+								await updateActivity(token, userID, activity.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
 
-							populateActivityList(true);
-						
-							popup.hide();
-						});
+								populateActivityList(true);
+							
+								popup.hide();
+							});
+						}
 					}
 				}
 			});
@@ -519,25 +521,28 @@ function showActivityStakingPopup() {
 				popupSpanOutput.innerHTML = "";
 				popupSpanOutput.classList.add("hidden");
 
-				showAssetMatches(popupInputAPY, result, false);
-				popup.setSize(360, "auto");
-				popup.updateHeight();
+				let showMatches = showAssetMatches(popupInputAPY, result, false);
 
-				popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+				if(showMatches) {
+					popup.setSize(360, "auto");
+					popup.updateHeight();
 
-				let rows = popup.element.getElementsByClassName("popup-list-row");
+					popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-				for(let i = 0; i < rows.length; i++) {
-					rows[i].addEventListener("click", async () => {
-						let id = rows[i].getAttribute("data-id");
+					let rows = popup.element.getElementsByClassName("popup-list-row");
 
-						let marketData = await cryptoAPI.getMarketByID(currency, id);
-						let price = marketData[0].current_price;
-						popupSpanOutput.innerHTML = calculateStakingRewards(currency, symbol, amount, apy, price);
-						popupSpanOutput.classList.remove("hidden");
-						popupSpanOutput.classList.add("margin-top");
-						popup.updateHeight();
-					});
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							let id = rows[i].getAttribute("data-id");
+
+							let marketData = await cryptoAPI.getMarketByID(currency, id);
+							let price = marketData[0].current_price;
+							popupSpanOutput.innerHTML = calculateStakingRewards(currency, symbol, amount, apy, price);
+							popupSpanOutput.classList.remove("hidden");
+							popupSpanOutput.classList.add("margin-top");
+							popup.updateHeight();
+						});
+					}
 				}
 			}
 		} else {
@@ -592,25 +597,28 @@ function showActivityMiningPopup() {
 				popupSpanOutput.innerHTML = "";
 				popupSpanOutput.classList.add("hidden");
 
-				showAssetMatches(popupInputDailyPowerCost, result, false);
-				popup.setSize(360, "auto");
-				popup.updateHeight();
+				let showMatches = showAssetMatches(popupInputDailyPowerCost, result, false);
 
-				popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+				if(showMatches) {
+					popup.setSize(360, "auto");
+					popup.updateHeight();
 
-				let rows = popup.element.getElementsByClassName("popup-list-row");
+					popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-				for(let i = 0; i < rows.length; i++) {
-					rows[i].addEventListener("click", async () => {
-						let id = rows[i].getAttribute("data-id");
+					let rows = popup.element.getElementsByClassName("popup-list-row");
 
-						let marketData = await cryptoAPI.getMarketByID(currency, id);
-						let price = marketData[0].current_price;
-						popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
-						popupSpanOutput.classList.remove("hidden");
-						popupSpanOutput.classList.add("margin-top");
-						popup.updateHeight();
-					});
+					for(let i = 0; i < rows.length; i++) {
+						rows[i].addEventListener("click", async () => {
+							let id = rows[i].getAttribute("data-id");
+
+							let marketData = await cryptoAPI.getMarketByID(currency, id);
+							let price = marketData[0].current_price;
+							popupSpanOutput.innerHTML = calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost);
+							popupSpanOutput.classList.remove("hidden");
+							popupSpanOutput.classList.add("margin-top");
+							popup.updateHeight();
+						});
+					}
 				}
 			}
 		} else {

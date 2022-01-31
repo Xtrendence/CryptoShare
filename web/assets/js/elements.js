@@ -49,6 +49,8 @@ let buttonHoldingsAddStockAsset = document.getElementById("button-holdings-add-s
 
 let divPageHoldings = document.getElementById("holdings-page");
 let divHoldingsList = document.getElementById("holdings-list");
+let divHoldingsCardUsername = document.getElementById("holdings-card-username");
+let divHoldingsCardValue = document.getElementById("holdings-card-value");
 
 let divPageActivity = document.getElementById("activity-page");
 let divActivityList = document.getElementById("activity-list");

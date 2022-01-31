@@ -104,7 +104,7 @@ function checkBackdrop() {
 }
 
 function showAssetMatches(referenceNode, list, marginBottom) {
-	if("matches" in list && list.matches.length > 1) {
+	if("matches" in list && Object.keys(list.matches).length > 1) {
 		let current = document.getElementsByClassName("popup-list asset-matches");
 		for(let i = 0; i < current.length; i++) {
 			current[i].remove();
@@ -133,8 +133,11 @@ function showAssetMatches(referenceNode, list, marginBottom) {
 		errorNotification("Two or more assets have the same symbol. Please choose an asset from the list.");
 
 		insertAfter(div, referenceNode);
+
+		return true;
 	} else {
-		errorNotification("Invalid number of matches.");
+		errorNotification("Asset not found.");
+		return false;
 	}
 }
 

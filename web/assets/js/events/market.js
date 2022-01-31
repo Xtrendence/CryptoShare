@@ -72,7 +72,7 @@ buttonMarketSearch.addEventListener("click", () => {
 			if(!empty(symbol)) {
 				let type = popupChoiceCrypto.classList.contains("active") ? "crypto" : "stock";
 
-				showMarketSearchResult(popup, symbol, currency, type);
+				showMarketSearchResult(popup, inputSearch, symbol, currency, type);
 			} else {
 				errorNotification("Please provide a symbol/ticker to search for.");
 			}

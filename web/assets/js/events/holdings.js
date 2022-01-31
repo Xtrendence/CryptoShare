@@ -1,3 +1,12 @@
+divHoldingsCardUsername.addEventListener("click", () => {
+	setSettingsPage("account");
+	setPage("settings");
+});
+
+divHoldingsCardValue.addEventListener("click", () => {
+	buttonHoldingsPerformance.click();
+});
+
 // TODO: Add functionality.
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
@@ -83,41 +92,44 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 
 						popup.hide();
 					} else {
-						showAssetMatches(inputAmount, result, false);
-						popup.setSize(360, "auto");
-						popup.updateHeight();
+						let showMatches = showAssetMatches(inputAmount, result, false);
 
-						popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
+						if(showMatches) {
+							popup.setSize(360, "auto");
+							popup.updateHeight();
 
-						let rows = popup.element.getElementsByClassName("popup-list-row");
+							popup.bottom.scrollTo(0, popup.bottom.scrollHeight);
 
-						for(let i = 0; i < rows.length; i++) {
-							rows[i].addEventListener("click", async () => {
-								showLoading(1000, "Adding...");
+							let rows = popup.element.getElementsByClassName("popup-list-row");
 
-								let id = rows[i].getAttribute("data-id");
+							for(let i = 0; i < rows.length; i++) {
+								rows[i].addEventListener("click", async () => {
+									showLoading(1000, "Adding...");
 
-								let exists = await cryptoHoldingExists(id);
+									let id = rows[i].getAttribute("data-id");
 
-								let encrypted = encryptObjectValues(key, {
-									holdingAssetID: id,
-									holdingAssetSymbol: symbol,
-									holdingAssetAmount: amount,
-									holdingAssetType: "crypto"
+									let exists = await cryptoHoldingExists(id);
+
+									let encrypted = encryptObjectValues(key, {
+										holdingAssetID: id,
+										holdingAssetSymbol: symbol,
+										holdingAssetAmount: amount,
+										holdingAssetType: "crypto"
+									});
+
+									if(exists.exists) {
+										await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+
+										errorNotification("Asset was already part of your holdings, but the amount was updated.");
+									} else {
+										await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+									}
+
+									populateHoldingsList(true);
+
+									popup.hide();
 								});
-
-								if(exists.exists) {
-									await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
-
-									errorNotification("Asset was already part of your holdings, but the amount was updated.");
-								} else {
-									await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
-								}
-
-								populateHoldingsList(true);
-
-								popup.hide();
-							});
+							}
 						}
 					}
 				} else {
