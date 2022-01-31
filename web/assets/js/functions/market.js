@@ -359,7 +359,9 @@ async function showMarketSearchResult(popup, symbol, currency, type) {
 	} else {
 		showLoading(1000, "Loading...");
 
-		let resultPrice = await fetchStockPrice([symbol]);
+		let currency = getCurrency();
+
+		let resultPrice = await fetchStockPrice(currency, [symbol]);
 
 		if("error" in resultPrice) {
 			errorNotification(resultPrice.error);
@@ -367,9 +369,9 @@ async function showMarketSearchResult(popup, symbol, currency, type) {
 		}
 
 		let infoPrice = resultPrice[Object.keys(resultPrice)[0]].priceData;
-		infoPrice.currency = getCurrency();
+		infoPrice.currency = currency;
 
-		let resultHistorical = await fetchStockHistorical(symbol);
+		let resultHistorical = await fetchStockHistorical(currency, symbol);
 
 		if("error" in resultHistorical) {
 			errorNotification(resultHistorical.error);
@@ -377,7 +379,7 @@ async function showMarketSearchResult(popup, symbol, currency, type) {
 		}
 
 		let infoHistorical = resultHistorical.data.historicalData.chart.result[0];
-		infoHistorical.currency = getCurrency();
+		infoHistorical.currency = currency;
 
 		showStockMarketData(infoPrice, infoHistorical);
 

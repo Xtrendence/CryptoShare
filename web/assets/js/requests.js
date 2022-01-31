@@ -368,6 +368,10 @@ const cryptoAPI = {
 		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null, null);
 	},
 
+	getExchangeRates() {
+		return request("GET", "https://api.coingecko.com/api/v3/exchange_rates", null, null);
+	},
+
 	getCoinData(id) {
 		return request("GET", "https://api.coingecko.com/api/v3/coins/" + id + "?localization=false&market_data=true", null, null);
 	},
