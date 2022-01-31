@@ -28,6 +28,7 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 		checkBackdrop();
 		let currency = getCurrency();
 		populateMarketListCrypto(cryptoPage, currency);
+		populateMarketListStocks(stocksPage, currency);
 	}
 }
 
@@ -63,6 +64,27 @@ async function populateMarketListCrypto(page, currency) {
 	} catch(error) {
 		console.log(error);
 	}
+}
+
+// TODO: Add functionality.
+async function populateMarketListStocks(page, currency) {
+	try {
+		let parsedData = await parseWatchlistAsMarket();
+
+		if(empty(parsedData)) {
+			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Items In Watchlist</span>`;
+			return;
+		}
+	} catch(error) {
+		console.log(error);
+	}
+}
+
+// TODO: Add functionality.
+function parseWatchlistAsMarket() {
+	return new Promise((resolve, reject) => {
+		resolve({});
+	});
 }
 
 function createMarketListCryptoRows(marketData, page, currency) {
@@ -284,6 +306,8 @@ function showStockMarketData(infoPrice, infoHistorical) {
 			};
 
 			generateChart(divChart, `${infoHistorical.meta.symbol} Price`, parsed.labels, parsed.tooltips, infoHistorical.currency, parsed.prices, colors);
+
+			popup.bottom.classList.add("less-margin");
 
 			addMarketStockData(divChart, infoPrice);
 		} catch(error) {

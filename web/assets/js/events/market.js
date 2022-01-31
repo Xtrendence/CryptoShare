@@ -1,6 +1,6 @@
 buttonMarketInfo.addEventListener("click", async () => {
 	try {
-		showLoading(2000, "Fetching Global Market Data...");
+		showLoading(2000, "Fetching Global Crypto Market Data...");
 
 		let currency = getCurrency();
 
@@ -24,7 +24,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 			</div>
 		`;
 
-		let popup = new Popup(400, "auto", "Global Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
+		let popup = new Popup(400, "auto", "Global Crypto Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
 		popup.show();
 		popup.bottom.classList.add("less-margin");
 		popup.updateHeight();

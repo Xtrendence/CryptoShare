@@ -150,7 +150,7 @@ function getCurrency() {
 
 function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
-	tippy(buttonMarketInfo, { content:"Market Info", placement:"top" });
+	tippy(buttonMarketInfo, { content:"Crypto Market Info", placement:"top" });
 	tippy(buttonMarketSearch, { content:"Search", placement:"top" });
 	tippy(buttonMarketCrypto, { content:"Crypto Market", placement:"left" });
 	tippy(buttonMarketStocks, { content:"Stock Market", placement:"right" });

@@ -53,10 +53,6 @@ span.negative {
 	color:var(--negative-first) !important;
 }
 
-.margin-top {
-	margin-top:20px;
-}
-
 #web .app-only {
 	display:none;
 }
@@ -498,6 +494,9 @@ html.light .toggle-container {
 	border-width:3px;
 	border-color:var(--accent-first);
 }
+.popup-wrapper .bottom span.margin-top {
+	margin-top:20px;
+}
 .popup-wrapper .bottom span.detail {
 	margin-top:20px;
 	font-weight:bold;
@@ -935,6 +934,12 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	background:var(--main-third);
 	color:var(--main-contrast);
 }
+.page.market .page-type-wrapper .choice-button:first-of-type {
+	margin-left:0;
+}
+.page.market .list-text {
+	top:calc(50% - 40px / 2 - 10px);
+}
 
 .list-text {
 	text-align:center;
@@ -947,6 +952,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	top:calc(50% - 40px / 2);
 	left:calc(50% - 200px / 2);
 }
+
 .market-list, .holdings-list, .activity-list {
 	position:absolute;
 	width:100%;
