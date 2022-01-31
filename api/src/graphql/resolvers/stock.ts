@@ -15,7 +15,7 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 						console.log(error);
 						reject();
 					} else {
-						if(row === undefined || !Utils.validJSON(row.data) || Utils.refetchRequired(JSON.parse(row.historicalData).time)) {
+						if(row === undefined || !Utils.validJSON(row.historicalData) || Utils.refetchRequired(JSON.parse(row.historicalData).time)) {
 							try {
 								let historicalData: any = await getHistoricalData(assetSymbol, keyAPI);
 
@@ -56,8 +56,6 @@ export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 					
 					let refetch: any = await getSymbolsToRefetch(symbols) || {};
 					let refetchSymbols = Object.keys(refetch);
-
-					console.log(refetchSymbols);
 
 					try {
 						if(refetchSymbols.length > 0) {
