@@ -4,7 +4,7 @@ import { createSetting, readSetting, updateSetting, deleteSetting } from "./sett
 import { createHolding, readHolding, updateHolding, deleteHolding, importHolding } from "./holding";
 import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
 import { readCoin } from "./coin";
-import { readStock } from "./stock";
+import { readStockHistorical, readStockPrice } from "./stock";
 
 let resolvers = {
 	userExists, createUser, readUser, updateUser, deleteUser,
@@ -13,7 +13,7 @@ let resolvers = {
 	createHolding, readHolding, updateHolding, deleteHolding, importHolding,
 	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,
 	readCoin,
-	readStock
+	readStockHistorical, readStockPrice
 };
 
 export default resolvers;

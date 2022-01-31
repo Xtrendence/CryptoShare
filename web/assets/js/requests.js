@@ -278,7 +278,7 @@ function updateSetting(token, userID, userSettings) {
 	return request("POST", urlAPI, query);
 }
 
-function request(method, url, body) {
+function request(method, url, body, headers) {
 	console.log("Request", url);
 
 	return new Promise((resolve, reject) => {
@@ -306,6 +306,15 @@ function request(method, url, body) {
 
 			xhr.open(method, url, true);
 			xhr.setRequestHeader("Content-Type", "application/json");
+
+			if(!empty(headers)) {
+				headers.map(header => {
+					let key = header[0];
+					let value = header[1];
+					xhr.setRequestHeader(key, value);
+				});
+			}
+
 			xhr.send(JSON.stringify(body));
 		} catch(error) {
 			console.log(error);

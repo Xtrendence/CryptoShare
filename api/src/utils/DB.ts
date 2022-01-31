@@ -200,9 +200,9 @@ export default class DB {
 				let statement = (`
 					CREATE TABLE IF NOT EXISTS Stock (
 						stockID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-						assetID VARCHAR(64) NOT NULL,
-						assetSymbol VARCHAR(16) NOT NULL,
-						data BLOB
+						assetSymbol VARCHAR(16) NOT NULL UNIQUE,
+						historicalData BLOB,
+						priceData BLOB
 					);
 				`);
 

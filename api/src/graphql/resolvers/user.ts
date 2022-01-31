@@ -43,48 +43,60 @@ export async function createUser({ username, password, key }: any) {
 
 export async function readUser({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
-		let valid = await Utils.verifyToken(userID, token);
+		try {
+			let valid = await Utils.verifyToken(userID, token);
 
-		if(valid) {
-			db.db?.get("SELECT * FROM User WHERE userID = ?", [userID], (error, row) => {
-				if(error) {
-					console.log(error);
-					reject();
-				} else {
-					if(row === undefined) {
-						reject("!User not found.!");
-						return;
+			if(valid) {
+				db.db?.get("SELECT * FROM User WHERE userID = ?", [userID], (error, row) => {
+					if(error) {
+						console.log(error);
+						reject();
+					} else {
+						if(row === undefined) {
+							reject("!User not found.!");
+							return;
+						}
+
+						let user = new User(row.username, row.password, row.key);
+						user.userID = row.userID;
+						resolve(user);
 					}
-
-					let user = new User(row.username, row.password, row.key);
-					user.userID = row.userID;
-					resolve(user);
-				}
-			});
-		} else {
-			reject("!Unauthorized!");
+				});
+			} else {
+				reject("!Unauthorized!");
+			}
+		} catch(error) {
+			console.log(error);
 		}
 	});
 }
 
 export async function updateUser({ token, userID, password, key }: any) {
-	let valid = await Utils.verifyToken(userID, token);
+	try {
+		let valid = await Utils.verifyToken(userID, token);
 
-	if(valid) {
-		db.runQuery("UPDATE User SET key = ? WHERE userID = ?", [key, userID]);
-		return "Done";
-	} else {
-		return "Unauthorized";
+		if(valid) {
+			db.runQuery("UPDATE User SET key = ? WHERE userID = ?", [key, userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
 	}
 }
 
 export async function deleteUser({ token, userID }: any) {
-	let valid = await Utils.verifyToken(userID, token);
+	try {
+		let valid = await Utils.verifyToken(userID, token);
 
-	if(valid) {
-		db.runQuery("DELETE FROM User WHERE userID = ?", [userID]);
-		return "Done";
-	} else {
-		return "Unauthorized";
+		if(valid) {
+			db.runQuery("DELETE FROM User WHERE userID = ?", [userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
 	}
 }

@@ -239,6 +239,14 @@ export default class Utils {
 		return false;
 	}
 
+	static chunkArray(array: any, size: number) {
+		let chunks = [];
+		for(let i = 0; i < array.length; i += size) {
+			chunks.push(array.slice(i, i + size));
+		}
+		return chunks;
+	}
+
 	static xssValid(string: string) {
 		try {
 			if(string.includes("<") || string.includes(">")) {
@@ -264,7 +272,9 @@ export default class Utils {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
 
-	static request(method: string, url: string, body: any) {
+	static request(method: string, url: string, body: any, headers: any) {
+		// console.log(new Date().toLocaleTimeString(), "Request", url);
+
 		return new Promise((resolve, reject) => {
 			try {
 				let XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
@@ -291,6 +301,15 @@ export default class Utils {
 
 				xhr.open(method, url, true);
 				xhr.setRequestHeader("Content-Type", "application/json");
+
+				if(!Utils.empty(headers)) {
+					headers.map((header: any) => {
+						let key = header[0];
+						let value = header[1];
+						xhr.setRequestHeader(key, value);
+					});
+				}
+
 				xhr.send(JSON.stringify(body));
 			} catch(error) {
 				console.log(error);

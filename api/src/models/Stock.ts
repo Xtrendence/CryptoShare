@@ -1,11 +1,11 @@
 export default class Stock {
-	assetID: string;
 	assetSymbol: string;
-	data: string;
+	historicalData: string;
+	priceData: string;
 
-	constructor(assetID: string, assetSymbol: string, data: string) {
-		this.assetID = assetID;
+	constructor(assetSymbol: string, historicalData: string, priceData: string) {
 		this.assetSymbol = assetSymbol;
-		this.data = data;
+		this.historicalData = historicalData;
+		this.priceData = priceData;
 	}
 }

@@ -53,9 +53,9 @@ type Coin {
 }
 
 type Stock {
-	assetID: String!,
 	assetSymbol: String!,
-	data: String!
+	historicalData: String!,
+	priceData: String!
 }
 
 type Query {
@@ -72,7 +72,8 @@ type Query {
 
 	readCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, currency: String!): Coin
 
-	readStock(token: String!, userID: Int!, assetID: String!): Stock
+	readStockHistorical(token: String!, userID: Int!, keyAPI: String!, assetSymbol: String!): Stock
+	readStockPrice(token: String!, userID: Int!, keyAPI: String!, symbols: [String]!): [Stock]
 }
 
 type Mutation {
