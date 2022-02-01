@@ -6,7 +6,7 @@ const btoa = require("btoa");
 /**
  * A class with static methods to simplify the use of cryptographic functions throughout the application.
  */
-export default class CryptoFN {
+module.exports = class CryptoFN {
 	/**
 	 * @param {ArrayBuffer} data - The file data as an ArrayBuffer.
 	 * @returns {string} - An encoded string version of the file data.
