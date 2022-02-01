@@ -55,3 +55,22 @@ function calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmo
 		Your ROI (Return on Investment) would be ${roi.toFixed(2)} months.
 	`;
 }
+
+function calculateDividendRewards(currency, amount, dividend) {
+	let currencySymbol = currencySymbols[currency];
+
+	let yearlyValue = (amount * dividend).toFixed(3);
+
+	let monthlyValue = (parseFloat(yearlyValue) / 12).toFixed(3);
+
+	let weeklyValue = (parseFloat(yearlyValue) / (365 / 7)).toFixed(3);
+
+	let dailyValue = (parseFloat(yearlyValue) / 365).toFixed(3);
+
+	return `
+		Yearly Value: ${currencySymbol + separateThousands(yearlyValue)}<br>
+		Monthly Value: ${currencySymbol + separateThousands(monthlyValue)}<br>
+		Weekly Value: ${currencySymbol + separateThousands(weeklyValue)}<br>
+		Daily Value: ${currencySymbol + separateThousands(dailyValue)}
+	`;
+}

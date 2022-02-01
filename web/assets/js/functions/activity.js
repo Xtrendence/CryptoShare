@@ -651,3 +651,37 @@ function showActivityMiningPopup() {
 		}
 	});
 }
+
+function showActivityDividendPopup() {
+	let html = `
+		<input type="number" id="popup-input-amount" placeholder="Number Of Shares...">
+		<input type="number" id="popup-input-dividend" placeholder="Annual Dividend Per Share...">
+		<span class="hidden" id="popup-span-output"></span>
+	`;
+
+	let popup = new Popup(340, "auto", "Dividend Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	popup.show();
+	popup.updateHeight();
+
+	let popupInputAmount = document.getElementById("popup-input-amount");
+	let popupInputDividend = document.getElementById("popup-input-dividend");
+	let popupSpanOutput = document.getElementById("popup-span-output");
+
+	popup.on("confirm", async () => {
+		let currency = getCurrency();
+
+		let amount = popupInputAmount.value;
+		let dividend = popupInputDividend.value;
+
+		if(!empty(amount) && !isNaN(amount) && amount > 0 && !isNaN(dividend) && dividend > 0) {
+			popupSpanOutput.innerHTML = calculateDividendRewards(currency, amount, dividend);
+			popupSpanOutput.classList.remove("hidden");
+			popup.updateHeight();
+		} else {
+			popupSpanOutput.innerHTML = "";
+			popupSpanOutput.classList.add("hidden");
+			popup.updateHeight();
+			errorNotification("Please fill out all fields, and enter the amount and APY as numbers.");
+		}
+	});
+}
