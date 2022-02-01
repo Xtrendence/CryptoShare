@@ -323,7 +323,7 @@ function showStockMarketData(infoPrice, infoHistorical) {
 
 async function showMarketSearchResult(popup, inputSearch, symbol, currency, type) {
 	if(type === "crypto") {
-		showLoading(1000, "Loading...");
+		showLoading(5000, "Loading...");
 
 		let result = await getCoin({ symbol:symbol });
 
@@ -335,6 +335,8 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 			showCryptoMarketData(info);
 			popup.hide();
 		} else {
+			hideLoading();
+			
 			let showMatches = showAssetMatches(inputSearch, result, false);
 
 			if(showMatches) {
@@ -360,7 +362,7 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 			}
 		}
 	} else {
-		showLoading(1000, "Loading...");
+		showLoading(5000, "Loading...");
 
 		let currency = getCurrency();
 
@@ -385,6 +387,8 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 		infoHistorical.currency = currency;
 
 		showStockMarketData(infoPrice, infoHistorical);
+
+		hideLoading();
 
 		popup.hide();
 	}

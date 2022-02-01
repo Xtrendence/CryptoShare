@@ -41,17 +41,28 @@ async function populateHoldingsList(recreate) {
 				}
 			}
 
-			let ids = Object.keys(holdingsData);
+			// Separate crypto and stock holdings.
+			let filteredHoldings = filterHoldingsByType(holdingsData);
 
-			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
+			// Get holding IDs and symbols.
+			let holdingCryptoIDs = Object.keys(filteredHoldings.crypto);
+			let holdingStockSymbols = getHoldingSymbols(filteredHoldings.stocks);
 
-			let sortedHoldingsData = sortHoldingsDataByValue(holdingsData, marketData);
+			// Get market data based on holding IDs and symbols.
+			let marketCryptoData = await cryptoAPI.getMarketByID(currency, holdingCryptoIDs.join(","));
+			let marketStocksData = await fetchStockPrice(currency, holdingStockSymbols);
 
-			holdingsData = sortedHoldingsData.holdingsData;
+			// Combine and sort holdings data.
+			let sortedHoldingsData = sortHoldingsDataByValue(filteredHoldings.crypto, filteredHoldings.stocks, marketCryptoData, marketStocksData);
 
-			let parsed = createHoldingsListCryptoRows(marketData, holdingsData, sortedHoldingsData.order, currency);
+			// Get sorted holding data.
+			let sortedData = sortedHoldingsData.holdingsData;
+			let sortedOrder = sortedHoldingsData.order;
+
+			let parsed = createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, sortedOrder, currency);
 
 			let rows = parsed.rows;
+
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
@@ -85,70 +96,191 @@ async function populateHoldingsList(recreate) {
 	}
 }
 
-function createHoldingsListCryptoRows(marketData, holdingsData, order, currency) {
+function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketCryptoData, marketStocksData) {
+	let combined = { ...holdingsCryptoData, ...holdingsStocksData };
+	let sorted = {};
+	let array = [];
+	let order = [];
+
+	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
+
+	for(let holding in holdingsCryptoData) {
+		let value = holdingsCryptoData[holding].holdingAssetAmount * marketCryptoData[holding].current_price;
+
+		if(value > 0) {
+			array.push([holding, value]);
+		}
+	}
+	
+	for(let holding in holdingsStocksData) {
+		let symbol = holdingsStocksData[holding].holdingAssetSymbol;
+		let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
+
+		if(value > 0) {
+			array.push([holding, value]);
+		}
+	}
+
+	array.sort(function(a, b) {
+		return a[1] - b[1];
+	});
+
+	array.reverse().map(item => {
+		order.push(item[0]);
+		sorted[item[0]] = combined[item[0]];
+	});
+
+	return { holdingsData:sorted, order:order };
+}
+
+function getHoldingSymbols(holdings) {
+	let symbols = [];
+
+	Object.keys(holdings).map(id => {
+		symbols.push(holdings[id].holdingAssetSymbol);
+	});
+
+	return symbols;
+}
+
+function filterHoldingsByType(holdingsData) {
+	let holdingsCrypto = {};
+	let holdingsStocks = {};
+
+	let ids = Object.keys(holdingsData);
+	ids.map(id => {
+		let holding = holdingsData[id];
+		if(holding.holdingAssetType === "crypto") {
+			holdingsCrypto[id] = holding;
+		} else {
+			holdingsStocks[id] = holding;
+		}
+	});
+
+	return { crypto:holdingsCrypto, stocks:holdingsStocks };
+}
+
+function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, sortedOrder, currency) {
 	let output = { rows:[], totalValue:0 };
 
-	let ids = order;
+	let ids = sortedOrder;
 
-	marketData = sortMarketDataByCoinID(marketData);
+	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
 
 	for(let i = 0; i < ids.length; i++) {
 		try {
 			let id = ids[i];
+			
+			let holding = sortedData[id];
 
-			let coin = marketData[id];
+			let value = 0;
 
-			let coinID = coin.id;
-			let price = coin.current_price;
-			let icon = coin.image;
-			let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
-			let name = coin.name;
-			let symbol = coin.symbol;
-			let rank = coin.market_cap_rank;
+			if(holding.holdingAssetType === "crypto") {
+				let coin = marketCryptoData[id];
 
-			let holding = holdingsData[coinID];
+				let coinID = coin.id;
+				let price = coin.current_price;
+				let icon = coin.image;
+				let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+				let name = coin.name;
+				let symbol = coin.symbol;
+				let rank = coin.market_cap_rank;
 
-			let amount = parseFloat(holding.holdingAssetAmount);
-			let value = parseFloat((amount * price).toFixed(2));
+				let amount = parseFloat(holding.holdingAssetAmount);
+				value = parseFloat((amount * price).toFixed(2));
 
-			if(amount <= 0) {
-				continue;
-			}
+				if(amount <= 0) {
+					continue;
+				}
 
-			let div = document.createElement("div");
-			div.id = "holdings-list-crypto-" + coinID;
-			div.setAttribute("class", "holdings-list-row crypto noselect audible-pop");
+				let div = document.createElement("div");
+				div.id = "holdings-list-crypto-" + coinID;
+				div.setAttribute("class", "holdings-list-row crypto noselect audible-pop");
 
-			div.innerHTML = `
-				<div class="icon-wrapper audible-pop">
-					<img class="icon" src="${icon}" draggable="false">
-				</div>
-				<div class="info-wrapper audible-pop">
-					<span class="name">${name}</span>
-					<div class="rank-container audible-pop">
-						<span class="rank">#${rank}</span>
-						<span class="symbol">${symbol.toUpperCase()}</span>
+				div.innerHTML = `
+					<div class="icon-wrapper audible-pop">
+						<img class="icon" src="${icon}" draggable="false">
 					</div>
-					<div class="info-container">
-						<div class="top audible-pop">
-							<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
-							<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+					<div class="info-wrapper audible-pop">
+						<span class="name">${name}</span>
+						<div class="rank-container audible-pop">
+							<span class="rank">#${rank}</span>
+							<span class="symbol">${symbol.toUpperCase()}</span>
 						</div>
-						<div class="bottom audible-pop">
-							<span class="price-change">Amount: ${separateThousands(amount)}</span>
-							<span class="price-change">24h Change: ${priceChangeDay}%</span>
+						<div class="info-container">
+							<div class="top audible-pop">
+								<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
+								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+							</div>
+							<div class="bottom audible-pop">
+								<span class="price-change">Amount: ${separateThousands(amount)}</span>
+								<span class="price-change">24h Change: ${priceChangeDay}%</span>
+							</div>
 						</div>
 					</div>
-				</div>
-			`;
+				`;
 
-			if(holding.holdingID === "-") {
-				addHoldingListChartCryptoRowEvent(div, coinID, symbol);
+				if(holding.holdingID === "-") {
+					addHoldingListChartRowEvent(div, coinID, symbol);
+				} else {
+					addHoldingListRowEvent(div, holding.holdingID, coinID, symbol, amount, "crypto");
+				}
+
+				output.rows.push(div);
 			} else {
-				addHoldingListCryptoRowEvent(div, holding.holdingID, coinID, symbol, amount);
-			}
+				let symbol = holding.holdingAssetSymbol;
 
-			output.rows.push(div);
+				let stock = marketStocksData[symbol].priceData;
+
+				let shortName = stock.shortName;
+				let price = stock.price;
+				let priceChangeDay = formatPercentage(stock.change);
+
+				let amount = parseFloat(holding.holdingAssetAmount);
+				value = parseFloat((amount * price).toFixed(2));
+
+				if(amount <= 0) {
+					continue;
+				}
+
+				let div = document.createElement("div");
+				div.id = "holdings-list-stock-" + symbol;
+				div.setAttribute("class", "holdings-list-row stock noselect audible-pop");
+
+				div.innerHTML = `
+					<div class="icon-wrapper audible-pop">
+						<div class="icon-symbol-wrapper">
+							<span>${symbol}</span>
+						</div>
+					</div>
+					<div class="info-wrapper audible-pop">
+						<span class="name">${shortName}</span>
+						<div class="rank-container audible-pop">
+							<span class="rank">-</span>
+							<span class="symbol">${symbol.toUpperCase()}</span>
+						</div>
+						<div class="info-container">
+							<div class="top audible-pop">
+								<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
+								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+							</div>
+							<div class="bottom audible-pop">
+								<span class="price-change">Amount: ${separateThousands(amount)}</span>
+								<span class="price-change">24h Change: ${priceChangeDay}%</span>
+							</div>
+						</div>
+					</div>
+				`;
+
+				if(holding.holdingID === "-") {
+					addHoldingListChartRowEvent(div, id, symbol);
+				} else {
+					addHoldingListRowEvent(div, holding.holdingID, id, symbol, amount, "stock");
+				}
+
+				output.rows.push(div);
+			}
+			
 			output.totalValue += value;
 		} catch(error) {
 			console.log(error);
@@ -159,15 +291,15 @@ function createHoldingsListCryptoRows(marketData, holdingsData, order, currency)
 }
 
 // TODO: Add functionality.
-function addHoldingListChartCryptoRowEvent(div, coinID, symbol) {
+function addHoldingListChartRowEvent(div, id, symbol) {
 	div.addEventListener("click", async () => {
 		try {
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
-			let data = await fetchHoldingsHistoricalData([coinID]);
+			let data = await fetchHoldingsHistoricalData([id]);
 
 			let prices = data.prices;
-			let activities = filterActivitiesByAssetID(data.activities, coinID);
+			let activities = filterActivitiesByAssetID(data.activities, id);
 
 			showLoading(5000, "Parsing...");
 
@@ -185,17 +317,17 @@ function addHoldingListChartCryptoRowEvent(div, coinID, symbol) {
 	});
 }
 
-function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount) {
+function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount, holdingAssetType) {
 	div.addEventListener("click", () => {
 		try {
-			let html = `<input id="popup-input-amount-crypto" type="number" placeholder="Amount..." value="${amount}"><button class="action-button delete" id="popup-button-delete-crypto">Delete Asset</button>`;
+			let html = `<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}"><button class="action-button delete" id="popup-button-delete">Delete Asset</button>`;
 			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
 			popup.show();
 			popup.updateHeight();
 
-			addHoldingPopupDeleteEvent(popup, document.getElementById("popup-button-delete-crypto"), holdingID);
+			addHoldingPopupDeleteEvent(popup, document.getElementById("popup-button-delete"), holdingID);
 
-			let inputAmount = document.getElementById("popup-input-amount-crypto");
+			let inputAmount = document.getElementById("popup-input-amount");
 
 			inputAmount.focus();
 		
@@ -213,7 +345,7 @@ function addHoldingListCryptoRowEvent(div, holdingID, holdingAssetID, holdingAss
 						holdingAssetID: holdingAssetID,
 						holdingAssetSymbol: holdingAssetSymbol,
 						holdingAssetAmount: amount,
-						holdingAssetType: "crypto"
+						holdingAssetType: holdingAssetType
 					});
 
 					await updateHolding(token, userID, holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
@@ -335,33 +467,6 @@ function parseActivityAsHoldings() {
 			reject(error);
 		}
 	});
-}
-
-function sortHoldingsDataByValue(holdingsData, marketData) {
-	let sorted = {};
-	let array = [];
-	let order = [];
-
-	marketData = sortMarketDataByCoinID(marketData);
-
-	for(let holding in holdingsData) {
-		let value = holdingsData[holding].holdingAssetAmount * marketData[holding].current_price;
-
-		if(value > 0) {
-			array.push([holding, value]);
-		}
-	}
-
-	array.sort(function(a, b) {
-		return a[1] - b[1];
-	});
-
-	array.reverse().map(item => {
-		order.push(item[0]);
-		sorted[item[0]] = holdingsData[item[0]];
-	});
-
-	return { holdingsData:sorted, order:order };
 }
 
 function fetchHoldingsHistoricalData(ids = null) {

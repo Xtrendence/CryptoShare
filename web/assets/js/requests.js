@@ -319,6 +319,10 @@ function request(method, url, body, headers) {
 
 	return new Promise((resolve, reject) => {
 		try {
+			setTimeout(() => {
+				reject("Timeout.");
+			}, 5000);
+
 			let xhr = new XMLHttpRequest();
 
 			xhr.addEventListener("readystatechange", () => {

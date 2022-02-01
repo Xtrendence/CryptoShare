@@ -1019,6 +1019,29 @@ html.light .market-list-row .icon-wrapper, html.light .holdings-list-row .icon-w
 html.dark .market-list.backdrop .icon, html.dark .holdings-list.backdrop .icon {
 	background:rgb(255,255,255);
 }
+.market-list-row .icon-symbol-wrapper, .holdings-list-row .icon-symbol-wrapper {
+	border-radius:50%;
+	background:var(--main-second);
+	width:80px;
+	height:80px;
+	padding:4px;
+	display:block;
+	margin:16px 0 0 21px;
+}
+html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row .icon-symbol-wrapper {
+	background:var(--main-third);
+}
+.market-list-row .icon-wrapper span, .holdings-list-row .icon-wrapper span {
+	display:block;
+	width:calc(100% - 20px);
+	padding:0 10px 0 10px;
+	text-align:center;
+	font-size:18px;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	overflow:hidden;
+	line-height:80px;
+}
 .market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container, .activity-list-row .info-wrapper, .activity-list-row .info-container {
 	display:inline-block;
 	vertical-align:middle;

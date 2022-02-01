@@ -103,6 +103,38 @@ function checkBackdrop() {
 	}
 }
 
+async function assetHoldingExists(id) {
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
+	let key = localStorage.getItem("key");
+
+	return new Promise(async (resolve, reject) => {
+		try {
+			let holdings = await readHolding(token, userID);
+
+			if(empty(holdings) || holdings?.data?.readHolding.length === 0) {
+				resolve({ exists:false });
+			} else {
+				let encrypted = holdings?.data?.readHolding;
+
+				Object.keys(encrypted).map(index => {
+					let decrypted = decryptObjectValues(key, encrypted[index]);
+
+					if(decrypted.holdingAssetID === id) {
+						resolve({ exists:true, holdingID:encrypted[index].holdingID });
+						return;
+					}
+				});
+
+				resolve({ exists:false });
+			}
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
 function showAssetMatches(referenceNode, list, marginBottom) {
 	if("matches" in list && Object.keys(list.matches).length > 1) {
 		let current = document.getElementsByClassName("popup-list asset-matches");
