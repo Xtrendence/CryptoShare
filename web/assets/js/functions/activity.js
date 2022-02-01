@@ -144,6 +144,7 @@ function createActivityListRows(activityData) {
 		let div = document.createElement("div");
 		div.id = "activity-list-" + txID;
 		div.setAttribute("class", "activity-list-row noselect audible-pop");
+		div.setAttribute("data-id", activity.activityAssetID);
 
 		div.innerHTML = `
 			<div class="info-wrapper audible-pop">
@@ -233,7 +234,11 @@ function addActivityListRowEvent(div, activity) {
 					return;
 				}
 
+				showLoading(5000, "Loading...");
+
 				let result = await getActivityPopupAssetID(data.activityAssetType, data.activityAssetSymbol);
+
+				hideLoading();
 
 				if("id" in result) {
 					showLoading(1000, "Updating...");
@@ -336,11 +341,27 @@ function fillActivityPopupElements(elements, activity) {
 // Add stock functionality.
 async function getActivityPopupAssetID(type, symbol) {
 	return new Promise(async (resolve, reject) => {
-		if(type === "crypto") {
-			let result = await getCoin({ symbol:symbol });
-			resolve(result);
-		} else {
+		try {
+			if(empty(symbol)) {
+				reject();
+			}
 
+			if(type === "crypto") {
+				let result = await getCoin({ symbol:symbol });
+				resolve(result);
+			} else {
+				symbol = symbol.toUpperCase();
+
+				let result = await fetchStockPrice(getCurrency(), [symbol]);
+
+				if(!empty(result) && symbol in result) {
+					resolve({ id:"stock-" + symbol.toUpperCase() });
+				} else {
+					resolve({});
+				}
+			}
+		} catch(error) {
+			reject(error);
 		}
 	});
 }

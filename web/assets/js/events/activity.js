@@ -106,7 +106,11 @@ buttonActivityAdd.addEventListener("click", () => {
 				return;
 			}
 
+			showLoading(5000, "Loading...");
+
 			let result = await getActivityPopupAssetID(data.activityAssetType, data.activityAssetSymbol);
+
+			hideLoading();
 
 			if("id" in result) {
 				showLoading(1000, "Adding...");
