@@ -22,14 +22,19 @@ export async function readCoin({ token, userID, assetID, assetSymbol, currency }
 								let from = Math.floor(Utils.previousYear(new Date()).getTime() / 1000);
 								let now = Math.floor(new Date().getTime() / 1000);
 
-								let historicalData = await Utils.request("GET", "https://api.coingecko.com/api/v3/coins/" + assetID + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + now, null, null);
+								let historicalData: any = await Utils.request("GET", "https://api.coingecko.com/api/v3/coins/" + assetID + "/market_chart/range?vs_currency=" + currency + "&from=" + from + "&to=" + now, null, null);
 
-								let data = JSON.stringify({ time:now, historicalData:historicalData });
+								if(!("error" in historicalData)) {
+									let data = JSON.stringify({ time:now, historicalData:historicalData });
 
-								db.runQuery("INSERT OR REPLACE INTO Coin (assetID, assetSymbol, data) VALUES (?, ?, ?)", [id, assetSymbol, data]);
+									db.runQuery("INSERT OR REPLACE INTO Coin (assetID, assetSymbol, data) VALUES (?, ?, ?)", [id, assetSymbol, data]);
 
-								let coin = new Coin(id, assetSymbol, data);
-								resolve(coin);
+									let coin = new Coin(id, assetSymbol, data);
+
+									resolve(coin);
+								} else {
+									reject(historicalData.error);
+								}
 							} catch(error) {
 								console.log(error);
 								reject(error);
