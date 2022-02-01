@@ -158,6 +158,7 @@ function createActivityListRows(activityData) {
 						`<span class="notes">${activity.activityNotes}</span>`
 					}
 					<span class="amount">Amount: ${separateThousands(activity.activityAssetAmount)}</span>
+					<span class="hidden">${activity.activityAssetType}</span>
 				</div>
 			</div>
 		`;
