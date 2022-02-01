@@ -184,7 +184,7 @@ function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, 
 				let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
 				let name = coin.name;
 				let symbol = coin.symbol;
-				let rank = coin.market_cap_rank;
+				let rank = coin.market_cap_rank || "-";
 
 				let amount = parseFloat(holding.holdingAssetAmount);
 				value = parseFloat((amount * price).toFixed(2));
