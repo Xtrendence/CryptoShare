@@ -49,8 +49,8 @@ async function populateHoldingsList(recreate) {
 			let holdingStockSymbols = getHoldingSymbols(filteredHoldings.stocks);
 
 			// Get market data based on holding IDs and symbols.
-			let marketCryptoData = await cryptoAPI.getMarketByID(currency, holdingCryptoIDs.join(","));
-			let marketStocksData = await fetchStockPrice(currency, holdingStockSymbols);
+			let marketCryptoData = !empty(holdingCryptoIDs) ? await cryptoAPI.getMarketByID(currency, holdingCryptoIDs.join(",")) : {};
+			let marketStocksData = !empty(holdingStockSymbols) ? await fetchStockPrice(currency, holdingStockSymbols) : {};
 
 			// Combine and sort holdings data.
 			let sortedHoldingsData = sortHoldingsDataByValue(filteredHoldings.crypto, filteredHoldings.stocks, marketCryptoData, marketStocksData);

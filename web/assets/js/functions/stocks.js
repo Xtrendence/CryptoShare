@@ -4,6 +4,10 @@ async function fetchStockPrice(currency, symbols) {
 		let token = localStorage.getItem("token");
 		let keyAPI = localStorage.getItem("keyAPI");
 
+		if(empty(symbols)) {
+			return { error:"No symbols provided." };
+		}
+
 		if(empty(keyAPI)) {
 			return { error:"No stock API key provided. Please set this in settings." };
 		}
