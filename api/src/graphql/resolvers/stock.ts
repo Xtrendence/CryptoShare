@@ -21,7 +21,7 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 							try {
 								let historicalData: any = await getHistoricalData(assetSymbol, keyAPI);
 
-								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData) VALUES (?, ?)", [assetSymbol, historicalData]);
+								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData, priceData) VALUES (?, ?, ?)", [assetSymbol, historicalData, row?.priceData || ""]);
 
 								let stock = new Stock(assetSymbol, historicalData, row?.priceData || "");
 								resolve(stock);
@@ -63,10 +63,25 @@ export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 						if(refetchSymbols.length > 0) {
 							let priceData: any = await getPriceData(refetchSymbols, keyAPI);
 
+							if("error" in priceData) {
+								reject(`!${priceData.error}!`);
+								return;
+							}
+
 							let fetchedSymbols = Object.keys(priceData.priceData);
 
 							fetchedSymbols.map(symbol => {
-								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, priceData) VALUES (?, ?)", [symbol, JSON.stringify({ time:priceData.time, priceData:priceData.priceData[symbol] })]);
+								db.db?.get("SELECT * FROM Stock WHERE assetSymbol = ?", [symbol], async (error, row) => {
+									if(error) {
+										console.log(error);
+									} else {
+										if(row !== undefined) {
+											db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData, priceData) VALUES (?, ?, ?)", [symbol, row.historicalData || "", JSON.stringify({ time:priceData.time, priceData:priceData.priceData[symbol] })]);
+										} else {
+											db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData, priceData) VALUES (?, ?, ?)", [symbol, "", JSON.stringify({ time:priceData.time, priceData:priceData.priceData[symbol] })]);
+										}
+									}
+								});
 							});
 						}
 					} catch(error) {
@@ -158,6 +173,8 @@ async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 
 	if("chart" in historicalData) {
 		return JSON.stringify({ time:now, historicalData:historicalData });
+	} else {
+		return JSON.stringify({});
 	}
 }
 
@@ -196,6 +213,8 @@ function getPriceData(symbols: any, keyAPI: string) {
 							high1y: result.fiftyTwoWeekHigh 
 						};
 					});
+				} else if("message" in priceData && priceData.message === "Limit Exceeded") {
+					resolve({ error:"Stock API Rate Limit Exceeded" });
 				}
 
 				if(i === symbols.length - 1) {
