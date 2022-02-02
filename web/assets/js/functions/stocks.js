@@ -1,4 +1,4 @@
-async function fetchStockPrice(currency, symbols) {
+async function fetchStockPrice(currency, symbols, showError) {
 	try {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
@@ -15,8 +15,10 @@ async function fetchStockPrice(currency, symbols) {
 		let data = await readStockPrice(token, userID, keyAPI, symbols);
 
 		if("errors" in data && data.errors.length > 0) {
-			errorNotification(data.errors[0]);
-			ignoreError(data.errors[0]);
+			if(showError) {
+				errorNotification(data.errors[0]);
+			}
+			
 			return { error:data.errors[0] };
 		}
 
@@ -39,7 +41,7 @@ async function fetchStockPrice(currency, symbols) {
 	}
 }
 
-async function fetchStockHistorical(currency, assetSymbol) {
+async function fetchStockHistorical(currency, assetSymbol, showError) {
 	try {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
@@ -52,8 +54,10 @@ async function fetchStockHistorical(currency, assetSymbol) {
 		let data = await readStockHistorical(token, userID, keyAPI, assetSymbol);
 
 		if("errors" in data && data.errors.length > 0) {
-			errorNotification(data.errors[0]);
-			ignoreError(data.errors[0]);
+			if(showError) {
+				errorNotification(data.errors[0]);
+			}
+
 			return { error:data.errors[0] };
 		}
 

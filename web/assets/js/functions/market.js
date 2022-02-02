@@ -336,7 +336,7 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 			popup.hide();
 		} else {
 			hideLoading();
-			
+
 			let showMatches = showAssetMatches(inputSearch, result, false);
 
 			if(showMatches) {
@@ -366,7 +366,7 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 
 		let currency = getCurrency();
 
-		let resultPrice = await fetchStockPrice(currency, [symbol]);
+		let resultPrice = await fetchStockPrice(currency, [symbol], true);
 
 		if("error" in resultPrice) {
 			errorNotification(resultPrice.error);
@@ -376,7 +376,7 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 		let infoPrice = resultPrice[Object.keys(resultPrice)[0]].priceData;
 		infoPrice.currency = currency;
 
-		let resultHistorical = await fetchStockHistorical(currency, symbol);
+		let resultHistorical = await fetchStockHistorical(currency, symbol, true);
 
 		if("error" in resultHistorical) {
 			errorNotification(resultHistorical.error);

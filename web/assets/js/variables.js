@@ -10,6 +10,15 @@ let currencySymbols = {
 	cad: "$"
 };
 
+let firstFetch = {
+	chatBot: true,
+	dashboard: true,
+	market: true,
+	holdings: true,
+	activity: true,
+	settings: true
+};
+
 let applicationSettings = getSettings();
 let applicationChoices = getSettingsChoices();
 

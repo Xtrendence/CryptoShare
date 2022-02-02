@@ -189,7 +189,7 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 					let token = localStorage.getItem("token");
 					let key = localStorage.getItem("key");
 
-					let result = await fetchStockPrice(currency, [symbol]);
+					let result = await fetchStockPrice(currency, [symbol], true);
 
 					hideLoading();
 

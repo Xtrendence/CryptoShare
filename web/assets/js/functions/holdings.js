@@ -1,5 +1,7 @@
 async function populateHoldingsList(recreate) {
 	if(getActivePage().id === "holdings-page") {
+		let firstFetchHoldings = firstFetch.holdings;
+		
 		if(recreate) {
 			spanHoldingsValue.textContent = "-";
 			divHoldingsList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
@@ -51,8 +53,12 @@ async function populateHoldingsList(recreate) {
 			// Get market data based on holding IDs and symbols.
 			let marketCryptoData = !empty(holdingCryptoIDs) ? await cryptoAPI.getMarketByID(currency, holdingCryptoIDs.join(",")) : {};
 
-			let marketStocksData = !empty(holdingStockSymbols) ? await fetchStockPrice(currency, holdingStockSymbols) : {};
+			let marketStocksData = !empty(holdingStockSymbols) ? await fetchStockPrice(currency, holdingStockSymbols, false) : {};
 			if("error" in marketStocksData) {
+				if(firstFetchHoldings) {
+					errorNotification(marketStocksData.error);
+				}
+
 				marketStocksData = {};
 				holdingStockSymbols = [];
 				filteredHoldings.stocks = {};
@@ -558,7 +564,7 @@ function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 
 						let assetID = "stock-" + assetSymbols[i];
 
-						let request = await fetchStockHistorical(currency, assetSymbols[i]);
+						let request = await fetchStockHistorical(currency, assetSymbols[i], false);
 
 						if("error" in request) {
 							resolve({ error:request.error });
@@ -806,7 +812,7 @@ function parseActivityAsDatedValue(days, prices, activities) {
 					});
 
 					// Get stock market data for today's holdings.
-					let priceData = await fetchStockPrice(currency, symbolsStock);
+					let priceData = await fetchStockPrice(currency, symbolsStock, false);
 
 					idsStocks.map(assetID => {
 						let symbol = assetID.replace("stock-", "");

@@ -70,21 +70,27 @@ function setPage(page) {
 
 	switch(page) {
 		case "chatbot":
+			firstFetch.chatBot = false;
 			break;
 		case "dashboard":
+			firstFetch.dashboard = false;
 			break;
 		case "market":
 			populateMarketList(1, 1, true);
+			firstFetch.market = false;
 			break;
 		case "holdings":
 			populateHoldingsList(true);
 			setHoldingsUsername();
+			firstFetch.holdings = false;
 			break;
 		case "activity":
 			populateActivityList(true);
+			firstFetch.activity = false;
 			break;
 		case "settings":
 			syncSettings(false);
+			firstFetch.settings = false;
 			break;
 	}
 }
