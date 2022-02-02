@@ -14,6 +14,12 @@ async function fetchStockPrice(currency, symbols) {
 
 		let data = await readStockPrice(token, userID, keyAPI, symbols);
 
+		if("errors" in data && data.errors.length > 0) {
+			errorNotification(data.errors[0]);
+			ignoredErrors.push(data.errors[0]);
+			return { error:data.errors[0] };
+		}
+
 		if(!empty(data?.data?.readStockPrice)) {
 			let parsedOutput = {};
 			let result = data?.data?.readStockPrice;
@@ -158,8 +164,6 @@ async function convertStockPrice(currency, data) {
 async function convertStockHistorical(currency, data) {
 	let exchangeRates = await fetchExchangeRates();
 
-	console.log(data);
-
 	let prices = data.historicalData.chart.result[0].indicators.quote[0].close;
 
 	let convertedPrices = [];
@@ -172,4 +176,41 @@ async function convertStockHistorical(currency, data) {
 	data.historicalData.chart.result[0].indicators.quote[0].close = convertedPrices;
 
 	return data;
+}
+
+function parseStockHistoricalDataAsCrypto(days, historicalData) {
+	let parsed = [];
+	let parsedObject = {};
+	let datedPrices = {};
+	let prices = historicalData?.indicators?.quote[0]?.close;
+	let times = historicalData?.timestamp;
+
+	for(let i = 0; i < times.length; i++) {
+		let date = formatDateHyphenated(new Date(times[i] * 1000));
+		datedPrices[date] = prices[i];
+	}
+
+	for(let i = 0; i < days.length; i++) {
+		let day = days[i];
+		let currentTime = times[i] * 1000;
+		let currentDay = formatDateHyphenated(new Date(currentTime));
+		let currentPrice = datedPrices[currentDay];
+		parsedObject[currentDay] = [currentTime, currentPrice];
+
+		if(!(day in parsedObject)) {
+			let value = previousValueInObject(parsedObject, i);
+			if(empty(value)) {
+				value = nextValueInObject(parsedObject, i);
+			}
+
+			parsedObject[day] = value;
+		}
+
+		let time = parsedObject[day][0];
+		let price = parsedObject[day][1];
+
+		parsed.push([time, price]);
+	}
+
+	return parsed;
 }

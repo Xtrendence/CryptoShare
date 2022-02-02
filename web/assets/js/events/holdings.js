@@ -19,7 +19,7 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
-			let data = await fetchHoldingsHistoricalData(undefined);
+			let data = await fetchHoldingsCryptoHistoricalData(undefined);
 
 			let prices = data.prices;
 			let activities = data.activities;
