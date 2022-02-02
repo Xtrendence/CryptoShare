@@ -2,6 +2,8 @@ import Stock from "../../models/Stock";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";
 
+let stockAPI = "https://yfapi.net";
+
 const db = new DB();
 
 export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }: any) {
@@ -176,7 +178,7 @@ function getSymbolsToRefetch(symbols: any) {
 async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 	let now = Math.floor(new Date().getTime() / 1000);
 
-	let historicalData: any = await Utils.request("GET", "https://yfapi.net/v8/finance/chart/" + assetSymbol.toUpperCase() + "?range=1y&interval=1d&lang=en", null, [["X-API-KEY", keyAPI]]);
+	let historicalData: any = await Utils.request("GET", stockAPI + "/v8/finance/chart/" + assetSymbol.toUpperCase() + "?range=1y&interval=1d&lang=en", null, [["X-API-KEY", keyAPI]]);
 
 	if("chart" in historicalData) {
 		return JSON.stringify({ time:now, historicalData:historicalData });
@@ -200,7 +202,7 @@ function getPriceData(symbols: any, keyAPI: string) {
 				let chunk = symbols[i];
 				let joinedSymbols = chunk.join("%2C").toUpperCase();
 
-				let priceData: any = await Utils.request("GET", "https://yfapi.net/v6/finance/quote?lang=en&symbols=" + joinedSymbols, null, [["X-API-KEY", keyAPI]]);
+				let priceData: any = await Utils.request("GET", stockAPI + "/v6/finance/quote?lang=en&symbols=" + joinedSymbols, null, [["X-API-KEY", keyAPI]]);
 
 				if("quoteResponse" in priceData && "result" in priceData.quoteResponse) {
 					let results = priceData.quoteResponse.result;
