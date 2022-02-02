@@ -489,6 +489,7 @@ function fetchHoldingsCryptoHistoricalData(ids = null) {
 
 			let prices = {};
 			let parsedData = await parseActivityAsHoldings();
+			parsedData.activityData = filterActivitiesByType(parsedData.activityData).crypto;
 			let holdings = filterHoldingsByType(parsedData.holdingsData).crypto;
 
 			let coinIDs = Object.keys(holdings);
@@ -498,7 +499,7 @@ function fetchHoldingsCryptoHistoricalData(ids = null) {
 
 			for(let i = 0; i < coinIDs.length; i++) {
 				setTimeout(async () => {
-					showLoading(5000, `Getting Data... (${i + 1}/${coinIDs.length})`);
+					showLoading(5000, `Getting Crypto Data... (${i + 1}/${coinIDs.length})`);
 
 					let holding = holdings[coinIDs[i]];
 
@@ -512,7 +513,6 @@ function fetchHoldingsCryptoHistoricalData(ids = null) {
 					}
 
 					if(Object.keys(prices).length === coinIDs.length) {
-						hideLoading();
 						resolve({ coinIDs:coinIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
 					}
 				}, i * 2000);
@@ -531,6 +531,7 @@ function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 
 			let prices = {};
 			let parsedData = await parseActivityAsHoldings();
+			parsedData.activityData = filterActivitiesByType(parsedData.activityData).stocks;
 			let holdings = filterHoldingsByType(parsedData.holdingsData).stocks;
 
 			let assetIDs = Object.keys(holdings);
@@ -548,21 +549,31 @@ function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 				assetSymbols = symbols;
 			}
 
+			let cancelled = false;
+
 			for(let i = 0; i < assetSymbols.length; i++) {
 				setTimeout(async () => {
-					showLoading(5000, `Getting Data... (${i + 1}/${assetSymbols.length})`);
+					if(!cancelled) {
+						showLoading(5000, `Getting Stocks Data... (${i + 1}/${assetSymbols.length})`);
 
-					let assetID = "stock-" + assetSymbols[i];
+						let assetID = "stock-" + assetSymbols[i];
 
-					let request = await fetchStockHistorical(currency, assetSymbols[i]);
+						let request = await fetchStockHistorical(currency, assetSymbols[i]);
 
-					let historicalData = request?.data?.historicalData?.chart?.result[0];
+						if("error" in request) {
+							resolve({ error:request.error });
+							hideLoading();
+							cancelled = true;
+							return;
+						}
 
-					prices[assetID] = parseStockHistoricalDataAsCrypto(days, historicalData);
+						let historicalData = request?.data?.historicalData?.chart?.result[0];
 
-					if(Object.keys(prices).length === assetIDs.length) {
-						hideLoading();
-						resolve({ assetIDs:assetIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
+						prices[assetID] = parseStockHistoricalDataAsCrypto(days, historicalData);
+
+						if(Object.keys(prices).length === assetIDs.length) {
+							resolve({ assetIDs:assetIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
+						}
 					}
 				}, i * 2000);
 			}
@@ -605,7 +616,11 @@ function getInitialDatedValue(activities, futureDays) {
 				let amount = parseFloat(activity.activityAssetAmount);
 
 				if(!(assetID in dates[day].holdings)) {
-					dates[day].holdings[assetID] = { amount:amount };
+					dates[day].holdings[assetID] = { 
+						amount: amount, 
+						symbol: activity.activityAssetSymbol,
+						holdingAssetType: activity.activityAssetType 
+					};
 					continue;
 				}
 
@@ -724,15 +739,11 @@ function parseActivityAsDatedValue(days, prices, activities) {
 
 						function add() {
 							dates[day].holdings[assetID].amount += amount;
-							dates[day].holdings[assetID].holdingAssetType = activity.activityAssetType;
-							dates[day].holdings[assetID].symbol = activity.activityAssetSymbol;
 							dates[day].modified = true;
 						}
 
 						function subtract() {
 							dates[day].holdings[assetID].amount -= amount;
-							dates[day].holdings[assetID].holdingAssetType = activity.activityAssetType;
-							dates[day].holdings[assetID].symbol = activity.activityAssetSymbol;
 							dates[day].modified = true;
 						}
 					}
@@ -772,35 +783,40 @@ function parseActivityAsDatedValue(days, prices, activities) {
 
 				let idsCrypto = Object.keys(filtered.crypto);
 
-				// Get crypto market data for today's holdings.
-				let marketData = await cryptoAPI.getMarketByID(currency, idsCrypto.join(","));
-				let currentPrices = sortMarketDataByCoinID(marketData);
+				if(!empty(idsCrypto)) {
+					// Get crypto market data for today's holdings.
+					let marketData = await cryptoAPI.getMarketByID(currency, idsCrypto.join(","));
+					let currentPrices = sortMarketDataByCoinID(marketData);
 
-				Object.keys(filtered.crypto).map(assetID => {
-					let amount = dates[today].holdings[assetID].amount;
-					let value = amount * currentPrices[assetID].current_price;
+					Object.keys(filtered.crypto).map(assetID => {
+						let amount = dates[today].holdings[assetID].amount;
+						let value = amount * currentPrices[assetID].current_price;
 
-					dates[today].holdings[assetID].value = value;
-					dates[today].totalValue += value;
-				});
+						dates[today].holdings[assetID].value = value;
+						dates[today].totalValue += value;
+					});
+				}
 
 				let idsStocks = Object.keys(filtered.stocks);
-				let symbolsStock = [];
-				idsStocks.map(assetID => {
-					symbolsStock.push(filtered.stocks[assetID].symbol.toUpperCase());
-				});
 
-				// Get stock market data for today's holdings.
-				let priceData = await fetchStockPrice(currency, symbolsStock);
+				if(!empty(idsStocks)) {
+					let symbolsStock = [];
+					idsStocks.map(assetID => {
+						symbolsStock.push(filtered.stocks[assetID].symbol.toUpperCase());
+					});
 
-				idsStocks.map(assetID => {
-					let symbol = assetID.replace("stock-", "");
-					let amount = dates[today].holdings[assetID].amount;
-					let value = amount * priceData[symbol].priceData.price;
+					// Get stock market data for today's holdings.
+					let priceData = await fetchStockPrice(currency, symbolsStock);
 
-					dates[today].holdings[assetID].value = value;
-					dates[today].totalValue += value;
-				});
+					idsStocks.map(assetID => {
+						let symbol = assetID.replace("stock-", "");
+						let amount = dates[today].holdings[assetID].amount;
+						let value = amount * priceData[symbol].priceData.price;
+
+						dates[today].holdings[assetID].value = value;
+						dates[today].totalValue += value;
+					});
+				}
 			}
 
 			resolve(dates);

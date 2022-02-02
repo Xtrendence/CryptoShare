@@ -16,7 +16,7 @@ async function fetchStockPrice(currency, symbols) {
 
 		if("errors" in data && data.errors.length > 0) {
 			errorNotification(data.errors[0]);
-			ignoredErrors.push(data.errors[0]);
+			ignoreError(data.errors[0]);
 			return { error:data.errors[0] };
 		}
 
@@ -50,6 +50,12 @@ async function fetchStockHistorical(currency, assetSymbol) {
 		}
 
 		let data = await readStockHistorical(token, userID, keyAPI, assetSymbol);
+
+		if("errors" in data && data.errors.length > 0) {
+			errorNotification(data.errors[0]);
+			ignoreError(data.errors[0]);
+			return { error:data.errors[0] };
+		}
 
 		if(!empty(data?.data?.readStockHistorical)) {
 			let result = data?.data?.readStockHistorical;

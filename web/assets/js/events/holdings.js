@@ -19,14 +19,30 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 
 			let days = dayRangeArray(previousYear(new Date()), new Date());
 
-			let data = await fetchHoldingsCryptoHistoricalData(undefined);
+			let dataCrypto = await fetchHoldingsCryptoHistoricalData(undefined);
+			let dataStocks = await fetchHoldingsStocksHistoricalData(days, undefined, undefined);
 
-			let prices = data.prices;
-			let activities = data.activities;
+			if("error" in dataStocks) {
+				dataStocks = null;
+			}
+
+			let pricesCrypto = dataCrypto?.prices;
+			let activitiesCrypto = dataCrypto?.activities;
+
+			let pricesStocks = dataStocks?.prices;
+			let activitiesStocks = dataStocks?.activities;
+
+			let pricesCombined = { ...pricesCrypto, ...pricesStocks };
+			let activitiesCombined = { ...activitiesCrypto, ...activitiesStocks };
 
 			showLoading(5000, "Parsing...");
 
-			let dates = await parseActivityAsDatedValue(days, prices, activities);
+			let dates;
+			if(!empty(dataStocks)) {
+				dates = await parseActivityAsDatedValue(days, pricesCombined, activitiesCombined);
+			} else {
+				dates = await parseActivityAsDatedValue(days, pricesCrypto, activitiesCrypto);
+			}
 
 			setTimeout(() => {
 				hideLoading();

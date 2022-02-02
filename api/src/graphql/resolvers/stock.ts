@@ -21,6 +21,11 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 							try {
 								let historicalData: any = await getHistoricalData(assetSymbol, keyAPI);
 
+								if(Utils.validJSON(historicalData) && "error" in JSON.parse(historicalData)) {
+									reject(`!${JSON.parse(historicalData).error}!`);
+									return;
+								}
+
 								db.runQuery("INSERT OR REPLACE INTO Stock (assetSymbol, historicalData, priceData) VALUES (?, ?, ?)", [assetSymbol, historicalData, row?.priceData || ""]);
 
 								let stock = new Stock(assetSymbol, historicalData, row?.priceData || "");
@@ -173,8 +178,10 @@ async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 
 	if("chart" in historicalData) {
 		return JSON.stringify({ time:now, historicalData:historicalData });
+	} else if("message" in historicalData && historicalData.message === "Limit Exceeded") {
+		return JSON.stringify({ error:"Stock API Rate Limit Exceeded" });
 	} else {
-		return JSON.stringify({});
+		return JSON.stringify("");
 	}
 }
 

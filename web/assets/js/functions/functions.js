@@ -245,6 +245,12 @@ function audibleElement(element) {
 	}
 }
 
+function ignoreError(description) {
+	if(!ignoredErrors.includes(description)) {
+		ignoredErrors.push(description);
+	}
+}
+
 function errorNotification(description) {
 	if(!ignoredErrors.includes(description)) {
 		Notify.error({

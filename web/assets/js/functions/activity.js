@@ -92,6 +92,23 @@ function sortActivityDataByDate(activityData) {
 	return sorted;
 }
 
+function filterActivitiesByType(activityData) {
+	let activitiesCrypto = {};
+	let activitiesStocks = {};
+
+	let ids = Object.keys(activityData);
+	ids.map(id => {
+		let activity = activityData[id];
+		if(activity.activityAssetType === "crypto") {
+			activitiesCrypto[id] = activity;
+		} else {
+			activitiesStocks[id] = activity;
+		}
+	});
+
+	return { crypto:activitiesCrypto, stocks:activitiesStocks };
+}
+
 function filterActivityList(query) {
 	let rows = divActivityList.getElementsByClassName("activity-list-row");
 
