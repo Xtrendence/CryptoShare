@@ -1042,6 +1042,11 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 	overflow:hidden;
 	line-height:80px;
 }
+.market-list-row br, .holdings-list-row br {
+	display:block;
+	height:10px;
+	content:"";
+}
 .market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container, .activity-list-row .info-wrapper, .activity-list-row .info-container {
 	display:inline-block;
 	vertical-align:middle;

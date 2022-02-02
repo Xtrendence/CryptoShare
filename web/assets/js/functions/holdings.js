@@ -1,7 +1,7 @@
 async function populateHoldingsList(recreate) {
 	if(getActivePage().id === "holdings-page") {
 		let firstFetchHoldings = firstFetch.holdings;
-		
+
 		if(recreate) {
 			spanHoldingsValue.textContent = "-";
 			divHoldingsList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
@@ -43,6 +43,9 @@ async function populateHoldingsList(recreate) {
 				}
 			}
 
+			// Used to tell the user their stock API key doesn't work.
+			let errorRow = false;
+
 			// Separate crypto and stock holdings.
 			let filteredHoldings = filterHoldingsByType(holdingsData);
 
@@ -55,6 +58,8 @@ async function populateHoldingsList(recreate) {
 
 			let marketStocksData = !empty(holdingStockSymbols) ? await fetchStockPrice(currency, holdingStockSymbols, false) : {};
 			if("error" in marketStocksData) {
+				errorRow = true;
+
 				if(firstFetchHoldings) {
 					errorNotification(marketStocksData.error);
 				}
@@ -78,6 +83,8 @@ async function populateHoldingsList(recreate) {
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
+
+			removeHoldingsListErrorRow();
 			
 			if(divHoldingsList.getElementsByClassName("loading-icon").length > 0 || divHoldingsList.childElementCount !== rows.length) {
 				divHoldingsList.innerHTML = "";
@@ -102,10 +109,47 @@ async function populateHoldingsList(recreate) {
 					divHoldingsList.appendChild(rows[i]);
 				}
 			}
+
+			if(errorRow) {
+				divHoldingsList.prepend(createHoldingsListErrorRow());
+			}
 		} catch(error) {
 			errorNotification("Couldn't fetch holdings.");
 		}
 	}
+}
+
+function removeHoldingsListErrorRow() {
+	let divError = divHoldingsList.getElementsByClassName("holdings-list-row error");
+	for(let i = 0; i < divError.length; i++) {
+		divError[i].remove();
+	}
+}
+
+function createHoldingsListErrorRow() {
+	let div = document.createElement("div");
+	div.id = "holdings-list-error-row";
+	div.setAttribute("class", "holdings-list-row error noselect");
+
+	div.innerHTML = `
+		<div class="icon-wrapper">
+			<div class="icon-symbol-wrapper">
+				<span>Error</span>
+			</div>
+		</div>
+		<div class="info-wrapper">
+			<span class="name">Stock API Error</span>
+			<div class="rank-container">
+				<span class="rank">Limit</span>
+				<span class="symbol">Exceeded</span>
+			</div>
+			<div class="info-container">
+				<span>Stock API Limit Exceeded<br>Stock Holdings Omitted</span>
+			</div>
+		</div>
+	`;
+
+	return div;
 }
 
 function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketCryptoData, marketStocksData) {
