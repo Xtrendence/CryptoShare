@@ -217,6 +217,46 @@ function randomBetween(min, max) {
 	return min + Math.floor(Math.random() * (max - min + 1));
 }
 
+function previousValueInObject(object, start) {
+	let keys = Object.keys(object);
+
+	for(let i = start; i >= 0; i--) {
+		try {
+			if(!empty(object[keys[i]])) {
+				return object[keys[i]];
+			}
+		} catch(error) {
+			continue;
+		}
+	}
+}
+
+function nextValueInObject(object, start) {
+	let keys = Object.keys(object);
+
+	for(let i = start; i < keys.length; i++) {
+		try {
+			if(!empty(object[keys[i]])) {
+				return object[keys[i]];
+			}
+		} catch(error) {
+			continue;
+		}
+	}
+}
+
+function previousValueInArray(array, start) {
+	for(let i = start; i >= 0; i--) {
+		try {
+			if(!empty(array[i])) {
+				return array[i];
+			}
+		} catch(error) {
+			continue;
+		}
+	}
+}
+
 String.prototype.replaceAll = function(str1, str2, ignore) {
 	return this.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 }

@@ -246,13 +246,15 @@ function audibleElement(element) {
 }
 
 function errorNotification(description) {
-	Notify.error({
-		title: "Error",
-		description: description,
-		duration: 5000,
-		background: "var(--accent-second)",
-		color: "var(--accent-contrast)"
-	});
+	if(!ignoredErrors.includes(description)) {
+		Notify.error({
+			title: "Error",
+			description: description,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+	}
 }
 
 function addPattern() {
