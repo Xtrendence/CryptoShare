@@ -93,9 +93,11 @@ export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 						console.log(error);
 					}
 
-					let rows = await getStocks(symbols);
+					setTimeout(async () => {
+						let rows = await getStocks(symbols);
 
-					resolve(rows);
+						resolve(rows);
+					}, 1000);
 				} catch(error) {
 					console.log(error);
 					reject(error);
