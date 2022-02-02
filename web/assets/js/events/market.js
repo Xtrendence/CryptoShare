@@ -37,7 +37,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 buttonMarketSearch.addEventListener("click", () => {
 	try {
 		let html = `
-			<input class="uppercase" id="popup-input-search" type="text" placeholder="Asset Symbol...">
+			<input class="uppercase" id="popup-input-search" type="text" placeholder="Asset Symbol..." spellcheck="false">
 			<div class="popup-button-wrapper margin-bottom">
 				<button id="popup-choice-crypto" class="choice active">Crypto</button>
 				<button id="popup-choice-stock" class="choice">Stock</button>

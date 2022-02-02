@@ -76,6 +76,7 @@ function removeAccountInfo() {
 	localStorage.removeItem("username");
 	localStorage.removeItem("token");
 	localStorage.removeItem("key");
+	localStorage.removeItem("keyAPI");
 }
 
 function clearLogin() {
@@ -94,6 +95,7 @@ function showLogin() {
 	divPageApp.classList.add("hidden");
 }
 
+// TODO: Add functionality.
 function clearApp() {
 
 }

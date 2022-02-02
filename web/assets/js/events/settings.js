@@ -58,7 +58,7 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 });
 
 buttonSettingsPassword.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Change Password", `<input type="password" id="popup-input-current-password" placeholder="Current Password..."><input type="password" id="popup-input-new-password" placeholder="New Password..."><input type="password" id="popup-input-repeat-password" placeholder="Repeat Password...">`);
+	let popup = new Popup(300, "auto", "Change Password", `<input type="password" id="popup-input-current-password" placeholder="Current Password..." spellcheck="false"><input type="password" id="popup-input-new-password" placeholder="New Password..." spellcheck="false"><input type="password" id="popup-input-repeat-password" placeholder="Repeat Password..." spellcheck="false">`);
 	popup.show();
 
 	let inputCurrentPassword = document.getElementById("popup-input-current-password");
@@ -100,10 +100,12 @@ buttonSettingsPassword.addEventListener("click", () => {
 });
 
 buttonSettingsStockAPIKey.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Set Stock API Key", `<input type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
+	let popup = new Popup(300, "auto", "Set Stock API Key", `<input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
 	popup.show();
 
 	let inputStockAPIKey = document.getElementById("popup-input-stock-api-key");
+
+	inputStockAPIKey.value = localStorage.getItem("keyAPI");
 
 	inputStockAPIKey.focus();
 
@@ -118,9 +120,19 @@ buttonSettingsStockAPIKey.addEventListener("click", () => {
 				background: "var(--accent-second)",
 				color: "var(--accent-contrast)"
 			});
+		} else {
+			localStorage.removeItem("keyAPI");
 
-			popup.hide();
+			Notify.success({
+				title: "Stock API Key Removed",
+				description: "API key has been removed.",
+				duration: 5000,
+				background: "var(--accent-second)",
+				color: "var(--accent-contrast)"
+			});
 		}
+
+		popup.hide();
 	});
 });
 

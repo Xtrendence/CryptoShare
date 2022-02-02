@@ -31,6 +31,8 @@ async function populateActivityList(recreate) {
 					divActivityList.appendChild(rows[i]);
 				}
 			}
+
+			filterActivityList(inputActivitySearch.value);
 		} catch(error) {
 			console.log(error);
 			errorNotification("Couldn't fetch activity data.");
@@ -192,14 +194,14 @@ function addActivityListRowEvent(div, activity) {
 	div.addEventListener("click", () => {
 		try {
 			let html = `
-				<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol...">
+				<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false">
 				<div class="popup-button-wrapper margin-bottom">
 					<button id="popup-choice-crypto" class="choice active">Crypto</button>
 					<button id="popup-choice-stock" class="choice">Stock</button>
 				</div>
-				<input id="popup-input-amount" type="number" placeholder="Amount...">
-				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off">
-				<input id="popup-input-fee" type="number" placeholder="Fee...">
+				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false">
+				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
+				<input id="popup-input-fee" type="number" placeholder="Fee..." spellcheck="false">
 				<input id="popup-input-notes" type="text" placeholder="Notes...">
 				<div class="popup-button-wrapper three margin-bottom">
 					<button id="popup-choice-buy" class="choice small active">Buy</button>
@@ -207,13 +209,13 @@ function addActivityListRowEvent(div, activity) {
 					<button id="popup-choice-transfer" class="choice large">Transfer</button>
 				</div>
 				<div id="popup-wrapper-trade">
-					<input id="popup-input-exchange" type="text" placeholder="Exchange...">
-					<input id="popup-input-pair" type="text" placeholder="Pair...">
-					<input id="popup-input-price" type="number" placeholder="Price...">
+					<input id="popup-input-exchange" type="text" placeholder="Exchange..." spellcheck="false">
+					<input id="popup-input-pair" type="text" placeholder="Pair..." spellcheck="false">
+					<input id="popup-input-price" type="number" placeholder="Price..." spellcheck="false">
 				</div>
 				<div id="popup-wrapper-transfer" class="hidden">
-					<input id="popup-input-from" type="text" placeholder="From...">
-					<input id="popup-input-to" type="text" placeholder="To...">
+					<input id="popup-input-from" type="text" placeholder="From..." spellcheck="false">
+					<input id="popup-input-to" type="text" placeholder="To..." spellcheck="false">
 				</div>
 				<button class="action-button delete" id="popup-button-delete-activity">Delete Activity</button>
 			`;
@@ -522,9 +524,9 @@ function addActivityPopupListeners(elements) {
 
 function showActivityStakingPopup() {
 	let html = `
-		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Staked Asset Symbol...">
-		<input type="number" id="popup-input-amount" placeholder="Staked Amount...">
-		<input type="number" id="popup-input-apy" placeholder="Asset APY...">
+		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Staked Asset Symbol..." spellcheck="false">
+		<input type="number" id="popup-input-amount" placeholder="Staked Amount..." spellcheck="false">
+		<input type="number" id="popup-input-apy" placeholder="Asset APY..." spellcheck="false">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
@@ -595,10 +597,10 @@ function showActivityStakingPopup() {
 
 function showActivityMiningPopup() {
 	let html = `
-		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Mining Asset Symbol...">
-		<input type="number" id="popup-input-equipment-cost" placeholder="Equipment Cost...">
-		<input type="number" id="popup-input-daily-amount" placeholder="Daily Amount...">
-		<input type="number" id="popup-input-daily-power-cost" placeholder="Daily Power Cost...">
+		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Mining Asset Symbol..." spellcheck="false">
+		<input type="number" id="popup-input-equipment-cost" placeholder="Equipment Cost..." spellcheck="false">
+		<input type="number" id="popup-input-daily-amount" placeholder="Daily Amount..." spellcheck="false">
+		<input type="number" id="popup-input-daily-power-cost" placeholder="Daily Power Cost..." spellcheck="false">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
@@ -671,8 +673,8 @@ function showActivityMiningPopup() {
 
 function showActivityDividendPopup() {
 	let html = `
-		<input type="number" id="popup-input-amount" placeholder="Number Of Shares...">
-		<input type="number" id="popup-input-dividend" placeholder="Annual Dividend Per Share...">
+		<input type="number" id="popup-input-amount" placeholder="Number Of Shares..." spellcheck="false">
+		<input type="number" id="popup-input-dividend" placeholder="Annual Dividend Per Share..." spellcheck="false">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 

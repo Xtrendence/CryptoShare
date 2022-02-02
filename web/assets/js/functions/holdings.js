@@ -131,23 +131,41 @@ function createHoldingsListErrorRow() {
 	div.id = "holdings-list-error-row";
 	div.setAttribute("class", "holdings-list-row error noselect");
 
-	div.innerHTML = `
-		<div class="icon-wrapper">
-			<div class="icon-symbol-wrapper">
-				<span>Error</span>
+	if(!empty(localStorage.getItem("keyAPI"))) {
+		div.innerHTML = `
+			<div class="icon-wrapper">
+				<div class="icon-symbol-wrapper">
+					<span>Error</span>
+				</div>
 			</div>
-		</div>
-		<div class="info-wrapper">
-			<span class="name">Stock API Error</span>
-			<div class="rank-container">
-				<span class="rank">Limit</span>
-				<span class="symbol">Exceeded</span>
+			<div class="info-wrapper">
+				<span class="name">Stock API Error</span>
+				<div class="rank-container">
+					<span class="rank">Limit Exceeded</span>
+				</div>
+				<div class="info-container">
+					<span>Stock API Limit Exceeded<br>Stock Holdings Omitted</span>
+				</div>
 			</div>
-			<div class="info-container">
-				<span>Stock API Limit Exceeded<br>Stock Holdings Omitted</span>
+		`;
+	} else {
+		div.innerHTML = `
+			<div class="icon-wrapper">
+				<div class="icon-symbol-wrapper">
+					<span>Error</span>
+				</div>
 			</div>
-		</div>
-	`;
+			<div class="info-wrapper">
+				<span class="name">Stock API Error</span>
+				<div class="rank-container">
+					<span class="rank">Not Set</span>
+				</div>
+				<div class="info-container">
+					<span>Stock API Key Not Set<br>Stock Holdings Omitted</span>
+				</div>
+			</div>
+		`;
+	}
 
 	return div;
 }
@@ -380,7 +398,7 @@ function addHoldingListChartRowEvent(div, id, symbol, type) {
 function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount, holdingAssetType) {
 	div.addEventListener("click", () => {
 		try {
-			let html = `<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}"><button class="action-button delete" id="popup-button-delete">Delete Asset</button>`;
+			let html = `<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}" spellcheck="false"><button class="action-button delete" id="popup-button-delete">Delete Asset</button>`;
 			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
 			popup.show();
 			popup.updateHeight();

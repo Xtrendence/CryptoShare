@@ -51,14 +51,14 @@ buttonActivityTools.addEventListener("click", () => {
 buttonActivityAdd.addEventListener("click", () => {
 	try {
 		let html = `
-			<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol...">
+			<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false">
 			<div class="popup-button-wrapper margin-bottom">
 				<button id="popup-choice-crypto" class="choice active">Crypto</button>
 				<button id="popup-choice-stock" class="choice">Stock</button>
 			</div>
-			<input id="popup-input-amount" type="number" placeholder="Amount...">
-			<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off">
-			<input id="popup-input-fee" type="number" placeholder="Fee...">
+			<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false">
+			<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
+			<input id="popup-input-fee" type="number" placeholder="Fee..." spellcheck="false">
 			<input id="popup-input-notes" type="text" placeholder="Notes...">
 			<div class="popup-button-wrapper three margin-bottom">
 				<button id="popup-choice-buy" class="choice small active">Buy</button>
@@ -66,9 +66,9 @@ buttonActivityAdd.addEventListener("click", () => {
 				<button id="popup-choice-transfer" class="choice large">Transfer</button>
 			</div>
 			<div id="popup-wrapper-trade">
-				<input id="popup-input-exchange" type="text" placeholder="Exchange...">
-				<input id="popup-input-pair" type="text" placeholder="Pair...">
-				<input id="popup-input-price" type="number" placeholder="Price...">
+				<input id="popup-input-exchange" type="text" placeholder="Exchange..." spellcheck="false">
+				<input id="popup-input-pair" type="text" placeholder="Pair..." spellcheck="false">
+				<input id="popup-input-price" type="number" placeholder="Price..." spellcheck="false">
 			</div>
 			<div id="popup-wrapper-transfer" class="hidden">
 				<input id="popup-input-from" type="text" placeholder="From...">
