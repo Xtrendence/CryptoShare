@@ -110,6 +110,7 @@ export default function Activity({ navigation }: any) {
 			<SafeAreaView style={styles.area}>
 				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
 					<TextInput 
+						spellCheck={false}
 						placeholder="Query..." 
 						selectionColor={Colors[theme].mainContrast} 
 						placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -487,6 +488,7 @@ export default function Activity({ navigation }: any) {
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<TextInput 
+							spellCheck={false}
 							autoCorrect={false}
 							autoCapitalize="characters"
 							placeholder="Symbol..." 
@@ -496,6 +498,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.staking.symbol = value}
 						/>
 						<TextInput 
+							spellCheck={false}
 							keyboardType="decimal-pad"
 							autoCorrect={false}
 							placeholder="Amount..." 
@@ -505,6 +508,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.staking.amount = value}
 						/>
 						<TextInput 
+							spellCheck={false}
 							keyboardType="decimal-pad"
 							autoCorrect={false}
 							placeholder="APY..." 
@@ -609,6 +613,7 @@ export default function Activity({ navigation }: any) {
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<TextInput 
+							spellCheck={false}
 							autoCorrect={false}
 							autoCapitalize="characters"
 							placeholder="Symbol..." 
@@ -618,6 +623,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.mining.symbol = value}
 						/>
 						<TextInput 
+							spellCheck={false}
 							keyboardType="decimal-pad"
 							autoCorrect={false}
 							placeholder="Equipment Cost..." 
@@ -627,6 +633,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.mining.equipmentCost = value}
 						/>
 						<TextInput 
+							spellCheck={false}
 							keyboardType="decimal-pad"
 							autoCorrect={false}
 							placeholder="Daily Amount..." 
@@ -636,6 +643,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.mining.amount = value}
 						/>
 						<TextInput 
+							spellCheck={false}
 							keyboardType="decimal-pad"
 							autoCorrect={false}
 							placeholder="Power Cost..." 

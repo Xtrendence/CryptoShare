@@ -14,6 +14,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 				</View>
 				<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 					<TextInput 
+						spellCheck={false}
 						defaultValue={data.activityAssetSymbol}
 						autoCorrect={false}
 						autoCapitalize="characters"
@@ -32,6 +33,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						</TouchableOpacity>
 					</View>
 					<TextInput 
+						spellCheck={false}
 						defaultValue={data.activityAssetAmount}
 						keyboardType="decimal-pad"
 						autoCorrect={false}
@@ -42,6 +44,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						onChangeText={(value) => popupRef.current.activity.activityAssetAmount = value}
 					/>
 					<TextInput 
+						spellCheck={false}
 						defaultValue={data.activityDate}
 						autoCorrect={false}
 						placeholder="Date..." 
@@ -51,6 +54,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						onChangeText={(value) => popupRef.current.activity.activityDate = value}
 					/>
 					<TextInput 
+						spellCheck={false}
 						defaultValue={data.activityFee}
 						keyboardType="decimal-pad"
 						autoCorrect={false}
@@ -61,6 +65,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						onChangeText={(value) => popupRef.current.activity.activityFee = value}
 					/>
 					<TextInput 
+						spellCheck={true}
 						defaultValue={data.activityNotes}
 						autoCorrect={false}
 						placeholder="Notes..." 
@@ -83,6 +88,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 					{ ["buy", "sell"].includes(popupRef.current.activity.activityType) &&
 						<View>
 							<TextInput 
+								spellCheck={false}
 								defaultValue={data.activityExchange}
 								autoCorrect={false}
 								placeholder="Exchange..." 
@@ -92,6 +98,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								onChangeText={(value) => popupRef.current.activity.activityExchange = value}
 							/>
 							<TextInput 
+								spellCheck={false}
 								defaultValue={data.activityPair}
 								autoCorrect={false}
 								placeholder="Pair..." 
@@ -101,6 +108,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								onChangeText={(value) => popupRef.current.activity.activityPair = value}
 							/>
 							<TextInput 
+								spellCheck={false}
 								keyboardType="decimal-pad"
 								defaultValue={data.activityPrice}
 								autoCorrect={false}
@@ -115,6 +123,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 					{ popupRef.current.activity.activityType === "transfer" &&
 						<View>
 							<TextInput 
+								spellCheck={true}
 								defaultValue={data.activityFrom}
 								autoCorrect={false}
 								placeholder="From..." 
@@ -124,6 +133,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								onChangeText={(value) => popupRef.current.activity.activityFrom = value}
 							/>
 							<TextInput 
+								spellCheck={true}
 								defaultValue={data.activityTo}
 								autoCorrect={false}
 								placeholder="To..." 

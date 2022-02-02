@@ -367,6 +367,7 @@ export default function Holdings({ navigation }: any) {
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						{ action === "createHolding" &&
 							<TextInput 
+								spellCheck={false}
 								autoCorrect={false}
 								autoCapitalize="characters"
 								placeholder="Symbol..." 
@@ -377,6 +378,7 @@ export default function Holdings({ navigation }: any) {
 							/>
 						}
 						<TextInput 
+							spellCheck={false}
 							defaultValue={info?.amount?.toString()}
 							autoCorrect={false}
 							keyboardType="decimal-pad"

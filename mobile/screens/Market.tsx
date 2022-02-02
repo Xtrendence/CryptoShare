@@ -81,6 +81,7 @@ export default function Market({ navigation }: any) {
 			<SafeAreaView style={styles.area}>
 				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
 					<TextInput
+						spellCheck={false}
 						placeholder="Symbol..." 
 						selectionColor={Colors[theme].mainContrast} 
 						placeholderTextColor={Colors[theme].mainContrastDarker} 

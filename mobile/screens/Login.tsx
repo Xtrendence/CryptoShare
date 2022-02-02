@@ -76,6 +76,7 @@ export default function Login({ navigation }: any) {
 							{ action === "login" &&
 								<View>
 									<TextInput 
+										spellCheck={false}
 										placeholder="API URL..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -84,6 +85,7 @@ export default function Login({ navigation }: any) {
 										value={url}
 									/>
 									<TextInput 
+										spellCheck={false}
 										placeholder="Username..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -92,6 +94,7 @@ export default function Login({ navigation }: any) {
 										value={loginUsername}
 									/>
 									<TextInput 
+										spellCheck={false}
 										placeholder="Password..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -111,6 +114,7 @@ export default function Login({ navigation }: any) {
 							{ action === "create" &&
 								<View>
 									<TextInput 
+										spellCheck={false}
 										placeholder="API URL..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -119,6 +123,7 @@ export default function Login({ navigation }: any) {
 										value={url}
 									/>
 									<TextInput 
+										spellCheck={false}
 										placeholder="Username..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -127,6 +132,7 @@ export default function Login({ navigation }: any) {
 										value={createUsername}
 									/>
 									<TextInput 
+										spellCheck={false}
 										placeholder="Password..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
@@ -136,6 +142,7 @@ export default function Login({ navigation }: any) {
 										secureTextEntry
 									/>
 									<TextInput 
+										spellCheck={false}
 										placeholder="Repeat Password..." 
 										selectionColor={Colors[theme].mainContrast} 
 										placeholderTextColor={Colors[theme].mainContrastDarker} 
