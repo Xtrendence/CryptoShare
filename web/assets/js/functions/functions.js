@@ -90,15 +90,7 @@ function setPage(page) {
 			break;
 		case "settings":
 			syncSettings(false);
-
-			let username = localStorage.getItem("username");
-			if(!empty(username) && username.toLowerCase() === "admin") {
-				buttonSettingsStockAPIType.classList.remove("hidden");
-				getAdminSettings();
-			} else {
-				buttonSettingsStockAPIType.classList.add("hidden");
-			}
-
+			adminCheck();
 			firstFetch.settings = false;
 			break;
 	}

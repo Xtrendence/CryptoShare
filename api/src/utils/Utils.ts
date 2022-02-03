@@ -12,7 +12,7 @@ export default class Utils {
 
 	static defaultAdminSettings: any = {
 		stockAPIType: "external",
-		userRegistration: "enabled"
+		userRegistration: "disabled"
 	};
 
 	static async verifyToken(userID: number, token: string) {

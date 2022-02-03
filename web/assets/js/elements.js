@@ -71,6 +71,7 @@ let settingsToggleSounds = document.getElementById("settings-toggle-sounds");
 let buttonSettingsLogout = document.getElementById("button-settings-logout");
 let buttonSettingsLogoutEverywhere = document.getElementById("button-settings-logout-everywhere");
 let buttonSettingsPassword = document.getElementById("button-settings-password");
+let buttonSettingsUserRegistration = document.getElementById("button-settings-user-registration");
 let buttonSettingsStockAPIKey = document.getElementById("button-settings-stock-api-key");
 let buttonSettingsStockAPIType = document.getElementById("button-settings-stock-api-type");
 let buttonSettingsReset = document.getElementById("button-settings-reset");

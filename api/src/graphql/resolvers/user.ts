@@ -29,21 +29,31 @@ export function userExists({ username }: any) {
 }
 
 export async function createUser({ username, password, key }: any) {
-	return userExists({ username:username }).then((result) => {
-		if(result === "Not found.") {
-			if(Utils.validUsername(username) && Utils.xssValid(username)) {
-				let hashedPassword = bcrypt.hashSync(password, 10);
-				db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [username, hashedPassword, key]);
-				return "Done";
-			} else {
-				return "Invalid Username";
-			}
-		}
+	try {
+		let settings = await Utils.getAdminSettings();
 
-		return "User already exists.";
-	}).catch(error => {
+		if(settings.userRegistration === "enabled") {
+			return userExists({ username:username }).then((result) => {
+				if(result === "Not found.") {
+					if(Utils.validUsername(username) && Utils.xssValid(username)) {
+						let hashedPassword = bcrypt.hashSync(password, 10);
+						db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [username, hashedPassword, key]);
+						return "Done";
+					} else {
+						return "Invalid Username";
+					}
+				}
+
+				return "User already exists.";
+			}).catch(error => {
+				return error;
+			});
+		} else {
+			return "User registration has been disabled by the admin.";
+		}
+	} catch(error) {
 		return error;
-	});
+	}
 }
 
 export async function readUser({ token, userID }: any) {

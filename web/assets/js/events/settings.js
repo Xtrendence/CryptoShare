@@ -99,6 +99,37 @@ buttonSettingsPassword.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsUserRegistration.addEventListener("click", async () => {
+	try {
+		let token = localStorage.getItem("token");
+		let userID = localStorage.getItem("userID");
+		let username = localStorage.getItem("username");
+		let type = "enabled";
+		let action = "enableRegistration";
+
+		if(buttonSettingsUserRegistration.getAttribute("data-type") === "enabled") {
+			type = "disabled";
+			action = "disableRegistration";
+		}
+
+		console.log(action);
+
+		await performAdminAction(token, userID, username, action);
+
+		Notify.success({
+			title: "Setting Changed",
+			description: `User registration is now ${type}.`,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+
+		getAdminSettings();
+	} catch(error) {
+		console.log(error);
+	}
+});
+
 buttonSettingsStockAPIKey.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Set Stock API Key", `<input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
 	popup.show();

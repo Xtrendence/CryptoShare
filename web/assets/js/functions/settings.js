@@ -275,6 +275,19 @@ async function syncSettings(update) {
 	}
 }
 
+function adminCheck() {
+	let username = localStorage.getItem("username");
+
+	if(!empty(username) && username.toLowerCase() === "admin") {
+		buttonSettingsUserRegistration.classList.remove("hidden");
+		buttonSettingsStockAPIType.classList.remove("hidden");
+		getAdminSettings();
+	} else {
+		buttonSettingsUserRegistration.classList.add("hidden");
+		buttonSettingsStockAPIType.classList.add("hidden");
+	}
+}
+
 async function getAdminSettings() {
 	try {
 		let token = localStorage.getItem("token");
@@ -282,6 +295,14 @@ async function getAdminSettings() {
 		let username = localStorage.getItem("username");
 
 		let response = await performAdminAction(token, userID, username, "getSettings");
+
+		if(response.userRegistration === "enabled") {
+			buttonSettingsUserRegistration.textContent = "Disable Registration";
+			buttonSettingsUserRegistration.setAttribute("data-type", "enabled");
+		} else {
+			buttonSettingsUserRegistration.textContent = "Enable Registration";
+			buttonSettingsUserRegistration.setAttribute("data-type", "disabled");
+		}
 
 		if(response.stockAPIType === "internal") {
 			buttonSettingsStockAPIType.textContent = "Using Internal";
