@@ -16,6 +16,7 @@ export async function createHolding({ token, userID, holdingAssetID, holdingAsse
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -51,6 +52,7 @@ export async function readHolding({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -67,6 +69,7 @@ export async function updateHolding({ token, userID, holdingID, holdingAssetID, 
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -82,6 +85,7 @@ export async function deleteHolding({ token, userID, holdingID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -123,6 +127,7 @@ export async function importHolding({ token, userID, rows }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }

@@ -48,6 +48,7 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -110,6 +111,7 @@ export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }

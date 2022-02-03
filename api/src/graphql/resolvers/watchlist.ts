@@ -16,6 +16,7 @@ export async function createWatchlist({ token, userID, assetID, assetSymbol, ass
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -45,6 +46,7 @@ export async function readWatchlist({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -76,5 +78,6 @@ export async function deleteWatchlist({ token, userID, watchlistID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }

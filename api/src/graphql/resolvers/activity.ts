@@ -18,6 +18,7 @@ export async function createActivity({ token, userID, activityAssetID, activityA
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -53,6 +54,7 @@ export async function readActivity({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -69,6 +71,7 @@ export async function updateActivity({ token, userID, activityID, activityAssetI
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -84,6 +87,7 @@ export async function deleteActivity({ token, userID, activityID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -135,6 +139,7 @@ export async function importActivity({ token, userID, rows }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }

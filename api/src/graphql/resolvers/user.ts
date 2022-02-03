@@ -7,19 +7,24 @@ const db = new DB();
 
 export function userExists({ username }: any) {
 	return new Promise(async (resolve, reject) => {
-		db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
-			if(error) {
-				console.log(error);
-				reject();
-			} else {
-				if(row === undefined) {
-					resolve("Not found.");
-					return;
-				}
+		try {
+			db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
+				if(error) {
+					console.log(error);
+					reject();
+				} else {
+					if(row === undefined) {
+						resolve("Not found.");
+						return;
+					}
 
-				resolve(username);
-			}
-		});
+					resolve(username);
+				}
+			});
+		} catch(error) {
+			console.log(error);
+			reject(`!${error}!`);
+		}
 	});
 }
 
@@ -67,6 +72,7 @@ export async function readUser({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -83,6 +89,7 @@ export async function updateUser({ token, userID, password, key }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -98,5 +105,6 @@ export async function deleteUser({ token, userID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }

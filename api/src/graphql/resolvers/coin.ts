@@ -50,6 +50,7 @@ export async function readCoin({ token, userID, assetID, assetSymbol, currency }
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }

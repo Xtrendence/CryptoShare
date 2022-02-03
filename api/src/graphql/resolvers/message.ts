@@ -16,6 +16,7 @@ export async function createMessage({ token, userID, userMessage, botMessage }: 
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -45,6 +46,7 @@ export async function readMessage({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -61,6 +63,7 @@ export async function updateMessage({ token, userID, messageID, userMessage, bot
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -76,5 +79,6 @@ export async function deleteMessage({ token, userID, messageID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }

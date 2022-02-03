@@ -16,6 +16,7 @@ export async function createSetting({ token, userID, userSettings }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -45,6 +46,7 @@ export async function readSetting({ token, userID }: any) {
 			}
 		} catch(error) {
 			console.log(error);
+			reject(`!${error}!`);
 		}
 	});
 }
@@ -61,6 +63,7 @@ export async function updateSetting({ token, userID, userSettings }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
 
@@ -76,5 +79,6 @@ export async function deleteSetting({ token, userID }: any) {
 		}
 	} catch(error) {
 		console.log(error);
+		return error;
 	}
 }
