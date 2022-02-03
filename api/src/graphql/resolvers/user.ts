@@ -8,19 +8,25 @@ const db = new DB();
 export function userExists({ username }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
-				if(error) {
-					console.log(error);
-					reject();
-				} else {
-					if(row === undefined) {
-						resolve("Not found.");
-						return;
-					}
+			let settings = await Utils.getAdminSettings();
 
-					resolve(username);
-				}
-			});
+			if(settings.userRegistration === "enabled") {
+				db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
+					if(error) {
+						console.log(error);
+						reject();
+					} else {
+						if(row === undefined) {
+							resolve("Not found.");
+							return;
+						}
+
+						resolve(username);
+					}
+				});
+			} else {
+				resolve(`User registration has been disabled by the admin.`);
+			}
 		} catch(error) {
 			console.log(error);
 			reject(`!${error}!`);

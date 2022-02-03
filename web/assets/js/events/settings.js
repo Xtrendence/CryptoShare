@@ -112,8 +112,6 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 			action = "disableRegistration";
 		}
 
-		console.log(action);
-
 		await performAdminAction(token, userID, username, action);
 
 		Notify.success({

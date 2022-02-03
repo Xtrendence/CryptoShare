@@ -14,6 +14,11 @@ async function accountSetup() {
 		
 		let exists = await userExists(username);
 
+		if(exists.data.userExists === "User registration has been disabled by the admin.") {
+			errorNotification("User registration has been disabled by the admin.");
+			return;
+		}
+
 		if(exists.data.userExists !== "Not found.") {
 			errorNotification("A user with that username already exists.");
 			return;
@@ -130,7 +135,7 @@ async function accountSetup() {
 								color: "var(--accent-contrast)"
 							});
 						} else {
-							errorNotification("Something went wrong...");
+							errorNotification(result.data.createUser);
 						}
 					}).catch(error => {
 						errorNotification(error);
