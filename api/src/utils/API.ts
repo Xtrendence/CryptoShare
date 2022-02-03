@@ -12,6 +12,7 @@ import resolvers from "../graphql/resolvers/resolvers";
 import DB from "./DB";
 import Utils from "./Utils";
 import express from "express";
+import addStockAPIRoutes from "./StockAPI";
 
 export default class API {
 	portAPI: number | undefined;
@@ -141,6 +142,8 @@ export default class API {
 						response.send({ error:error });
 					}
 				});
+
+				addStockAPIRoutes(app);
 
 				this.httpServer.listen(this.portBot, () => {
 					listening.bot = true;

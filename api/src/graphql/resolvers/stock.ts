@@ -2,7 +2,8 @@ import Stock from "../../models/Stock";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";
 
-let stockAPI = "https://yfapi.net";
+// let stockAPI = "https://yfapi.net";
+let stockAPI = "http://localhost:3190";
 
 const db = new DB();
 
