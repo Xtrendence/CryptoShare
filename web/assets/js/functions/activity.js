@@ -438,6 +438,10 @@ function parseActivityPopupData(elements) {
 			return { error:"The values of the amount, fee, and price fields must be numbers."};
 		}
 
+		if(parseFloat(values.activityAssetAmount) <= 0) {
+			return { error:"Amount must be greater than zero." };
+		}
+
 		if(empty(values.activityAssetSymbol) || empty(values.activityAssetType) || empty(values.activityAssetAmount) || empty(values.activityDate) || empty(values.activityType)) {
 			return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
 		}
