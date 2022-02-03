@@ -10,6 +10,9 @@ export default class Utils {
 	static dbFile: string = path.join(this.dataFolder, "data.db");
 	static adminFile: string = path.join(this.dataFolder, "adminSettings.txt");
 
+	// Default: 86400.
+	static marketRefetchTime: number = 86400;
+
 	static defaultAdminSettings: any = {
 		stockAPIType: "external",
 		userRegistration: "disabled"
@@ -285,7 +288,7 @@ export default class Utils {
 	}
 
 	static refetchRequired(time: string) {
-		let refetchTime = 86400;
+		let refetchTime = this.marketRefetchTime;
 		return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
 	}
 
