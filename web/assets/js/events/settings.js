@@ -136,6 +136,35 @@ buttonSettingsStockAPIKey.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsStockAPIType.addEventListener("click", async () => {
+	try {
+		let token = localStorage.getItem("token");
+		let userID = localStorage.getItem("userID");
+		let username = localStorage.getItem("username");
+		let type = "internal";
+		let action = "internalStockAPI";
+
+		if(buttonSettingsStockAPIType.getAttribute("data-type") === "internal") {
+			type = "external";
+			action = "externalStockAPI";
+		}
+
+		await performAdminAction(token, userID, username, action);
+
+		Notify.success({
+			title: "Setting Changed",
+			description: `Now using ${type} stock API.`,
+			duration: 5000,
+			background: "var(--accent-second)",
+			color: "var(--accent-contrast)"
+		});
+
+		getAdminSettings();
+	} catch(error) {
+		console.log(error);
+	}
+});
+
 buttonSettingsReset.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`);
 	popup.show();

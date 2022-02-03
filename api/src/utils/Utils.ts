@@ -8,6 +8,12 @@ export default class Utils {
 	static db: DB | undefined;
 	static dataFolder: string = "./data/";
 	static dbFile: string = path.join(this.dataFolder, "data.db");
+	static adminFile: string = path.join(this.dataFolder, "adminSettings.txt");
+
+	static defaultAdminSettings: any = {
+		stockAPIType: "external",
+		userRegistration: "enabled"
+	};
 
 	static async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
@@ -198,6 +204,61 @@ export default class Utils {
 		});
 	}
 
+	static async processAdminAction(userID: number, username: string, token: string, action: string) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let valid: any = await this.verifyToken(userID, token);
+
+				if(valid && JSON.parse(valid).username.toLowerCase() === "admin" && username.toLowerCase() === "admin") {
+					let current: any;
+
+					switch(action) {
+						case "getSettings":
+							current = await this.getAdminSettings();
+							resolve(current);
+							break;
+						case "internalStockAPI":
+							current = await this.getAdminSettings();
+							current.stockAPIType = "internal";
+							writeFileSync(this.adminFile, JSON.stringify(current));
+							resolve(current);
+							break;
+						case "externalStockAPI":
+							current = await this.getAdminSettings();
+							current.stockAPIType = "external";
+							writeFileSync(this.adminFile, JSON.stringify(current));
+							resolve(current);
+							break;
+						case "enableRegistration":
+							current = await this.getAdminSettings();
+							current.userRegistration = "enabled";
+							writeFileSync(this.adminFile, JSON.stringify(current));
+							resolve(current);
+							break;
+						case "disableRegistration":
+							current = await this.getAdminSettings();
+							current.userRegistration = "disabled";
+							writeFileSync(this.adminFile, JSON.stringify(current));
+							resolve(current);
+							break;
+					}
+				}
+			} catch(error) {
+				reject(error);
+			}
+		});
+	}
+
+	static async getAdminSettings() {
+		try {
+			let current = readFileSync(this.adminFile, { encoding:"utf-8" });
+			let parsed = JSON.parse(current);
+			return parsed;
+		} catch(error) {
+			return this.defaultAdminSettings;
+		}
+	}
+
 	static async generateToken() {
 		return new Promise((resolve, reject) => {
 			crypto.randomBytes(32, (error, buffer) => {
@@ -266,6 +327,10 @@ export default class Utils {
 		if(!existsSync(this.dbFile)) {
 			writeFileSync(this.dbFile, "");
 		}
+
+		if(!existsSync(this.adminFile)) {
+			writeFileSync(this.adminFile, JSON.stringify(this.defaultAdminSettings));
+		}
 	}
 
 	static getSchema() {
@@ -273,7 +338,7 @@ export default class Utils {
 	}
 
 	static request(method: string, url: string, body: any, headers: any) {
-		// console.log(new Date().toLocaleTimeString(), "Request", url);
+		console.log(new Date().toLocaleTimeString(), "Request", url);
 
 		return new Promise((resolve, reject) => {
 			try {

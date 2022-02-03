@@ -274,3 +274,23 @@ async function syncSettings(update) {
 		});
 	}
 }
+
+async function getAdminSettings() {
+	try {
+		let token = localStorage.getItem("token");
+		let userID = localStorage.getItem("userID");
+		let username = localStorage.getItem("username");
+
+		let response = await performAdminAction(token, userID, username, "getSettings");
+
+		if(response.stockAPIType === "internal") {
+			buttonSettingsStockAPIType.textContent = "Using Internal";
+			buttonSettingsStockAPIType.setAttribute("data-type", "internal");
+		} else {
+			buttonSettingsStockAPIType.textContent = "Using External";
+			buttonSettingsStockAPIType.setAttribute("data-type", "external");
+		}
+	} catch(error) {
+		console.log(error);
+	}
+}

@@ -143,6 +143,19 @@ export default class API {
 					}
 				});
 
+				app.post("/adminAction", async (request, response) => {
+					let userID = request.body.userID;
+					let username = request.body.username;
+					let token = request.body.token;
+					let action = request.body.action;
+
+					try {
+						response.send(await Utils.processAdminAction(userID, username, token, action));
+					} catch(error) {
+						response.send({ error:error });
+					}
+				});
+
 				addStockAPIRoutes(app);
 
 				this.httpServer.listen(this.portBot, () => {

@@ -2,8 +2,10 @@ import Stock from "../../models/Stock";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";
 
-// let stockAPI = "https://yfapi.net";
-let stockAPI = "http://localhost:3190";
+let stockAPITypes = {
+	internal: "http://localhost:3190",
+	external: "https://yfapi.net"
+};
 
 const db = new DB();
 
@@ -179,6 +181,9 @@ function getSymbolsToRefetch(symbols: any) {
 }
 
 async function getHistoricalData(assetSymbol: string, keyAPI: string) {
+	let settings = await Utils.getAdminSettings();
+	let stockAPI = settings.stockAPIType === "internal" ? stockAPITypes.internal : stockAPITypes.external;
+
 	let now = Math.floor(new Date().getTime() / 1000);
 
 	let historicalData: any = await Utils.request("GET", stockAPI + "/v8/finance/chart/" + assetSymbol.toUpperCase() + "?range=1y&interval=1d&lang=en", null, [["X-API-KEY", keyAPI]]);
@@ -195,6 +200,9 @@ async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 function getPriceData(symbols: any, keyAPI: string) {
 	return new Promise(async (resolve, reject) => {
 		try {
+			let settings = await Utils.getAdminSettings();
+			let stockAPI = settings.stockAPIType === "internal" ? stockAPITypes.internal : stockAPITypes.external;
+			
 			let now = Math.floor(new Date().getTime() / 1000);
 
 			let output: any = {};

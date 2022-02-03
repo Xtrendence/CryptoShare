@@ -74,6 +74,17 @@ function changePassword(userID, token, currentPassword, newPassword) {
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body, null);
 }
 
+async function performAdminAction(token, userID, username, action) {
+	let body = {
+		token: token,
+		userID: parseInt(userID),
+		username: username,
+		action: action
+	};
+
+	return request("POST", urlAPI.replace("graphql", "adminAction"), body, null);
+}
+
 function readStockPrice(token, userID, keyAPI, symbols) {
 	let query = {
 		query: `query readStockPrice($token: String!, $userID: Int!, $keyAPI: String!, $symbols: [String]!) {
