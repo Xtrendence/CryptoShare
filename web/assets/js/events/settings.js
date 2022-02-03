@@ -129,7 +129,7 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 });
 
 buttonSettingsStockAPIKey.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Set Stock API Key", `<input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
+	let popup = new Popup(300, "auto", "Set Stock API Key", `<span class="margin-bottom">If internal stock API is being used, set the API key to "-" or anything besides leaving it empty.</span><input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
 	popup.show();
 
 	let inputStockAPIKey = document.getElementById("popup-input-stock-api-key");

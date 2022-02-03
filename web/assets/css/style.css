@@ -497,6 +497,9 @@ html.light .toggle-container {
 .popup-wrapper .bottom span.margin-top {
 	margin-top:20px;
 }
+.popup-wrapper .bottom span.margin-bottom {
+	margin-bottom:20px;
+}
 .popup-wrapper .bottom span.detail {
 	margin-top:20px;
 	font-weight:bold;
