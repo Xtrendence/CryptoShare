@@ -27,6 +27,18 @@ export default createStyle<any>({
 	areaSearchWrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	header: {
+		alignItems: "center",
+	},
+	listText: {
+		fontSize: 18,
+		fontWeight: "bold",
+		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 10,
+		color: Colors.Dark.mainContrast
+	},
+	listTextLight: {
+		color: Colors.Light.mainContrast
+	},
 	inputSearch: {
 		fontSize: 16,
 		paddingLeft: 14,

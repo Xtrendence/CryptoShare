@@ -33,6 +33,7 @@ export default function Activity({ navigation }: any) {
 	const [popupType, setPopupType] = useState<any>(null);
 
 	const [activityRows, setActivityRows] = useState<any>({});
+	const [activityHeader, setActivityHeader] = useState<any>(null);
 	const [filteredRows, setFilteredRows] = useState<any>({});
 
 	const popupRef = useRef<any>({
@@ -128,6 +129,8 @@ export default function Activity({ navigation }: any) {
 					renderItem={renderItem}
 					keyExtractor={item => activityRows[item].activityTransactionID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
+					ListHeaderComponent={activityHeader}
+					ListHeaderComponentStyle={styles.header}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
 					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
@@ -161,10 +164,12 @@ export default function Activity({ navigation }: any) {
 		let activityData = await fetchActivity();
 
 		if(Utils.empty(activityData)) {
+			setActivityHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Activity Found</Text></View>);
 			setActivityRows({});
 			return;
 		}
 
+		setActivityHeader(null);
 		setActivityRows(activityData);
 	}
 

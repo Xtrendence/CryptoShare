@@ -104,6 +104,12 @@ export default class Utils {
 	static async getSettings(dispatch: any) {
 		let settings = this.defaultSettings;
 
+		let username = await AsyncStorage.getItem("username");
+		if(!this.empty(username)) {
+			settings.username = username;
+			dispatch(changeSetting({ key:"username", value:username }));
+		}
+
 		let defaultPage = await AsyncStorage.getItem("defaultPage");
 		if(!this.empty(defaultPage)) {
 			settings.defaultPage = defaultPage;

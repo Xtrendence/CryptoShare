@@ -49,6 +49,7 @@ export default function Holdings({ navigation }: any) {
 	const [chartSegments, setChartSegments] = useState<any>(1);
 
 	const [holdingsRows, setHoldingsRows] = useState<any>({});
+	const [holdingsHeader, setHoldingsHeader] = useState<any>(null);
 	const [holdingsTotalValue, setHoldingsTotalValue] = useState<string>("-");
 
 	const renderItem = ({ item }: any) => {
@@ -104,6 +105,8 @@ export default function Holdings({ navigation }: any) {
 					renderItem={renderItem}
 					keyExtractor={item => holdingsRows[item].coinID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
+					ListHeaderComponent={holdingsHeader}
+					ListHeaderComponentStyle={styles.header}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
 					<TouchableOpacity onPress={() => showPortfolioChart()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
@@ -666,6 +669,7 @@ export default function Holdings({ navigation }: any) {
 				let holdings = await requests.readHolding(token, userID);
 
 				if(Utils.empty(holdings?.data?.readHolding)) {
+					setHoldingsHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text></View>);
 					setHoldingsRows({});
 					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
@@ -683,6 +687,7 @@ export default function Holdings({ navigation }: any) {
 				holdingsData = parsedData?.holdingsData;
 
 				if(Utils.empty(holdingsData)) {
+					setHoldingsHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text></View>);
 					setHoldingsRows({});
 					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
@@ -702,6 +707,7 @@ export default function Holdings({ navigation }: any) {
 			let rows = parsed.rows;
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
+			setHoldingsHeader(null);
 			setHoldingsRows(rows);
 			setHoldingsTotalValue(`${Utils.currencySymbols[currency] + Utils.separateThousands(totalValue)}`);
 		} catch(error) {
