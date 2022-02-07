@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { ImageBackground, ScrollView, Text, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { ImageBackground, Keyboard, Modal, ScrollView, Text, View, TouchableOpacity, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -10,7 +10,6 @@ import styles from "../styles/Settings";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../styles/Global";
 import { switchTheme } from "../store/reducers/theme";
-import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import Requests from "../utils/Requests";
 import { changeSetting, setSettingsState } from "../store/reducers/settings";
 import ChoiceButton from "../components/ChoiceButton";
@@ -19,6 +18,16 @@ export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
+
+	const [popup, setPopup] = useState<boolean>(false);
+	const [popupContent, setPopupContent] = useState<any>(null);
+
+	const popupRef = useRef<any>({
+		currentPassword: "",
+		newPassword: "",
+		repeatPassword: "",
+		stockAPIKey: ""
+	});
 
 	const [search, setSearch] = useState<string>("");
 	
@@ -88,6 +97,18 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("stockAPI") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Stock API</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]} onPress={() => showStockAPIPopup()}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Set Key</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						}
 						{ Utils.filterSettings(search).includes("defaultPage") &&
 							<View style={[styles.section, styles[`section${theme}`]]}>
 								<View style={styles.sectionTop}>
@@ -128,8 +149,77 @@ export default function Settings({ navigation }: any) {
 					</ScrollView>
 				</SafeAreaView>
 			</ScrollView>
+			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
+				<View style={styles.popup}>
+					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
+					<View style={styles.popupForeground}>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
+					</View>
+				</View>
+			</Modal>
 		</ImageBackground>
 	);
+
+	function showPopup(content: any) {
+		Keyboard.dismiss();
+		setPopup(true);
+		setPopupContent(content);
+	}
+
+	function hidePopup() {
+		Keyboard.dismiss();
+		setPopup(false);
+		setPopupContent(null);
+	}
+
+	async function showStockAPIPopup() {
+		popupRef.current.stockAPIKey = await AsyncStorage.getItem("keyAPI") || "";
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Set Stock API Key</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TextInput 
+							defaultValue={popupRef.current.stockAPIKey}
+							spellCheck={false}
+							autoCorrect={false}
+							placeholder="API Key..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.stockAPIKey = value}
+						/>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => setStockAPIKey(popupRef.current.stockAPIKey)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function setStockAPIKey(keyAPI: string) {
+		hidePopup();
+
+		if(!Utils.empty(keyAPI)) {
+			await AsyncStorage.setItem("keyAPI", keyAPI);
+			Utils.notify(theme, "Stock API key has been set.");
+			return;
+		}
+
+		await AsyncStorage.removeItem("keyAPI");
+		Utils.notify(theme, "Stock API key has been removed.");
+	}
 
 	async function logout() {
 		let api = await AsyncStorage.getItem("api");

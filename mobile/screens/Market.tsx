@@ -92,7 +92,7 @@ export default function Market({ navigation }: any) {
 					<TouchableOpacity 
 						onPress={() => { 
 							if(!Utils.empty(symbol)) { 
-								searchMarket({ symbol:symbol })
+								showSearchPopup();
 							}
 						}} 
 						style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}
@@ -325,75 +325,114 @@ export default function Market({ navigation }: any) {
 
 	function selectMatch(id: string) {
 		hidePopup();
-		searchMarket({ id:id });
+		searchMarket({ type:"crypto", id:id });
+	}
+
+	function showSearchPopup() {
+		Keyboard.dismiss();
+		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>What type of asset are you searching for?</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => searchMarket({ type:"crypto", symbol:symbol })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Crypto</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => searchMarket({ type:"stock", symbol:symbol })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Stock</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
 	}
 
 	async function searchMarket(args: any) {
 		try {
-			let settings: any = store.getState().settings.settings;
+			hidePopup();
 
 			setLoading(true);
 
 			setSymbol("");
 
-			let assetSymbol: string;
-			let asset: any;
-
-			if("symbol" in args) {
-				assetSymbol = args.symbol.toLowerCase();
-				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+			if(args?.type === "crypto") {
+				showCryptoPopup(args);
 			} else {
-				asset = await CryptoFinder.getCoin({ id:args.id });
-				assetSymbol = asset.symbol;
+				showStockPopup(args);
 			}
-
-			if("matches" in asset) {
-				let content = () => {
-					return (
-						<View style={styles.popupContent}>
-							<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
-							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
-								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
-							</TouchableOpacity>
-						</View>
-					);
-				}
-
-				showPopup(content);
-
-				setLoading(false);
-
-				return;
-			}
-
-			let coinID = asset.id;
-
-			let data: any = await cryptoAPI.getCoinData(coinID);
-
-			let marketData = data?.market_data;
-			
-			let rank = data?.market_cap_rank;
-			let price = marketData?.current_price[settings.currency];
-			let icon = data?.image;
-			let marketCap = marketData?.market_cap[settings.currency];
-			let priceChangeDay = Utils.formatPercentage(marketData?.market_cap_change_percentage_24h);
-			let athChange = Utils.formatPercentage(marketData?.ath_change_percentage[settings.currency]);
-			let ath = marketData?.ath[settings.currency];
-			let high24h = marketData?.high_24h[settings.currency];
-			let low24h = marketData?.low_24h[settings.currency];
-			let volume = marketData?.total_volume[settings.currency];
-			let supply = marketData?.circulating_supply;
-			let name = data?.name;
-			let symbol = data?.symbol;
-	
-			let info = { coinID:coinID, currency:settings.currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
-
-			showModal(coinID, symbol, price, info);
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
 			Utils.notify(theme, "Something went wrong...");
 		}
+	}
+
+	async function showCryptoPopup(args: any) {
+		let settings: any = store.getState().settings.settings;
+
+		let assetSymbol: string;
+		let asset: any;
+
+		if("symbol" in args) {
+			assetSymbol = args.symbol.toLowerCase();
+			asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+		} else {
+			asset = await CryptoFinder.getCoin({ id:args.id });
+			assetSymbol = asset.symbol;
+		}
+
+		if("matches" in asset) {
+			let content = () => {
+				return (
+					<View style={styles.popupContent}>
+						<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+					</View>
+				);
+			}
+
+			showPopup(content);
+
+			setLoading(false);
+
+			return;
+		}
+
+		let coinID = asset.id;
+
+		let data: any = await cryptoAPI.getCoinData(coinID);
+
+		let marketData = data?.market_data;
+			
+		let rank = data?.market_cap_rank;
+		let price = marketData?.current_price[settings.currency];
+		let icon = data?.image;
+		let marketCap = marketData?.market_cap[settings.currency];
+		let priceChangeDay = Utils.formatPercentage(marketData?.market_cap_change_percentage_24h);
+		let athChange = Utils.formatPercentage(marketData?.ath_change_percentage[settings.currency]);
+		let ath = marketData?.ath[settings.currency];
+		let high24h = marketData?.high_24h[settings.currency];
+		let low24h = marketData?.low_24h[settings.currency];
+		let volume = marketData?.total_volume[settings.currency];
+		let supply = marketData?.circulating_supply;
+		let name = data?.name;
+		let symbol = data?.symbol;
+	
+		let info = { coinID:coinID, currency:settings.currency, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
+
+		showModal(coinID, symbol, price, info);
+	}
+
+	async function showStockPopup(args: any) {
+
 	}
 
 	async function showModal(assetID: string, assetSymbol: string, currentPrice: number, info: any) {

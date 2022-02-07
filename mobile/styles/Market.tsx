@@ -134,6 +134,20 @@ export default createStyle<any>({
 	iconButtonLight: {
 		backgroundColor: Colors.Light.Market.accentFirst
 	},
+	actionText: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.accentContrast,
+	},
+	actionTextLight: {
+		color: Colors.Light.accentContrast,
+	},
+	actionButton: {
+		backgroundColor: Colors.Dark.Market.accentFirst
+	},
+	actionButtonLight: {
+		backgroundColor: Colors.Light.Market.accentFirst
+	},
 	choiceButton: {
 		backgroundColor: "transparent",
 		borderWidth: 3,
@@ -295,5 +309,13 @@ export default createStyle<any>({
 	popupContent: {
 		alignItems: "center",
 		justifyContent: "center"
-	}
+	},
+	popupButtonWrapper: {
+		flexDirection: "row",
+	},
+	popupButton: {
+		width: 100,
+		marginLeft: 10,
+		marginRight: 10
+	},
 });

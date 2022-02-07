@@ -754,6 +754,10 @@ export default function Activity({ navigation }: any) {
 				return { error:"The values of the amount, fee, and price fields must be numbers."};
 			}
 
+			if(values.activityAssetAmount <= 0) {
+				return { error:"Amount must be greater than zero." };
+			}
+
 			if(Utils.empty(values.activityAssetSymbol) || Utils.empty(values.activityAssetType) || Utils.empty(values.activityAssetAmount) || Utils.empty(values.activityDate) || Utils.empty(values.activityType)) {
 				return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
 			}

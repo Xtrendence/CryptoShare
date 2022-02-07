@@ -142,6 +142,7 @@ export default class Utils {
 		let content: any = {
 			appearance: ["theme", "dark", "light", "mode", "appearance", "looks"],
 			account: ["logout", "token", "user", "account"],
+			stockAPI: ["stock", "api", "key", "set", "change", "input"],
 			defaultPage: ["page", "default", "login", "area", "section", "load"],
 			transactionsAffectHoldings: ["transactions", "affect", "holdings", "activity", "record", "base"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
