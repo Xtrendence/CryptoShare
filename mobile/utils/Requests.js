@@ -143,6 +143,42 @@ export default class Requests {
 		return request("POST", this.urlAPI.replace("graphql", "changePassword"), body, null);
 	}
 
+	readStockPrice(token, userID, keyAPI, symbols) {
+		let query = {
+			query: `query readStockPrice($token: String!, $userID: Int!, $keyAPI: String!, $symbols: [String]!) {
+				readStockPrice(token: $token, userID: $userID, keyAPI: $keyAPI, symbols: $symbols) {
+					priceData, historicalData
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				keyAPI: keyAPI,
+				symbols: symbols
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	readStockHistorical(token, userID, keyAPI, assetSymbol) {
+		let query = {
+			query: `query readStockHistorical($token: String!, $userID: Int!, $keyAPI: String!, $assetSymbol: String!) {
+				readStockHistorical(token: $token, userID: $userID, keyAPI: $keyAPI, assetSymbol: $assetSymbol) {
+					priceData, historicalData
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				keyAPI: keyAPI,
+				assetSymbol: assetSymbol
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	readHolding(token, userID) {
 		let query = {
 			query: `query readHolding($token: String!, $userID: Int!) {
@@ -355,6 +391,10 @@ export const cryptoAPI = {
 
 	getCoinList() {
 		return request("GET", "https://api.coingecko.com/api/v3/coins/list", null, null);
+	},
+
+	getExchangeRates() {
+		return request("GET", "https://api.coingecko.com/api/v3/exchange_rates", null, null);
 	},
 
 	getCoinData(id) {

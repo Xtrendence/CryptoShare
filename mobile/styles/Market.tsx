@@ -115,6 +115,18 @@ export default createStyle<any>({
 	areaActionsWrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	header: {
+		alignItems: "center",
+	},
+	listText: {
+		fontSize: 18,
+		fontWeight: "bold",
+		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 10,
+		color: Colors.Dark.mainContrast
+	},
+	listTextLight: {
+		color: Colors.Light.mainContrast
+	},
 	button: {
 		width: ((screenWidth / 2) - 35) - 25,
 		paddingLeft: 10,

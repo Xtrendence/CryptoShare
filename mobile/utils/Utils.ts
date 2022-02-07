@@ -217,6 +217,34 @@ export default class Utils {
 		});
 	}
 
+	static previousValueInObject(object: any, start: number) {
+		let keys = Object.keys(object);
+
+		for(let i = start; i >= 0; i--) {
+			try {
+				if(!Utils.empty(object[keys[i]])) {
+					return object[keys[i]];
+				}
+			} catch(error) {
+				continue;
+			}
+		}
+	}
+
+	static nextValueInObject(object: any, start: number) {
+		let keys = Object.keys(object);
+
+		for(let i = start; i < keys.length; i++) {
+			try {
+				if(!Utils.empty(object[keys[i]])) {
+					return object[keys[i]];
+				}
+			} catch(error) {
+				continue;
+			}
+		}
+	}
+
 	static empty(value: any) {
 		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 			return true;
