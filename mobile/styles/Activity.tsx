@@ -149,7 +149,7 @@ export default createStyle<any>({
 		backgroundColor: Colors.Dark.Activity.accentFirst
 	},
 	actionButtonLight: {
-		backgroundColor: Colors.Light.Activity.accentSecond
+		backgroundColor: Colors.Light.Activity.accentFirst
 	},
 	choiceButton: {
 		backgroundColor: "transparent",

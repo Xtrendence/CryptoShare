@@ -265,7 +265,7 @@ export default function Holdings({ navigation }: any) {
 
 			let requests = new Requests(api);
 
-			let exists: any = await cryptoHoldingExists(asset.id);
+			let exists: any = await assetHoldingExists(asset.id);
 
 			let encrypted = Utils.encryptObjectValues(key, {
 				holdingAssetID: asset.id,
@@ -866,40 +866,6 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
-	async function cryptoHoldingExists(id: string) {
-		let userID = await AsyncStorage.getItem("userID");
-		let token = await AsyncStorage.getItem("token");
-		let key = await AsyncStorage.getItem("key") || "";
-		let api = await AsyncStorage.getItem("api");
-
-		return new Promise(async (resolve, reject) => {
-			try {
-				let requests = new Requests(api);
-				let holdings = await requests.readHolding(token, userID);
-
-				if(Utils.empty(holdings) || holdings?.data?.readHolding.length === 0) {
-					resolve({ exists:false });
-				} else {
-					let encrypted = holdings?.data?.readHolding;
-
-					Object.keys(encrypted).map(index => {
-						let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
-
-						if(decrypted.holdingAssetID === id) {
-							resolve({ exists:true, holdingID:encrypted[index].holdingID });
-							return;
-						}
-					});
-
-					resolve({ exists:false });
-				}
-			} catch(error) {
-				console.log(error);
-				reject(error);
-			}
-		});
-	}
-
 	function fetchHoldingsHistoricalData(ids: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1212,4 +1178,38 @@ export default function Holdings({ navigation }: any) {
 
 		return activities;
 	}
+}
+
+export async function assetHoldingExists(id: string) {
+	let userID = await AsyncStorage.getItem("userID");
+	let token = await AsyncStorage.getItem("token");
+	let key = await AsyncStorage.getItem("key") || "";
+	let api = await AsyncStorage.getItem("api");
+
+	return new Promise(async (resolve, reject) => {
+		try {
+			let requests = new Requests(api);
+			let holdings = await requests.readHolding(token, userID);
+
+			if(Utils.empty(holdings) || holdings?.data?.readHolding.length === 0) {
+				resolve({ exists:false });
+			} else {
+				let encrypted = holdings?.data?.readHolding;
+
+				Object.keys(encrypted).map(index => {
+					let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
+
+					if(decrypted.holdingAssetID === id) {
+						resolve({ exists:true, holdingID:encrypted[index].holdingID });
+						return;
+					}
+				});
+
+				resolve({ exists:false });
+			}
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }

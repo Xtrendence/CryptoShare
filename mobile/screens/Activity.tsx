@@ -136,7 +136,7 @@ export default function Activity({ navigation }: any) {
 					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="question" 
-							size={24} 
+							size={18} 
 							color={Colors[theme].accentContrast}
 						/>
 					</TouchableOpacity>

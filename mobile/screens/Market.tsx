@@ -232,6 +232,9 @@ export default function Market({ navigation }: any) {
 										Rank: #{modalInfo.rank}
 									</Text>
 									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
+										Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.price)}
+									</Text>
+									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
 										Market Cap: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.marketCap)}
 									</Text>
 									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
@@ -340,7 +343,7 @@ export default function Market({ navigation }: any) {
 				return (
 					<View style={styles.popupContent}>
 						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Global Market Data</Text>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Global Crypto Market Data</Text>
 						</View>
 						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Volume: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(volume)}</Text>

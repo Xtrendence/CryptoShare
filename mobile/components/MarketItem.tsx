@@ -6,7 +6,7 @@ import Utils from "../utils/Utils";
 
 export default function Item({ info, showModal, theme, settings }: any) {
 	return (
-		<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info)} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
+		<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info, "crypto")} style={[styles.itemCard, styles[`itemCard${theme}`]]}>
 			<View style={styles.itemTop}>
 				<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
 					<Image source={{ uri: info.icon }} style={styles.itemIcon} />
