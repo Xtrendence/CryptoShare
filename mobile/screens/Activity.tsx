@@ -18,6 +18,7 @@ import MatchList from "../components/MatchList";
 import store from "../store/store";
 import { screenWidth } from "../styles/NavigationBar";
 import ActivityPopup from "../components/ActivityPopup";
+import Stock from "../utils/Stock";
 
 export default function Activity({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -125,7 +126,7 @@ export default function Activity({ navigation }: any) {
 				</View>
 				<FlatList
 					contentContainerStyle={{ paddingTop:10 }}
-					data={Object.keys(filteredRows).length > 0 ? Object.keys(filteredRows).reverse() : Object.keys(activityRows).reverse()}
+					data={getRows(filteredRows, activityRows, query)}
 					renderItem={renderItem}
 					keyExtractor={item => activityRows[item].activityTransactionID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
@@ -160,6 +161,18 @@ export default function Activity({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	function getRows(filteredRows: any, activityRows: any, query: any) {
+		if(!Utils.empty(query) && Utils.empty(filteredRows)) {
+			return null;
+		}
+
+		if(!Utils.empty(query) && Object.keys(filteredRows).length > 0) {
+			return Object.keys(filteredRows).reverse();
+		}
+		
+		return Object.keys(activityRows).reverse();
+	}
+
 	async function populateActivityList() {
 		let activityData = await fetchActivity();
 
@@ -185,7 +198,7 @@ export default function Activity({ navigation }: any) {
 
 		Object.keys(activityRows).map(txID => {
 			let activity = activityRows[txID];
-			let data = [activity.activityDate, activity.activityType, activity.activityAssetSymbol, activity.activityAssetAmount];
+			let data = [activity.activityDate, activity.activityType, activity.activityAssetSymbol, activity.activityAssetAmount, activity.activityAssetType];
 
 			if(data.join("|").toLowerCase().includes(query)) {
 				filtered[txID] = activity;
@@ -290,44 +303,58 @@ export default function Activity({ navigation }: any) {
 
 	async function createActivity(args: any) {
 		try {
+			let settings: any = store.getState().settings.settings;
+
 			setLoading(true);
 
 			let assetSymbol: string;
 			let asset: any;
-
-			if("symbol" in args) {
-				assetSymbol = args.symbol.toLowerCase();
-				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
-			} else {
-				asset = await CryptoFinder.getCoin({ id:args.id });
-				assetSymbol = asset.symbol;
-			}
-
+			
 			let data = parseActivityPopupData(popupRef.current.activity);
 
-			if("error" in data) {
-				setLoading(false);
-				Utils.notify(theme, data.error);
-				return;
-			}
-
-			if("matches" in asset) {
-				let content = () => {
-					return (
-						<View style={styles.popupContent}>
-							<MatchList onPress={selectMatchCreate} theme={theme} matches={asset.matches}/>
-							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
-								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
-							</TouchableOpacity>
-						</View>
-					);
+			if(data?.activityAssetType === "crypto") {
+				if("symbol" in args) {
+					assetSymbol = args.symbol.toLowerCase();
+					asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+				} else {
+					asset = await CryptoFinder.getCoin({ id:args.id });
+					assetSymbol = asset.symbol;
 				}
 
-				showPopup(content);
+				if("error" in data) {
+					setLoading(false);
+					Utils.notify(theme, data.error);
+					return;
+				}
 
-				setLoading(false);
+				if("matches" in asset) {
+					let content = () => {
+						return (
+							<View style={styles.popupContent}>
+								<MatchList onPress={selectMatchCreate} theme={theme} matches={asset.matches}/>
+								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+								</TouchableOpacity>
+							</View>
+						);
+					}
 
-				return;
+					showPopup(content);
+
+					setLoading(false);
+
+					return;
+				}
+			} else {
+				assetSymbol = data?.activityAssetSymbol.toUpperCase();
+				asset = { id:"stock-" + assetSymbol, symbol:assetSymbol };
+				let stock = await Stock.fetchStockPrice(settings.currency, [assetSymbol]);
+
+				if(Utils.empty(stock) || !(assetSymbol in stock)) {
+					setLoading(false);
+					Utils.notify(theme, "Asset not found.");
+					return;
+				}
 			}
 
 			let userID = await AsyncStorage.getItem("userID");
