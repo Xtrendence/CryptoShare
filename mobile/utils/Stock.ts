@@ -230,8 +230,8 @@ export default class Stock {
 			parsedObject[currentDay] = [currentTime, currentPrice];
 
 			if(!(day in parsedObject)) {
-				let value = Utils.previousValueInObject(parsedObject, i);
-				if(Utils.empty(value)) {
+				let value = Utils.previousValueInObject(parsedObject, i - 1);
+				if(Utils.empty(value) || isNaN(value[0])) {
 					value = Utils.nextValueInObject(parsedObject, i);
 				}
 

@@ -208,7 +208,7 @@ function parseStockHistoricalDataAsCrypto(days, historicalData) {
 		parsedObject[currentDay] = [currentTime, currentPrice];
 
 		if(!(day in parsedObject)) {
-			let value = previousValueInObject(parsedObject, i);
+			let value = previousValueInObject(parsedObject, i - 1);
 			if(empty(value)) {
 				value = nextValueInObject(parsedObject, i);
 			}

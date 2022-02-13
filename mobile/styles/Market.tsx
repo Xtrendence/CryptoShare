@@ -238,7 +238,7 @@ export default createStyle<any>({
 		color: Colors.Light.mainContrast
 	},
 	modalScrollView: {
-		paddingLeft: 50,
+		marginLeft: 50,
 		paddingTop: 10,
 		borderBottomWidth: 5,
 		borderColor: Colors.Dark.mainFifth

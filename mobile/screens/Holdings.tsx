@@ -10,7 +10,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import LinearGradient from "react-native-linear-gradient";
 import { Colors } from "../styles/Global";
 import Requests, { cryptoAPI } from "../utils/Requests";
-import { fetchActivity } from "./Activity";
+import { fetchActivity, filterActivitiesByType } from "./Activity";
 import store from "../store/store";
 import Loading from "../components/Loading";
 import { screenWidth } from "../styles/NavigationBar";
@@ -521,7 +521,13 @@ export default function Holdings({ navigation }: any) {
 		try {
 			let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
 
-			let data: any = await fetchHoldingsHistoricalData([info.assetID]);
+			let data: any = {};
+			
+			if(info.type === "crypto") {
+				data = await fetchHoldingsHistoricalData([info.assetID]);
+			} else {
+				data = await fetchHoldingsStocksHistoricalData(days, [info.assetID], [info.symbol]);
+			}
 
 			let prices = data.prices;
 			let activities = filterActivitiesByAssetID(data.activities, info.assetID);
@@ -965,6 +971,69 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
+	function fetchHoldingsStocksHistoricalData(days: any, ids: any = null, symbols: any = null) {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let settings: any = store.getState().settings.settings;
+
+				let currency = settings.currency;
+
+				let prices: any = {};
+				let parsedData: any = await parseActivityAsHoldings();
+				parsedData.activityData = filterActivitiesByType(parsedData.activityData).stocks;
+				let holdings = filterHoldingsByType(parsedData.holdingsData).stocks;
+
+				let assetIDs = Object.keys(holdings);
+				let assetSymbols: any = [];
+			
+				assetIDs.map((id: any) => {
+					assetSymbols.push(holdings[id].holdingAssetSymbol.toUpperCase());
+				});
+
+				if(!Utils.empty(ids)) {
+					assetIDs = ids;
+				}
+
+				if(!Utils.empty(symbols)) {
+					assetSymbols = symbols;
+				}
+
+				let cancelled = false;
+
+				for(let i = 0; i < assetSymbols.length; i++) {
+					setTimeout(async () => {
+						if(!cancelled) {
+							setLoading(true);
+							setLoadingText(`Getting Stocks Data... (${i + 1}/${assetSymbols.length})`);
+
+							let assetID = "stock-" + assetSymbols[i];
+
+							let request: any = await Stock.fetchStockHistorical(currency, assetSymbols[i]);
+
+							if("error" in request) {
+								resolve({ error:request.error });
+								setLoading(false);
+								cancelled = true;
+								return;
+							}
+
+							let historicalData = request?.data?.historicalData?.chart?.result[0];
+
+							prices[assetID] = Stock.parseStockHistoricalDataAsCrypto(days, historicalData);
+
+							if(Object.keys(prices).length === assetIDs.length) {
+								resolve({ assetIDs:assetIDs, prices:prices, holdings:holdings, activities:parsedData.activityData });
+							}
+						}
+					}, i * 2000);
+				}
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
 	function fetchHoldingsHistoricalData(ids: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1048,7 +1117,11 @@ export default function Holdings({ navigation }: any) {
 					let amount = parseFloat(activity.activityAssetAmount);
 
 					if(!(assetID in dates[day].holdings)) {
-						dates[day].holdings[assetID] = { amount:amount };
+						dates[day].holdings[assetID] = { 
+							amount: amount, 
+							symbol: activity.activityAssetSymbol,
+							holdingAssetType: activity.activityAssetType 
+						};
 						continue;
 					}
 
@@ -1083,6 +1156,8 @@ export default function Holdings({ navigation }: any) {
 	function parseActivityAsDatedValue(days: any, prices: any, activities: any) {
 		return new Promise(async (resolve, reject) => {
 			try {
+				let settings: any = store.getState().settings.settings;
+
 				let dates: any = {
 					[days[0]]: {
 						holdings: {},
@@ -1135,7 +1210,7 @@ export default function Holdings({ navigation }: any) {
 							if(!Utils.empty(activity.activityPrice) && parseFloat(activity.activityPrice) > 0) {
 								price = parseFloat(activity.activityPrice);
 							}
-							
+
 							let value = parseFloat((price * amount).toFixed(3));
 
 							// If the asset doesn't already exist, then its values are set directly instead of being incremented or decremented.
@@ -1143,7 +1218,9 @@ export default function Holdings({ navigation }: any) {
 								dates[day].holdings[assetID] = {
 									amount: amount,
 									value: value,
-									price: price
+									price: price,
+									symbol: activity.activityAssetSymbol,
+									holdingAssetType: activity.activityAssetType
 								};
 
 								dates[day].modified = true;
@@ -1181,7 +1258,7 @@ export default function Holdings({ navigation }: any) {
 					for(let j = 0; j < ids.length; j++) {
 						let id = ids[j];
 						let price = prices[id][i][1];
-						let value =  dates[day].holdings[id].amount * price;
+						let value = dates[day].holdings[id].amount * price;
 						dates[day].holdings[id].value = value;
 						total += value;
 					}
@@ -1192,21 +1269,57 @@ export default function Holdings({ navigation }: any) {
 				// If the current day's data isn't found in the "dates" object, then the current prices are fetched, and the data is added.
 				let today = Utils.formatDateHyphenated(new Date());
 				if(!(today in dates)) {
-					let settings: any = store.getState().settings.settings;
 					let currency = settings.currency;
+
+					// Get yesterday's holdings.
 					let keys = Object.keys(dates);
 					let previous = dates[keys[keys.length - 1]];
+
+					// Set the initial value of today's holdings to that of yesterday's.
 					dates[today] = JSON.parse(JSON.stringify(previous));
 					dates[today].totalValue = 0;
-					let ids = Object.keys(dates[today].holdings);
-					let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
-					let currentPrices = sortMarketDataByCoinID(marketData);
-					Object.keys(dates[today].holdings).map(assetID => {
-						let amount = dates[today].holdings[assetID].amount;
-						let value = amount * currentPrices[assetID].current_price;
-						dates[today].holdings[assetID].value = value;
-						dates[today].totalValue += value;
-					});
+
+					// Get today's holdings.
+					let holdingsToday = dates[today].holdings;
+
+					let filtered = filterHoldingsByType(holdingsToday);
+
+					let idsCrypto = Object.keys(filtered.crypto);
+
+					if(!Utils.empty(idsCrypto)) {
+						// Get crypto market data for today's holdings.
+						let marketData = await cryptoAPI.getMarketByID(currency, idsCrypto.join(","));
+						let currentPrices = sortMarketDataByCoinID(marketData);
+
+						Object.keys(filtered.crypto).map(assetID => {
+							let amount = dates[today].holdings[assetID].amount;
+							let value = amount * currentPrices[assetID].current_price;
+
+							dates[today].holdings[assetID].value = value;
+							dates[today].totalValue += value;
+						});
+					}
+
+					let idsStocks = Object.keys(filtered.stocks);
+
+					if(!Utils.empty(idsStocks)) {
+						let symbolsStock: any = [];
+						idsStocks.map(assetID => {
+							symbolsStock.push(filtered.stocks[assetID].symbol.toUpperCase());
+						});
+
+						// Get stock market data for today's holdings.
+						let priceData = await Stock.fetchStockPrice(currency, symbolsStock);
+
+						idsStocks.map(assetID => {
+							let symbol = assetID.replace("stock-", "");
+							let amount = dates[today].holdings[assetID].amount;
+							let value = amount * priceData[symbol].priceData.price;
+
+							dates[today].holdings[assetID].value = value;
+							dates[today].totalValue += value;
+						});
+					}
 				}
 
 				resolve(dates);

@@ -1044,3 +1044,20 @@ export function sortActivityDataByDate(activityData: any) {
 
 	return sorted;
 }
+
+export function filterActivitiesByType(activityData: any) {
+	let activitiesCrypto: any = {};
+	let activitiesStocks: any = {};
+
+	let ids = Object.keys(activityData);
+	ids.map(id => {
+		let activity = activityData[id];
+		if(activity.activityAssetType === "crypto") {
+			activitiesCrypto[id] = activity;
+		} else {
+			activitiesStocks[id] = activity;
+		}
+	});
+
+	return { crypto:activitiesCrypto, stocks:activitiesStocks };
+}
