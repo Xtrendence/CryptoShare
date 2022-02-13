@@ -692,6 +692,9 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	async function populateHoldingsList() {
+		// Used to tell the user their stock API key doesn't work.
+		let errorRow = false;
+
 		try {
 			let settings: any = store.getState().settings.settings;
 
@@ -735,9 +738,6 @@ export default function Holdings({ navigation }: any) {
 				}
 			}
 
-			// Used to tell the user their stock API key doesn't work.
-			let errorRow = false;
-
 			// Separate crypto and stock holdings.
 			let filteredHoldings = filterHoldingsByType(holdingsData);
 
@@ -768,14 +768,20 @@ export default function Holdings({ navigation }: any) {
 
 			let rows = parsed.rows;
 
+			if(errorRow) {
+				rows.unshift({ assetID:"error", error:"Stock API Limit Exceeded" });
+			}
+
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			setHoldingsHeader(null);
 			setHoldingsRows(rows);
 			setHoldingsTotalValue(`${Utils.currencySymbols[currency] + Utils.separateThousands(totalValue)}`);
 		} catch(error) {
-			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			if(error !== "Timeout.") {
+				Utils.notify(theme, "Something went wrong...");
+				console.log(error);
+			}
 		}
 	}
 
