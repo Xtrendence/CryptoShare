@@ -104,7 +104,7 @@ export default function Holdings({ navigation }: any) {
 					contentContainerStyle={{ paddingTop:10 }}
 					data={Object.keys(holdingsRows)}
 					renderItem={renderItem}
-					keyExtractor={item => holdingsRows[item].coinID}
+					keyExtractor={item => holdingsRows[item].assetID}
 					style={[styles.wrapper, styles[`wrapper${theme}`]]}
 					ListHeaderComponent={holdingsHeader}
 					ListHeaderComponentStyle={styles.header}
@@ -521,10 +521,10 @@ export default function Holdings({ navigation }: any) {
 		try {
 			let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
 
-			let data: any = await fetchHoldingsHistoricalData([info.coinID]);
+			let data: any = await fetchHoldingsHistoricalData([info.assetID]);
 
 			let prices = data.prices;
-			let activities = filterActivitiesByAssetID(data.activities, info.coinID);
+			let activities = filterActivitiesByAssetID(data.activities, info.assetID);
 
 			setLoading(true);
 

@@ -50,7 +50,8 @@ export default function Activity({ navigation }: any) {
 			powerCost: ""
 		},
 		dividends: {
-
+			shares: "",
+			dividend: "",
 		},
 		activity: {
 			activityID: "", 
@@ -750,11 +751,75 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
-	// TODO: Add functionality.
 	function showDividendsPopup() {
 		setPopupType("tools");
 
+		popupRef.current.dividends = {
+			shares: "",
+			dividend: ""
+		};
+
 		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Dividends Calculator</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TextInput 
+							spellCheck={false}
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Number Of Shares..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.dividends.shares = value}
+						/>
+						<TextInput 
+							spellCheck={false}
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Dividend Per Share..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.dividends.dividend = value}
+						/>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showDividendsOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function showDividendsOutput(args: any) {
+		try {
+			let settings: any = store.getState().settings.settings;
+			
+			let { shares, dividend } = popupRef.current.dividends;
+
+			if(!Utils.empty(shares) && !Utils.empty(dividend) && !isNaN(shares) && shares > 0 && !isNaN(dividend) && dividend > 0) {
+				let results = calculateDividendRewards(settings.currency, shares, dividend);
+
+				showPopup(outputHTML(`<span>${results}</span>`));
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
 	}
 
 	function showPopup(content: any) {
@@ -901,6 +966,25 @@ function calculateMiningRewards(currency: string, symbol: string, price: number,
 		Daily Amount: ${dailyAmount} ${symbol.toUpperCase()}<br>
 		Daily Value: ${currencySymbol + Utils.separateThousands(dailyValue)}<br><br>
 		Your ROI (Return on Investment) would be ${roi.toFixed(2)} months.
+	`;
+}
+
+function calculateDividendRewards(currency: string, amount: number, dividend: number) {
+	let currencySymbol = Utils.currencySymbols[currency];
+
+	let yearlyValue = parseFloat((amount * dividend).toFixed(3));
+
+	let monthlyValue = parseFloat((yearlyValue / 12).toFixed(3));
+
+	let weeklyValue = parseFloat((yearlyValue / (365 / 7)).toFixed(3));
+
+	let dailyValue = parseFloat((yearlyValue / 365).toFixed(3));
+
+	return `
+		Yearly Value: ${currencySymbol + Utils.separateThousands(yearlyValue)}<br>
+		Monthly Value: ${currencySymbol + Utils.separateThousands(monthlyValue)}<br>
+		Weekly Value: ${currencySymbol + Utils.separateThousands(weeklyValue)}<br>
+		Daily Value: ${currencySymbol + Utils.separateThousands(dailyValue)}
 	`;
 }
 
