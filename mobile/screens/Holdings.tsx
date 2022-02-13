@@ -18,6 +18,7 @@ import Chart from "../components/Charts/Chart";
 import CryptoFinder from "../utils/CryptoFinder";
 import MatchList from "../components/MatchList";
 import Item from "../components/HoldingItem";
+import Stock from "../utils/Stock";
 
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -119,7 +120,7 @@ export default function Holdings({ navigation }: any) {
 					<TouchableOpacity onPress={() => showHoldingPopup("crypto", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Crypto</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
+					<TouchableOpacity onPress={() => showHoldingPopup("stock", "createHolding", undefined)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.smallerButton]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Stock</Text>
 					</TouchableOpacity>
 				</View>
@@ -225,37 +226,49 @@ export default function Holdings({ navigation }: any) {
 			let assetSymbol: string;
 			let asset: any;
 
-			if("symbol" in args) {
-				assetSymbol = args.symbol.toLowerCase();
-				asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
-			} else {
-				asset = await CryptoFinder.getCoin({ id:args.id });
-				assetSymbol = asset.symbol;
-			}
-
-			if(Utils.empty(assetSymbol) || Utils.empty(holdingAssetAmount) || isNaN(holdingAssetAmount) || holdingAssetAmount < 0) {
-				setLoading(false);
-				Utils.notify(theme, "Invalid data.");
-				return;
-			}
-
-			if("matches" in asset) {
-				let content = () => {
-					return (
-						<View style={styles.popupContent}>
-							<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
-							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
-								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
-							</TouchableOpacity>
-						</View>
-					);
+			if(holdingAssetType === "crypto") {
+				if("symbol" in args) {
+					assetSymbol = args.symbol.toLowerCase();
+					asset = await CryptoFinder.getCoin({ symbol:assetSymbol });
+				} else {
+					asset = await CryptoFinder.getCoin({ id:args.id });
+					assetSymbol = asset.symbol;
 				}
 
-				showPopup(content);
+				if(Utils.empty(assetSymbol) || Utils.empty(holdingAssetAmount) || isNaN(holdingAssetAmount) || holdingAssetAmount < 0) {
+					setLoading(false);
+					Utils.notify(theme, "Invalid data.");
+					return;
+				}
 
-				setLoading(false);
+				if("matches" in asset) {
+					let content = () => {
+						return (
+							<View style={styles.popupContent}>
+								<MatchList onPress={selectMatch} theme={theme} matches={asset.matches}/>
+								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
+									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+								</TouchableOpacity>
+							</View>
+						);
+					}
 
-				return;
+					showPopup(content);
+
+					setLoading(false);
+
+					return;
+				}
+			} else {
+				assetSymbol = args.symbol.toUpperCase();
+				asset = { id:"stock-" + assetSymbol, symbol:assetSymbol };
+				let stock = await Stock.fetchStockPrice(settings.currency, [assetSymbol]);
+
+				if(Utils.empty(stock) || !(assetSymbol in stock)) {
+					setLoading(false);
+					Utils.notify(theme, "Asset not found.");
+					return;
+				}
 			}
 
 			let userID = await AsyncStorage.getItem("userID");
@@ -364,7 +377,7 @@ export default function Holdings({ navigation }: any) {
 				<View style={styles.popupContent}>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-							{ action === "createHolding" ? "Add Asset" : `Update Asset (${info.symbol.toUpperCase()})` }
+							{ action === "createHolding" ? `Add ${Utils.capitalizeFirstLetter(assetType)}` : `Update Asset (${info.symbol.toUpperCase()})` }
 						</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
@@ -474,7 +487,7 @@ export default function Holdings({ navigation }: any) {
 
 	async function showPortfolioChart() {
 		let settings: any = store.getState().settings.settings;
-		
+
 		if(settings.transactionsAffectHoldings !== "enabled") {
 			Utils.notify(theme, "Transactions need to be affecting holdings.", 5000);
 			return;
@@ -695,17 +708,39 @@ export default function Holdings({ navigation }: any) {
 				}
 			}
 
-			let ids = Object.keys(holdingsData);
+			// Used to tell the user their stock API key doesn't work.
+			let errorRow = false;
 
-			let marketData = await cryptoAPI.getMarketByID(currency, ids.join(","));
+			// Separate crypto and stock holdings.
+			let filteredHoldings = filterHoldingsByType(holdingsData);
 
-			let sortedHoldingsData = sortHoldingsDataByValue(holdingsData, marketData);
+			// Get holding IDs and symbols.
+			let holdingCryptoIDs = Object.keys(filteredHoldings.crypto);
+			let holdingStockSymbols = getHoldingSymbols(filteredHoldings.stocks);
 
-			holdingsData = sortedHoldingsData.holdingsData;
+			// Get market data based on holding IDs and symbols.
+			let marketCryptoData = !Utils.empty(holdingCryptoIDs) ? await cryptoAPI.getMarketByID(currency, holdingCryptoIDs.join(",")) : {};
 
-			let parsed = createHoldingsListCryptoRows(marketData, holdingsData, sortedHoldingsData.order, currency);
+			let marketStocksData = !Utils.empty(holdingStockSymbols) ? await Stock.fetchStockPrice(currency, holdingStockSymbols) : {};
+
+			if("error" in marketStocksData) {
+				errorRow = true;
+				marketStocksData = {};
+				holdingStockSymbols = [];
+				filteredHoldings.stocks = {};
+			}
+
+			// Combine and sort holdings data.
+			let sortedHoldingsData = sortHoldingsDataByValue(filteredHoldings.crypto, filteredHoldings.stocks, marketCryptoData, marketStocksData);
+
+			// Get sorted holding data.
+			let sortedData = sortedHoldingsData.holdingsData;
+			let sortedOrder = sortedHoldingsData.order;
+
+			let parsed = createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, sortedOrder, currency);
 
 			let rows = parsed.rows;
+
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			setHoldingsHeader(null);
@@ -717,41 +752,67 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
-	function createHoldingsListCryptoRows(marketData: any, holdingsData: any, order: any, currency: string) {
+	function createHoldingsListRows(marketCryptoData: any, marketStocksData: any, sortedData: any, sortedOrder: any, currency: string) {
 		let output: any = { rows:[], totalValue:0 };
 
-		let ids = order;
+		let ids = sortedOrder;
 
-		marketData = sortMarketDataByCoinID(marketData);
+		marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
 
 		for(let i = 0; i < ids.length; i++) {
 			try {
 				let id = ids[i];
+			
+				let holding = sortedData[id];
 
-				let coin = marketData[id];
+				let value = 0;
 
-				let coinID = coin.id;
-				let price = coin.current_price;
-				let icon = coin.image;
-				let priceChangeDay = Utils.formatPercentage(coin.market_cap_change_percentage_24h);
-				let name = coin.name;
-				let symbol = coin.symbol;
-				let rank = coin.market_cap_rank;
+				if(holding.holdingAssetType === "crypto") {
+					let coin = marketCryptoData[id];
 
-				let holding = holdingsData[coinID];
+					let coinID = coin.id;
+					let price = coin.current_price;
+					let icon = coin.image;
+					let priceChangeDay = Utils.formatPercentage(coin.market_cap_change_percentage_24h);
+					let name = coin.name;
+					let symbol = coin.symbol;
+					let rank = coin.market_cap_rank || "";
 
-				let holdingID = parseFloat(holding.holdingID);
-				let amount = parseFloat(holding.holdingAssetAmount);
-				let value = parseFloat((amount * price).toFixed(2));
+					let holding = sortedData[coinID];
 
-				if(amount <= 0) {
-					continue;
+					let holdingID = parseFloat(holding.holdingID);
+					let amount = parseFloat(holding.holdingAssetAmount);
+					value = parseFloat((amount * price).toFixed(2));
+
+					if(amount <= 0) {
+						continue;
+					}
+
+					let info = { holdingID:holdingID, assetID:coinID, price:price, icon:icon, priceChangeDay:priceChangeDay, name:name, symbol:symbol, rank:rank, holding:holding, amount:amount, value:value, type:"crypto" };
+
+					output.rows.push(info);
+				} else {
+					let symbol = holding.holdingAssetSymbol;
+
+					let stock = marketStocksData[symbol].priceData;
+
+					let shortName = stock.shortName;
+					let price = stock.price;
+					let priceChangeDay = Utils.formatPercentage(stock.change);
+
+					let holdingID = parseFloat(holding.holdingID);
+					let amount = parseFloat(holding.holdingAssetAmount);
+					value = parseFloat((amount * price).toFixed(2));
+
+					if(amount <= 0) {
+						continue;
+					}
+
+					let info = { holdingID:holdingID, assetID:"stock-" + symbol, symbol:symbol, price:price, shortName:shortName, priceChangeDay:priceChangeDay, amount:amount, value:value, type:"stock" };
+
+					output.rows.push(info);
 				}
-
-				let info = { holdingID:holdingID, coinID:coinID, price:price, icon:icon, priceChangeDay:priceChangeDay, name:name, symbol:symbol, rank:rank, holding:holding, amount:amount, value:value };
-
-				output.rows.push(info);
-
+			
 				output.totalValue += value;
 			} catch(error) {
 				console.log(error);
@@ -759,6 +820,33 @@ export default function Holdings({ navigation }: any) {
 		}
 
 		return output;
+	}
+
+	function filterHoldingsByType(holdingsData: any) {
+		let holdingsCrypto: any = {};
+		let holdingsStocks: any = {};
+
+		let ids = Object.keys(holdingsData);
+		ids.map(id => {
+			let holding = holdingsData[id];
+			if(holding.holdingAssetType === "crypto") {
+				holdingsCrypto[id] = holding;
+			} else {
+				holdingsStocks[id] = holding;
+			}
+		});
+
+		return { crypto:holdingsCrypto, stocks:holdingsStocks };
+	}
+
+	function getHoldingSymbols(holdings: any) {
+		let symbols: any = [];
+
+		Object.keys(holdings).map(id => {
+			symbols.push(holdings[id].holdingAssetSymbol);
+		});
+
+		return symbols;
 	}
 
 	function sortMarketDataByCoinID(marketData: any) {
@@ -772,15 +860,25 @@ export default function Holdings({ navigation }: any) {
 		return prices;
 	}
 
-	function sortHoldingsDataByValue(holdingsData: any, marketData: any) {
+	function sortHoldingsDataByValue(holdingsCryptoData: any, holdingsStocksData: any, marketCryptoData: any, marketStocksData: any) {
+		let combined = { ...holdingsCryptoData, ...holdingsStocksData };
 		let sorted: any = {};
-		let array: any = [];
+		let array = [];
 		let order: any = [];
 
-		marketData = sortMarketDataByCoinID(marketData);
+		marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
 
-		for(let holding in holdingsData) {
-			let value = holdingsData[holding].holdingAssetAmount * marketData[holding].current_price;
+		for(let holding in holdingsCryptoData) {
+			let value = holdingsCryptoData[holding].holdingAssetAmount * marketCryptoData[holding].current_price;
+
+			if(value > 0) {
+				array.push([holding, value]);
+			}
+		}
+	
+		for(let holding in holdingsStocksData) {
+			let symbol = holdingsStocksData[holding].holdingAssetSymbol;
+			let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
 
 			if(value > 0) {
 				array.push([holding, value]);
@@ -793,7 +891,7 @@ export default function Holdings({ navigation }: any) {
 
 		array.reverse().map((item: any) => {
 			order.push(item[0]);
-			sorted[item[0]] = holdingsData[item[0]];
+			sorted[item[0]] = combined[item[0]];
 		});
 
 		return { holdingsData:sorted, order:order };

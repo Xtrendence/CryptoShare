@@ -467,7 +467,7 @@ export default function Market({ navigation }: any) {
 
 		let marketData = data?.market_data;
 
-		let rank = data?.market_cap_rank;
+		let rank = data?.market_cap_rank || "";
 		let price = marketData?.current_price[settings.currency];
 		let icon = data?.image;
 		let marketCap = marketData?.market_cap[settings.currency];

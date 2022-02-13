@@ -19,14 +19,31 @@ export default function Item({ info, showHoldingChart, showHoldingPopup, theme, 
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemTop}>
-				<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
-					<Image source={{ uri: info.icon }} style={styles.itemIcon} />
-				</View>
-				<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.name} ({info.symbol.toUpperCase()})</Text>
+				{ info.type === "crypto" && 
+					<View style={[styles.itemIconWrapper, settings.assetIconBackdrop === "enabled" ? styles.itemIconWrapperBackdrop : null]}>
+						<Image source={{ uri: info.icon }} style={styles.itemIcon} />
+					</View>
+				}
+				{ info.type === "stock" && 
+					<View style={[styles.itemIconWrapper, styles.itemIconWrapperStock]}>
+						<Text style={[styles.itemStockSymbol, styles[`itemStockSymbol${theme}`]]}>{info.symbol.toUpperCase()}</Text>
+					</View>
+				}
+				{ info.type === "crypto" && 
+					<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.name} ({info.symbol.toUpperCase()})</Text>
+				}
+				{ info.type === "stock" && 
+					<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.shortName} ({info.symbol.toUpperCase()})</Text>
+				}
 			</View>
 			<View style={styles.itemBottom}>
 				<ScrollView style={[styles.itemScrollView]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
-					<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">#{info.rank}</Text>
+					{ info.type === "crypto" &&
+						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">#{info.rank}</Text>
+					}
+					{ info.type === "stock" &&
+						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">-</Text>
+					}
 					<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">24h: {info.priceChangeDay}%</Text>
 					<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(info.price)}</Text>
 				</ScrollView>
@@ -69,6 +86,9 @@ let styles: any = StyleSheet.create({
 	itemIconWrapper: {
 		padding: 4,
 	},
+	itemIconWrapperStock: {
+
+	},
 	itemIconWrapperBackdrop: {
 		backgroundColor: "rgb(255,255,255)",
 		borderRadius: GlobalStyle.borderRadius
@@ -76,6 +96,20 @@ let styles: any = StyleSheet.create({
 	itemIcon: {
 		width: 32,
 		height: 32,
+	},
+	itemStockSymbol: {
+		backgroundColor: Colors.Dark.Holdings.accentFirst,
+		color: Colors.Dark.accentContrast,
+		fontWeight: "bold",
+		borderRadius: GlobalStyle.borderRadius,
+		paddingLeft: 10,
+		paddingRight: 10,
+		paddingTop: 4,
+		paddingBottom: 4,
+	},
+	itemStockSymbolLight: {
+		backgroundColor: Colors.Light.Holdings.accentFirst,
+		color: Colors.Light.accentContrast,
 	},
 	itemText: {
 		maxWidth: (screenWidth / 2) + 10,
