@@ -486,35 +486,56 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	async function showPortfolioChart() {
-		let settings: any = store.getState().settings.settings;
+		try {
+			let settings: any = store.getState().settings.settings;
 
-		if(settings.transactionsAffectHoldings !== "enabled") {
-			Utils.notify(theme, "Transactions need to be affecting holdings.", 5000);
-			return;
+			if(settings.transactionsAffectHoldings !== "enabled") {
+				Utils.notify(theme, "Transactions need to be affecting holdings.", 5000);
+				return;
+			}
+
+			setLoadingText("This might take a while...");
+
+			let activityData = await fetchActivity();
+			if(Utils.empty(activityData)) {
+				Utils.notify(theme, "No activities found.");
+				return;
+			}
+			
+			let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
+
+			let dataCrypto: any = await fetchHoldingsCryptoHistoricalData(undefined);
+			let dataStocks: any = await fetchHoldingsStocksHistoricalData(days, undefined, undefined);
+
+			if("error" in dataStocks) {
+				dataStocks = null;
+			}
+
+			let pricesCrypto = dataCrypto?.prices;
+			let activitiesCrypto = dataCrypto?.activities;
+
+			let pricesStocks = dataStocks?.prices;
+			let activitiesStocks = dataStocks?.activities;
+
+			let pricesCombined = { ...pricesCrypto, ...pricesStocks };
+			let activitiesCombined = { ...activitiesCrypto, ...activitiesStocks };
+
+			let dates;
+			if(!Utils.empty(dataStocks)) {
+				dates = await parseActivityAsDatedValue(days, pricesCombined, activitiesCombined);
+			} else {
+				dates = await parseActivityAsDatedValue(days, pricesCrypto, activitiesCrypto);
+			}
+
+			setLoading(true);
+			setLoadingText("");
+
+			showModal(dates, undefined);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
 		}
-
-		setLoadingText("This might take a while...");
-
-		let activityData = await fetchActivity();
-		if(Utils.empty(activityData)) {
-			Utils.notify(theme, "No activities found.");
-			return;
-		}
-
-		let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
-
-		let data: any = await fetchHoldingsHistoricalData(undefined);
-
-		let prices = data.prices;
-		let activities = data.activities;
-
-		setLoading(true);
-
-		let dates = await parseActivityAsDatedValue(days, prices, activities);
-
-		setLoadingText("");
-
-		showModal(dates, undefined);
 	}
 
 	async function showHoldingChart(info: any) {
@@ -524,7 +545,7 @@ export default function Holdings({ navigation }: any) {
 			let data: any = {};
 			
 			if(info.type === "crypto") {
-				data = await fetchHoldingsHistoricalData([info.assetID]);
+				data = await fetchHoldingsCryptoHistoricalData([info.assetID]);
 			} else {
 				data = await fetchHoldingsStocksHistoricalData(days, [info.assetID], [info.symbol]);
 			}
@@ -1034,7 +1055,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
-	function fetchHoldingsHistoricalData(ids: any = null) {
+	function fetchHoldingsCryptoHistoricalData(ids: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let settings: any = store.getState().settings.settings;
@@ -1049,7 +1070,8 @@ export default function Holdings({ navigation }: any) {
 
 				let prices: any = {};
 				let parsedData: any = await parseActivityAsHoldings();
-				let holdings: any = parsedData.holdingsData;
+				parsedData.activityData = filterActivitiesByType(parsedData.activityData).crypto;
+				let holdings = filterHoldingsByType(parsedData.holdingsData).crypto;
 
 				let coinIDs: any = Object.keys(holdings);
 				if(!Utils.empty(ids)) {
@@ -1059,7 +1081,7 @@ export default function Holdings({ navigation }: any) {
 				for(let i = 0; i < coinIDs.length; i++) {
 					setTimeout(async () => {
 						setLoading(true);
-						setLoadingText(`Getting Data... (${i + 1}/${coinIDs.length})`);
+						setLoadingText(`Getting Crypto Data... (${i + 1}/${coinIDs.length})`);
 
 						let holding = holdings[coinIDs[i]];
 
