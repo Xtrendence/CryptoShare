@@ -27,6 +27,8 @@ let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
 let divChatList = document.getElementById("chat-list");
+let divChatStatus = document.getElementById("chat-status");
+let divChatOptions = document.getElementById("chat-options");
 
 let buttonChatMenu = document.getElementById("button-chat-menu");
 let buttonMessageSend = document.getElementById("button-message-send");

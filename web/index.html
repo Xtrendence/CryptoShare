@@ -4,6 +4,7 @@
 		<script src="./assets/js/lib/jquery.js"></script>
 		<script src="./assets/js/lib/crypto-js.js"></script>
 		<script src="./assets/js/lib/chart.js"></script>
+		<script src="./assets/js/lib/socket.js"></script>
 		<script src="./assets/js/lib/popper.min.js"></script>
 		<script src="./assets/js/lib/tippy.min.js"></script>
 		<script src="./assets/js/lib/flatpickr.js"></script>
@@ -120,6 +121,7 @@
 						</div>
 						<div class="name-wrapper">
 							<span>Plutus</span>
+							<div class="chat-status" id="chat-status"></div>
 						</div>
 						<button class="action-button" id="button-chat-menu">
 							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M576 736v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z"/></svg>
@@ -128,6 +130,7 @@
 					<div class="chat-list noselect" id="chat-list">
 						<div class="loading-icon"><div></div><div></div></div>
 					</div>
+					<div class="chat-options-wrapper noselect hidden" id="chat-options"></div>
 					<div class="chat-bottom">
 						<input id="input-message" placeholder="Say Something..." type="text" spellcheck="true">
 						<button class="action-button" id="button-message-send">Send</button>

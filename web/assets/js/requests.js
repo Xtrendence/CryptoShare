@@ -1,6 +1,7 @@
 let ip = getIP();
 let port = getPort();
 let urlAPI = `${getProtocol()}//${ip}:${port}/graphql`;
+let urlBot = `${getProtocol()}//${ip}:${port + 1}`;
 
 function userExists(username) {
 	let query = {

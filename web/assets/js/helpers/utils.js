@@ -9,7 +9,7 @@ function getPort() {
 		port = getProtocol() === "https:" ? 443 : 80;
 	}
 
-	return port;
+	return parseInt(port);
 }
 
 function getProtocol() {

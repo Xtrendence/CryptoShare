@@ -893,7 +893,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	width:476px;
 	left:calc(50% - 476px / 2);
 }
-.page.chatbot .chat-top, .page.chatbot .chat-bottom {
+.page.chatbot .chat-top, .page.chatbot .chat-bottom, .page.chatbot .chat-options-wrapper {
 	position:absolute;
 	width:100%;
 	height:60px;
@@ -933,6 +933,20 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	color:var(--main-contrast);
 	font-size:18px;
 	font-weight:bold;
+	display:inline-block;
+	vertical-align:center;
+}
+.page.chatbot .chat-top .name-wrapper .chat-status {
+	display:inline-block;
+	vertical-align:center;
+	margin-left:10px;
+	border-radius:50%;
+	width:12px;
+	height:12px;
+	background:var(--negative-first);
+}
+.page.chatbot .chat-top .name-wrapper .chat-status.active {
+	background:var(--positive-first);
 }
 .page.chatbot .chat-top .action-button {
 	position:absolute;
@@ -978,6 +992,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	overflow:hidden auto;
 	background:var(--main-first-transparent);
 }
+.page.chatbot .chat-list.options {
+	height:calc(100% - 60px - 60px - 50px - 6px);
+}
 .page.chatbot .chat-list .chat-bubble-wrapper {
 	display:block;
 	padding:0 20px 20px 20px;
@@ -1004,6 +1021,31 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .page.chatbot .chat-list .chat-bubble span {
 	font-size:16px;
+}
+.page.chatbot .chat-options-wrapper {
+	position:absolute;
+	top:auto;
+	overflow:auto hidden;
+	white-space:nowrap;
+	width:100%;
+	height:50px;
+	bottom:62px;
+	border-width:2px 0 0 0;
+	background:var(--main-second-transparent);
+}
+.page.chatbot .chat-options-wrapper button {
+	display:inline-block;
+	font-size:14px;
+	font-weight:bold;
+	height:30px;
+	border-radius:var(--border-radius);
+	padding:0 10px 0 10px;
+	margin:6px 6px 0 6px;
+	background:var(--accent-third);
+	color:var(--main-contrast);
+}
+.page.chatbot .chat-options-wrapper button:hover {
+	background:var(--accent-first);
 }
 
 .page.market .page-container-toolbar {

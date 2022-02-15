@@ -40,8 +40,7 @@ buttonActivityTools.addEventListener("click", () => {
 		popup.hide();
 		showActivityMiningPopup();
 	});
-
-	// TODO: Add functionality.
+	
 	document.getElementById("popup-button-dividends").addEventListener("click", () => {
 		popup.hide();
 		showActivityDividendPopup();

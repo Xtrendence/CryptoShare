@@ -49,7 +49,15 @@ export default class API {
 				Utils.db = db;
 
 				this.httpServer = http.createServer();
-				this.ioServer = new Server(this.httpServer);
+
+				this.ioServer = new Server(this.httpServer, {
+					cors: {
+						origin: "*",
+						methods: ["GET", "POST", "PUT", "DELETE"]
+					},
+					maxHttpBufferSize: 8192 * 1024
+				});
+
 				await addEvents(this.ioServer);
 
 				console.log(Utils.console.magenta, `-----------------------------\n`, `Starting Server... (${new Date().toTimeString().split(" ")[0]})`, Utils.console.reset);
