@@ -23,6 +23,14 @@ type Activity {
 	activityTo: String!
 }
 
+type Message {
+	messageID: Int!,
+	userID: Int!,
+	userMessage: String!,
+	botMessage: String!,
+	messageDate: String!
+}
+
 type Setting {
 	settingID: Int!,
 	userID: Int!, 
@@ -64,6 +72,8 @@ type Query {
 
 	readActivity(token: String!, userID: Int!): [Activity]
 
+	readMessage(token: String!, userID: Int!): Message
+
 	readSetting(token: String!, userID: Int!): Setting
 
 	readHolding(token: String!, userID: Int!): [Holding]
@@ -89,6 +99,10 @@ type Mutation {
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
 	updateSetting(token: String!, userID: Int!, userSettings: String!): String
 	deleteSetting(token: String!, userID: Int!): String
+
+	createMessage(token: String!, userID: Int!, userMessage: String!, botMessage: String!): String
+	updateMessage(token: String!, userID: Int!, messageID: Int!, userMessage: String!, botMessage: String!): String
+	deleteMessage(token: String!, userID: Int!, messageID: Int!): String
 
 	createHolding(token: String!, userID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	updateHolding(token: String!, userID: Int!, holdingID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String

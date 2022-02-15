@@ -7,18 +7,30 @@ async function populateChatList(recreate) {
 			divChatList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
 
-		divChatList.innerHTML = "";
+		try {
+			let messages = await fetchMessage();
 
-		scrollChatToBottom();
+			console.log(messages);
+
+			divChatList.innerHTML = "";
+
+			scrollChatToBottom();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
 	}
 }
 
 function sendMessage(message) {
 	if(chatConnected()) {
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
 		addMessage("user", message);
 
 		setTimeout(() => {
-			socket.emit("message", message);
+			socket.emit("message", { userID:userID, token:token, message:message });
 		}, 500);
 	} else {
 		errorNotification("You aren't connected to the chat bot.");
@@ -76,5 +88,37 @@ function attachSocketEvents(socket) {
 
 	socket.on("process", (data) => {
 		console.log(data);
+	});
+}
+
+function fetchMessage() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let message = await readMessage(token, userID);
+
+			if(empty(message?.data?.readMessage)) {
+				resolve();
+				return;
+			}
+
+			let messageData = {};
+	
+			let encrypted = message?.data?.readMessage;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = decryptObjectValues(key, encrypted[index]);
+				decrypted.messageID = encrypted[index].messageID;
+				messageData[decrypted.messageID] = decrypted;
+			});
+
+			resolve(messageData);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
 	});
 }

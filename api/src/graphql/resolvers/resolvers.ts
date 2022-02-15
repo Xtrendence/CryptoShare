@@ -3,6 +3,7 @@ import { createActivity, readActivity, updateActivity, deleteActivity, importAct
 import { createSetting, readSetting, updateSetting, deleteSetting } from "./setting";
 import { createHolding, readHolding, updateHolding, deleteHolding, importHolding } from "./holding";
 import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
+import { createMessage, readMessage, updateMessage, deleteMessage } from "./message";
 import { readCoin } from "./coin";
 import { readStockHistorical, readStockPrice } from "./stock";
 
@@ -12,6 +13,7 @@ let resolvers = {
 	createSetting, readSetting, updateSetting, deleteSetting,
 	createHolding, readHolding, updateHolding, deleteHolding, importHolding,
 	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,
+	createMessage, readMessage, updateMessage, deleteMessage,
 	readCoin,
 	readStockHistorical, readStockPrice
 };

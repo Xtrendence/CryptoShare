@@ -122,6 +122,22 @@ function readStockHistorical(token, userID, keyAPI, assetSymbol) {
 	return request("POST", urlAPI, query, null);
 }
 
+function readMessage(token, userID) {
+	let query = {
+		query: `query readMessage($token: String!, $userID: Int!) {
+			readMessage(token: $token, userID: $userID) {
+				messageID, userMessage, botMessage, messageDate
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function readHolding(token, userID) {
 	let query = {
 		query: `query readHolding($token: String!, $userID: Int!) {
@@ -148,6 +164,22 @@ function readActivity(token, userID) {
 		variables: {
 			token: token,
 			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function createMessage(token, userID, userMessage, botMessage) {
+	let query = {
+		query: `mutation createMessage($token: String!, $userID: Int!, $userMessage: String!, $botMessage: String!) {
+			createMessage(token: $token, userID: $userID, userMessage: $userMessage, botMessage: $botMessage)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			userMessage: userMessage,
+			botMessage: botMessage
 		}
 	};
 
@@ -240,6 +272,21 @@ function updateActivity(token, userID, activityID, activityAssetID, activityAsse
 			activityPrice: activityPrice, 
 			activityFrom: activityFrom, 
 			activityTo: activityTo  
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteMessage(token, userID, messageID) {
+	let query = {
+		query: `mutation deleteMessage($token: String!, $userID: Int!, $messageID: Int!) {
+			deleteMessage(token: $token, userID: $userID, messageID: $messageID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			messageID: parseInt(messageID)
 		}
 	};
 
