@@ -24,6 +24,7 @@ addTooltips();
 
 setInterval(() => {
 	let active = getActiveMarketPage();
+	populateChatList(false);
 	populateMarketList(active.cryptoPage, active.stocksPage, false);
 	populateHoldingsList(false);
 	populateActivityList(false);

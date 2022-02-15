@@ -26,6 +26,13 @@ let loginToggleTheme = document.getElementById("login-toggle-theme");
 let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
+let divChatList = document.getElementById("chat-list");
+
+let buttonChatMenu = document.getElementById("button-chat-menu");
+let buttonMessageSend = document.getElementById("button-message-send");
+
+let inputMessage = document.getElementById("input-message");
+
 let divPageMarket = document.getElementById("market-page");
 let divMarketPageNavigationWrapper = document.getElementById("market-page-navigation-wrapper");
 let divMarketListCrypto = document.getElementById("market-list-crypto");

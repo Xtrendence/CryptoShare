@@ -112,7 +112,28 @@
 					</div>
 				</div>
 			</div>
-			<div class="page chatbot hidden" id="chatbot-page"></div>
+			<div class="page chatbot hidden" id="chatbot-page">
+				<div class="page-container full chatbot">
+					<div class="chat-top noselect">
+						<div class="icon-wrapper">
+							<span>P</span>
+						</div>
+						<div class="name-wrapper">
+							<span>Plutus</span>
+						</div>
+						<button class="action-button" id="button-chat-menu">
+							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M576 736v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z"/></svg>
+						</button>
+					</div>
+					<div class="chat-list noselect" id="chat-list">
+						<div class="loading-icon"><div></div><div></div></div>
+					</div>
+					<div class="chat-bottom">
+						<input id="input-message" placeholder="Say Something..." type="text" spellcheck="true">
+						<button class="action-button" id="button-message-send">Send</button>
+					</div>
+				</div>
+			</div>
 			<div class="page dashboard hidden" id="dashboard-page"></div>
 			<div class="page market" id="market-page">
 				<div class="page-container full market">
@@ -337,6 +358,7 @@
 		<!-- Functions -->
 		<script src="./assets/js/functions/functions.js"></script>
 		<script src="./assets/js/functions/account.js"></script>
+		<script src="./assets/js/functions/chatbot.js"></script>
 		<script src="./assets/js/functions/market.js"></script>
 		<script src="./assets/js/functions/holdings.js"></script>
 		<script src="./assets/js/functions/activity.js"></script>
@@ -347,6 +369,7 @@
 		<!-- Events -->
 		<script src="./assets/js/events/events.js"></script>
 		<script src="./assets/js/events/login.js"></script>
+		<script src="./assets/js/events/chatbot.js"></script>
 		<script src="./assets/js/events/market.js"></script>
 		<script src="./assets/js/events/holdings.js"></script>
 		<script src="./assets/js/events/activity.js"></script>

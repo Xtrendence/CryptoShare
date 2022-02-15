@@ -60,7 +60,7 @@ function clearActivePage() {
 
 // TODO: Fetch data when switching between pages.
 function setPage(page) {
-	page = empty(page) ? defaultChoices.defaultPage.toLowerCase() : page.toLowerCase();
+	page = empty(page) ? defaultChoices.defaultPage.toLowerCase() : page.toLowerCase().replace(" ", "");
 
 	clearActiveNavbarItem();
 	clearActivePage();
@@ -70,6 +70,7 @@ function setPage(page) {
 
 	switch(page) {
 		case "chatbot":
+			populateChatList(true);
 			firstFetch.chatBot = false;
 			break;
 		case "dashboard":

@@ -12,6 +12,7 @@ function attemptLogin() {
 				if(result.error.includes("Invalid")) {
 					removeAccountInfo();
 				}
+				
 				errorNotification(result.error);
 			} else {
 				let key = localStorage.getItem("key");

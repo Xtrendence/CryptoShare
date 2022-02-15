@@ -39,7 +39,7 @@ export const Colors: any = {
 
 		ChatBot: {
 			accentFirst: "#8a2387",
-			accentSecond: "#e94057",
+			accentSecond: "#c2374a",
 			accentThird: "#f27121"
 		},
 		Dashboard: {
@@ -108,7 +108,7 @@ export const Colors: any = {
 
 		ChatBot: {
 			accentFirst: "#8a2387",
-			accentSecond: "#e94057",
+			accentSecond: "#c2374a",
 			accentThird: "#f27121"
 		},
 		Dashboard: {
