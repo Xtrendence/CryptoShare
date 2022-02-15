@@ -4,17 +4,18 @@ attachSocketEvents(socket);
 async function populateChatList(recreate) {
 	if(getActivePage().id === "chatbot-page") {
 		if(recreate) {
+			divChatList.removeAttribute("data-checksum");
 			divChatList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
 
 		try {
-			let messages = await fetchMessage();
+			let messages = await fetchMessage() || "";
+			let checksum = sha256(JSON.stringify(messages));
 
 			console.log(messages);
 
+			divChatList.setAttribute("data-checksum", checksum);
 			divChatList.innerHTML = "";
-
-			
 
 			scrollChatToBottom();
 		} catch(error) {

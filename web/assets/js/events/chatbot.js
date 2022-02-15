@@ -10,6 +10,30 @@ buttonChatMenu.addEventListener("click", () => {
 
 	document.getElementById("popup-button-clear").addEventListener("click", () => {
 		popup.hide();
+
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		popup = new Popup(300, "auto", "Delete Messages", `<span>Are you sure you want to delete all messages?</span>`);
+		popup.show();
+		popup.updateHeight();
+
+		popup.on("confirm", async () => {
+			try {
+				showLoading(1500, "Deleting...");
+
+				await deleteMessageAll(token, userID);
+
+				populateChatList(true);
+
+				hideLoading();
+
+				popup.hide();
+			} catch(error) {
+				console.log(error);
+				errorNotification("Couldn't delete messages.");
+			}
+		});
 	});
 });
 
