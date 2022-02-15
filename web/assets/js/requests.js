@@ -293,6 +293,20 @@ function deleteMessage(token, userID, messageID) {
 	return request("POST", urlAPI, query, null);
 }
 
+function deleteMessageAll(token, userID) {
+	let query = {
+		query: `mutation deleteMessageAll($token: String!, $userID: Int!) {
+			deleteMessageAll(token: $token, userID: $userID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function deleteHolding(token, userID, holdingID) {
 	let query = {
 		query: `mutation deleteHolding($token: String!, $userID: Int!, $holdingID: Int!) {

@@ -1015,9 +1015,11 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 .page.chatbot .chat-list .chat-bubble-wrapper.user .chat-bubble {
 	background:var(--accent-second);
 	max-width:60%;
+	color:var(--accent-contrast);
 }
 .page.chatbot .chat-list .chat-bubble-wrapper.bot .chat-bubble {
 	max-width:70%;
+	color:var(--main-contrast);
 }
 .page.chatbot .chat-list .chat-bubble span {
 	font-size:16px;

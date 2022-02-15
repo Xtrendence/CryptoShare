@@ -14,6 +14,8 @@ async function populateChatList(recreate) {
 
 			divChatList.innerHTML = "";
 
+			
+
 			scrollChatToBottom();
 		} catch(error) {
 			console.log(error);

@@ -82,3 +82,19 @@ export async function deleteMessage({ token, userID, messageID }: any) {
 		return error;
 	}
 }
+
+export async function deleteMessageAll({ token, userID }: any) {
+	try {
+		let valid = await Utils.verifyToken(userID, token);
+
+		if(valid) {
+			db.runQuery("DELETE FROM Message WHERE userID = ?", [userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
+		return error;
+	}
+}
