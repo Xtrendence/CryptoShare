@@ -652,7 +652,7 @@ export default function Market({ navigation }: any) {
 		let parsedData = await parseWatchlistAsMarket();
 
 		if(Utils.empty(parsedData)) {
-			setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Items In Watchlist</Text></View>);
+			setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
 			return;
 		}
 	}

@@ -26,19 +26,25 @@ export async function readWatchlist({ token, userID }: any) {
 			let valid = await Utils.verifyToken(userID, token);
 
 			if(valid) {
-				db.db?.get("SELECT * FROM Watchlist WHERE userID = ?", [userID], (error, row) => {
+				db.db?.all("SELECT * FROM Watchlist WHERE userID = ?", [userID], (error, rows) => {
 					if(error) {
 						console.log(error);
 						reject();
 					} else {
-						if(row === undefined) {
+						if(rows === undefined) {
 							reject("!Watchlist not found.!");
 							return;
 						}
 
-						let watchlist = new Watchlist(userID, row.assetID, row.assetSymbol, row.assetType);
-						watchlist.watchlistID = row.watchlistID;
-						resolve(watchlist);
+						let items: Array<Watchlist> = [];
+
+						rows.map(row => {
+							let watchlist = new Watchlist(userID, row.assetID, row.assetSymbol, row.assetType);
+							watchlist.watchlistID = row.watchlistID;
+							items.push(watchlist);
+						});
+						
+						resolve(items);
 					}
 				});
 			} else {

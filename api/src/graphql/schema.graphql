@@ -88,9 +88,9 @@ type Query {
 
 	readActivity(token: String!, userID: Int!): [Activity]
 
-	readMessage(token: String!, userID: Int!): Message
+	readMessage(token: String!, userID: Int!): [Message]
 
-	readTransaction(token: String!, userID: Int!): Transaction
+	readTransaction(token: String!, userID: Int!): [Transaction]
 
 	readBudget(token: String!, userID: Int!): Budget
 
@@ -98,7 +98,7 @@ type Query {
 
 	readHolding(token: String!, userID: Int!): [Holding]
 
-	readWatchlist(token: String!, userID: Int!): Watchlist
+	readWatchlist(token: String!, userID: Int!): [Watchlist]
 
 	readCoin(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, currency: String!): Coin
 

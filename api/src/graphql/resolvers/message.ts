@@ -26,19 +26,25 @@ export async function readMessage({ token, userID }: any) {
 			let valid = await Utils.verifyToken(userID, token);
 
 			if(valid) {
-				db.db?.get("SELECT * FROM Message WHERE userID = ?", [userID], (error, row) => {
+				db.db?.all("SELECT * FROM Message WHERE userID = ?", [userID], (error, rows) => {
 					if(error) {
 						console.log(error);
 						reject();
 					} else {
-						if(row === undefined) {
-							reject("!Message not found.!");
+						if(rows === undefined) {
+							reject("!Messages not found.!");
 							return;
 						}
 
-						let message = new Message(userID, row.userMessage, row.botMessage, row.messageDate);
-						message.messageID = row.messageID;
-						resolve(message);
+						let messages: Array<Message> = [];
+
+						rows.map(row => {
+							let message = new Message(userID, row.userMessage, row.botMessage, row.messageDate);
+							message.messageID = row.messageID;
+							messages.push(message);
+						});
+						
+						resolve(messages);
 					}
 				});
 			} else {

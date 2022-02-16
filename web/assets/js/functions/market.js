@@ -72,7 +72,7 @@ async function populateMarketListStocks(page, currency) {
 		let parsedData = await parseWatchlistAsMarket();
 
 		if(empty(parsedData)) {
-			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Items In Watchlist</span>`;
+			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
 			return;
 		}
 	} catch(error) {
