@@ -222,11 +222,13 @@ function getPriceData(symbols: any, keyAPI: string) {
 
 					keys.map((index: any) => {
 						let result = results[index];
+
 						output[result.symbol] = {
 							symbol: result.symbol,
 							currency: result.currency,
 							price: result.regularMarketPrice,
 							marketCap: result.marketCap,
+							volume: result.regularMarketVolume,
 							shortName: result.shortName,
 							longName: result.longName,
 							displayName: result.displayName,

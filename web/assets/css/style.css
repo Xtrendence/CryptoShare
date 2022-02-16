@@ -1124,28 +1124,40 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 .dashboard-list.holdings .icon-wrapper {
 	display:none;
 }
-.dashboard-list.holdings .info-wrapper {
+.dashboard-list.holdings .info-wrapper, .dashboard-list.watchlist .info-wrapper {
 	width:100%;
 	text-align:left;
 }
-.dashboard-list.holdings .name {
+.dashboard-list.holdings .name, .dashboard-list.watchlist .name {
 	position:relative;
 	display:inline-block;
 	margin:10px 0 0 10px;
 	left:auto;
 	top:auto;
 	background:var(--accent-second);
+	vertical-align:middle;
+}
+.dashboard-list.watchlist .name {
+	background:var(--accent-first);
 }
 .dashboard-list.holdings .rank-container {
 	display:none;
 }
-.dashboard-list.holdings .info-container {
+.dashboard-list.watchlist .rank-container {
+	position:relative;
+	display:inline-block;
+	margin:10px 0 0 10px;
+	bottom:auto;
+	left:auto;
+	vertical-align:middle;
+}
+.dashboard-list.holdings .info-container, .dashboard-list.watchlist .info-container {
 	width:100%;
 	display:block;
 	position:relative;
 	text-align:left;
 }
-.dashboard-list.holdings .info-container .price-change {
+.dashboard-list.holdings .info-container .price-change, .dashboard-list.watchlist .info-container .price-change {
 	margin-right:20px;
 }
 
@@ -1235,7 +1247,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	top:0;
 	height:calc(100% - 62px);
 }
-.market-list-row, .holdings-list-row, .activity-list-row {
+.watchlist-list-row, .market-list-row, .holdings-list-row, .activity-list-row {
 	position:relative;
 	width:calc(100% - 40px);
 	max-width:1320px;
@@ -1248,16 +1260,16 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	margin:0 auto 20px auto;
 	cursor:pointer;
 }
-.holdings-list-row:first-of-type, .activity-list-row:first-of-type {
+.watchlist-list-row, .holdings-list-row:first-of-type, .activity-list-row:first-of-type {
 	margin-top:20px;
 }
-html.light .market-list-row, html.light .holdings-list-row, html.light .activity-list-row {
+html.light .watchlist-list-row, html.light .market-list-row, html.light .holdings-list-row, html.light .activity-list-row {
 	background:var(--main-fourth);
 }
-html.light #desktop .market-list-row:hover, html.light #desktop .holdings-list-row:hover, html.light #desktop .activity-list-row:hover {
+html.light #desktop .watchlist-list-row:hover, html.light #desktop .market-list-row:hover, html.light #desktop .holdings-list-row:hover, html.light #desktop .activity-list-row:hover {
 	background:var(--main-fifth);
 }
-#desktop .market-list-row:hover, #desktop .holdings-list-row:hover, #desktop .activity-list-row:hover {
+#desktop .watchlist-list-row:hover, #desktop .market-list-row:hover, #desktop .holdings-list-row:hover, #desktop .activity-list-row:hover {
 	background:var(--main-fourth);
 }
 .market-list-row .icon-wrapper, .holdings-list-row .icon-wrapper {
@@ -1308,12 +1320,12 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 	overflow:hidden;
 	line-height:80px;
 }
-.market-list-row br, .holdings-list-row br {
+.watchlist-list-row br, .market-list-row br, .holdings-list-row br {
 	display:block;
 	height:10px;
 	content:"";
 }
-.market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container, .activity-list-row .info-wrapper, .activity-list-row .info-container {
+.watchlist-list-row .info-wrapper, .watchlist-list-row .info-container, .market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container, .activity-list-row .info-wrapper, .activity-list-row .info-container {
 	display:inline-block;
 	vertical-align:middle;
 	text-align:right;
@@ -1322,38 +1334,38 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 .activity-list-row .info-wrapper {
 	width:calc(100% - 10px);
 }
-.market-list-row .info-container, .holdings-list-row .info-container, .activity-list-row .info-container {
+.watchlist-list-row .info-container, .market-list-row .info-container, .holdings-list-row .info-container, .activity-list-row .info-container {
 	width:calc(100% - 220px);
 	white-space:nowrap;
 	overflow:auto visible;
 	padding:20px 0 20px 0;
 }
-.market-list-row span, .holdings-list-row span, .activity-list-row span {
+.watchlist-list-row span, .market-list-row span, .holdings-list-row span, .activity-list-row span {
 	font-size:16px;
 	font-weight:bold;
 	color:var(--main-contrast);
 }
-.market-list-row .top, .holdings-list-row .top, .activity-list-row .top {
+.watchlist-list-row .top, .market-list-row .top, .holdings-list-row .top, .activity-list-row .top {
 	display:block;
 	margin-bottom:30px;
 }
-.market-list-row .bottom, .holdings-list-row .bottom, .activity-list-row .bottom {
+.watchlist-list-row .bottom, .market-list-row .bottom, .holdings-list-row .bottom, .activity-list-row .bottom {
 	display:block;
 	margin-top:30px;
 }
-.market-list-row .top span, .holdings-list-row .top span, .activity-list-row .top span {
+.watchlist-list-row .top span, .market-list-row .top span, .holdings-list-row .top span, .activity-list-row .top span {
 	background:var(--main-first);
 	margin-left:10px;
 	padding:10px;
 	border-radius:var(--border-radius);
 }
-.market-list-row .bottom span, .holdings-list-row .bottom span, .activity-list-row .bottom span, .activity-list-row .info-container span {
+.watchlist-list-row .bottom span, .market-list-row .bottom span, .holdings-list-row .bottom span, .activity-list-row .bottom span, .activity-list-row .info-container span {
 	background:var(--main-first-transparent);
 	margin-left:10px;
 	padding:10px;
 	border-radius:var(--border-radius);
 }
-.market-list-row .name, .market-list-row .rank, .market-list-row .symbol, .holdings-list-row .name, .holdings-list-row .rank, .holdings-list-row .symbol, .activity-list-row .date, .activity-list-row .symbol, .activity-list-row .type {
+.watchlist-list-row .name, .watchlist-list-row .rank, .watchlist-list-row .symbol, .market-list-row .name, .market-list-row .rank, .market-list-row .symbol, .holdings-list-row .name, .holdings-list-row .rank, .holdings-list-row .symbol, .activity-list-row .date, .activity-list-row .symbol, .activity-list-row .type {
 	max-width:200px;
 	text-overflow:ellipsis;
 	white-space:nowrap;
@@ -1366,7 +1378,7 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 	color:var(--accent-contrast);
 	border-radius:var(--border-radius);
 }
-.market-list-row .rank-container, .holdings-list-row .rank-container, .activity-list-row .asset-container {
+.watchlist-list-row .rank-container, .market-list-row .rank-container, .holdings-list-row .rank-container, .activity-list-row .asset-container {
 	position:absolute;
 	left:140px;
 	bottom:17px;
@@ -1377,7 +1389,7 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 	top:20px;
 	left:20px;
 }
-.market-list-row .rank, .holdings-list-row .rank, .activity-list-row .date {
+.watchlist-list-row .rank, .market-list-row .rank, .holdings-list-row .rank, .activity-list-row .date {
 	text-align:center;
 	display:inline-block;
 	vertical-align:top;
@@ -1386,7 +1398,7 @@ html.light .market-list-row .icon-symbol-wrapper, html.light .holdings-list-row 
 	left:auto;
 	background:var(--accent-second);
 }
-.market-list-row .symbol, .holdings-list-row .symbol, .activity-list-row .symbol, .activity-list-row .type {
+.watchlist-list-row .symbol, .market-list-row .symbol, .holdings-list-row .symbol, .activity-list-row .symbol, .activity-list-row .type {
 	margin-left:10px;
 	text-align:center;
 	display:inline-block;

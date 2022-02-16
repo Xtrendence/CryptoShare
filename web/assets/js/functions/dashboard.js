@@ -20,19 +20,220 @@ async function populateDashboardWatchlist(recreate) {
 		}
 		
 		try {
-			let watchlist = await fetchWatchlist();
+			let watchlistData = await fetchWatchlist();
 
-			if(empty(watchlist)) {
+			if(empty(watchlistData)) {
 				divDashboardWatchlistList.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
 				return;
 			}
 
+			let currency = getCurrency();
 
+			let filteredWatchlist = filterWatchlistByType(watchlistData);
+
+			let watchlistCryptoIDs = getWatchlistIDs(filteredWatchlist.crypto);
+			let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
+
+			let marketCryptoData = !empty(watchlistCryptoIDs) ? await cryptoAPI.getMarketByID(currency, watchlistCryptoIDs.join(",")) : {};
+
+			let marketStocksData = !empty(watchlistStockSymbols) ? await fetchStockPrice(currency, watchlistStockSymbols, false) : {};
+			if("error" in marketStocksData) {
+				marketStocksData = {};
+				watchlistStockSymbols = [];
+				filteredWatchlist.stocks = {};
+			}
+
+			let rows = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData);
+
+			if(divDashboardWatchlistList.getElementsByClassName("loading-icon").length > 0 || divDashboardWatchlistList.childElementCount !== rows.length) {
+				divDashboardWatchlistList.innerHTML = "";
+			}
+
+			for(let i = 0; i < rows.length; i++) {
+				if(divDashboardWatchlistList.childElementCount >= i + 1) {
+					let current = divDashboardWatchlistList.getElementsByClassName("watchlist-list-row")[i];
+					if(current.innerHTML !== rows[i].innerHTML) {
+						let currentInfo = current.getElementsByClassName("info-wrapper")[0];
+
+						if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
+							currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
+						}
+					}
+				} else {
+					divDashboardWatchlistList.appendChild(rows[i]);
+				}
+			}
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");
 		}
 	}
+}
+
+function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
+	let currency = getCurrency();
+
+	let rows = [];
+
+	let ids = Object.keys(watchlistData);
+
+	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
+
+	for(let i = 0; i < ids.length; i++) {
+		try {
+			let id = ids[i];
+			
+			let asset = watchlistData[id];
+
+			if(asset.assetType === "crypto") {
+				let coin = marketCryptoData[asset.assetID];
+
+				let coinID = coin.id;
+				let price = coin.current_price;
+				let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+				let name = coin.name;
+				let symbol = coin.symbol;
+				let marketCap = coin.market_cap;
+				let volume = coin.total_volume;
+				let rank = coin.market_cap_rank || "-";
+
+				let div = document.createElement("div");
+				div.id = "watchlist-list-crypto-" + coinID;
+				div.setAttribute("class", "watchlist-list-row crypto noselect audible-pop");
+
+				div.innerHTML = `
+					<div class="info-wrapper audible-pop">
+						<span class="name">${name}</span>
+						<div class="rank-container audible-pop">
+							<span class="rank">#${rank}</span>
+							<span class="symbol">${symbol.toUpperCase()}</span>
+						</div>
+						<div class="info-container">
+							<div class="top audible-pop">
+								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+								<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
+							</div>
+							<div class="bottom audible-pop">
+								<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+								<span class="price-change">24h Change: ${priceChangeDay}%</span>
+							</div>
+						</div>
+					</div>
+				`;
+
+				addWatchlistRowEvent(div, asset.watchlistID);
+
+				rows.push(div);
+			} else {
+				let symbol = asset.assetSymbol.toUpperCase();
+
+				let stock = marketStocksData[symbol].priceData;
+
+				let shortName = stock.shortName;
+				let price = stock.price;
+				let marketCap = stock.marketCap;
+				let volume = stock.volume;
+				let priceChangeDay = formatPercentage(stock.change);
+
+				let div = document.createElement("div");
+				div.id = "watchlist-list-stock-" + symbol;
+				div.setAttribute("class", "watchlist-list-row stock noselect audible-pop");
+
+				div.innerHTML = `
+					<div class="info-wrapper audible-pop">
+						<span class="name">${shortName}</span>
+						<div class="rank-container audible-pop">
+							<span class="rank">-</span>
+							<span class="symbol">${symbol.toUpperCase()}</span>
+						</div>
+						<div class="info-container">
+							<div class="top audible-pop">
+								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+								<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
+							</div>
+							<div class="bottom audible-pop">
+								<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+								<span class="price-change">24h Change: ${priceChangeDay}%</span>
+							</div>
+						</div>
+					</div>
+				`;
+
+				addWatchlistRowEvent(div, asset.watchlistID);
+
+				rows.push(div);
+			}
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	return rows;
+}
+
+function addWatchlistRowEvent(div, watchlistID) {
+	div.addEventListener("click", () => {
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove this asset from your watchlist?</span>`);
+		popup.show();
+		popup.updateHeight();
+
+		popup.on("confirm", async () => {
+			try {
+				showLoading(1500, "Deleting...");
+
+				await deleteWatchlist(token, userID, watchlistID);
+
+				populateDashboardWatchlist(true);
+
+				hideLoading();
+
+				popup.hide();
+			} catch(error) {
+				console.log(error);
+				errorNotification("Couldn't delete asset.");
+			}
+		});
+	});
+}
+
+function getWatchlistIDs(watchlist) {
+	let ids = [];
+
+	Object.keys(watchlist).map(id => {
+		ids.push(watchlist[id].assetID);
+	});
+
+	return ids;
+}
+
+function getWatchlistSymbols(watchlist) {
+	let symbols = [];
+
+	Object.keys(watchlist).map(id => {
+		symbols.push(watchlist[id].assetSymbol);
+	});
+
+	return symbols;
+}
+
+function filterWatchlistByType(watchlistData) {
+	let watchlistCrypto = {};
+	let watchlistStocks = {};
+
+	let ids = Object.keys(watchlistData);
+	ids.map(id => {
+		let asset = watchlistData[id];
+		if(asset.assetType === "crypto") {
+			watchlistCrypto[id] = asset;
+		} else {
+			watchlistStocks[id] = asset;
+		}
+	});
+
+	return { crypto:watchlistCrypto, stocks:watchlistStocks };
 }
 
 function watchlistExists(watchlist, id) {
