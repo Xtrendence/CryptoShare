@@ -114,6 +114,7 @@ async function populateHoldingsList(recreate) {
 				divHoldingsList.prepend(createHoldingsListErrorRow());
 			}
 		} catch(error) {
+			console.log(error);
 			errorNotification("Couldn't fetch holdings.");
 		}
 	}
@@ -187,7 +188,7 @@ function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketC
 	}
 	
 	for(let holding in holdingsStocksData) {
-		let symbol = holdingsStocksData[holding].holdingAssetSymbol;
+		let symbol = holdingsStocksData[holding].holdingAssetSymbol.toUpperCase();
 		let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
 
 		if(value > 0) {
@@ -302,7 +303,7 @@ function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, 
 
 				output.rows.push(div);
 			} else {
-				let symbol = holding.holdingAssetSymbol;
+				let symbol = holding.holdingAssetSymbol.toUpperCase();
 
 				let stock = marketStocksData[symbol].priceData;
 

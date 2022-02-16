@@ -156,7 +156,7 @@ function getSymbolsToRefetch(symbols: any) {
 			let refetchSymbols: any = {};
 
 			for(let i = 0; i < symbols.length; i++) {
-				let symbol = symbols[i];
+				let symbol = symbols[i].toUpperCase();
 
 				db.db?.get("SELECT * FROM Stock WHERE assetSymbol = ?", [symbol], async (error, row) => {
 					if(error) {
