@@ -1112,6 +1112,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	right:10px;
 	height:40px;
 }
+.page.dashboard .page-container-toolbar .action-button.first {
+	right:64px;
+}
 .page.dashboard .page-container-toolbar .action-button svg {
 	width:24px;
 	height:24px;
@@ -1169,8 +1172,13 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-color:var(--accent-second);
 }
 .dashboard-list.budget .chart-wrapper {
-	width:calc(100% - 40px);
+	width:calc(100% - 40px - 40px);
+	border-radius:var(--border-radius);
+	box-shadow:var(--shadow-smooth);
 	padding:20px;
+	margin:20px auto 20px auto;
+	display:block;
+	background:var(--main-first);
 }
 .dashboard-list.budget .chart-wrapper canvas {
 	margin:0 auto 0 auto;

@@ -46,7 +46,7 @@ function generatePieChart(budgetData) {
 	Object.keys(categories).map(category => {
 		let percentage = categories[category];
 		let amount = parseFloat(((percentage * income) / 100).toFixed(0));
-		labels.push(`${capitalizeFirstLetter(category)} - ${currencySymbols[currency] + separateThousands(amount)}`);
+		labels.push(`  ${capitalizeFirstLetter(category)} - ${currencySymbols[currency] + separateThousands(amount)}`);
 		values.push(categories[category]);
 	});
 
@@ -58,7 +58,9 @@ function generatePieChart(budgetData) {
 				data: values,
 				backgroundColor: backgroundColors,
 				hoverOffset: 4,
-				spacing: 4
+				spacing: 4,
+				borderWidth: 0,
+				pointStyle: "circle"
 			}]
 		},
 		options: {
@@ -68,6 +70,8 @@ function generatePieChart(budgetData) {
 				position: "right",
 				labels: {
 					fontColor: mainContrast,
+					fontStyle: "bold",
+					usePointStyle: true,
 				},
 			},
 			tooltips: {
@@ -76,7 +80,7 @@ function generatePieChart(budgetData) {
 						return "";
 					},
 					label: function(item) {
-						return `  ${labels[item.index]} (${values[item.index]}%)`;
+						return `${labels[item.index]} (${values[item.index]}%)`;
 					}
 				}
 			}

@@ -198,6 +198,7 @@ function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
 	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
 	tippy(buttonChatMenu, { content:"Chat Actions", placement:"bottom" });
+	tippy(buttonDashboardBudgetStats, { content:"Stats", placement:"bottom" });
 	tippy(buttonDashboardBudgetEdit, { content:"Edit", placement:"bottom" });
 	tippy(buttonDashboardWatchlistAdd, { content:"Add", placement:"bottom" });
 	tippy(buttonMarketInfo, { content:"Crypto Market Info", placement:"top" });

@@ -40,6 +40,7 @@ let divDashboardBudgetList = document.getElementById("dashboard-budget-list");
 let divDashboardHoldingsList = document.getElementById("dashboard-holdings-list");
 let divDashboardWatchlistList = document.getElementById("dashboard-watchlist-list");
 
+let buttonDashboardBudgetStats = document.getElementById("button-dashboard-budget-stats");
 let buttonDashboardBudgetEdit = document.getElementById("button-dashboard-budget-edit");
 let buttonDashboardWatchlistAdd = document.getElementById("button-dashboard-watchlist-add");
 
