@@ -5,12 +5,83 @@ async function populateDashboardBudget(recreate) {
 		}
 		
 		try {
+			let budgetData = await fetchBudget();
 
+			if(empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			if(divDashboardBudgetList.getElementsByTagName("canvas").length === 0) {
+				divDashboardBudgetList.innerHTML = `
+					<div class="chart-wrapper">
+						<canvas class="pie-chart-canvas" id="pie-chart-canvas"></canvas>
+					</div>
+				`;
+
+				generatePieChart(budgetData);
+			}
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");
 		}
 	}
+}
+
+function generatePieChart(budgetData) {
+	let canvas = document.getElementById("pie-chart-canvas");
+
+	let currency = getCurrency();
+
+	let mainContrast = cssValue(document.documentElement, "--main-contrast");
+
+	let backgroundColors = ["#f0bb35", "#67648f", "#c5d145", "#d63e3e", "#3bb85c", "#4f3dbf", "#3ba1db", "#9f54c7"];
+
+	let categories = budgetData.categories;
+	let income = budgetData.income;
+
+	let labels = [];
+	let values = [];
+
+	Object.keys(categories).map(category => {
+		let percentage = categories[category];
+		let amount = parseFloat(((percentage * income) / 100).toFixed(0));
+		labels.push(`${capitalizeFirstLetter(category)} - ${currencySymbols[currency] + separateThousands(amount)}`);
+		values.push(categories[category]);
+	});
+
+	new Chart(canvas, {
+		type: "doughnut",
+		data: {
+			labels: labels,
+			datasets: [{
+				data: values,
+				backgroundColor: backgroundColors,
+				hoverOffset: 4,
+				spacing: 4
+			}]
+		},
+		options: {
+			responsive: true,
+			legend: {
+				display: true,
+				position: "right",
+				labels: {
+					fontColor: mainContrast,
+				},
+			},
+			tooltips: {
+				callbacks: {
+					title: function() {
+						return "";
+					},
+					label: function(item) {
+						return `  ${labels[item.index]} (${values[item.index]}%)`;
+					}
+				}
+			}
+		}
+	});
 }
 
 async function populateDashboardWatchlist(recreate) {
@@ -274,6 +345,61 @@ function fetchWatchlist() {
 			});
 
 			resolve(watchlistData);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
+function fetchBudget() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let budget = await readBudget(token, userID);
+
+			if(empty(budget?.data?.readBudget)) {
+				resolve({});
+				return;
+			}
+	
+			let encrypted = budget?.data?.readBudget?.budgetData;
+
+			if(empty(encrypted)) {
+				resolve({});
+				return;
+			}
+
+			let budgetData = CryptoFN.decryptAES(encrypted, key);
+
+			if(!validJSON(budgetData)) {
+				resolve({});
+				return;
+			}
+
+			resolve(JSON.parse(budgetData));
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
+function setDefaultBudgetData() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(defaultBudgetData), key);
+
+			await updateBudget(token, userID, encrypted);
+
+			resolve();
 		} catch(error) {
 			console.log(error);
 			reject(error);

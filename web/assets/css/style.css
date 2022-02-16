@@ -1168,6 +1168,13 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-width:0 0 0 4px;
 	border-color:var(--accent-second);
 }
+.dashboard-list.budget .chart-wrapper {
+	width:calc(100% - 40px);
+	padding:20px;
+}
+.dashboard-list.budget .chart-wrapper canvas {
+	margin:0 auto 0 auto;
+}
 
 .page.market .page-container-toolbar {
 	display:block;
