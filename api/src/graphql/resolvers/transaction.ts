@@ -9,7 +9,7 @@ export async function createTransaction({ token, userID, transactionType, transa
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("INSERT INTO Transaction (userID, transactionType, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?)", [userID, transactionType, transactionCategory, transactionAmount, transactionNotes]);
+			db.runQuery("INSERT INTO [Transaction] (userID, transactionType, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?)", [userID, transactionType, transactionCategory, transactionAmount, transactionNotes]);
 			return "Done";
 		} else {
 			return "Unauthorized";
@@ -26,7 +26,7 @@ export async function readTransaction({ token, userID }: any) {
 			let valid = await Utils.verifyToken(userID, token);
 
 			if(valid) {
-				db.db?.all("SELECT * FROM Transaction WHERE userID = ?", [userID], (error, rows) => {
+				db.db?.all("SELECT * FROM [Transaction] WHERE userID = ?", [userID], (error, rows) => {
 					if(error) {
 						console.log(error);
 						reject();
@@ -62,7 +62,7 @@ export async function updateTransaction({ token, userID, transactionID, transact
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("UPDATE Transaction SET transactionType = ?, transactionCategory = ?, transactionAmount = ?, transactionNotes = ? WHERE transactionID = ? AND userID = ?", [transactionType, transactionCategory, transactionAmount, transactionNotes, transactionID, userID]);
+			db.runQuery("UPDATE [Transaction] SET transactionType = ?, transactionCategory = ?, transactionAmount = ?, transactionNotes = ? WHERE transactionID = ? AND userID = ?", [transactionType, transactionCategory, transactionAmount, transactionNotes, transactionID, userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";
@@ -78,7 +78,7 @@ export async function deleteTransaction({ token, userID, transactionID }: any) {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("DELETE FROM Transaction WHERE transactionID = ? AND userID = ?", [transactionID, userID]);
+			db.runQuery("DELETE FROM [Transaction] WHERE transactionID = ? AND userID = ?", [transactionID, userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";

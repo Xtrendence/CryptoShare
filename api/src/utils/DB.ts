@@ -261,7 +261,7 @@ export default class DB {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
 				let statement = (`
-					CREATE TABLE IF NOT EXISTS Transaction (
+					CREATE TABLE IF NOT EXISTS [Transaction] (
 						transactionID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 						userID INTEGER NOT NULL,
 						transactionType BLOB NOT NULL,
