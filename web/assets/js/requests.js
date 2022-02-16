@@ -186,15 +186,16 @@ function createMessage(token, userID, userMessage, botMessage) {
 	return request("POST", urlAPI, query, null);
 }
 
-function createTransaction(token, userID, transactionType, transactionCategory, transactionAmount, transactionNotes) {
+function createTransaction(token, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
 	let query = {
-		query: `mutation createTransaction($token: String!, $userID: Int!, $transactionType: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
-			createTransaction(token: $token, userID: $userID, transactionType: $transactionType, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+		query: `mutation createTransaction($token: String!, $userID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+			createTransaction(token: $token, userID: $userID, transactionType: $transactionType, transactionDate: $transactionDate, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
 		}`,
 		variables: {
 			token: token,
 			userID: parseInt(userID),
 			transactionType: transactionType,
+			transactionDate: transactionDate,
 			transactionCategory: transactionCategory,
 			transactionAmount: transactionAmount,
 			transactionNotes: transactionNotes
@@ -249,16 +250,17 @@ function createActivity(token, userID, activityAssetID, activityAssetSymbol, act
 	return request("POST", urlAPI, query, null);
 }
 
-function updateTransaction(token, userID, transactionID, transactionType, transactionCategory, transactionAmount, transactionNotes) {
+function updateTransaction(token, userID, transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
 	let query = {
-		query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: Int!, $transactionType: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
-			updateTransaction(token: $token, userID: $userID, transactionID: $transactionID, transactionType: $transactionType, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+		query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+			updateTransaction(token: $token, userID: $userID, transactionID: $transactionID, transactionType: $transactionType, transactionDate: $transactionDate, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
 		}`,
 		variables: {
 			token: token,
 			userID: parseInt(userID),
 			transactionID: parseInt(transactionID),
-			transactionType: transactionType, 
+			transactionType: transactionType,
+			transactionDate: transactionDate,
 			transactionCategory: transactionCategory, 
 			transactionAmount: transactionAmount, 
 			transactionNotes: transactionNotes

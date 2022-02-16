@@ -4,12 +4,12 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
-export async function createTransaction({ token, userID, transactionType, transactionCategory, transactionAmount, transactionNotes }: any) {
+export async function createTransaction({ token, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("INSERT INTO [Transaction] (userID, transactionType, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?)", [userID, transactionType, transactionCategory, transactionAmount, transactionNotes]);
+			db.runQuery("INSERT INTO [Transaction] (userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?, ?)", [userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes]);
 			return "Done";
 		} else {
 			return "Unauthorized";
@@ -39,7 +39,7 @@ export async function readTransaction({ token, userID }: any) {
 						let transactions: Array<Transaction> = [];
 
 						rows.map(row => {
-							let transaction = new Transaction(userID, row.transactionType, row.transactionCategory, row.transactionAmount, row.transactionNotes);
+							let transaction = new Transaction(userID, row.transactionType, row.transactionDate, row.transactionCategory, row.transactionAmount, row.transactionNotes);
 							transaction.transactionID = row.transactionID;
 							transactions.push(transaction);
 						});
@@ -57,12 +57,12 @@ export async function readTransaction({ token, userID }: any) {
 	});
 }
 
-export async function updateTransaction({ token, userID, transactionID, transactionType, transactionCategory, transactionAmount, transactionNotes }: any) {
+export async function updateTransaction({ token, userID, transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("UPDATE [Transaction] SET transactionType = ?, transactionCategory = ?, transactionAmount = ?, transactionNotes = ? WHERE transactionID = ? AND userID = ?", [transactionType, transactionCategory, transactionAmount, transactionNotes, transactionID, userID]);
+			db.runQuery("UPDATE [Transaction] SET transactionType = ?, transactionDate = ?, transactionCategory = ?, transactionAmount = ?, transactionNotes = ? WHERE transactionID = ? AND userID = ?", [transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes, transactionID, userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";

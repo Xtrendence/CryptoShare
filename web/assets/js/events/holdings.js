@@ -191,6 +191,10 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 
 					let result = await fetchStockPrice(currency, [symbol], true);
 
+					if("error" in result) {
+						errorNotification(result.error);
+					}
+
 					hideLoading();
 
 					if(!empty(result) && symbol in result) {

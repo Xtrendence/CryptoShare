@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -350,6 +350,10 @@ export default function Activity({ navigation }: any) {
 				assetSymbol = data?.activityAssetSymbol.toUpperCase();
 				asset = { id:"stock-" + assetSymbol, symbol:assetSymbol };
 				let stock = await Stock.fetchStockPrice(settings.currency, [assetSymbol]);
+
+				if("error" in stock) {
+					ToastAndroid.show(stock.error, 4000);
+				}
 
 				if(Utils.empty(stock) || !(assetSymbol in stock)) {
 					setLoading(false);

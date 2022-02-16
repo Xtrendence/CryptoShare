@@ -374,6 +374,10 @@ async function getActivityPopupAssetID(type, symbol) {
 
 				let result = await fetchStockPrice(getCurrency(), [symbol], true);
 
+				if("error" in result) {
+					errorNotification(result.error);
+				}
+
 				if(!empty(result) && symbol in result) {
 					resolve({ id:"stock-" + symbol.toUpperCase() });
 				} else {

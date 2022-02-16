@@ -870,10 +870,28 @@ html.navbar-compact .page-container.full {
 	top:135px;
 	left:20px;
 }
+.page-container.half.top-right {
+	width:calc(50% - 40px);
+	height:calc(50% - 40px - 40px - 7.5px);
+	top:135px;
+	right:20px;
+}
 .page-container.half.bottom-left {
 	width:calc(50% - 40px);
 	height:calc(50% - 40px - 40px - 7.5px);
 	bottom:20px;
+	left:20px;
+}
+.page-container.half.bottom-right {
+	width:calc(50% - 40px);
+	height:calc(50% - 40px - 40px - 7.5px);
+	bottom:20px;
+	right:20px;
+}
+.page-container.half.left {
+	width:calc(50% - 20px);
+	height:calc(100% - 135px - 20px);
+	top:135px;
 	left:20px;
 }
 .page-container.half.right {
@@ -1051,13 +1069,26 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	background:var(--accent-first);
 }
 
+.page.dashboard .page-container.half.left {
+	left:calc(50% - 440px / 2 - 220px - 10px);
+	width:440px;
+}
+.page.dashboard .page-container.half.top-right, .page.dashboard .page-container.half.bottom-right {
+	right:calc(50% - 440px / 2 - 220px - 10px);
+}
+.page.dashboard .page-container.half.top-right {
+	width:440px;
+}
+.page.dashboard .page-container.half.bottom-right {
+	width:440px;
+}
+
 .page.market .page-container-toolbar {
 	display:block;
 	width:100%;
 	text-align:center;
 	margin:20px auto 20px auto;
 }
-
 .page.market .page-actions-wrapper, .page.market .page-navigation-wrapper {
 	position:absolute;
 	top:20px;

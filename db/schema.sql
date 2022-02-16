@@ -95,6 +95,7 @@ CREATE TABLE IF NOT EXISTS [Transaction] (
 	transactionID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	userID INTEGER NOT NULL,
 	transactionType BLOB NOT NULL,
+	transactionDate BLOB NOT NULL,
 	transactionCategory BLOB NOT NULL,
 	transactionAmount BLOB NOT NULL,
 	transactionNotes BLOB NOT NULL,

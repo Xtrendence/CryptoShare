@@ -14,7 +14,7 @@ export default class Utils {
 	static marketRefetchTime: number = 86400;
 
 	static defaultAdminSettings: any = {
-		stockAPIType: "external",
+		stockAPIType: "internal",
 		userRegistration: "enabled"
 	};
 

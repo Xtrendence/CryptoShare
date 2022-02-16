@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Image, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, View, TouchableOpacity } from "react-native";
+import { FlatList, Image, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, View, TouchableOpacity, ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -263,6 +263,10 @@ export default function Holdings({ navigation }: any) {
 				assetSymbol = args.symbol.toUpperCase();
 				asset = { id:"stock-" + assetSymbol, symbol:assetSymbol };
 				let stock = await Stock.fetchStockPrice(settings.currency, [assetSymbol]);
+
+				if("error" in stock) {
+					ToastAndroid.show(stock.error, 4000);
+				}
 
 				if(Utils.empty(stock) || !(assetSymbol in stock)) {
 					setLoading(false);
