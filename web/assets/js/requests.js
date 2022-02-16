@@ -186,6 +186,24 @@ function createMessage(token, userID, userMessage, botMessage) {
 	return request("POST", urlAPI, query, null);
 }
 
+function createTransaction(token, userID, transactionType, transactionCategory, transactionAmount, transactionNotes) {
+	let query = {
+		query: `mutation createTransaction($token: String!, $userID: Int!, $transactionType: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+			createTransaction(token: $token, userID: $userID, transactionType: $transactionType, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			transactionType: transactionType,
+			transactionCategory: transactionCategory,
+			transactionAmount: transactionAmount,
+			transactionNotes: transactionNotes
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
 	let query = {
 		query: `mutation createHolding($token: String!, $userID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {
@@ -225,6 +243,25 @@ function createActivity(token, userID, activityAssetID, activityAssetSymbol, act
 			activityPrice: activityPrice, 
 			activityFrom: activityFrom, 
 			activityTo: activityTo  
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function updateTransaction(token, userID, transactionID, transactionType, transactionCategory, transactionAmount, transactionNotes) {
+	let query = {
+		query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: Int!, $transactionType: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+			updateTransaction(token: $token, userID: $userID, transactionID: $transactionID, transactionType: $transactionType, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			transactionID: parseInt(transactionID),
+			transactionType: transactionType, 
+			transactionCategory: transactionCategory, 
+			transactionAmount: transactionAmount, 
+			transactionNotes: transactionNotes
 		}
 	};
 
@@ -272,6 +309,21 @@ function updateActivity(token, userID, activityID, activityAssetID, activityAsse
 			activityPrice: activityPrice, 
 			activityFrom: activityFrom, 
 			activityTo: activityTo  
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteTransaction(token, userID, transactionID) {
+	let query = {
+		query: `mutation deleteTransaction($token: String!, $userID: Int!, $transactionID: Int!) {
+			deleteTransaction(token: $token, userID: $userID, transactionID: $transactionID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			transactionID: parseInt(transactionID)
 		}
 	};
 
@@ -366,6 +418,37 @@ function readSetting(token, userID) {
 		variables: {
 			token: token,
 			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function readBudget(token, userID) {
+	let query = {
+		query: `query readBudget($token: String!, $userID: Int!) {
+			readBudget(token: $token, userID: $userID) {
+				budgetData
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function updateBudget(token, userID, budgetData) {
+	let query = {
+		query: `mutation updateBudget($token: String!, $userID: Int!, $budgetData: String!) {
+			updateBudget(token: $token, userID: $userID, budgetData: $budgetData)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			budgetData: budgetData
 		}
 	};
 
