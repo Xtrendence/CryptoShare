@@ -36,9 +36,14 @@ let buttonMessageSend = document.getElementById("button-message-send");
 let inputMessage = document.getElementById("input-message");
 
 let divPageDashboard = document.getElementById("dashboard-page");
-let divDashboardBudgetList = document.getElementById("dashboard-budget-list")
-let divDashboardHoldingsList = document.getElementById("dashboard-holdings-list")
-let divDashboardWatchlistList = document.getElementById("dashboard-watchlist-list")
+let divDashboardBudgetList = document.getElementById("dashboard-budget-list");
+let divDashboardHoldingsList = document.getElementById("dashboard-holdings-list");
+let divDashboardWatchlistList = document.getElementById("dashboard-watchlist-list");
+
+let buttonDashboardBudgetEdit = document.getElementById("button-dashboard-budget-edit");
+let buttonDashboardWatchlistAdd = document.getElementById("button-dashboard-watchlist-add");
+
+let spanDashboardHoldings = document.getElementById("span-dashboard-holdings");
 
 let divPageMarket = document.getElementById("market-page");
 let divMarketPageNavigationWrapper = document.getElementById("market-page-navigation-wrapper");

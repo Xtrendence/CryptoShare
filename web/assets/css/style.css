@@ -1101,6 +1101,11 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	line-height:60px;
 	margin-left:20px;
 }
+.page.dashboard .page-container-toolbar .title.right {
+	position:absolute;
+	right:20px;
+	margin-left:0;
+}
 .page.dashboard .page-container-toolbar .action-button {
 	position:absolute;
 	top:10px;

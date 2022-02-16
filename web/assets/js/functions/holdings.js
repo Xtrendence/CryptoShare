@@ -4,6 +4,7 @@ async function populateHoldingsList(recreate, callback = null) {
 
 		if(recreate) {
 			spanHoldingsValue.textContent = "-";
+			spanDashboardHoldings.textContent = "-";
 			divHoldingsList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
 
@@ -83,6 +84,7 @@ async function populateHoldingsList(recreate, callback = null) {
 			let totalValue = parseFloat(parsed.totalValue.toFixed(2));
 
 			spanHoldingsValue.textContent = `${currencySymbols[currency] + separateThousands(totalValue)}`;
+			spanDashboardHoldings.textContent = spanHoldingsValue.textContent;
 
 			removeHoldingsListErrorRow();
 			
