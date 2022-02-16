@@ -1118,9 +1118,6 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	margin-top:4px;
 	fill:var(--accent-contrast);
 }
-.dashboard-list.holdings .holdings-list-row {
-	pointer-events:none;
-}
 .dashboard-list.holdings .icon-wrapper {
 	display:none;
 }
@@ -1159,6 +1156,17 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .dashboard-list.holdings .info-container .price-change, .dashboard-list.watchlist .info-container .price-change {
 	margin-right:20px;
+}
+.dashboard-list.holdings .holdings-list-row {
+	pointer-events:none;
+	border-style:solid;
+	border-width:0 0 0 4px;
+	border-color:var(--accent-first);
+}
+.dashboard-list.watchlist .watchlist-list-row {
+	border-style:solid;
+	border-width:0 0 0 4px;
+	border-color:var(--accent-second);
 }
 
 .page.market .page-container-toolbar {
@@ -1222,9 +1230,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	font-weight:bold;
 	color:var(--main-contrast);
 	line-height:40px;
-	width:200px;
+	width:240px;
 	top:calc(50% - 40px / 2);
-	left:calc(50% - 200px / 2);
+	left:calc(50% - 240px / 2);
 }
 
 .dashboard-list, .market-list, .holdings-list, .activity-list {
