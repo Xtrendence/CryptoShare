@@ -899,7 +899,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	height:60px;
 	top:0;
 	left:0;
-	background:var(--main-third);
+	background:var(--main-second-transparent);
 	border-style:solid;
 	border-color:var(--main-fourth);
 	border-width:0 0 2px 0;
@@ -964,6 +964,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	top:auto;
 	bottom:0;
 	border-width:2px 0 0 0;
+	background:var(--main-third);
 }
 .page.chatbot .chat-bottom input {
 	height:40px;

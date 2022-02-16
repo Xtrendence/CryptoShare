@@ -22,6 +22,8 @@ export default class DB {
 		await this.createStockTable();
 		await this.createWatchlistTable();
 		await this.createMessageTable();
+		await this.createTransactionTable();
+		await this.createBudgetTable();
 		await this.createUserLoginView();
 	}
 
@@ -244,6 +246,47 @@ export default class DB {
 						userMessage BLOB NOT NULL,
 						botMessage BLOB,
 						messageDate DATETIME NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
+
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
+		});
+	}
+
+	async createTransactionTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Transaction (
+						transactionID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL,
+						transactionType BLOB NOT NULL,
+						transactionCategory BLOB NOT NULL,
+						transactionAmount BLOB NOT NULL,
+						transactionNotes BLOB NOT NULL,
+						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
+					);
+				`);
+
+				this.db?.run(statement, (result) => {
+					resolve(result);
+				});
+			});
+		});
+	}
+
+	async createBudgetTable() {
+		return new Promise((resolve, reject) => {
+			this.db?.serialize(() => {
+				let statement = (`
+					CREATE TABLE IF NOT EXISTS Budget (
+						budgetID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						userID INTEGER NOT NULL UNIQUE,
+						budgetData BLOB NOT NULL,
 						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
 					);
 				`);

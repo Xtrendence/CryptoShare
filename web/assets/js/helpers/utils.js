@@ -47,6 +47,12 @@ function decryptObjectValues(password, object) {
 	return decrypted;
 }
 
+function stripHTMLCharacters(string) {
+	string = replaceAll(string, "<", "&lt;");
+	string = replaceAll(string, ">", "&gt;");
+	return string;
+}
+
 function refetchRequired(time) {
 	let refetchTime = 86400;
 	return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
@@ -56,7 +62,7 @@ function empty(value) {
 	if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 		return true;
 	}
-		
+
 	if(value === null || typeof value === "undefined" || value.toString().trim() === "") {
 		return true;
 	}
@@ -255,6 +261,10 @@ function previousValueInArray(array, start) {
 			continue;
 		}
 	}
+}
+
+function replaceAll(str, str1, str2, ignore) {
+	return str.replace(new RegExp(str1.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(str2)=="string")?str2.replace(/\$/g,"$$$$"):str2);
 }
 
 String.prototype.replaceAll = function(str1, str2, ignore) {

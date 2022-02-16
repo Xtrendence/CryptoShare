@@ -193,6 +193,7 @@ function getCurrency() {
 
 function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
+	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
 	tippy(buttonMarketInfo, { content:"Crypto Market Info", placement:"top" });
 	tippy(buttonMarketSearch, { content:"Search", placement:"top" });
 	tippy(buttonMarketCrypto, { content:"Crypto Market", placement:"left" });

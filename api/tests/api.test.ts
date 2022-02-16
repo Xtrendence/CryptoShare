@@ -59,6 +59,8 @@ describe("API Testing", () => {
 					expect(json).toContain("Stock");
 					expect(json).toContain("User");
 					expect(json).toContain("Watchlist");
+					expect(json).toContain("Transaction");
+					expect(json).toContain("Budget");
 				});
 			});
 

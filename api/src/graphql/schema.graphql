@@ -31,6 +31,21 @@ type Message {
 	messageDate: String!
 }
 
+type Transaction {
+	transactionID: Int!,
+	userID: Int!,
+	transactionType: String!,
+	transactionCategory: String!,
+	transactionAmount: String!,
+	transactionNotes: String!
+}
+
+type Budget {
+	budgetID: Int!,
+	userID: Int!, 
+	budgetData: String!
+}
+
 type Setting {
 	settingID: Int!,
 	userID: Int!, 
@@ -74,6 +89,10 @@ type Query {
 
 	readMessage(token: String!, userID: Int!): Message
 
+	readTransaction(token: String!, userID: Int!): Transaction
+
+	readBudget(token: String!, userID: Int!): Budget
+
 	readSetting(token: String!, userID: Int!): Setting
 
 	readHolding(token: String!, userID: Int!): [Holding]
@@ -100,10 +119,18 @@ type Mutation {
 	updateSetting(token: String!, userID: Int!, userSettings: String!): String
 	deleteSetting(token: String!, userID: Int!): String
 
+	createBudget(token: String!, userID: Int!, budgetData: String!): String
+	updateBudget(token: String!, userID: Int!, budgetData: String!): String
+	deleteBudget(token: String!, userID: Int!): String
+
 	createMessage(token: String!, userID: Int!, userMessage: String!, botMessage: String!): String
 	updateMessage(token: String!, userID: Int!, messageID: Int!, userMessage: String!, botMessage: String!): String
 	deleteMessage(token: String!, userID: Int!, messageID: Int!): String
 	deleteMessageAll(token: String!, userID: Int!): String
+
+	createTransaction(token: String!, userID: Int!, transactionType: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
+	updateTransaction(token: String!, userID: Int!, transactionID: Int!, transactionType: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
+	deleteTransaction(token: String!, userID: Int!, transactionID: Int!): String
 
 	createHolding(token: String!, userID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	updateHolding(token: String!, userID: Int!, holdingID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String

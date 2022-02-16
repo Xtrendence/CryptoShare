@@ -15,7 +15,7 @@ export default class Utils {
 
 	static defaultAdminSettings: any = {
 		stockAPIType: "external",
-		userRegistration: "disabled"
+		userRegistration: "enabled"
 	};
 
 	static async verifyToken(userID: number, token: string) {
@@ -46,6 +46,16 @@ export default class Utils {
 								return;
 							}
 
+							try {
+								await this.db?.asyncDBGet("SELECT * FROM Budget WHERE userID = ?", [row.userID]);
+							} catch(error: any) {
+								if(error.toString().includes("not found")) {
+									this.db?.runQuery("INSERT INTO Budget (userID, budgetData) VALUES (?, ?)", [row.userID, ""]);
+								} else {
+									console.log(error);
+								}
+							}
+							
 							let settings;
 
 							try {
@@ -158,6 +168,16 @@ export default class Utils {
 					if(valid) {
 						let token = await this.generateToken();
 						this.db?.runQuery("INSERT INTO Login (userID, loginToken, loginDate) VALUES (?, ?, TIME())", [row.userID, token]);
+
+						try {
+							await this.db?.asyncDBGet("SELECT * FROM Budget WHERE userID = ?", [row.userID]);
+						} catch(error: any) {
+							if(error.toString().includes("not found")) {
+								this.db?.runQuery("INSERT INTO Budget (userID, budgetData) VALUES (?, ?)", [row.userID, ""]);
+							} else {
+								console.log(error);
+							}
+						}
 
 						let settings;
 

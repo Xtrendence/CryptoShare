@@ -26,6 +26,10 @@ async function populateChatList(recreate) {
 }
 
 function sendMessage(message) {
+	if(empty(message)) {
+		return;
+	}
+
 	if(chatConnected()) {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
@@ -41,6 +45,8 @@ function sendMessage(message) {
 }
 
 function addMessage(from, message) {
+	message = stripHTMLCharacters(message);
+	
 	let div = document.createElement("div");
 	div.setAttribute("class", `chat-bubble-wrapper ${from}`);
 
