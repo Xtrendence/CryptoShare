@@ -122,6 +122,22 @@ function readStockHistorical(token, userID, keyAPI, assetSymbol) {
 	return request("POST", urlAPI, query, null);
 }
 
+function readWatchlist(token, userID) {
+	let query = {
+		query: `query readWatchlist($token: String!, $userID: Int!) {
+			readWatchlist(token: $token, userID: $userID) {
+				watchlistID, assetID, assetSymbol, assetType
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function readMessage(token, userID) {
 	let query = {
 		query: `query readMessage($token: String!, $userID: Int!) {
@@ -164,6 +180,23 @@ function readActivity(token, userID) {
 		variables: {
 			token: token,
 			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function createWatchlist(token, userID, assetID, assetSymbol, assetType) {
+	let query = {
+		query: `mutation createWatchlist($token: String!, $userID: Int!, $assetID: String!, $assetSymbol: String!, $assetType: String!) {
+			createWatchlist(token: $token, userID: $userID, assetID: $assetID, assetSymbol: $assetSymbol, assetType: $assetType)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			assetID: assetID,
+			assetSymbol: assetSymbol,
+			assetType: assetType
 		}
 	};
 
@@ -326,6 +359,21 @@ function deleteTransaction(token, userID, transactionID) {
 			token: token,
 			userID: parseInt(userID),
 			transactionID: parseInt(transactionID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteWatchlist(token, userID, watchlistID) {
+	let query = {
+		query: `mutation deleteWatchlist($token: String!, $userID: Int!, $watchlistID: Int!) {
+			deleteWatchlist(token: $token, userID: $userID, watchlistID: $watchlistID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID),
+			watchlistID: parseInt(watchlistID)
 		}
 	};
 
