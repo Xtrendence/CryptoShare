@@ -24,6 +24,7 @@ async function populateHoldingsList(recreate, callback = null) {
 
 				if(empty(holdings?.data?.readHolding)) {
 					divHoldingsList.innerHTML = `<span class="list-text noselect">No Holdings Found</span>`;
+					divDashboardHoldingsList.innerHTML = divHoldingsList.innerHTML;
 					return;
 				}
 
@@ -40,6 +41,7 @@ async function populateHoldingsList(recreate, callback = null) {
 
 				if(empty(holdingsData)) {
 					divHoldingsList.innerHTML = `<span class="list-text noselect">No Activities Found</span>`;
+					divDashboardHoldingsList.innerHTML = divHoldingsList.innerHTML;
 					return;
 				}
 			}

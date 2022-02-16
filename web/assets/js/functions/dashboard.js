@@ -45,8 +45,8 @@ function generatePieChart(budgetData) {
 
 	Object.keys(categories).map(category => {
 		let percentage = categories[category];
-		let amount = parseFloat(((percentage * income) / 100).toFixed(0));
-		labels.push(`  ${capitalizeFirstLetter(category)} - ${currencySymbols[currency] + separateThousands(amount)}`);
+		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
+		labels.push(`  ${capitalizeFirstLetter(category)}: ${currencySymbols[currency] + separateThousands(amount)}`);
 		values.push(categories[category]);
 	});
 
