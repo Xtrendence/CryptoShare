@@ -74,6 +74,9 @@ function setPage(page) {
 			firstFetch.chatBot = false;
 			break;
 		case "dashboard":
+			populateHoldingsList();
+			populateDashboardBudget(true);
+			populateDashboardWatchlist(true);
 			firstFetch.dashboard = false;
 			break;
 		case "market":

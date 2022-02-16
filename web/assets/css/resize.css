@@ -1,3 +1,9 @@
+@media screen and (max-height:783px) {
+	.page.dashboard .page-container.half.bottom-right {
+		height:calc(100% - 300px - 170px);
+	}
+}
+
 @media screen and (max-height:600px) {
 	.popup-wrapper .bottom .chart-wrapper {
 		max-width:80%;

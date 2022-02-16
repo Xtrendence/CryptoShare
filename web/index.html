@@ -147,10 +147,14 @@
 							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M491 1536l91-91-235-235-91 91v107h128v128h107zm523-928q0-22-22-22-10 0-17 7l-542 542q-7 7-7 17 0 22 22 22 10 0 17-7l542-542q7-7 7-17zm-54-192l416 416-832 832h-416v-416zm683 96q0 53-37 90l-166 166-416-416 166-165q36-38 90-38 53 0 91 38l235 234q37 39 37 91z"/></svg>
 						</button>
 					</div>
+					<div class="dashboard-list budget" id="dashboard-budget-list"></div>
 				</div>
 				<div class="page-container half top-right dashboard">
 					<div class="page-container-toolbar">
 						<span class="title">Holdings</span>
+					</div>
+					<div class="dashboard-list holdings" id="dashboard-holdings-list">
+						<div class="loading-icon"><div></div><div></div></div>
 					</div>
 				</div>
 				<div class="page-container half bottom-right dashboard">
@@ -160,6 +164,7 @@
 							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z"/></svg>
 						</button>
 					</div>
+					<div class="dashboard-list watchlist" id="dashboard-watchlist-list"></div>
 				</div>
 			</div>
 			<div class="page market" id="market-page">
@@ -386,6 +391,7 @@
 		<script src="./assets/js/functions/functions.js"></script>
 		<script src="./assets/js/functions/account.js"></script>
 		<script src="./assets/js/functions/chatbot.js"></script>
+		<script src="./assets/js/functions/dashboard.js"></script>
 		<script src="./assets/js/functions/market.js"></script>
 		<script src="./assets/js/functions/holdings.js"></script>
 		<script src="./assets/js/functions/activity.js"></script>
@@ -397,6 +403,7 @@
 		<script src="./assets/js/events/events.js"></script>
 		<script src="./assets/js/events/login.js"></script>
 		<script src="./assets/js/events/chatbot.js"></script>
+		<script src="./assets/js/events/dashboard.js"></script>
 		<script src="./assets/js/events/market.js"></script>
 		<script src="./assets/js/events/holdings.js"></script>
 		<script src="./assets/js/events/activity.js"></script>

@@ -1,5 +1,5 @@
-async function populateHoldingsList(recreate) {
-	if(getActivePage().id === "holdings-page") {
+async function populateHoldingsList(recreate, callback = null) {
+	if(getActivePage().id === "holdings-page" || getActivePage().id === "dashboard-page") {
 		let firstFetchHoldings = firstFetch.holdings;
 
 		if(recreate) {
@@ -112,6 +112,10 @@ async function populateHoldingsList(recreate) {
 
 			if(errorRow) {
 				divHoldingsList.prepend(createHoldingsListErrorRow());
+			}
+
+			if(divDashboardHoldingsList.innerHTML !== divHoldingsList.innerHTML) {
+				divDashboardHoldingsList.innerHTML = divHoldingsList.innerHTML;
 			}
 		} catch(error) {
 			console.log(error);
@@ -284,11 +288,11 @@ function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, 
 						</div>
 						<div class="info-container">
 							<div class="top audible-pop">
-								<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
+								<span class="value">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
 								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
 							</div>
 							<div class="bottom audible-pop">
-								<span class="price-change">Amount: ${separateThousands(amount)}</span>
+								<span class="amount">Amount: ${separateThousands(amount)}</span>
 								<span class="price-change">24h Change: ${priceChangeDay}%</span>
 							</div>
 						</div>
@@ -336,11 +340,11 @@ function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, 
 						</div>
 						<div class="info-container">
 							<div class="top audible-pop">
-								<span class="price">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
+								<span class="value">Value: ${currencySymbols[currency] + separateThousands(value)}</span>
 								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
 							</div>
 							<div class="bottom audible-pop">
-								<span class="price-change">Amount: ${separateThousands(amount)}</span>
+								<span class="amount">Amount: ${separateThousands(amount)}</span>
 								<span class="price-change">24h Change: ${priceChangeDay}%</span>
 							</div>
 						</div>

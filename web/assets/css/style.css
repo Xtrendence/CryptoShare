@@ -1078,6 +1078,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .page.dashboard .page-container.half.top-right {
 	width:440px;
+	min-height:300px;
 }
 .page.dashboard .page-container.half.bottom-right {
 	width:440px;
@@ -1111,6 +1112,36 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	height:24px;
 	margin-top:4px;
 	fill:var(--accent-contrast);
+}
+.dashboard-list.holdings .holdings-list-row {
+	pointer-events:none;
+}
+.dashboard-list.holdings .icon-wrapper {
+	display:none;
+}
+.dashboard-list.holdings .info-wrapper {
+	width:100%;
+	text-align:left;
+}
+.dashboard-list.holdings .name {
+	position:relative;
+	display:inline-block;
+	margin:10px 0 0 10px;
+	left:auto;
+	top:auto;
+	background:var(--accent-second);
+}
+.dashboard-list.holdings .rank-container {
+	display:none;
+}
+.dashboard-list.holdings .info-container {
+	width:100%;
+	display:block;
+	position:relative;
+	text-align:left;
+}
+.dashboard-list.holdings .info-container .price-change {
+	margin-right:20px;
 }
 
 .page.market .page-container-toolbar {
@@ -1179,13 +1210,17 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	left:calc(50% - 200px / 2);
 }
 
-.market-list, .holdings-list, .activity-list {
+.dashboard-list, .market-list, .holdings-list, .activity-list {
 	position:absolute;
 	width:100%;
 	height:calc(100% - 40px - 40px);
 	left:0;
 	top:80px;
 	overflow:hidden auto;
+}
+.dashboard-list {
+	top:62px;
+	height:calc(100% - 40px - 20px - 2px);
 }
 .holdings-list {
 	top:0;
