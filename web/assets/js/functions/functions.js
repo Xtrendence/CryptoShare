@@ -119,8 +119,6 @@ function setPage(page) {
 			populateHoldingsList();
 			populateDashboardBudget(true);
 			populateDashboardWatchlist(true);
-			// TODO: Remove.
-			buttonDashboardBudgetTransactions.click();
 			firstFetch.dashboard = false;
 			break;
 		case "market":

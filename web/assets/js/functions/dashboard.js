@@ -79,8 +79,9 @@ async function populateDashboardBudget(recreate) {
 				`;
 
 				generatePieChart(budgetData);
-				generateBudgetStats(budgetData, transactionData);
 			}
+			
+			generateBudgetStats(budgetData, transactionData);
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");
@@ -160,20 +161,68 @@ function generateBudgetStats(budgetData, transactionData) {
 	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
 	let divStats = divDashboardBudgetList.getElementsByClassName("foreground");
 	
+	for(let i = 0; i < spanStats.length; i++) {
+		spanStats[i].textContent = "0%";
+		divStats[i].style.width = "0%";
+	}
+	
 	if(empty(transactionData)) {
-		for(let i = 0; i < spanStats.length; i++) {
-			spanStats[i].textContent = "0%";
-			divStats[i].style.width = "0%";
-		}
-
 		return;
 	}
 
 	let parsed = parseTransactionData(transactionData);
+
+	let budgetAmounts = {};
+	
+	let categories = budgetData.categories;
+	let income = budgetData.income;
+	
+	Object.keys(categories).map(category => {
+		let percentage = categories[category];
+		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
+		let remaining = amount - parsed[category];
+		let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
+		let usedPercentage = 100 - remainingPercentage;
+
+		if(usedPercentage > 100) {
+			usedPercentage = 100;
+		}
+		
+		budgetAmounts[category] = { budget:amount, remaining:remaining, remainingPercentage:remainingPercentage, usedPercentage:usedPercentage };
+
+		document.getElementById(`span-stats-${category}`).textContent = `${usedPercentage}%`;
+		document.getElementById(`stats-${category}`).style.width = `${usedPercentage}%`;
+	});
 }
 
 function parseTransactionData(transactionData) {
+	let categories = Object.keys(defaultBudgetData.categories);
+	let parsed = {};
 
+	categories.map(category => {
+		parsed[category] = 0;
+	});
+
+	let keys = Object.keys(transactionData);
+	
+	keys.map(key => {
+		let transaction = transactionData[key];
+
+		try {
+			let amount = parseFloat(transaction.transactionAmount);
+
+			if(transaction.transactionType === "spent") {
+				parsed[transaction.transactionCategory] += amount;
+			} else {
+				parsed[transaction.transactionCategory] -= amount;
+			}
+		} catch(error) {
+			console.log(error);
+			errorNotification("Couldn't parse all transactions.");
+		}
+	});
+
+	return parsed;
 }
 
 async function listTransactions() {
@@ -304,6 +353,8 @@ function addTransactionListRowEvent(transaction, div) {
 
 				listTransactions();
 
+				populateDashboardBudget();
+
 				popup.hide();
 			});
 		});
@@ -331,6 +382,8 @@ function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transaction
 				await deleteTransaction(token, userID, transactionID);
 
 				listTransactions();
+
+				populateDashboardBudget();
 
 				hideLoading();
 
@@ -495,6 +548,8 @@ function addTransactionButtonEvent(button) {
 				hideLoading();
 
 				listTransactions();
+
+				populateDashboardBudget();
 
 				popup.hide();
 			});
