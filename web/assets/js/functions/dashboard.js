@@ -324,13 +324,17 @@ function addTransactionListRowEvent(transaction, div) {
 	try {
 		div.addEventListener("click", () => {
 			let html = `
+				<span class="popup-input-span">Amount</span>
 				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off" value="${transaction.transactionAmount}">
 				<div class="popup-button-wrapper margin-bottom">
 					<button id="popup-choice-earned" class="choice ${transaction.transactionType === "earned" ? "active" : ""}">Earned</button>
 					<button id="popup-choice-spent" class="choice ${transaction.transactionType === "spent" ? "active" : ""}">Spent</button>
 				</div>
+				<span class="popup-input-span">Category</span>
 				<input class="audible-pop" id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly value="${capitalizeFirstLetter(transaction.transactionCategory)}">
+				<span class="popup-input-span">Date</span>
 				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false" value="${transaction.transactionDate}">
+				<span class="popup-input-span">Notes</span>
 				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off" value="${transaction.transactionNotes}">
 				<button class="action-button delete" id="popup-button-delete-transaction">Delete Transaction</button>
 			`;
@@ -527,13 +531,17 @@ function addTransactionButtonEvent(button) {
 	button.addEventListener("click", () => {
 		try {
 			let html = `
+				<span class="popup-input-span">Amount</span>
 				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
 				<div class="popup-button-wrapper margin-bottom">
 					<button id="popup-choice-earned" class="choice">Earned</button>
 					<button id="popup-choice-spent" class="choice active">Spent</button>
 				</div>
+				<span class="popup-input-span">Category</span>
 				<input class="audible-pop" id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly>
+				<span class="popup-input-span">Date</span>
 				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
+				<span class="popup-input-span">Notes</span>
 				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off">
 			`;
 	
@@ -1057,12 +1065,19 @@ function setDefaultBudgetData() {
 
 async function showBudgetPopup() {
 	let html = `
+		<span class="popup-input-span">Food</span>
 		<input type="number" id="popup-input-food" placeholder="Food..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Housing</span>
 		<input type="number" id="popup-input-housing" placeholder="Housing..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Transport</span>
 		<input type="number" id="popup-input-transport" placeholder="Transport..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Entertainment</span>
 		<input type="number" id="popup-input-entertainment" placeholder="Entertainment..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Insurance</span>
 		<input type="number" id="popup-input-insurance" placeholder="Insurance..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Savings</span>
 		<input type="number" id="popup-input-savings" placeholder="Savings..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Other</span>
 		<input type="number" id="popup-input-other" placeholder="Other..." spellcheck="false" autocomplete="off">
 	`;
 

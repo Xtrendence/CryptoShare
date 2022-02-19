@@ -688,6 +688,27 @@ html.light .toggle-container {
 #desktop .popup-wrapper .bottom .action-button.delete:hover {
 	background:var(--negative-second);
 }
+.popup-wrapper .bottom .popup-input-span {
+	background:var(--main-second);
+	color:var(--main-contrast-dark);
+	border:none;
+	display:block;
+	text-align:center;
+	height:auto;
+	padding:0;
+	line-height:30px;
+	margin-bottom:10px;
+	font-size:14px;
+	pointer-events:none;
+	-webkit-user-select:none !important;
+	-khtml-user-select:none !important;
+	-moz-user-select:none !important;
+	-ms-user-select:none !important;
+	user-select:none !important;
+}
+html.light .popup-wrapper .bottom .popup-input-span {
+	background:var(--main-fifth);
+}
 
 .navbar-wrapper {
 	height:140px;

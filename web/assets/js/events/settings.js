@@ -58,7 +58,16 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 });
 
 buttonSettingsPassword.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Change Password", `<input type="password" id="popup-input-current-password" placeholder="Current Password..." spellcheck="false"><input type="password" id="popup-input-new-password" placeholder="New Password..." spellcheck="false"><input type="password" id="popup-input-repeat-password" placeholder="Repeat Password..." spellcheck="false">`);
+	let html = `
+		<span class="popup-input-span">Current Password</span>
+		<input type="password" id="popup-input-current-password" placeholder="Current Password..." spellcheck="false">
+		<span class="popup-input-span">New Password</span>
+		<input type="password" id="popup-input-new-password" placeholder="New Password..." spellcheck="false">
+		<span class="popup-input-span">Repeat Password</span>
+		<input type="password" id="popup-input-repeat-password" placeholder="Repeat Password..." spellcheck="false">
+	`;
+
+	let popup = new Popup(300, "auto", "Change Password", html);
 	popup.show();
 
 	let inputCurrentPassword = document.getElementById("popup-input-current-password");

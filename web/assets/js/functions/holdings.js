@@ -413,7 +413,11 @@ function addHoldingListChartRowEvent(div, id, symbol, type) {
 function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount, holdingAssetType) {
 	div.addEventListener("click", () => {
 		try {
-			let html = `<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}" spellcheck="false" autocomplete="off"><button class="action-button delete" id="popup-button-delete">Delete Asset</button>`;
+			let html = `
+				<span class="popup-input-span">Amount</span>
+				<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}" spellcheck="false" autocomplete="off">
+				<button class="action-button delete" id="popup-button-delete">Delete Asset</button>
+			`;
 			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
 			popup.show();
 			popup.updateHeight();
