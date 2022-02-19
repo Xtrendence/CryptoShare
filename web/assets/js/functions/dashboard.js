@@ -279,9 +279,11 @@ async function listTransactions() {
 
 		divSideMenuContainer.innerHTML = "";
 
-		transactions = sortTransactionDataByDate(transactions);
+		let sorted = sortTransactionDataByDate(transactions);
 
-		let keys = Object.keys(transactions);
+		transactions = sorted.sorted;
+
+		let keys = sorted.sortedKeys;
 		keys.map(key => {
 			let transaction = transactions[key];
 
@@ -435,6 +437,7 @@ function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transaction
 
 function sortTransactionDataByDate(transactionData) {
 	let sorted = {};
+	let sortedKeys = [];
 	let array = [];
 
 	for(let transaction in transactionData) {
@@ -447,9 +450,10 @@ function sortTransactionDataByDate(transactionData) {
 
 	array.map(item => {
 		sorted[item[0]] = transactionData[item[0]];
+		sortedKeys.push(item[0]);
 	});
 
-	return sorted;
+	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
 }
 
 function addTransactionSearchEvent(input, button) {
