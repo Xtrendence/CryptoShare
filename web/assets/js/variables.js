@@ -23,3 +23,5 @@ let applicationSettings = getSettings();
 let applicationChoices = getSettingsChoices();
 
 let audioPlayable = false;
+
+let tippyInstances = {};

@@ -211,9 +211,15 @@ function generateBudgetStats(budgetData, transactionData) {
 		span.textContent = `${usedPercentage}%`;
 		div.style.width = `${usedPercentage}%`;
 
-		tippy(span, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
-		tippy(div, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
-		tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
+		if(span.id in tippyInstances) {
+			tippyInstances[span.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
+			tippyInstances[div.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
+			tippyInstances[div.id + "-background"].setContent(`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`);
+		} else {
+			tippyInstances[span.id] = tippy(span, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+			tippyInstances[div.id] = tippy(div, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+			tippyInstances[div.id + "-background"] = tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
+		}
 	});
 }
 
