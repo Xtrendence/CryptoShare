@@ -213,8 +213,6 @@ function parseTransactionData(transactionData) {
 
 			if(transaction.transactionType === "spent") {
 				parsed[transaction.transactionCategory] += amount;
-			} else {
-				parsed[transaction.transactionCategory] -= amount;
 			}
 		} catch(error) {
 			console.log(error);
@@ -310,11 +308,13 @@ function addTransactionListRowEvent(transaction, div) {
 			let popupInputNotes = document.getElementById("popup-input-notes");
 
 			popupChoiceEarned.addEventListener("click", () => {
+				popupInputCategory.value = "Income";
 				popupChoiceEarned.classList.add("active");
 				popupChoiceSpent.classList.remove("active");
 			});
 
 			popupChoiceSpent.addEventListener("click", () => {
+				popupInputCategory.value = "";
 				popupChoiceEarned.classList.remove("active");
 				popupChoiceSpent.classList.add("active");
 			});
@@ -488,8 +488,8 @@ function addTransactionButtonEvent(button) {
 			let html = `
 				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
 				<div class="popup-button-wrapper margin-bottom">
-					<button id="popup-choice-earned" class="choice active">Earned</button>
-					<button id="popup-choice-spent" class="choice">Spent</button>
+					<button id="popup-choice-earned" class="choice">Earned</button>
+					<button id="popup-choice-spent" class="choice active">Spent</button>
 				</div>
 				<input class="audible-pop" id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly>
 				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
@@ -508,11 +508,13 @@ function addTransactionButtonEvent(button) {
 			let popupInputNotes = document.getElementById("popup-input-notes");
 
 			popupChoiceEarned.addEventListener("click", () => {
+				popupInputCategory.value = "Income";
 				popupChoiceEarned.classList.add("active");
 				popupChoiceSpent.classList.remove("active");
 			});
 
 			popupChoiceSpent.addEventListener("click", () => {
+				popupInputCategory.value = "";
 				popupChoiceEarned.classList.remove("active");
 				popupChoiceSpent.classList.add("active");
 			});
@@ -572,7 +574,7 @@ function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInp
 			return { error:"Amount must be a number, and greater than zero." };
 		}
 
-		if(empty(category) || !Object.keys(defaultBudgetData.categories).includes(category.toLowerCase())) {
+		if(empty(category) || (!Object.keys(defaultBudgetData.categories).includes(category.toLowerCase()) && category.toLowerCase() !== "income")) {
 			return { error:"Invalid category." };
 		}
 
@@ -599,49 +601,51 @@ function addTransactionCategoryEvent(previousPopup, input) {
 	});
 
 	input.addEventListener("click", () => {
-		previousPopup.element.classList.add("hidden");
+		if(document.getElementById("popup-choice-spent").classList.contains("active")) {
+			previousPopup.element.classList.add("hidden");
 
-		let html = `
-			<div class="popup-button-wrapper no-margin-top">
-				<button class="popup-choice" data-value="Food">Food</button>
-				<button class="popup-choice" data-value="Housing">Housing</button>
-			</div>
-			<div class="popup-button-wrapper">
-				<button class="popup-choice" data-value="Transport">Transport</button>
-				<button class="popup-choice" data-value="Entertainment">Entertainment</button>
-			</div>
-			<div class="popup-button-wrapper">
-				<button class="popup-choice" data-value="Insurance">Insurance</button>
-				<button class="popup-choice" data-value="Savings">Savings</button>
-			</div>
-			<div class="popup-button-wrapper">
-				<button class="popup-choice" data-value="Other">Other</button>
-			</div>
-		`;
-	
-		let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
-		popup.show();
-		popup.updateHeight();
-
-		let choices = popup.bottom.getElementsByClassName("popup-choice");
+			let html = `
+				<div class="popup-button-wrapper no-margin-top">
+					<button class="popup-choice" data-value="Food">Food</button>
+					<button class="popup-choice" data-value="Housing">Housing</button>
+				</div>
+				<div class="popup-button-wrapper">
+					<button class="popup-choice" data-value="Transport">Transport</button>
+					<button class="popup-choice" data-value="Entertainment">Entertainment</button>
+				</div>
+				<div class="popup-button-wrapper">
+					<button class="popup-choice" data-value="Insurance">Insurance</button>
+					<button class="popup-choice" data-value="Savings">Savings</button>
+				</div>
+				<div class="popup-button-wrapper">
+					<button class="popup-choice" data-value="Other">Other</button>
+				</div>
+			`;
 		
-		for(let i = 0; i < choices.length; i++) {
-			choices[i].addEventListener("click", () => {
+			let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
+			popup.show();
+			popup.updateHeight();
+
+			let choices = popup.bottom.getElementsByClassName("popup-choice");
+			
+			for(let i = 0; i < choices.length; i++) {
+				choices[i].addEventListener("click", () => {
+					popup.hide();
+					input.value = choices[i].getAttribute("data-value");
+					previousPopup.element.classList.remove("hidden");
+				});
+			}
+
+			popup.on("close", () => {
 				popup.hide();
-				input.value = choices[i].getAttribute("data-value");
+				previousPopup.element.classList.remove("hidden");
+			});
+
+			popup.on("cancel", () => {
+				popup.hide();
 				previousPopup.element.classList.remove("hidden");
 			});
 		}
-
-		popup.on("close", () => {
-			popup.hide();
-			previousPopup.element.classList.remove("hidden");
-		});
-
-		popup.on("cancel", () => {
-			popup.hide();
-			previousPopup.element.classList.remove("hidden");
-		});
 	});
 }
 

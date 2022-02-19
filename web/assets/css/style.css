@@ -1046,7 +1046,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .side-menu-container .transaction-row span {
 	font-size:16px;
-	color:var(--main-contrast);
+	color:var(--main-contrast-darker);
 	display:inline-block;
 	padding:10px;
 	background:var(--main-first-transparent);
