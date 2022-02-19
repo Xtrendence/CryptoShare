@@ -196,6 +196,7 @@ function generateBudgetStats(budgetData, transactionData) {
 		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
 		let remaining = amount - parsed[category];
 		let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
+		let used = amount - remaining;
 		let usedPercentage = 100 - remainingPercentage;
 
 		if(usedPercentage > 100) {
@@ -204,8 +205,15 @@ function generateBudgetStats(budgetData, transactionData) {
 		
 		budgetAmounts[category] = { budget:amount, remaining:remaining, remainingPercentage:remainingPercentage, usedPercentage:usedPercentage };
 
-		document.getElementById(`span-stats-${category}`).textContent = `${usedPercentage}%`;
-		document.getElementById(`stats-${category}`).style.width = `${usedPercentage}%`;
+		let span = document.getElementById(`span-stats-${category}`);
+		let div = document.getElementById(`stats-${category}`);
+
+		span.textContent = `${usedPercentage}%`;
+		div.style.width = `${usedPercentage}%`;
+
+		tippy(span, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+		tippy(div, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+		tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
 	});
 }
 
@@ -281,7 +289,7 @@ async function listTransactions() {
 					<span class="category">${capitalizeFirstLetter(transaction.transactionCategory)}</span>
 				</div>
 				<div class="item">
-					<span class="type ${transaction.transactionType}">${capitalizeFirstLetter(transaction.transactionType)} ${currencySymbols[currency] + separateThousands(transaction.transactionAmount)}</span>
+					<span class="type ${transaction.transactionType}">${transaction.transactionCategory === "savings" ? "Saved" : capitalizeFirstLetter(transaction.transactionType)} ${currencySymbols[currency] + separateThousands(transaction.transactionAmount)}</span>
 				</div>
 			`;
 			
@@ -1034,4 +1042,12 @@ function setDefaultBudgetData() {
 			reject(error);
 		}
 	});
+}
+
+function showBudgetPopup() {
+
+}
+
+function showIncomePopup() {
+
 }

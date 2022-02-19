@@ -3,6 +3,27 @@ buttonDashboardBudgetTransactions.addEventListener("click", () => {
 	listTransactions();
 });
 
+buttonDashboardBudgetEdit.addEventListener("click", () => {
+	let html = `
+		<button class="action-button block" id="popup-button-budget">Set Budget</button>
+		<button class="action-button block" id="popup-button-income">Set Income</button>
+	`;
+
+	let popup = new Popup(250, "auto", "Update Budget", html, { cancelText:"Dismiss", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
+
+	document.getElementById("popup-button-budget").addEventListener("click", () => {
+		popup.hide();
+		showBudgetPopup();
+	});
+
+	document.getElementById("popup-button-income").addEventListener("click", () => {
+		popup.hide();
+		showIncomePopup();
+	});
+});
+
 buttonDashboardWatchlistAdd.addEventListener("click", () => {
 	try {
 		let html = `
