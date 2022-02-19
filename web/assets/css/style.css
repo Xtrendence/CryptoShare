@@ -962,6 +962,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	width:100%;
 	background:var(--main-second);
 	text-align:center;
+	border-style:solid;
+	border-color:var(--main-fourth);
+	border-width:0 0 2px 0;
 }
 .side-menu-top input {
 	vertical-align:top;
@@ -982,11 +985,92 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 .side-menu-bottom {
 	top:auto;
 	bottom:0;
+	border-width:2px 0 0 0;
 }
 .side-menu-bottom button {
 	padding:0;
 	margin:10px 0 0 0;
 	width:calc(100% - 20px);
+}
+.side-menu-container .transaction-row {
+	cursor:pointer;
+	width:calc(100% - 20px - 40px);
+	padding:10px;
+	margin:0 auto 20px auto;
+	display:block;
+	border-style:solid;
+	border-width:0 0 0 4px;
+	background:var(--main-third);
+	box-shadow:var(--shadow-smooth);
+	border-radius:var(--border-radius);
+}
+#desktop .side-menu-container .transaction-row:hover {
+	background:var(--main-second);
+}
+.side-menu-container .transaction-row.food {
+	border-color:rgb(254,137,112);
+}
+.side-menu-container .transaction-row.housing {
+	border-color:rgb(157,255,149);
+}
+.side-menu-container .transaction-row.transport {
+	border-color:rgb(200,172,165);
+}
+.side-menu-container .transaction-row.entertainment {
+	border-color:rgb(255,195,127);
+}
+.side-menu-container .transaction-row.insurance {
+	border-color:rgb(119,254,229);
+}
+.side-menu-container .transaction-row.savings {
+	border-color:rgb(119,194,253);
+}
+.side-menu-container .transaction-row.other {
+	border-color:rgb(182,137,251);
+}
+.side-menu-container .transaction-row:first-of-type {
+	margin-top:82px;
+}
+.side-menu-container .transaction-row:last-of-type {
+	margin-bottom:82px;
+}
+.side-menu-container .transaction-row .item {
+	display:block;
+	margin-bottom:10px;
+}
+.side-menu-container .transaction-row .item:last-of-type {
+	margin-bottom:0;
+}
+.side-menu-container .transaction-row span {
+	font-size:16px;
+	color:var(--main-contrast);
+	display:inline-block;
+	padding:10px;
+	background:var(--main-first-transparent);
+	border-radius:var(--border-radius);
+}
+.side-menu-container .transaction-row .date {
+	background:var(--accent-third);
+	color:var(--accent-contrast);
+}
+.side-menu-container .transaction-row .category {
+	background:var(--accent-first);
+	color:var(--accent-contrast);
+}
+.side-menu-container .transaction-row .type {
+	color:var(--accent-contrast);
+}
+.side-menu-container .transaction-row .type.earned {
+	background:var(--positive-first);
+}
+.side-menu-container .transaction-row .type.spent {
+	background:var(--negative-first);
+}
+.side-menu-container .transaction-row .notes {
+	max-width:calc(100% - 40px);
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
 }
 
 .page.chatbot .page-container.full.chatbot {

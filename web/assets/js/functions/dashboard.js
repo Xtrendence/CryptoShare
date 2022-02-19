@@ -190,10 +190,176 @@ async function listTransactions() {
 			divSideMenuContainer.innerHTML = `<span class="list-text noselect">No Transactions Found</span>`;
 			return;
 		}
+
+		let currency = getCurrency();
+
+		divSideMenuContainer.innerHTML = "";
+
+		transactions = sortTransactionDataByDate(transactions);
+
+		let keys = Object.keys(transactions);
+		keys.map(key => {
+			let transaction = transactions[key];
+
+			let div = document.createElement("div");
+			div.setAttribute("class", `transaction-row noselect ${transaction.transactionCategory}`);
+
+			div.innerHTML = `
+				<div class="item">
+					<span class="date">${transaction.transactionDate}</span>
+				</div>
+				<div class="item">
+					<span class="category">${capitalizeFirstLetter(transaction.transactionCategory)}</span>
+				</div>
+				<div class="item">
+					<span class="type ${transaction.transactionType}">${capitalizeFirstLetter(transaction.transactionType)} ${currencySymbols[currency] + separateThousands(transaction.transactionAmount)}</span>
+				</div>
+			`;
+			
+			if(!empty(transaction.transactionNotes) && transaction.transactionNotes !== "-") {
+				div.innerHTML += `
+					<div class="item">
+						<span class="notes">${transaction.transactionNotes}</span>
+					</div>
+				`;
+			}
+
+			addTransactionListRowEvent(transaction, div);
+
+			divSideMenuContainer.appendChild(div);
+		});
 	} catch(error) {
 		console.log(error);
 		errorNotification("Something went wrong...");
 	}
+}
+
+function addTransactionListRowEvent(transaction, div) {
+	try {
+		div.addEventListener("click", () => {
+			let html = `
+				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off" value="${transaction.transactionAmount}">
+				<div class="popup-button-wrapper margin-bottom">
+					<button id="popup-choice-earned" class="choice ${transaction.transactionType === "earned" ? "active" : ""}">Earned</button>
+					<button id="popup-choice-spent" class="choice ${transaction.transactionType === "spent" ? "active" : ""}">Spent</button>
+				</div>
+				<input class="audible-pop" id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly value="${capitalizeFirstLetter(transaction.transactionCategory)}">
+				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false" value="${transaction.transactionDate}">
+				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off" value="${transaction.transactionNotes}">
+				<button class="action-button delete" id="popup-button-delete-transaction">Delete Transaction</button>
+			`;
+	
+			let popup = new Popup(300, "auto", "Update Transaction", html, { confirmText:"Add" });
+			popup.show();
+			popup.updateHeight();
+
+			let popupInputAmount = document.getElementById("popup-input-amount");
+			let popupChoiceEarned = document.getElementById("popup-choice-earned");
+			let popupChoiceSpent = document.getElementById("popup-choice-spent");
+			let popupInputCategory = document.getElementById("popup-input-category");
+			let popupInputDate = document.getElementById("popup-input-date");
+			let popupInputNotes = document.getElementById("popup-input-notes");
+
+			popupChoiceEarned.addEventListener("click", () => {
+				popupChoiceEarned.classList.add("active");
+				popupChoiceSpent.classList.remove("active");
+			});
+
+			popupChoiceSpent.addEventListener("click", () => {
+				popupChoiceEarned.classList.remove("active");
+				popupChoiceSpent.classList.add("active");
+			});
+
+			addTransactionCategoryEvent(popup, popupInputCategory);
+
+			addTransactionPopupDeleteEvent(popup, document.getElementById("popup-button-delete-transaction"), transaction.transactionID);
+	
+			popupInputAmount.focus();
+	
+			flatpickr(popupInputDate, {
+				enableTime: true,
+				dateFormat: "Y-m-d H:i",
+				allowInput: true
+			});
+	
+			popup.on("confirm", async () => {
+				let userID = localStorage.getItem("userID");
+				let token = localStorage.getItem("token");
+				let key = localStorage.getItem("key");
+
+				let data = parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes);
+
+				if("error" in data) {
+					errorNotification(data.error);
+					return;
+				}
+
+				showLoading(5000, "Updating...");
+
+				let encrypted = encryptObjectValues(key, data);
+
+				await updateTransaction(token, userID, transaction.transactionID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+
+				hideLoading();
+
+				listTransactions();
+
+				popup.hide();
+			});
+		});
+	} catch(error) {
+		console.log(error);
+		errorNotification("Something went wrong...");
+	}
+}
+
+function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transactionID) {
+	buttonDelete.addEventListener("click", () => {
+		previousPopup.hide();
+		
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+
+		let popup = new Popup(300, "auto", "Delete Transaction", `<span>Are you sure you want to remove this transaction?</span>`);
+		popup.show();
+		popup.updateHeight();
+
+		popup.on("confirm", async () => {
+			try {
+				showLoading(1500, "Deleting...");
+
+				await deleteTransaction(token, userID, transactionID);
+
+				listTransactions();
+
+				hideLoading();
+
+				popup.hide();
+			} catch(error) {
+				console.log(error);
+				errorNotification("Couldn't delete transaction.");
+			}
+		});
+	});
+}
+
+function sortTransactionDataByDate(transactionData) {
+	let sorted = {};
+	let array = [];
+
+	for(let transaction in transactionData) {
+		array.push([transaction, transactionData[transaction].transactionDate]);
+	}
+
+	array.sort(function(a, b) {
+		return new Date(a[1]).getTime() - new Date(b[1]).getTime();
+	});
+
+	array.map(item => {
+		sorted[item[0]] = transactionData[item[0]];
+	});
+
+	return sorted;
 }
 
 function addTransactionSearchEvent(input, button) {
@@ -228,7 +394,7 @@ function addTransactionButtonEvent(button) {
 					<button id="popup-choice-earned" class="choice active">Earned</button>
 					<button id="popup-choice-spent" class="choice">Spent</button>
 				</div>
-				<input id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly>
+				<input class="audible-pop" id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly>
 				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
 				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off">
 			`;
@@ -242,6 +408,7 @@ function addTransactionButtonEvent(button) {
 			let popupChoiceSpent = document.getElementById("popup-choice-spent");
 			let popupInputCategory = document.getElementById("popup-input-category");
 			let popupInputDate = document.getElementById("popup-input-date");
+			let popupInputNotes = document.getElementById("popup-input-notes");
 
 			popupChoiceEarned.addEventListener("click", () => {
 				popupChoiceEarned.classList.add("active");
@@ -267,6 +434,25 @@ function addTransactionButtonEvent(button) {
 				let userID = localStorage.getItem("userID");
 				let token = localStorage.getItem("token");
 				let key = localStorage.getItem("key");
+
+				let data = parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes);
+
+				if("error" in data) {
+					errorNotification(data.error);
+					return;
+				}
+
+				showLoading(5000, "Adding...");
+
+				let encrypted = encryptObjectValues(key, data);
+
+				await createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+
+				hideLoading();
+
+				listTransactions();
+
+				popup.hide();
 			});
 		} catch(error) {
 			console.log(error);
@@ -275,7 +461,44 @@ function addTransactionButtonEvent(button) {
 	});
 }
 
+function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes) {
+	try {
+		let amount = popupInputAmount.value;
+		let type = popupChoiceEarned.classList.contains("active") ? "earned" : "spent";
+		let category = popupInputCategory.value;
+		let date = popupInputDate.value;
+		let notes = popupInputNotes.value;
+
+		if(empty(amount) || isNaN(amount) || parseFloat(amount) <= 0) {
+			return { error:"Amount must be a number, and greater than zero." };
+		}
+
+		if(empty(category) || !Object.keys(defaultBudgetData.categories).includes(category.toLowerCase())) {
+			return { error:"Invalid category." };
+		}
+
+		try {
+			new Date(Date.parse(date));
+		} catch(error) {
+			return { error:"Invalid date." };
+		}
+
+		if(empty(notes)) {
+			notes = "-";
+		}
+
+		return { transactionAmount:amount, transactionType:type, transactionCategory:category.toLowerCase(), transactionDate:date, transactionNotes:notes };
+	} catch(error) {
+		console.log(error);
+		return { error:"Invalid data." };
+	}
+}
+
 function addTransactionCategoryEvent(previousPopup, input) {
+	input.addEventListener("focus", () => {
+		input.click();
+	});
+
 	input.addEventListener("click", () => {
 		previousPopup.element.classList.add("hidden");
 
@@ -651,7 +874,7 @@ function fetchTransaction() {
 				transactionData[decrypted.transactionID] = decrypted;
 			});
 
-			resolve(JSON.parse(transactionData));
+			resolve(transactionData);
 		} catch(error) {
 			console.log(error);
 			reject(error);

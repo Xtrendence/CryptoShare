@@ -37,6 +37,7 @@ function addNavbarEvents() {
 
 function showSideMenu() {
 	divSideMenuWrapper.classList.remove("hidden");
+	divSideMenuOverlay.classList.remove("hidden");
 	
 	divSideMenuWrapper.style.left = `-${divSideMenuWrapper.scrollWidth}px`;
 
@@ -49,7 +50,6 @@ function showSideMenu() {
 			clearInterval(animation);
 			divSideMenuWrapper.removeAttribute("style");
 			buttonSideMenuClose.classList.remove("hidden");
-			divSideMenuOverlay.classList.remove("hidden");
 		}
 		
 		left += 20;

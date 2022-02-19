@@ -446,6 +446,12 @@ function parseActivityPopupData(elements) {
 			return { error:"Amount must be greater than zero." };
 		}
 
+		try {
+			new Date(Date.parse(values.activityDate));
+		} catch(error) {
+			return { error:"Invalid date." };
+		}
+
 		if(empty(values.activityAssetSymbol) || empty(values.activityAssetType) || empty(values.activityAssetAmount) || empty(values.activityDate) || empty(values.activityType)) {
 			return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
 		}

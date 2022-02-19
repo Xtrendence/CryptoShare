@@ -6,7 +6,7 @@ buttonDashboardBudgetTransactions.addEventListener("click", () => {
 buttonDashboardWatchlistAdd.addEventListener("click", () => {
 	try {
 		let html = `
-			<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false">
+			<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false" autocomplete="off">
 			<div class="popup-button-wrapper margin-bottom">
 				<button id="popup-choice-crypto" class="choice active">Crypto</button>
 				<button id="popup-choice-stock" class="choice">Stock</button>

@@ -859,6 +859,12 @@ export default function Activity({ navigation }: any) {
 				return { error:"Amount must be greater than zero." };
 			}
 
+			try {
+				new Date(Date.parse(values.activityDate));
+			} catch(error) {
+				return { error:"Invalid date." };
+			}
+
 			if(Utils.empty(values.activityAssetSymbol) || Utils.empty(values.activityAssetType) || Utils.empty(values.activityAssetAmount) || Utils.empty(values.activityDate) || Utils.empty(values.activityType)) {
 				return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
 			}
