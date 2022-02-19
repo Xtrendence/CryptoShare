@@ -1007,6 +1007,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 #desktop .side-menu-container .transaction-row:hover {
 	background:var(--main-second);
 }
+.side-menu-container .transaction-row.first-found {
+	margin-top:82px;
+}
 .side-menu-container .transaction-row.food {
 	border-color:rgb(254,137,112);
 }

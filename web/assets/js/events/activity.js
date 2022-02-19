@@ -1,12 +1,20 @@
-inputActivitySearch.addEventListener("keydown", () => {
+inputActivitySearch.addEventListener("keydown", (event) => {
 	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
 		filterActivityList(inputActivitySearch.value);
 	}
+
+	if(event.key.toLowerCase() === "enter") {
+		buttonActivitySearch.click();
+	}
 });
 
-inputActivitySearch.addEventListener("keyup", () => {
+inputActivitySearch.addEventListener("keyup", (event) => {
 	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
 		filterActivityList(inputActivitySearch.value);
+	}
+
+	if(event.key.toLowerCase() === "enter") {
+		buttonActivitySearch.click();
 	}
 });
 

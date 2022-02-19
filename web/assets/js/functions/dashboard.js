@@ -364,25 +364,69 @@ function sortTransactionDataByDate(transactionData) {
 
 function addTransactionSearchEvent(input, button) {
 	input.addEventListener("keydown", (event) => {
+		if(divSideMenuContainer.childElementCount < 100 || empty(input.value)) {
+			filterTransactionList(input.value);
+		}
+
 		if(event.key.toLowerCase() === "enter") {
 			button.click();
 		}
 	});
 
 	input.addEventListener("keyup", (event) => {
+		if(divSideMenuContainer.childElementCount < 100 || empty(input.value)) {
+			filterTransactionList(input.value);
+		}
+
 		if(event.key.toLowerCase() === "enter") {
 			button.click();
 		}
 	});
 
 	button.addEventListener("click", () => {
-		let query = input.value;
-
-		if(!empty(query)) {
-			query = query.toLowerCase();
-
-		}
+		filterTransactionList(input.value);
 	});
+}
+
+function filterTransactionList(query) {
+	let rows = divSideMenuContainer.getElementsByClassName("transaction-row");
+
+	if(empty(query)) {
+		for(let i = 0; i < rows.length; i++) {
+			rows[i].classList.remove("hidden");
+			rows[i].classList.remove("first-found");
+			rows[i].removeAttribute("style");
+		}
+
+		return;
+	}
+
+	query = query.toLowerCase();
+
+	let firstFound;
+
+	for(let i = 0; i < rows.length; i++) {
+		rows[i].removeAttribute("style");
+		rows[i].classList.remove("first-found");
+
+		let spans = rows[i].getElementsByTagName("span");
+		let values = [];
+
+		for(let j = 0; j < spans.length; j++) {
+			values.push(spans[j].textContent.toLowerCase());
+		}
+
+		if(values.join(",").includes(query)) {
+			if(empty(firstFound) && rows[i] !== rows[0] && divSideMenuContainer.getElementsByClassName("first-found").length === 0 && rows[0].classList.contains("hidden")) {
+				firstFound = rows[i];
+				rows[i].classList.add("first-found");
+			}
+
+			rows[i].classList.remove("hidden");
+		} else {
+			rows[i].classList.add("hidden");
+		}
+	}
 }
 
 function addTransactionButtonEvent(button) {
