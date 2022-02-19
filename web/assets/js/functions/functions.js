@@ -35,6 +35,48 @@ function addNavbarEvents() {
 	}
 }
 
+function showSideMenu() {
+	divSideMenuWrapper.classList.remove("hidden");
+	
+	divSideMenuWrapper.style.left = `-${divSideMenuWrapper.scrollWidth}px`;
+
+	let left = divSideMenuWrapper.scrollWidth * -1;
+
+	let animation = setInterval(() => {
+		divSideMenuWrapper.style.left = `${left}px`;
+
+		if(left >= 0) {
+			clearInterval(animation);
+			divSideMenuWrapper.removeAttribute("style");
+			buttonSideMenuClose.classList.remove("hidden");
+			divSideMenuOverlay.classList.remove("hidden");
+		}
+		
+		left += 20;
+	}, 10);
+}
+
+function hideSideMenu() {
+	let left = 0;
+	
+	buttonSideMenuClose.classList.add("hidden");
+
+	let animation = setInterval(() => {
+		divSideMenuWrapper.style.left = `${left}px`;
+
+		if(left <= (divSideMenuWrapper.scrollWidth * -1)) {
+			clearInterval(animation);
+			divSideMenuWrapper.classList.add("hidden");
+			divSideMenuOverlay.classList.add("hidden");
+			divSideMenuWrapper.removeAttribute("style");
+			divSideMenuContainer.innerHTML = '<div class="loading-icon"><div></div><div></div></div>';
+			divSideMenuBottom.innerHTML = "";
+		}
+		
+		left -= 20;
+	}, 10);
+}
+
 function getActivePage() {
 	let pages = divPageApp.getElementsByClassName("page");
 	for(let i = 0; i < pages.length; i++) {
@@ -77,6 +119,8 @@ function setPage(page) {
 			populateHoldingsList();
 			populateDashboardBudget(true);
 			populateDashboardWatchlist(true);
+			// TODO: Remove.
+			buttonDashboardBudgetTransactions.click();
 			firstFetch.dashboard = false;
 			break;
 		case "market":
@@ -198,7 +242,6 @@ function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
 	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
 	tippy(buttonChatMenu, { content:"Chat Actions", placement:"bottom" });
-	tippy(buttonDashboardBudgetStats, { content:"Stats", placement:"bottom" });
 	tippy(buttonDashboardBudgetEdit, { content:"Edit", placement:"bottom" });
 	tippy(buttonDashboardWatchlistAdd, { content:"Add", placement:"bottom" });
 	tippy(buttonMarketInfo, { content:"Crypto Market Info", placement:"top" });

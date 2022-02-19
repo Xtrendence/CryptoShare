@@ -6,6 +6,7 @@ async function populateDashboardBudget(recreate) {
 		
 		try {
 			let budgetData = await fetchBudget();
+			let transactionData = await fetchTransaction();
 
 			if(empty(budgetData)) {
 				await setDefaultBudgetData();
@@ -17,9 +18,68 @@ async function populateDashboardBudget(recreate) {
 					<div class="chart-wrapper">
 						<canvas class="pie-chart-canvas" id="pie-chart-canvas"></canvas>
 					</div>
+					<div class="stats-wrapper noselect">
+						<div class="stats-container">
+							<span class="title">Food</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground food" id="stats-food"></div>
+							</div>
+							<span class="span-stats" id="span-stats-food">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Housing</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground housing" id="stats-housing"></div>
+							</div>
+							<span class="span-stats" id="span-stats-housing">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Transport</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground transport" id="stats-transport"></div>
+							</div>
+							<span class="span-stats" id="span-stats-transport">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Entertainment</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground entertainment" id="stats-entertainment"></div>
+							</div>
+							<span class="span-stats" id="span-stats-entertainment">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Insurance</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground insurance" id="stats-insurance"></div>
+							</div>
+							<span class="span-stats" id="span-stats-insurance">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Savings</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground savings" id="stats-savings"></div>
+							</div>
+							<span class="span-stats" id="span-stats-savings">-</span>
+						</div>
+						<div class="stats-container">
+							<span class="title">Other</span>
+							<div class="progress-container">
+								<div class="background"></div>
+								<div class="foreground other" id="stats-other"></div>
+							</div>
+							<span class="span-stats" id="span-stats-other">-</span>
+						</div>
+					</div>
 				`;
 
 				generatePieChart(budgetData);
+				generateBudgetStats(budgetData, transactionData);
 			}
 		} catch(error) {
 			console.log(error);
@@ -35,7 +95,15 @@ function generatePieChart(budgetData) {
 
 	let mainContrast = cssValue(document.documentElement, "--main-contrast");
 
-	let backgroundColors = ["#f0bb35", "#67648f", "#c5d145", "#d63e3e", "#3bb85c", "#4f3dbf", "#3ba1db", "#9f54c7"];
+	let backgroundColors = [
+		"rgb(254,137,112)",
+		"rgb(157,255,149)",
+		"rgb(200,172,165)",
+		"rgb(255,195,127)",
+		"rgb(119,254,229)",
+		"rgb(119,194,253)",
+		"rgb(182,137,251)",
+	];
 
 	let categories = budgetData.categories;
 	let income = budgetData.income;
@@ -85,6 +153,173 @@ function generatePieChart(budgetData) {
 				}
 			}
 		}
+	});
+}
+
+function generateBudgetStats(budgetData, transactionData) {
+	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
+	let divStats = divDashboardBudgetList.getElementsByClassName("foreground");
+	
+	if(empty(transactionData)) {
+		for(let i = 0; i < spanStats.length; i++) {
+			spanStats[i].textContent = "0%";
+			divStats[i].style.width = "0%";
+		}
+
+		return;
+	}
+
+	let parsed = parseTransactionData(transactionData);
+}
+
+function parseTransactionData(transactionData) {
+
+}
+
+async function listTransactions() {
+	try {
+		let transactions = await fetchTransaction() || {};
+
+		divSideMenuTop.innerHTML = `<input type="text" id="input-search-transaction" placeholder="Search..." autocomplete="off"><button class="action-button" id="button-search-transaction">Search</button>`;
+		divSideMenuBottom.innerHTML = `<button class="action-button" id="button-add-transaction">Add Transaction</button>`;
+		
+		addTransactionSearchEvent(document.getElementById("input-search-transaction"), document.getElementById("button-search-transaction"));
+		addTransactionButtonEvent(document.getElementById("button-add-transaction"));
+
+		if(empty(transactions)) {
+			divSideMenuContainer.innerHTML = `<span class="list-text noselect">No Transactions Found</span>`;
+			return;
+		}
+	} catch(error) {
+		console.log(error);
+		errorNotification("Something went wrong...");
+	}
+}
+
+function addTransactionSearchEvent(input, button) {
+	input.addEventListener("keydown", (event) => {
+		if(event.key.toLowerCase() === "enter") {
+			button.click();
+		}
+	});
+
+	input.addEventListener("keyup", (event) => {
+		if(event.key.toLowerCase() === "enter") {
+			button.click();
+		}
+	});
+
+	button.addEventListener("click", () => {
+		let query = input.value;
+
+		if(!empty(query)) {
+			query = query.toLowerCase();
+
+		}
+	});
+}
+
+function addTransactionButtonEvent(button) {
+	button.addEventListener("click", () => {
+		try {
+			let html = `
+				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
+				<div class="popup-button-wrapper margin-bottom">
+					<button id="popup-choice-earned" class="choice active">Earned</button>
+					<button id="popup-choice-spent" class="choice">Spent</button>
+				</div>
+				<input id="popup-input-category" type="text" placeholder="Category..." autocomplete="off" spellcheck="false" readonly>
+				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
+				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off">
+			`;
+	
+			let popup = new Popup(300, "auto", "Add Transaction", html, { confirmText:"Add" });
+			popup.show();
+			popup.updateHeight();
+
+			let popupInputAmount = document.getElementById("popup-input-amount");
+			let popupChoiceEarned = document.getElementById("popup-choice-earned");
+			let popupChoiceSpent = document.getElementById("popup-choice-spent");
+			let popupInputCategory = document.getElementById("popup-input-category");
+			let popupInputDate = document.getElementById("popup-input-date");
+
+			popupChoiceEarned.addEventListener("click", () => {
+				popupChoiceEarned.classList.add("active");
+				popupChoiceSpent.classList.remove("active");
+			});
+
+			popupChoiceSpent.addEventListener("click", () => {
+				popupChoiceEarned.classList.remove("active");
+				popupChoiceSpent.classList.add("active");
+			});
+
+			addTransactionCategoryEvent(popup, popupInputCategory);
+	
+			popupInputAmount.focus();
+	
+			flatpickr(popupInputDate, {
+				enableTime: true,
+				dateFormat: "Y-m-d H:i",
+				allowInput: true
+			});
+	
+			popup.on("confirm", async () => {
+				let userID = localStorage.getItem("userID");
+				let token = localStorage.getItem("token");
+				let key = localStorage.getItem("key");
+			});
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
+	});
+}
+
+function addTransactionCategoryEvent(previousPopup, input) {
+	input.addEventListener("click", () => {
+		previousPopup.element.classList.add("hidden");
+
+		let html = `
+			<div class="popup-button-wrapper no-margin-top">
+				<button class="popup-choice" data-value="Food">Food</button>
+				<button class="popup-choice" data-value="Housing">Housing</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="Transport">Transport</button>
+				<button class="popup-choice" data-value="Entertainment">Entertainment</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="Insurance">Insurance</button>
+				<button class="popup-choice" data-value="Savings">Savings</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="Other">Other</button>
+			</div>
+		`;
+	
+		let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
+		popup.show();
+		popup.updateHeight();
+
+		let choices = popup.bottom.getElementsByClassName("popup-choice");
+		
+		for(let i = 0; i < choices.length; i++) {
+			choices[i].addEventListener("click", () => {
+				popup.hide();
+				input.value = choices[i].getAttribute("data-value");
+				previousPopup.element.classList.remove("hidden");
+			});
+		}
+
+		popup.on("close", () => {
+			popup.hide();
+			previousPopup.element.classList.remove("hidden");
+		});
+
+		popup.on("cancel", () => {
+			popup.hide();
+			previousPopup.element.classList.remove("hidden");
+		});
 	});
 }
 
@@ -385,6 +620,38 @@ function fetchBudget() {
 			}
 
 			resolve(JSON.parse(budgetData));
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
+function fetchTransaction() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let transaction = await readTransaction(token, userID);
+
+			if(empty(transaction?.data?.readTransaction)) {
+				resolve({});
+				return;
+			}
+	
+			let transactionData = {};
+	
+			let encrypted = transaction?.data?.readTransaction;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = decryptObjectValues(key, encrypted[index]);
+				decrypted.transactionID = encrypted[index].transactionID;
+				transactionData[decrypted.transactionID] = decrypted;
+			});
+
+			resolve(JSON.parse(transactionData));
 		} catch(error) {
 			console.log(error);
 			reject(error);

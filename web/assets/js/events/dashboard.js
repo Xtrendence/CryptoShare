@@ -1,3 +1,8 @@
+buttonDashboardBudgetTransactions.addEventListener("click", () => {
+	showSideMenu();
+	listTransactions();
+});
+
 buttonDashboardWatchlistAdd.addEventListener("click", () => {
 	try {
 		let html = `

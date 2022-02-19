@@ -32,3 +32,11 @@ document.addEventListener("keydown", (event) => {
 audioPop.addEventListener("canplay", () => {
 	audioPlayable = true;
 });
+
+divSideMenuOverlay.addEventListener("click", () => {
+	buttonSideMenuClose.click();
+});
+
+buttonSideMenuClose.addEventListener("click", () => {
+	hideSideMenu();
+});

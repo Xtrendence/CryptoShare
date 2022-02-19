@@ -536,6 +536,9 @@ html.light .toggle-container {
 .popup-wrapper .bottom .popup-button-wrapper.margin-bottom {
 	margin-bottom:20px;
 }
+.popup-wrapper .bottom .popup-button-wrapper.no-margin-top {
+	margin-top:0;
+}
 .popup-wrapper .bottom .popup-button-wrapper.three .choice {
 	width:calc(100% / 3 - 6.7px);
 }
@@ -907,6 +910,85 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	top:120px;
 }
 
+.side-menu-overlay, .side-menu-wrapper {
+	z-index:22;
+	background:rgba(0,0,0,0.85);
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+.side-menu-wrapper {
+	z-index:23;
+	background:var(--main-first);
+	width:320px;
+	overflow:hidden;
+}
+.side-menu-close {
+	position:absolute;
+	background:var(--accent-first);
+	z-index:26;
+	left:300px;
+	height:40px;
+	width:40px;
+	top:calc(50% - 40px / 2);
+	border-radius:var(--border-radius);
+}
+#desktop .side-menu-close:hover {
+	background:var(--accent-second);
+}
+.side-menu-close svg {
+	padding:8px 4px 8px 0;
+	width:24px;
+	height:24px;
+	fill:var(--main-contrast);
+}
+.side-menu-container {
+	z-index:24;
+	position:absolute;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+	overflow:hidden auto;
+}
+.side-menu-top, .side-menu-bottom {
+	z-index:25;
+	position:absolute;
+	top:0;
+	left:0;
+	height:60px;
+	width:100%;
+	background:var(--main-second);
+	text-align:center;
+}
+.side-menu-top input {
+	vertical-align:top;
+	margin-top:10px;
+	height:40px;
+	padding:0 10px 0 10px;
+	width:calc(100% - 20px - 90px - 30px);
+	border-radius:var(--border-radius);
+	font-size:16px;
+	background:var(--main-first-transparent);
+	color:var(--main-contrast);
+}
+.side-menu-top button {
+	vertical-align:top;
+	margin-top:10px;
+	width:90px;
+}
+.side-menu-bottom {
+	top:auto;
+	bottom:0;
+}
+.side-menu-bottom button {
+	padding:0;
+	margin:10px 0 0 0;
+	width:calc(100% - 20px);
+}
+
 .page.chatbot .page-container.full.chatbot {
 	width:476px;
 	left:calc(50% - 476px / 2);
@@ -1171,7 +1253,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-width:0 0 0 4px;
 	border-color:var(--accent-second);
 }
-.dashboard-list.budget .chart-wrapper {
+.dashboard-list.budget .chart-wrapper, .dashboard-list.budget .stats-wrapper {
 	width:calc(100% - 40px - 40px);
 	border-radius:var(--border-radius);
 	box-shadow:var(--shadow-smooth);
@@ -1182,6 +1264,66 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .dashboard-list.budget .chart-wrapper canvas {
 	margin:0 auto 0 auto;
+}
+.dashboard-list.budget .stats-container {
+	text-align:center;
+	margin-top:20px;
+	position:relative;
+	height:20px;
+}
+.dashboard-list.budget .stats-container:first-of-type {
+	margin-top:0;
+}
+.dashboard-list.budget .stats-container .progress-container {
+	width:calc(100% - 70px - 120px);
+	height:10px;
+	position:absolute;
+	left:120px;
+	top:5px;
+}
+.dashboard-list.budget .stats-container .background, .dashboard-list.budget .stats-container .foreground {
+	position:absolute;
+	width:100%;
+	height:100%;
+	background:rgb(60,60,60);
+	border-radius:var(--border-radius);
+}
+.dashboard-list.budget .stats-container .foreground.food {
+	background:rgb(254,137,112);
+}
+.dashboard-list.budget .stats-container .foreground.housing {
+	background:rgb(157,255,149);
+}
+.dashboard-list.budget .stats-container .foreground.transport {
+	background:rgb(200,172,165);
+}
+.dashboard-list.budget .stats-container .foreground.entertainment {
+	background:rgb(255,195,127);
+}
+.dashboard-list.budget .stats-container .foreground.insurance {
+	background:rgb(119,254,229);
+}
+.dashboard-list.budget .stats-container .foreground.savings {
+	background:rgb(119,194,253);
+}
+.dashboard-list.budget .stats-container .foreground.other {
+	background:rgb(182,137,251);
+}
+.dashboard-list.budget .stats-container .title, .dashboard-list.budget .stats-container .span-stats {
+	font-size:14px;
+	width:50px;
+	color:var(--main-contrast);
+	display:inline-block;
+	line-height:20px;
+	top:0;
+	left:10px;
+	position:absolute;
+	text-align:left;
+}
+.dashboard-list.budget .stats-container .span-stats {
+	right:10px;
+	left:auto;
+	text-align:center;
 }
 
 .page.market .page-container-toolbar {

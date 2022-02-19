@@ -115,6 +115,17 @@
 					</div>
 				</div>
 			</div>
+			<div class="side-menu-overlay hidden" id="side-menu-overlay"></div>
+			<button class="side-menu-close hidden" id="button-side-menu-close">
+				<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/></svg>
+			</button>
+			<div class="side-menu-wrapper hidden" id="side-menu-wrapper">
+				<div class="side-menu-top" id="side-menu-top"></div>
+				<div class="side-menu-container" id="side-menu-container">
+					<div class="loading-icon"><div></div><div></div></div>
+				</div>
+				<div class="side-menu-bottom" id="side-menu-bottom"></div>
+			</div>
 			<div class="page chatbot hidden" id="chatbot-page">
 				<div class="page-container full chatbot">
 					<div class="chat-top noselect">
@@ -143,9 +154,7 @@
 				<div class="page-container half left dashboard">
 					<div class="page-container-toolbar noselect">
 						<span class="title">Monthly Budget</span>
-						<button class="action-button first" id="button-dashboard-budget-stats">
-							<svg width="2048" height="1792" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M640 896v512h-256v-512h256zm384-512v1024h-256v-1024h256zm1024 1152v128h-2048v-1536h128v1408h1920zm-640-896v768h-256v-768h256zm384-384v1152h-256v-1152h256z"/></svg>
-						</button>
+						<button class="action-button first" id="button-dashboard-budget-transactions">Transactions</button>
 						<button class="action-button" id="button-dashboard-budget-edit">
 							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M491 1536l91-91-235-235-91 91v107h128v128h107zm523-928q0-22-22-22-10 0-17 7l-542 542q-7 7-7 17 0 22 22 22 10 0 17-7l542-542q7-7 7-17zm-54-192l416 416-832 832h-416v-416zm683 96q0 53-37 90l-166 166-416-416 166-165q36-38 90-38 53 0 91 38l235 234q37 39 37 91z"/></svg>
 						</button>

@@ -170,6 +170,22 @@ function readHolding(token, userID) {
 	return request("POST", urlAPI, query, null);
 }
 
+function readTransaction(token, userID) {
+	let query = {
+		query: `query readTransaction($token: String!, $userID: Int!) {
+			readTransaction(token: $token, userID: $userID) {
+				transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes
+			}
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function readActivity(token, userID) {
 	let query = {
 		query: `query readActivity($token: String!, $userID: Int!) {

@@ -194,28 +194,28 @@ function addActivityListRowEvent(div, activity) {
 	div.addEventListener("click", () => {
 		try {
 			let html = `
-				<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false">
+				<input class="uppercase" id="popup-input-symbol" type="text" placeholder="Asset Symbol..." spellcheck="false" autocomplete="off">
 				<div class="popup-button-wrapper margin-bottom">
 					<button id="popup-choice-crypto" class="choice active">Crypto</button>
 					<button id="popup-choice-stock" class="choice">Stock</button>
 				</div>
-				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false">
+				<input id="popup-input-amount" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
 				<input id="popup-input-date" type="text" placeholder="Date..." autocomplete="off" spellcheck="false">
-				<input id="popup-input-fee" type="number" placeholder="Fee..." spellcheck="false">
-				<input id="popup-input-notes" type="text" placeholder="Notes...">
+				<input id="popup-input-fee" type="number" placeholder="Fee..." spellcheck="false" autocomplete="off">
+				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off">
 				<div class="popup-button-wrapper three margin-bottom">
 					<button id="popup-choice-buy" class="choice small active">Buy</button>
 					<button id="popup-choice-sell" class="choice small">Sell</button>
 					<button id="popup-choice-transfer" class="choice large">Transfer</button>
 				</div>
 				<div id="popup-wrapper-trade">
-					<input id="popup-input-exchange" type="text" placeholder="Exchange..." spellcheck="false">
-					<input id="popup-input-pair" type="text" placeholder="Pair..." spellcheck="false">
-					<input id="popup-input-price" type="number" placeholder="Price..." spellcheck="false">
+					<input id="popup-input-exchange" type="text" placeholder="Exchange..." spellcheck="false" autocomplete="off">
+					<input id="popup-input-pair" type="text" placeholder="Pair..." spellcheck="false" autocomplete="off">
+					<input id="popup-input-price" type="number" placeholder="Price..." spellcheck="false" autocomplete="off">
 				</div>
 				<div id="popup-wrapper-transfer" class="hidden">
-					<input id="popup-input-from" type="text" placeholder="From..." spellcheck="false">
-					<input id="popup-input-to" type="text" placeholder="To..." spellcheck="false">
+					<input id="popup-input-from" type="text" placeholder="From..." spellcheck="false" autocomplete="off">
+					<input id="popup-input-to" type="text" placeholder="To..." spellcheck="false" autocomplete="off">
 				</div>
 				<button class="action-button delete" id="popup-button-delete-activity">Delete Activity</button>
 			`;
@@ -532,9 +532,9 @@ function addActivityPopupListeners(elements) {
 
 function showActivityStakingPopup() {
 	let html = `
-		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Staked Asset Symbol..." spellcheck="false">
-		<input type="number" id="popup-input-amount" placeholder="Staked Amount..." spellcheck="false">
-		<input type="number" id="popup-input-apy" placeholder="Asset APY..." spellcheck="false">
+		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Staked Asset Symbol..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-amount" placeholder="Staked Amount..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-apy" placeholder="Asset APY..." spellcheck="false" autocomplete="off">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
@@ -605,10 +605,10 @@ function showActivityStakingPopup() {
 
 function showActivityMiningPopup() {
 	let html = `
-		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Mining Asset Symbol..." spellcheck="false">
-		<input type="number" id="popup-input-equipment-cost" placeholder="Equipment Cost..." spellcheck="false">
-		<input type="number" id="popup-input-daily-amount" placeholder="Daily Amount..." spellcheck="false">
-		<input type="number" id="popup-input-daily-power-cost" placeholder="Daily Power Cost..." spellcheck="false">
+		<input class="uppercase" type="text" id="popup-input-symbol" placeholder="Mining Asset Symbol..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-equipment-cost" placeholder="Equipment Cost..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-daily-amount" placeholder="Daily Amount..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-daily-power-cost" placeholder="Daily Power Cost..." spellcheck="false" autocomplete="off">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
@@ -681,8 +681,8 @@ function showActivityMiningPopup() {
 
 function showActivityDividendPopup() {
 	let html = `
-		<input type="number" id="popup-input-amount" placeholder="Number Of Shares..." spellcheck="false">
-		<input type="number" id="popup-input-dividend" placeholder="Annual Dividend Per Share..." spellcheck="false">
+		<input type="number" id="popup-input-amount" placeholder="Number Of Shares..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-dividend" placeholder="Annual Dividend Per Share..." spellcheck="false" autocomplete="off">
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 

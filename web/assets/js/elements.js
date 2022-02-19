@@ -26,6 +26,14 @@ let loginToggleTheme = document.getElementById("login-toggle-theme");
 let divNavbarWrapper = document.getElementById("navbar-wrapper");
 let divNavbar = document.getElementById("navbar");
 
+let divSideMenuOverlay = document.getElementById("side-menu-overlay");
+let divSideMenuWrapper = document.getElementById("side-menu-wrapper");
+let divSideMenuContainer = document.getElementById("side-menu-container");
+let divSideMenuTop = document.getElementById("side-menu-top");
+let divSideMenuBottom = document.getElementById("side-menu-bottom");
+
+let buttonSideMenuClose = document.getElementById("button-side-menu-close");
+
 let divChatList = document.getElementById("chat-list");
 let divChatStatus = document.getElementById("chat-status");
 let divChatOptions = document.getElementById("chat-options");
@@ -40,7 +48,7 @@ let divDashboardBudgetList = document.getElementById("dashboard-budget-list");
 let divDashboardHoldingsList = document.getElementById("dashboard-holdings-list");
 let divDashboardWatchlistList = document.getElementById("dashboard-watchlist-list");
 
-let buttonDashboardBudgetStats = document.getElementById("button-dashboard-budget-stats");
+let buttonDashboardBudgetTransactions = document.getElementById("button-dashboard-budget-transactions");
 let buttonDashboardBudgetEdit = document.getElementById("button-dashboard-budget-edit");
 let buttonDashboardWatchlistAdd = document.getElementById("button-dashboard-watchlist-add");
 
