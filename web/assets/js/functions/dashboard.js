@@ -76,6 +76,9 @@ async function populateDashboardBudget(recreate) {
 							<span class="span-stats" id="span-stats-other">-</span>
 						</div>
 					</div>
+					<div class="income-wrapper noselect">
+						<span id="span-income"></span>
+					</div>
 				`;
 
 				generatePieChart(budgetData);
@@ -135,6 +138,7 @@ function generatePieChart(budgetData) {
 		options: {
 			responsive: true,
 			legend: {
+				onClick: (event) => event.stopPropagation(),
 				display: true,
 				position: "right",
 				labels: {
@@ -158,6 +162,7 @@ function generatePieChart(budgetData) {
 }
 
 function generateBudgetStats(budgetData, transactionData) {
+	let spanIncome = document.getElementById("span-income");
 	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
 	let divStats = divDashboardBudgetList.getElementsByClassName("foreground");
 	
@@ -170,13 +175,22 @@ function generateBudgetStats(budgetData, transactionData) {
 		return;
 	}
 
+	let currency = getCurrency();
+
 	let parsed = parseTransactionData(transactionData);
 
 	let budgetAmounts = {};
 	
 	let categories = budgetData.categories;
 	let income = budgetData.income;
-	
+	let earned = parsed.earned;
+
+	if(earned > 0) {
+		spanIncome.textContent = `Based on your transactions, aside from your income of ${currencySymbols[currency] + separateThousands(parseFloat((income / 12).toFixed(0)))}, you earned an additional ${currencySymbols[currency] + separateThousands(earned)} this month.`;
+	} else {
+		spanIncome.textContent = `Based on your transactions, you didn't earn any additional money aside from your income of ${currencySymbols[currency] + separateThousands(parseFloat((income / 12).toFixed(0)))}.`;
+	}
+
 	Object.keys(categories).map(category => {
 		let percentage = categories[category];
 		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
@@ -199,6 +213,8 @@ function parseTransactionData(transactionData) {
 	let categories = Object.keys(defaultBudgetData.categories);
 	let parsed = {};
 
+	parsed.earned = 0;
+
 	categories.map(category => {
 		parsed[category] = 0;
 	});
@@ -213,6 +229,12 @@ function parseTransactionData(transactionData) {
 
 			if(transaction.transactionType === "spent") {
 				parsed[transaction.transactionCategory] += amount;
+			} else {
+				if(transaction.transactionCategory === "savings") {
+					parsed[transaction.transactionCategory] += amount;
+				} else {
+					parsed.earned += amount;
+				}
 			}
 		} catch(error) {
 			console.log(error);
@@ -308,7 +330,7 @@ function addTransactionListRowEvent(transaction, div) {
 			let popupInputNotes = document.getElementById("popup-input-notes");
 
 			popupChoiceEarned.addEventListener("click", () => {
-				popupInputCategory.value = "Income";
+				popupInputCategory.value = "";
 				popupChoiceEarned.classList.add("active");
 				popupChoiceSpent.classList.remove("active");
 			});
@@ -508,7 +530,7 @@ function addTransactionButtonEvent(button) {
 			let popupInputNotes = document.getElementById("popup-input-notes");
 
 			popupChoiceEarned.addEventListener("click", () => {
-				popupInputCategory.value = "Income";
+				popupInputCategory.value = "";
 				popupChoiceEarned.classList.add("active");
 				popupChoiceSpent.classList.remove("active");
 			});
@@ -578,6 +600,10 @@ function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInp
 			return { error:"Invalid category." };
 		}
 
+		if(type === "earned" && !["income", "savings"].includes(category.toLowerCase())) {
+			return { error:"Category must be set to Income or Savings if you earned money." };
+		}
+
 		try {
 			new Date(Date.parse(date));
 		} catch(error) {
@@ -601,10 +627,12 @@ function addTransactionCategoryEvent(previousPopup, input) {
 	});
 
 	input.addEventListener("click", () => {
-		if(document.getElementById("popup-choice-spent").classList.contains("active")) {
-			previousPopup.element.classList.add("hidden");
+		previousPopup.element.classList.add("hidden");
 
-			let html = `
+		let html = "";
+
+		if(document.getElementById("popup-choice-spent").classList.contains("active")) {
+			html = `
 				<div class="popup-button-wrapper no-margin-top">
 					<button class="popup-choice" data-value="Food">Food</button>
 					<button class="popup-choice" data-value="Housing">Housing</button>
@@ -615,37 +643,41 @@ function addTransactionCategoryEvent(previousPopup, input) {
 				</div>
 				<div class="popup-button-wrapper">
 					<button class="popup-choice" data-value="Insurance">Insurance</button>
-					<button class="popup-choice" data-value="Savings">Savings</button>
-				</div>
-				<div class="popup-button-wrapper">
 					<button class="popup-choice" data-value="Other">Other</button>
 				</div>
 			`;
+		} else {
+			html = `
+				<div class="popup-button-wrapper no-margin-top">
+					<button class="popup-choice" data-value="Income">Income</button>
+					<button class="popup-choice" data-value="Savings">Savings</button>
+				</div>
+			`;
+		}
 		
-			let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
-			popup.show();
-			popup.updateHeight();
+		let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
+		popup.show();
+		popup.updateHeight();
 
-			let choices = popup.bottom.getElementsByClassName("popup-choice");
-			
-			for(let i = 0; i < choices.length; i++) {
-				choices[i].addEventListener("click", () => {
-					popup.hide();
-					input.value = choices[i].getAttribute("data-value");
-					previousPopup.element.classList.remove("hidden");
-				});
-			}
-
-			popup.on("close", () => {
+		let choices = popup.bottom.getElementsByClassName("popup-choice");
+		
+		for(let i = 0; i < choices.length; i++) {
+			choices[i].addEventListener("click", () => {
 				popup.hide();
-				previousPopup.element.classList.remove("hidden");
-			});
-
-			popup.on("cancel", () => {
-				popup.hide();
+				input.value = choices[i].getAttribute("data-value");
 				previousPopup.element.classList.remove("hidden");
 			});
 		}
+
+		popup.on("close", () => {
+			popup.hide();
+			previousPopup.element.classList.remove("hidden");
+		});
+
+		popup.on("cancel", () => {
+			popup.hide();
+			previousPopup.element.classList.remove("hidden");
+		});
 	});
 }
 

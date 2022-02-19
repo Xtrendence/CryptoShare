@@ -1330,7 +1330,6 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	margin-right:20px;
 }
 .dashboard-list.holdings .holdings-list-row {
-	pointer-events:none;
 	border-style:solid;
 	border-width:0 0 0 4px;
 	border-color:var(--accent-first);
@@ -1340,7 +1339,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-width:0 0 0 4px;
 	border-color:var(--accent-second);
 }
-.dashboard-list.budget .chart-wrapper, .dashboard-list.budget .stats-wrapper {
+.dashboard-list.budget .chart-wrapper, .dashboard-list.budget .stats-wrapper, .dashboard-list.budget .income-wrapper {
 	width:calc(100% - 40px - 40px);
 	border-radius:var(--border-radius);
 	box-shadow:var(--shadow-smooth);
@@ -1411,6 +1410,11 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	right:10px;
 	left:auto;
 	text-align:center;
+}
+.dashboard-list.budget .income-wrapper span {
+	font-size:16px;
+	line-height:25px;
+	color:var(--main-contrast);
 }
 
 .page.market .page-container-toolbar {

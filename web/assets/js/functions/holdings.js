@@ -120,6 +120,12 @@ async function populateHoldingsList(recreate, callback = null) {
 
 			if(divDashboardHoldingsList.innerHTML !== divHoldingsList.innerHTML) {
 				divDashboardHoldingsList.innerHTML = divHoldingsList.innerHTML;
+				let dashboardRows = divDashboardHoldingsList.getElementsByClassName("holdings-list-row");
+				for(let i = 0; i < dashboardRows.length; i++) {
+					dashboardRows[i].addEventListener("click", () => {
+						setPage("holdings");
+					});
+				}
 			}
 		} catch(error) {
 			console.log(error);
