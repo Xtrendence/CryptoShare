@@ -5,8 +5,8 @@ buttonDashboardBudgetTransactions.addEventListener("click", () => {
 
 buttonDashboardBudgetEdit.addEventListener("click", () => {
 	let html = `
-		<button class="action-button block" id="popup-button-budget">Set Budget</button>
-		<button class="action-button block" id="popup-button-income">Set Income</button>
+		<button class="action-button block" id="popup-button-budget">Set Monthly Budget</button>
+		<button class="action-button block" id="popup-button-income">Set Yearly Income</button>
 	`;
 
 	let popup = new Popup(250, "auto", "Update Budget", html, { cancelText:"Dismiss", confirmText:"-" });

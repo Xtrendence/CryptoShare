@@ -1,6 +1,7 @@
 async function populateDashboardBudget(recreate) {
 	if(getActivePage().id === "dashboard-page") {
 		if(recreate) {
+			tippyInstances.budgetStats = {};
 			divDashboardBudgetList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
 		
@@ -211,14 +212,14 @@ function generateBudgetStats(budgetData, transactionData) {
 		span.textContent = `${usedPercentage}%`;
 		div.style.width = `${usedPercentage}%`;
 
-		if(span.id in tippyInstances) {
-			tippyInstances[span.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
-			tippyInstances[div.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
-			tippyInstances[div.id + "-background"].setContent(`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`);
+		if(span.id in tippyInstances.budgetStats) {
+			tippyInstances.budgetStats[span.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
+			tippyInstances.budgetStats[div.id].setContent(`Used: ${currencySymbols[currency] + separateThousands(used)}`);
+			tippyInstances.budgetStats[div.id + "-background"].setContent(`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`);
 		} else {
-			tippyInstances[span.id] = tippy(span, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
-			tippyInstances[div.id] = tippy(div, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
-			tippyInstances[div.id + "-background"] = tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
+			tippyInstances.budgetStats[span.id] = tippy(span, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+			tippyInstances.budgetStats[div.id] = tippy(div, { content:`Used: ${currencySymbols[currency] + separateThousands(used)}`, placement:"bottom" });
+			tippyInstances.budgetStats[div.id + "-background"] = tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
 		}
 	});
 }
@@ -1050,10 +1051,193 @@ function setDefaultBudgetData() {
 	});
 }
 
-function showBudgetPopup() {
+async function showBudgetPopup() {
+	let html = `
+		<input type="number" id="popup-input-food" placeholder="Food..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-housing" placeholder="Housing..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-transport" placeholder="Transport..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-entertainment" placeholder="Entertainment..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-insurance" placeholder="Insurance..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-savings" placeholder="Savings..." spellcheck="false" autocomplete="off">
+		<input type="number" id="popup-input-other" placeholder="Other..." spellcheck="false" autocomplete="off">
+	`;
 
+	let popup = new Popup(250, "auto", "Set Monthly Budget", html);
+	popup.show();
+	popup.updateHeight();
+	
+	let budgetData = await fetchBudget();
+	
+	let popupInputFood = document.getElementById("popup-input-food");
+	let popupInputHousing = document.getElementById("popup-input-housing");
+	let popupInputTransport = document.getElementById("popup-input-transport");
+	let popupInputEntertainment = document.getElementById("popup-input-entertainment");
+	let popupInputInsurance = document.getElementById("popup-input-insurance");
+	let popupInputSavings = document.getElementById("popup-input-savings");
+	let popupInputOther = document.getElementById("popup-input-other");
+
+	popupInputFood.value = budgetData.categories.food;
+	popupInputHousing.value = budgetData.categories.housing;
+	popupInputTransport.value = budgetData.categories.transport;
+	popupInputEntertainment.value = budgetData.categories.entertainment;
+	popupInputInsurance.value = budgetData.categories.insurance;
+	popupInputSavings.value = budgetData.categories.savings;
+	popupInputOther.value = budgetData.categories.other;
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(5000, "Updating...");
+
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let budgetData = await fetchBudget();
+
+			if(empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			let data = parseBudgetPopupData(popupInputFood, popupInputHousing, popupInputTransport, popupInputEntertainment, popupInputInsurance, popupInputSavings, popupInputOther);
+
+			if("error" in data) {
+				hideLoading();
+				errorNotification(data.error);
+				return;
+			}
+
+			let { food, housing, transport, entertainment, insurance, savings, other } = data;
+
+			budgetData.categories.food = food;
+			budgetData.categories.housing = housing;
+			budgetData.categories.transport = transport;
+			budgetData.categories.entertainment = entertainment;
+			budgetData.categories.insurance = insurance;
+			budgetData.categories.savings = savings;
+			budgetData.categories.other = other;
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+			await updateBudget(token, userID, encrypted);
+
+			populateDashboardBudget(true);
+
+			listTransactions();
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
+	});
 }
 
-function showIncomePopup() {
+function parseBudgetPopupData(popupInputFood, popupInputHousing, popupInputTransport, popupInputEntertainment, popupInputInsurance, popupInputSavings, popupInputOther) {
+	let food = popupInputFood.value;
+	let housing = popupInputHousing.value;
+	let transport = popupInputTransport.value;
+	let entertainment = popupInputEntertainment.value;
+	let insurance = popupInputInsurance.value;
+	let savings = popupInputSavings.value;
+	let other = popupInputOther.value;
 
+	if(isNaN(food) || parseFloat(food) < 0) {
+		return { error:"Budget for food has to be zero or greater." };
+	}
+
+	if(isNaN(housing) || parseFloat(housing) < 0) {
+		return { error:"Budget for housing has to be zero or greater." };
+	}
+
+	if(isNaN(transport) || parseFloat(transport) < 0) {
+		return { error:"Budget for transport has to be zero or greater." };
+	}
+
+	if(isNaN(entertainment) || parseFloat(entertainment) < 0) {
+		return { error:"Budget for entertainment has to be zero or greater." };
+	}
+
+	if(isNaN(insurance) || parseFloat(insurance) < 0) {
+		return { error:"Budget for insurance has to be zero or greater." };
+	}
+
+	if(isNaN(savings) || parseFloat(savings) < 0) {
+		return { error:"Budget for savings has to be zero or greater." };
+	}
+
+	if(isNaN(other) || parseFloat(other) < 0) {
+		return { error:"Budget for other has to be zero or greater." };
+	}
+
+	food = parseFloat(food);
+	housing = parseFloat(housing);
+	transport = parseFloat(transport);
+	entertainment = parseFloat(entertainment);
+	insurance = parseFloat(insurance);
+	savings = parseFloat(savings);
+	other = parseFloat(other);
+	
+	if((food + housing + transport + entertainment + insurance + savings + other) !== 100) {
+		return { error:"Budget data must add up to 100%." };
+	}
+
+	return { food:food, housing:housing, transport:transport, entertainment:entertainment, insurance:insurance, savings:savings, other:other };
+}
+
+async function showIncomePopup() {
+	let html = `
+		<input type="number" id="popup-input-income" placeholder="Yearly Income..." spellcheck="false" autocomplete="off">
+	`;
+
+	let popup = new Popup(250, "auto", "Set Yearly Income", html);
+	popup.show();
+	popup.updateHeight();
+	
+	let budgetData = await fetchBudget();
+	
+	let popupInputIncome = document.getElementById("popup-input-income");
+
+	popupInputIncome.value = budgetData.income;
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(5000, "Updating...");
+
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+
+			let income = popupInputIncome.value;
+
+			if(empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			if(isNaN(income) || parseFloat(income) < 0) {
+				errorNotification("Income has to be zero or greater.");
+				return;
+			}
+
+			budgetData.income = parseFloat(income);
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+			await updateBudget(token, userID, encrypted);
+
+			populateDashboardBudget(true);
+
+			listTransactions();
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
+	});
 }

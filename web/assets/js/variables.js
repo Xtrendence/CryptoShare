@@ -24,4 +24,6 @@ let applicationChoices = getSettingsChoices();
 
 let audioPlayable = false;
 
-let tippyInstances = {};
+let tippyInstances = {
+	budgetStats: {}
+};
