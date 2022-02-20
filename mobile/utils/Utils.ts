@@ -294,21 +294,28 @@ export default class Utils {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
 		let year = date.getFullYear();
-		return year + " / " + month + " / " + day;
+		return year + " / " + ("0" + month).slice(-2) + " / " + ("0" + day).slice(-2);
 	}
 
 	static formatDateHuman(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
 		let year = date.getFullYear();
-		return day + " / " + month + " / " + year;
+		return ("0" + day).slice(-2) + " / " + ("0" + month).slice(-2) + " / " + year;
 	}
 
 	static formatDateHyphenated(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
 		let year = date.getFullYear();
-		return year + "-" + month + "-" + day;
+		return year + "-" + ("0" + month).slice(-2) + "-" + ("0" + day).slice(-2);
+	}
+
+	static formatDateHyphenatedHuman(date: Date) {
+		let day = date.getDate();
+		let month = date.getMonth() + 1;
+		let year = date.getFullYear();
+		return ("0" + day).slice(-2) + "-" + ("0" + month).slice(-2) + "-" + year;
 	}
 
 	static addDays(date: Date, days: number) {

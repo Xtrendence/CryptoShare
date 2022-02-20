@@ -8,6 +8,7 @@ let defaultChoices = {
 	"defaultSettingsPage": "behavior",
 	"currency": "usd",
 	"assetIconBackdrop": "disabled",
+	"dateFormat": "yyyy-mm-dd",
 	"navbarStyle": "normal",
 	"transactionsAffectHoldings": "enabled"
 };

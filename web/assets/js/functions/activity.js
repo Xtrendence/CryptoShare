@@ -153,6 +153,8 @@ function filterActivityList(query) {
 }
 
 function createActivityListRows(activityData) {
+	let choices = getSettingsChoices();
+
 	let transactionIDs = Object.keys(activityData).reverse();
 
 	let rows = [];
@@ -165,10 +167,12 @@ function createActivityListRows(activityData) {
 		div.setAttribute("class", "activity-list-row noselect audible-pop");
 		div.setAttribute("data-id", activity.activityAssetID);
 
+		let date = choices?.dateFormat === "dd-mm-yyyy" ? formatDateHyphenatedHuman(new Date(Date.parse(activity.activityDate))) : formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
 		div.innerHTML = `
 			<div class="info-wrapper audible-pop">
 				<div class="asset-container audible-pop">
-					<span class="date">${activity.activityDate}</span>
+					<span class="date">${date}</span>
 					<span class="symbol">${activity.activityAssetSymbol.toUpperCase()}</span>
 					<span class="type ${activity.activityType}">${capitalizeFirstLetter(activity.activityType)}</span>
 				</div>

@@ -154,21 +154,28 @@ function formatDate(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;
 	let year = date.getFullYear();
-	return year + " / " + month + " / " + day;
+	return year + " / " + ("0" + month).slice(-2) + " / " + ("0" + day).slice(-2);
 }
 
 function formatDateHuman(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;
 	let year = date.getFullYear();
-	return day + " / " + month + " / " + year;
+	return ("0" + day).slice(-2) + " / " + ("0" + month).slice(-2) + " / " + year;
 }
 
 function formatDateHyphenated(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;
 	let year = date.getFullYear();
-	return year + "-" + month + "-" + day;
+	return year + "-" + ("0" + month).slice(-2) + "-" + ("0" + day).slice(-2);
+}
+
+function formatDateHyphenatedHuman(date) {
+	let day = date.getDate();
+	let month = date.getMonth() + 1;
+	let year = date.getFullYear();
+	return ("0" + day).slice(-2) + "-" + ("0" + month).slice(-2) + "-" + year;
 }
 
 function addDays(date, days) {

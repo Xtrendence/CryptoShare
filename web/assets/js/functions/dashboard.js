@@ -275,6 +275,8 @@ async function listTransactions() {
 			divSideMenuContainer.innerHTML = `<span class="list-text noselect">No Transactions Found</span>`;
 			return;
 		}
+		
+		let choices = getSettingsChoices();
 
 		let currency = getCurrency();
 
@@ -291,9 +293,11 @@ async function listTransactions() {
 			let div = document.createElement("div");
 			div.setAttribute("class", `transaction-row noselect ${transaction.transactionCategory}`);
 
+			let date = choices?.dateFormat === "dd-mm-yyyy" ? formatDateHyphenatedHuman(new Date(Date.parse(transaction.transactionDate))) : formatDateHyphenated(new Date(Date.parse(transaction.transactionDate)));
+
 			div.innerHTML = `
 				<div class="item">
-					<span class="date">${transaction.transactionDate}</span>
+					<span class="date">${date}</span>
 				</div>
 				<div class="item">
 					<span class="category">${capitalizeFirstLetter(transaction.transactionCategory)}</span>
