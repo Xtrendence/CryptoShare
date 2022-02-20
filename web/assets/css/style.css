@@ -1327,6 +1327,17 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	background:var(--accent-second);
 	vertical-align:middle;
 }
+.dashboard-list.watchlist .action-button.delete {
+	position:absolute;
+	top:10px;
+	right:10px;
+}
+.dashboard-list.watchlist .action-button.delete svg {
+	width:24px;
+	height:24px;
+	fill:var(--accent-contrast);
+	margin-top:2px;
+}
 .dashboard-list.watchlist .name {
 	background:var(--accent-first);
 }
@@ -1551,6 +1562,9 @@ html.light #desktop .watchlist-list-row:hover, html.light #desktop .market-list-
 }
 .market-list .watchlist-list-row:first-of-type {
 	margin-top:0;
+}
+.market-list .watchlist-list-row .action-button.delete {
+	display:none;
 }
 .market-list .watchlist-list-row .info-wrapper {
 	width:calc(100% - 20px);
