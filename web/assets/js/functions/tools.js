@@ -99,66 +99,80 @@ function calculateTax(currency, income) {
 
 	income = parseFloat(income);
 
-	let brackets = [
-		{
-			title: "Personal Allowance",
+	let brackets = {
+		personalAllowance: {
 			from: 0,
 			to: 12570,
 			rate: 0
 		},
-		{
-			title: "Basic Rate",
+		basicRate: {
 			from: 12571,
 			to: 50270,
 			rate: 20
 		},
-		{
-			title: "Higher Rate",
+		higherRate: {
 			from: 50271,
 			to: 150000,
 			rate: 40
 		},
-		{
-			title: "Additional Rate",
+		additionalRate: {
 			from: 150001,
 			to: Number.MAX_SAFE_INTEGER,
 			rate: 45
 		}
-	];
+	};
 
-	let output = `This may not be accurate, and would only be applicable in the UK:<br><br>Total Tax To Pay: `;
+	let output = `This may not be accurate, and would only be applicable in the UK:`;
 
 	let taxableBasic, taxableHigher, taxableAdditional;
 
 	let toPay = 0;
 
-	if(income <= brackets[0].to) {
+	let taxBracket = "";
+
+	if(income <= brackets.personalAllowance.to) {
+		// Personal Allowance.
+		taxBracket = "You aren't in any tax bracket. You don't need to pay tax.";
+
 		toPay = 0;
-	} else if(income >= brackets[1].from && income <= brackets[1].to) {
-		taxableBasic = income - brackets[0].to;
-		let amountBasic = parseFloat(((taxableBasic * brackets[1].rate) / 100).toFixed(2));
+	} else if(income >= brackets.basicRate.from && income <= brackets.basicRate.to) {
+		// Basic Rate.
+		taxBracket = "You are in the basic tax bracket.";
+
+		taxableBasic = income - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
 		toPay += amountBasic;
-	} else if(income >= brackets[2].from && income <= brackets[2].to) {
-		taxableBasic = brackets[1].to - brackets[0].to;
-		let amountBasic = parseFloat(((taxableBasic * brackets[1].rate) / 100).toFixed(2));
+	} else if(income >= brackets.higherRate.from && income <= brackets.higherRate.to) {
+		// Higher Rate.
+		taxBracket = "You are in the higher tax bracket.";
+
+		taxableBasic = brackets.basicRate.to - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
 		toPay += amountBasic;
 
-		taxableHigher = income - brackets[1].to;
-		let amountHigher = parseFloat(((taxableHigher * brackets[2].rate) / 100).toFixed(2));
+		taxableHigher = income - brackets.basicRate.to;
+		let amountHigher = parseFloat(((taxableHigher * brackets.higherRate.rate) / 100).toFixed(2));
 		toPay += amountHigher;
-	} else if(income >= brackets[3].from && income <= brackets[3].to) {
-		taxableBasic = brackets[1].to - brackets[0].to;
-		let amountBasic = parseFloat(((taxableBasic * brackets[1].rate) / 100).toFixed(2));
+	} else {
+		// Additional Rate.
+		taxBracket = "You are in the additional tax bracket.";
+
+		taxableBasic = brackets.basicRate.to - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
 		toPay += amountBasic;
 
-		taxableHigher = income - brackets[1].to;
-		let amountHigher = parseFloat(((taxableHigher * brackets[2].rate) / 100).toFixed(2));
+		taxableHigher = brackets.higherRate.to - brackets.basicRate.to;
+		let amountHigher = parseFloat(((taxableHigher * brackets.higherRate.rate) / 100).toFixed(2));
 		toPay += amountHigher;
 
-		taxableAdditional = income - brackets[2].to;
-		let amountAdditional = parseFloat(((taxableAdditional * brackets[3].rate) / 100).toFixed(2));
+		taxableAdditional = income - brackets.higherRate.to;
+		let amountAdditional = parseFloat(((taxableAdditional * brackets.additionalRate.rate) / 100).toFixed(2));
 		toPay += amountAdditional;
 	}
+
+	output += "<br><br>" + taxBracket;
+
+	output += "<br><br>Total Tax To Pay: ";
 
 	output += currencySymbol + separateThousands(toPay) + "<br><br>";
 
