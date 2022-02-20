@@ -67,24 +67,57 @@ async function populateMarketListCrypto(page, currency) {
 }
 
 // TODO: Add functionality.
-async function populateMarketListStocks(page, currency) {
+async function populateMarketListStocks(page, currency) {		
 	try {
-		let parsedData = await parseWatchlistAsMarket();
+		let watchlistData = await fetchWatchlist();
 
-		if(empty(parsedData)) {
+		if(empty(watchlistData)) {
 			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
 			return;
 		}
+
+		let currency = getCurrency();
+
+		let filteredWatchlist = filterWatchlistByType(watchlistData);
+
+		let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
+
+		let marketStocksData = !empty(watchlistStockSymbols) ? await fetchStockPrice(currency, watchlistStockSymbols, false) : {};
+		if("error" in marketStocksData) {
+			marketStocksData = {};
+			watchlistStockSymbols = [];
+			filteredWatchlist.stocks = {};
+		}
+
+		let rows = createWatchlistListRows({}, marketStocksData, watchlistData);
+
+		if(empty(rows)) {
+			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
+			return;
+		}
+
+		if(divMarketListStocks.getElementsByClassName("loading-icon").length > 0 || divMarketListStocks.childElementCount !== rows.length) {
+			divMarketListStocks.innerHTML = "";
+		}
+
+		for(let i = 0; i < rows.length; i++) {
+			if(divMarketListStocks.childElementCount >= i + 1) {
+				let current = divMarketListStocks.getElementsByClassName("watchlist-list-row")[i];
+				if(current.innerHTML !== rows[i].innerHTML) {
+					let currentInfo = current.getElementsByClassName("info-wrapper")[0];
+
+					if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
+						currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
+					}
+				}
+			} else {
+				divMarketListStocks.appendChild(rows[i]);
+			}
+		}
 	} catch(error) {
 		console.log(error);
+		errorNotification("Something went wrong...");
 	}
-}
-
-// TODO: Add functionality.
-function parseWatchlistAsMarket() {
-	return new Promise((resolve, reject) => {
-		resolve({});
-	});
 }
 
 function createMarketListCryptoRows(marketData, page, currency) {

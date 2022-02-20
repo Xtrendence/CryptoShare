@@ -1549,6 +1549,30 @@ html.light #desktop .watchlist-list-row:hover, html.light #desktop .market-list-
 #desktop .watchlist-list-row:hover, #desktop .market-list-row:hover, #desktop .holdings-list-row:hover, #desktop .activity-list-row:hover {
 	background:var(--main-fourth);
 }
+.market-list .watchlist-list-row:first-of-type {
+	margin-top:0;
+}
+.market-list .watchlist-list-row .info-wrapper {
+	width:calc(100% - 20px);
+}
+.market-list .watchlist-list-row .info-container {
+	width:calc(100% - 200px);
+	padding:0;
+	margin-right:10px;
+}
+.market-list .watchlist-list-row .info-container .top {
+	display:inline-block;
+}
+.market-list .watchlist-list-row .info-container .bottom {
+	display:inline-block;
+}
+.market-list .watchlist-list-row .info-wrapper .name {
+	left:20px;
+	top:20px;
+}
+.market-list .watchlist-list-row .info-wrapper .rank-container {
+	display:none;
+}
 .market-list-row .icon-wrapper, .holdings-list-row .icon-wrapper {
 	width:120px;
 	height:120px;

@@ -816,7 +816,7 @@ function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistDa
 					</div>
 				`;
 
-				addWatchlistRowEvent(div, asset.watchlistID);
+				addWatchlistRowEvent(div, asset);
 
 				rows.push(div);
 			} else {
@@ -854,7 +854,7 @@ function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistDa
 					</div>
 				`;
 
-				addWatchlistRowEvent(div, asset.watchlistID);
+				addWatchlistRowEvent(div, asset);
 
 				rows.push(div);
 			}
@@ -866,8 +866,16 @@ function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistDa
 	return rows;
 }
 
-function addWatchlistRowEvent(div, watchlistID) {
+function addWatchlistRowEvent(div, asset) {
 	div.addEventListener("click", () => {
+		if(div.parentElement.id === "market-list-stocks") {
+			buttonMarketSearch.click();
+			document.getElementById("popup-input-search").value = asset.assetSymbol;
+			document.getElementById("popup-choice-stock").click();
+			document.getElementById("popup-input-search").parentElement.getElementsByClassName("button-confirm")[0].click();
+			return;
+		}
+
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
@@ -879,7 +887,7 @@ function addWatchlistRowEvent(div, watchlistID) {
 			try {
 				showLoading(1500, "Deleting...");
 
-				await deleteWatchlist(token, userID, watchlistID);
+				await deleteWatchlist(token, userID, asset.watchlistID);
 
 				populateDashboardWatchlist(true);
 
