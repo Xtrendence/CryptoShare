@@ -250,6 +250,7 @@ function addTooltips() {
 	tippy(buttonMarketNext, { content:"Next", placement:"top" });
 	tippy(".holdings-card.username", { content:"Account", placement:"right" });
 	tippy(".holdings-card.value", { content:"Total Portfolio Value", placement:"right" });
+	tippy(buttonActivityHelp, { content:"Help", placement:"top" });
 	tippy(buttonSettingsLogoutEverywhere, { content:"Deletes all your active session tokens, causing you to get logged out on every device.", placement:"right" });
 	tippy(buttonSettingsUserRegistration, { content:"Enables or disables the ability for users to register new accounts.", placement:"right" });
 	tippy(buttonSettingsStockAPIType, { content:"Switches between the internal stock API, and an external one. The internal one would not have API rate limits if used in moderation by a handful of users, but isn't recommended if user registration is enabled. The external one allows each user to set an API key, and make 100 requests per day. Market data is aggressively cached and shared between users to limit API requests to a minimum, and stock prices only update once a day. Both APIs are unofficial, and could cease to work at any point.", placement:"bottom" });

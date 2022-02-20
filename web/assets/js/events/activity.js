@@ -22,12 +22,19 @@ buttonActivitySearch.addEventListener("click", () => {
 	filterActivityList(inputActivitySearch.value);
 });
 
-// TODO: Add functionality.
 buttonActivityHelp.addEventListener("click", () => {
+	let html = `
+		<span>An activity represents an event where a crypto or stock asset was bought, sold, or transferred. The settings page includes an option where transactions can be set to affect holdings, which means your portfolio would be based on activities you record. For users who simply wish to track their assets without having to record each trade, the aforementioned option can be turned off, and holdings can be added directly through the holdings page.</span>
+		<span class="margin-top">Adding a plus (+) sign to the "From" or "To" fields of a "Transfer" activity would cause the asset to get added to your holdings, whereas adding a minus (-) would subtract the amount.</span>
+		<span class="margin-top">To decrease ambiguity, the preferred date format when recording activities is YYYY-MM-DD. However, the format of the date shown once the activity has been recorded can be changed through the settings page.</span>
+		<span class="margin-top">Only the asset symbol, asset type, amount, date, and activity type need to be provided. The rest of the fields can be left empty.</span>
+	`;
 
+	let popup = new Popup(360, "auto", "Help", html, { cancelText:"Dismiss", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
 });
 
-// TODO: Add functionality (and, in the future, additional income-related tools).
 buttonActivityTools.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-staking">Staking Calculator</button>
