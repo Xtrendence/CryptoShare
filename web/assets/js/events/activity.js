@@ -33,6 +33,8 @@ buttonActivityTools.addEventListener("click", () => {
 		<button class="action-button block" id="popup-button-staking">Staking Calculator</button>
 		<button class="action-button block" id="popup-button-mining">Mining Calculator</button>
 		<button class="action-button block" id="popup-button-dividends">Dividends Calculator</button>
+		<button class="action-button block" id="popup-button-mortgage">Mortgage Calculator</button>
+		<button class="action-button block" id="popup-button-tax">Tax Calculator</button>
 	`;
 
 	let popup = new Popup(250, "auto", "Tools", html, { cancelText:"Dismiss", confirmText:"-" });
@@ -52,6 +54,16 @@ buttonActivityTools.addEventListener("click", () => {
 	document.getElementById("popup-button-dividends").addEventListener("click", () => {
 		popup.hide();
 		showActivityDividendPopup();
+	});
+
+	document.getElementById("popup-button-mortgage").addEventListener("click", () => {
+		popup.hide();
+		showActivityMortgagePopup();
+	});
+
+	document.getElementById("popup-button-tax").addEventListener("click", () => {
+		popup.hide();
+		showActivityTaxPopup();
 	});
 });
 

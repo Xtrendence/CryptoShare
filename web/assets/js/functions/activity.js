@@ -737,3 +737,79 @@ function showActivityDividendPopup() {
 		}
 	});
 }
+
+function showActivityMortgagePopup() {
+	let html = `
+		<span class="popup-input-span">Property Price</span>
+		<input type="number" id="popup-input-price" placeholder="Property Price..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Deposit</span>
+		<input type="number" id="popup-input-deposit" placeholder="Deposit..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Term In Years</span>
+		<input type="number" id="popup-input-term" placeholder="Term In Years..." spellcheck="false" autocomplete="off">
+		<span class="popup-input-span">Interest Rate</span>
+		<input type="number" id="popup-input-interest" placeholder="Interest Rate..." spellcheck="false" autocomplete="off">
+		<span class="hidden" id="popup-span-output"></span>
+	`;
+
+	let popup = new Popup(340, "auto", "Mortgage Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	popup.show();
+	popup.updateHeight();
+
+	let popupInputPrice = document.getElementById("popup-input-price");
+	let popupInputDeposit = document.getElementById("popup-input-deposit");
+	let popupInputTerm = document.getElementById("popup-input-term");
+	let popupInputInterest = document.getElementById("popup-input-interest");
+	let popupSpanOutput = document.getElementById("popup-span-output");
+
+	popup.on("confirm", async () => {
+		let currency = getCurrency();
+
+		let price = popupInputPrice.value;
+		let deposit = popupInputDeposit.value;
+		let term = popupInputTerm.value;
+		let interest = popupInputInterest.value;
+
+		if(!isNaN(price) && price > 0 && !isNaN(deposit) && deposit > 0 && !isNaN(term) && term > 0 && !isNaN(interest) && interest > 0) {
+			popupSpanOutput.innerHTML = calculateMortgage(currency, price, deposit, term, interest);
+			popupSpanOutput.classList.remove("hidden");
+			popup.updateHeight();
+		} else {
+			popupSpanOutput.innerHTML = "";
+			popupSpanOutput.classList.add("hidden");
+			popup.updateHeight();
+			errorNotification("Please fill out all fields, and enter them as numbers.");
+		}
+	});
+}
+
+function showActivityTaxPopup() {
+	let html = `
+		<span class="popup-input-span">Yearly Income</span>
+		<input type="number" id="popup-input-income" placeholder="Yearly Income..." spellcheck="false" autocomplete="off">
+		<span class="hidden" id="popup-span-output"></span>
+	`;
+
+	let popup = new Popup(340, "auto", "Tax Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	popup.show();
+	popup.updateHeight();
+
+	let popupInputIncome = document.getElementById("popup-input-income");
+	let popupSpanOutput = document.getElementById("popup-span-output");
+
+	popup.on("confirm", async () => {
+		let currency = getCurrency();
+
+		let income = popupInputIncome.value;
+
+		if(!isNaN(income) && income > 0) {
+			popupSpanOutput.innerHTML = calculateTax(currency, income);
+			popupSpanOutput.classList.remove("hidden");
+			popup.updateHeight();
+		} else {
+			popupSpanOutput.innerHTML = "";
+			popupSpanOutput.classList.add("hidden");
+			popup.updateHeight();
+			errorNotification("Please fill out the field, and enter the value as a number.");
+		}
+	});
+}

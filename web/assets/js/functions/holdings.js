@@ -422,7 +422,7 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 			popup.show();
 			popup.updateHeight();
 
-			addHoldingPopupDeleteEvent(popup, document.getElementById("popup-button-delete"), holdingID);
+			addHoldingPopupDeleteEvent(popup, document.getElementById("popup-button-delete"), holdingID, holdingAssetSymbol);
 
 			let inputAmount = document.getElementById("popup-input-amount");
 
@@ -463,14 +463,14 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 	});
 }
 
-function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID) {
+function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID, holdingAssetSymbol) {
 	buttonDelete.addEventListener("click", () => {
 		previousPopup.hide();
 		
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove this asset from your portfolio?</span>`);
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${holdingAssetSymbol.toUpperCase()} from your portfolio?</span>`);
 		popup.show();
 		popup.updateHeight();
 

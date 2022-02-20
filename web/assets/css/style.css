@@ -1331,6 +1331,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	position:absolute;
 	top:10px;
 	right:10px;
+	height:37.5px;
 }
 .dashboard-list.watchlist .action-button.delete svg {
 	width:24px;
@@ -1382,6 +1383,12 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 .dashboard-list.budget .chart-wrapper canvas {
 	margin:0 auto 0 auto;
+}
+.dashboard-list.budget .header {
+	font-size:16px;
+	color:var(--main-contrast);
+	display:block;
+	margin-bottom:20px;
 }
 .dashboard-list.budget .stats-container {
 	text-align:center;

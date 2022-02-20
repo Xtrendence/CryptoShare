@@ -20,6 +20,7 @@ async function populateDashboardBudget(recreate) {
 						<canvas class="pie-chart-canvas" id="pie-chart-canvas"></canvas>
 					</div>
 					<div class="stats-wrapper noselect">
+						<span class="header">Used Budget</span>
 						<div class="stats-container">
 							<span class="title">Food</span>
 							<div class="progress-container">
@@ -879,7 +880,7 @@ function addWatchlistDeleteEvent(div, asset) {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove this asset from your watchlist?</span>`);
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${asset.assetSymbol} from your watchlist?</span>`);
 		popup.show();
 		popup.updateHeight();
 
