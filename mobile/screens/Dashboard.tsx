@@ -12,6 +12,7 @@ import { Colors } from "../styles/Global";
 import store from "../store/store";
 import CryptoFN from "../utils/CryptoFN";
 import Requests from "../utils/Requests";
+import BudgetStats from "../components/BudgetStats";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -25,8 +26,11 @@ export default function Dashboard({ navigation }: any) {
 
 	const [list, setList] = useState<string>("budget");
 
+	const defaultBudgetStats = null;
+
 	const [budgetChart, setBudgetChart] = useState<any>(null);
-	const [budgetStats, setBudgetStats] = useState<any>(null);
+	const [budgetStats, setBudgetStats] = useState<any>(defaultBudgetStats);
+	const [budgetSummary, setBudgetSummary] = useState<any>(null);
 
 	const [watchlistRows, setWatchlistRows] = useState<any>({});
 	
@@ -59,6 +63,7 @@ export default function Dashboard({ navigation }: any) {
 					<ScrollView style={[styles.wrapper, styles[`wrapper${theme}`]]} contentContainerStyle={styles.budgetScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
 						{budgetChart}
 						{budgetStats}
+						{budgetSummary}
 					</ScrollView>
 				}
 				{ list === "watchlist" &&
@@ -101,8 +106,18 @@ export default function Dashboard({ navigation }: any) {
 				budgetData = await fetchBudget();
 			}
 
-			generatePieChart(budgetData);
-			generateBudgetStats(budgetData, transactionData);
+			let backgroundColors: any = {
+				food: "rgb(254,137,112)",
+				housing: "rgb(157,255,149)",
+				transport: "rgb(200,172,165)",
+				entertainment: "rgb(255,195,127)",
+				insurance: "rgb(119,254,229)",
+				savings: "rgb(119,194,253)",
+				other: "rgb(182,137,251)",
+			};
+
+			generatePieChart(budgetData, backgroundColors);
+			generateBudgetStats(budgetData, transactionData, backgroundColors);
 		} catch(error) {
 			if(error !== "Timeout.") {
 				Utils.notify(theme, "Something went wrong...");
@@ -111,20 +126,10 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
-	function generatePieChart(budgetData: any) {
+	function generatePieChart(budgetData: any, backgroundColors: any) {
 		let settings: any = store.getState().settings.settings;
 
 		let currency = settings.currency;
-
-		let backgroundColors: any = {
-			food: "rgb(254,137,112)",
-			housing: "rgb(157,255,149)",
-			transport: "rgb(200,172,165)",
-			entertainment: "rgb(255,195,127)",
-			insurance: "rgb(119,254,229)",
-			savings: "rgb(119,194,253)",
-			other: "rgb(182,137,251)",
-		};
 
 		let categories = budgetData.categories;
 		let income = budgetData.income;
@@ -187,8 +192,90 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 
-	function generateBudgetStats(budgetData: any, transactionData: any) {
+	function generateBudgetStats(budgetData: any, transactionData: any, backgroundColors: any) {
+		if(Utils.empty(transactionData)) {
+			setBudgetStats(defaultBudgetStats);
+			return;
+		}
+
+		let settings: any = store.getState().settings.settings;
+
+		let currency = settings.currency;
+
+		let parsed = parseTransactionData(transactionData);
+
+		let budgetAmounts: any = {};
+	
+		let categories = budgetData.categories;
+		let income = budgetData.income;
+		let earned = parsed.earned;
+
+		if(earned > 0) {
+			setBudgetSummary(
+				<View style={[styles.budgetItem, styles[`budgetItem${theme}`]]}>
+					<Text style={[styles.progressText, styles[`progressText${theme}`]]}>Based on your transactions, aside from your income of {Utils.currencySymbols[currency] + Utils.separateThousands(parseFloat((income / 12).toFixed(0)))}, you earned an additional {Utils.currencySymbols[currency] + Utils.separateThousands(earned)} this month.</Text>
+				</View>
+			);
+		} else {
+			setBudgetSummary(
+				<View style={[styles.budgetItem, styles[`budgetItem${theme}`]]}>
+					<Text style={[styles.progressText, styles[`progressText${theme}`]]}>Based on your transactions, you didn't earn any additional money aside from your income of {Utils.currencySymbols[currency] + Utils.separateThousands(parseFloat((income / 12).toFixed(0)))}.</Text>
+				</View>
+			);
+		}
+
+		Object.keys(categories).map(category => {
+			let percentage = categories[category];
+			let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
+			let remaining = amount - parsed[category];
+			let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
+			let used = amount - remaining;
+			let usedPercentage = 100 - remainingPercentage;
+
+			if(usedPercentage > 100) {
+				usedPercentage = 100;
+			}
 		
+			budgetAmounts[category] = { budget:amount, remaining:remaining, remainingPercentage:remainingPercentage, used:used, usedPercentage:usedPercentage };
+		});
+
+		setBudgetStats(<BudgetStats theme={theme} currency={currency} stats={budgetAmounts} backgroundColors={backgroundColors}/>)
+	}
+
+	function parseTransactionData(transactionData: any) {
+		let categories = Object.keys(Utils.defaultBudgetData.categories);
+		let parsed: any = {};
+
+		parsed.earned = 0;
+
+		categories.map(category => {
+			parsed[category] = 0;
+		});
+
+		let keys = Object.keys(transactionData);
+	
+		keys.map(key => {
+			let transaction = transactionData[key];
+
+			try {
+				let amount = parseFloat(transaction.transactionAmount);
+
+				if(transaction.transactionType === "spent") {
+					parsed[transaction.transactionCategory] += amount;
+				} else {
+					if(transaction.transactionCategory === "savings") {
+						parsed[transaction.transactionCategory] += amount;
+					} else {
+						parsed.earned += amount;
+					}
+				}
+			} catch(error) {
+				console.log(error);
+				Utils.notify(theme, "Couldn't parse all transactions.");
+			}
+		});
+
+		return parsed;
 	}
 
 	function changeList(list: string) {

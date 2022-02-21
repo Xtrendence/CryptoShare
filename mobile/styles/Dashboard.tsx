@@ -124,10 +124,13 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast
 	},
 	budgetScrollViewContent: {
-		padding: 20
+		paddingTop: 20,
+		paddingRight: 20,
+		paddingLeft: 20,
 	},
 	budgetItem: {
 		padding: 20,
+		marginBottom: 20,
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: Colors.Dark.mainFirst,
@@ -156,6 +159,9 @@ export default createStyle<any>({
 		flexDirection: "row",
 		alignItems: "center"
 	},
+	column: {
+		flexDirection: "column",
+	},
 	legendWrapper: {
 		marginLeft: 15
 	},
@@ -172,6 +178,66 @@ export default createStyle<any>({
 		color: Colors.Dark.mainContrast
 	},
 	legendTextLight: {
+		color: Colors.Light.mainContrast
+	},
+	progressWrapper: {
+		width: "100%",
+		justifyContent: "flex-start"
+	},
+	progressContainer: {
+		width: "100%",
+		height: 20,
+	},
+	progressShape: {
+		height: 20,
+		width: screenWidth - 60 - 40 - 20,
+		overflow: "hidden",
+		borderRadius: GlobalStyle.borderRadius
+	},
+	progressBar: {
+		position: "absolute",
+		left: 0,
+		width: screenWidth - 60 - 40 - 20,
+		height: 20,
+	},
+	progressBackground: {
+		zIndex: 4,
+		backgroundColor: Colors.Dark.mainSecond
+	},
+	progressBackgroundLight: {
+		backgroundColor: Colors.Dark.mainSecond
+	},
+	progressForeground: {
+		zIndex: 5
+	},
+	progressText: {
+		fontSize: 14,
+		color: Colors.Dark.mainContrast
+	},
+	progressTextLight: {
+		color: Colors.Light.mainContrast
+	},
+	statsTextWrapper: {
+		marginTop: 15,
+		marginLeft: 10,
+		width: "100%",
+		justifyContent: "flex-start",
+		alignItems: "flex-start"
+	},
+	statsText: {
+		marginTop: 10,
+		fontSize: 12,
+		color: Colors.Dark.mainContrast
+	},
+	statsTextLight: {
+		color: Colors.Light.mainContrast
+	},
+	statsHeader: {
+		fontWeight: "bold",
+		fontSize: 14,
+		color: Colors.Dark.mainContrast
+	},
+	statsHeaderLight: {
 		color: Colors.Light.mainContrast
 	}
 });
