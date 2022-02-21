@@ -1,12 +1,38 @@
-import React from "react";
-import { ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import DatePicker from "react-native-modern-datepicker";
 import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
 
 // TODO: Add calendar input.
 export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
+	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
 	return (
 		<View style={styles.popupContent}>
+			<Modal animationType="fade" visible={showDatePicker} onRequestClose={() => setShowDatePicker(false)} transparent={true}>
+				<ScrollView style={[styles.modalScroll, styles[`modalScroll${theme}`]]}>
+					<DatePicker 
+						onSelectedChange={(value: any) => setDate(value)} 
+						style={styles.calendar}
+						options={{
+							backgroundColor: Colors[theme].mainFirst,
+							textHeaderColor: Colors[theme].accentSecond,
+							textDefaultColor: Colors[theme].mainContrast,
+							selectedTextColor: Colors[theme].accentContrast,
+							mainColor: Colors[theme].accentSecond,
+							textSecondaryColor: Colors[theme].accentFirst,
+							borderColor: Colors[theme].accentSecond,
+						}}
+					/>
+					<View style={{ justifyContent:"center", alignItems:"center", width:"100%", marginTop:20 }}>
+						<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], { width:100 }]} onPress={() => setShowDatePicker(false)}>
+							<Text style={styles.text}>Cancel</Text>
+						</TouchableOpacity>
+					</View>
+				</ScrollView>
+			</Modal>
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
 				<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird, marginTop:20 }]}>
 					<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
@@ -44,16 +70,21 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						style={[styles.popupInput, styles[`popupInput${theme}`], { marginTop:10 }]} 
 						onChangeText={(value) => popupRef.current.activity.activityAssetAmount = value}
 					/>
-					<TextInput 
-						spellCheck={false}
-						defaultValue={data.activityDate}
-						autoCorrect={false}
-						placeholder="Date..." 
-						selectionColor={Colors[theme].mainContrast} 
-						placeholderTextColor={Colors[theme].mainContrastDarker} 
-						style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-						onChangeText={(value) => popupRef.current.activity.activityDate = value}
-					/>
+					<View style={styles.popupButtonWrapper}>
+						<TextInput 
+							spellCheck={false}
+							defaultValue={data.activityDate}
+							autoCorrect={false}
+							placeholder="Date..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { width:150, marginRight:5 }]} 
+							onChangeText={(value) => popupRef.current.activity.activityDate = value}
+						/>
+						<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton${theme}`], { height:40 }]} onPress={() => setShowDatePicker(true)}>
+							<Icon name="calendar" size={20} color={Colors[theme].mainContrastLight}></Icon>
+						</TouchableOpacity>
+					</View>
 					<TextInput 
 						spellCheck={false}
 						defaultValue={data.activityFee}
@@ -162,6 +193,11 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 			</ScrollView>
 		</View>
 	);
+
+	function setDate(value: any) {
+		popupRef.current.activity.activityDate = value;
+		setShowDatePicker(false);
+	}
 
 	function changeContent() {
 		let info = popupRef.current.activity;

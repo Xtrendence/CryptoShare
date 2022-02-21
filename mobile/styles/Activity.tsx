@@ -180,6 +180,9 @@ export default createStyle<any>({
 	choiceTextActiveLight: {
 		color: Colors.Light.accentContrast
 	},
+	modalScroll: {
+		backgroundColor: "rgba(0,0,0,0.9)"
+	},
 	modalSection: {
 		maxWidth: screenWidth - 40,
 		padding: 20,
@@ -245,13 +248,13 @@ export default createStyle<any>({
 	popupChoicesWrapper: {
 		flexDirection: "column",
 		flexWrap: "nowrap",
-		width: 180
+		width: 200
 	},
 	popupButtonWrapper: {
 		flexDirection: "row",
 	},
 	popupButton: {
-		width: 100,
+		width: 110,
 		marginLeft: 10,
 		marginRight: 10
 	},
@@ -261,7 +264,7 @@ export default createStyle<any>({
 		marginBottom: 10
 	},
 	popupInput: {
-		width: 180,
+		width: 200,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainFirstTransparent,
 		color: Colors.Dark.mainContrast,
@@ -275,7 +278,7 @@ export default createStyle<any>({
 		color: Colors.Light.mainContrast,
 	},
 	sectionButton: {
-		width: 180,
+		width: 200,
 		marginLeft: 0,
 		marginRight: 0,
 		marginBottom: 20
