@@ -215,6 +215,38 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	readTransaction(token, userID) {
+		let query = {
+			query: `query readTransaction($token: String!, $userID: Int!) {
+				readTransaction(token: $token, userID: $userID) {
+					transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	readWatchlist(token, userID) {
+		let query = {
+			query: `query readWatchlist($token: String!, $userID: Int!) {
+				readWatchlist(token: $token, userID: $userID) {
+					watchlistID, assetID, assetSymbol, assetType
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
 		let query = {
 			query: `mutation createHolding($token: String!, $userID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {
@@ -350,6 +382,37 @@ export default class Requests {
 				assetID: assetID,
 				assetSymbol: assetSymbol,
 				currency: currency
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	readBudget(token, userID) {
+		let query = {
+			query: `query readBudget($token: String!, $userID: Int!) {
+				readBudget(token: $token, userID: $userID) {
+					budgetData
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	updateBudget(token, userID, budgetData) {
+		let query = {
+			query: `mutation updateBudget($token: String!, $userID: Int!, $budgetData: String!) {
+				updateBudget(token: $token, userID: $userID, budgetData: $budgetData)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				budgetData: budgetData
 			}
 		};
 
