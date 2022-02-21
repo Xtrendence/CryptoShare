@@ -135,7 +135,7 @@ export default function Activity({ navigation }: any) {
 					ListHeaderComponentStyle={styles.header}
 				/>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
+					<TouchableOpacity onPress={() => showHelpPopup()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="question" 
 							size={18} 
@@ -154,7 +154,7 @@ export default function Activity({ navigation }: any) {
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
-						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], popupType === "activity" ? { padding:0 } : null]}>{popupContent}</View>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], ["activity", "help"].includes(popupType) ? { padding:0 } : null]}>{popupContent}</View>
 					</View>
 				</View>
 			</Modal>
@@ -474,6 +474,39 @@ export default function Activity({ navigation }: any) {
 			console.log(error);
 			Utils.notify(theme, "Something went wrong...");
 		}
+	}
+
+	function showHelpPopup() {
+		setPopupType("help");
+
+		let content = () => {
+			return (
+				<View style={[styles.popupContent, { paddingLeft:20, paddingRight:20 }]}>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird, marginTop:20 }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Help</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>An activity represents an event where a crypto or stock asset was bought, sold, or transferred. The settings page includes an option where transactions can be set to affect holdings, which means your portfolio would be based on activities you record. For users who simply wish to track their assets without having to record each trade, the aforementioned option can be turned off, and holdings can be added directly through the holdings page.</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Adding a plus (+) sign to the "From" or "To" fields of a "Transfer" activity would cause the asset to get added to your holdings, whereas adding a minus (-) would subtract the amount.</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>To decrease ambiguity, the preferred date format when recording activities is YYYY-MM-DD. However, the format of the date shown once the activity has been recorded can be changed through the settings page.</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Only the asset symbol, asset type, amount, date, and activity type need to be provided. The rest of the fields can be left empty.</Text>
+						</View>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginBottom:20 }]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
+						</TouchableOpacity>
+					</ScrollView>
+				</View>
+			);
+		};
+
+		showPopup(content);
 	}
 
 	function showToolsPopup() {
