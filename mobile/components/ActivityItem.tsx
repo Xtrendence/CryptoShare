@@ -5,14 +5,16 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
-export default function Item({ info, showActivityPopup, theme }: any) {
+export default function Item({ info, showActivityPopup, theme, dateFormat }: any) {
+	let date = dateFormat === "dd-mm-yyyy" ? Utils.formatDateHyphenatedHuman(new Date(Date.parse(info.activityDate))) : Utils.formatDateHyphenated(new Date(Date.parse(info.activityDate)));
+
 	return (
 		<TouchableOpacity
 			onPress={() => showActivityPopup("updateActivity", info)}
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemLeft}>
-				<Text style={[styles.itemText, styles[`itemText${theme}`], { backgroundColor:Colors[theme].Activity.accentSecond, color:Colors[theme].accentContrast, marginBottom:10 }]}>{info.activityDate}</Text>
+				<Text style={[styles.itemText, styles[`itemText${theme}`], { backgroundColor:Colors[theme].Activity.accentSecond, color:Colors[theme].accentContrast, marginBottom:10 }]}>{date}</Text>
 				<Text style={[styles.itemText, styles[`itemText${theme}`], { backgroundColor:Colors[theme].Activity.accentThird, color:Colors[theme].accentContrast }]}>{info.activityAssetSymbol.toUpperCase()}</Text>
 			</View>
 			<View style={styles.itemRight}>

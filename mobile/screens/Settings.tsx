@@ -146,6 +146,17 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("dateFormat") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Date Format</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<ChoiceButton setting="yyyy-mm-dd" active={settings.dateFormat} text="YYYY-MM-DD" theme={theme} onPress={() => dispatch(changeSetting({ key:"dateFormat", value:"yyyy-mm-dd" }))}/>
+									<ChoiceButton setting="dd-mm-yyyy" active={settings.dateFormat} text="DD-MM-YYYY" theme={theme} onPress={() => dispatch(changeSetting({ key:"dateFormat", value:"dd-mm-yyyy" }))}/>
+								</View>
+							</View>
+						}
 					</ScrollView>
 				</SafeAreaView>
 			</ScrollView>

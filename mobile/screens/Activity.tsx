@@ -72,10 +72,12 @@ export default function Activity({ navigation }: any) {
 	});
 
 	const renderItem = ({ item }: any) => {
+		let settings: any = store.getState().settings.settings;
+
 		let info = activityRows[item];
 
 		return (
-			<Item info={info} showActivityPopup={showActivityPopup} theme={theme}/>
+			<Item info={info} showActivityPopup={showActivityPopup} theme={theme} dateFormat={settings?.dateFormat}/>
 		);
 	}
 	
@@ -188,6 +190,8 @@ export default function Activity({ navigation }: any) {
 	}
 
 	function searchActivity(query: string) {
+		let settings: any = store.getState().settings.settings;
+
 		if(Utils.empty(query)) {
 			setFilteredRows(activityRows);
 			return;
@@ -199,7 +203,10 @@ export default function Activity({ navigation }: any) {
 
 		Object.keys(activityRows).map(txID => {
 			let activity = activityRows[txID];
-			let data = [activity.activityDate, activity.activityType, activity.activityAssetSymbol, activity.activityAssetAmount, activity.activityAssetType];
+
+			let date = settings?.dateFormat === "dd-mm-yyyy" ? Utils.formatDateHyphenatedHuman(new Date(Date.parse(activity.activityDate))) : Utils.formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+
+			let data = [date, activity.activityType, activity.activityAssetSymbol, activity.activityAssetAmount, activity.activityAssetType];
 
 			if(data.join("|").toLowerCase().includes(query)) {
 				filtered[txID] = activity;

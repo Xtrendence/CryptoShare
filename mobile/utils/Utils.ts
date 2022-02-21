@@ -12,6 +12,7 @@ export default class Utils {
 		currency: "usd",
 		transactionsAffectHoldings: "disabled",
 		assetIconBackdrop: "disabled",
+		dateFormat: "yyyy-mm-dd"
 	}
 
 	static currencySymbols: any = {
@@ -128,6 +129,12 @@ export default class Utils {
 			dispatch(changeSetting({ key:"assetIconBackdrop", value:assetIconBackdrop }));
 		}
 
+		let dateFormat = await AsyncStorage.getItem("dateFormat");
+		if(!this.empty(dateFormat)) {
+			settings.dateFormat = dateFormat;
+			dispatch(changeSetting({ key:"dateFormat", value:dateFormat }));
+		}
+
 		return settings;
 	}
 
@@ -152,6 +159,7 @@ export default class Utils {
 			defaultPage: ["page", "default", "login", "area", "section", "load"],
 			transactionsAffectHoldings: ["transactions", "affect", "holdings", "activity", "record", "base"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
+			dateFormat: ["date", "format", "time", "activity", "transaction"],
 		};
 
 		if(!this.empty(query)) {
