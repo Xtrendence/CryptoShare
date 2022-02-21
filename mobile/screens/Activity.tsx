@@ -53,6 +53,15 @@ export default function Activity({ navigation }: any) {
 			shares: "",
 			dividend: "",
 		},
+		mortgage: {
+			price: "",
+			deposit: "",
+			term: "",
+			interest: ""
+		},
+		tax: {
+			income: ""
+		},
 		activity: {
 			activityID: "", 
 			activityAssetID: "", 
@@ -156,7 +165,7 @@ export default function Activity({ navigation }: any) {
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
-						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], ["activity", "help"].includes(popupType) ? { padding:0 } : null]}>{popupContent}</View>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], { padding:0 }]}>{popupContent}</View>
 					</View>
 				</View>
 			</Modal>
@@ -522,23 +531,31 @@ export default function Activity({ navigation }: any) {
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Tools</Text>
-					</View>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<TouchableOpacity onPress={() => showStakingPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
-							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Staking Calculator</Text>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Tools</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<TouchableOpacity onPress={() => showStakingPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Staking Calculator</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showMiningPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Mining Calculator</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showDividendsPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Dividends Calculator</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showMortgagePopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Mortgage Calculator</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showTaxPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:0 }]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Tax Calculator</Text>
+							</TouchableOpacity>
+						</View>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`]]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => showMiningPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
-							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Mining Calculator</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => showDividendsPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:0 }]}>
-							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Dividends Calculator</Text>
-						</TouchableOpacity>
-					</View>
-					<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`]]}>
-						<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
-					</TouchableOpacity>
+					</ScrollView>
 				</View>
 			);
 		};
@@ -560,52 +577,54 @@ export default function Activity({ navigation }: any) {
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Staking Calculator</Text>
-					</View>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
-						<TextInput 
-							spellCheck={false}
-							autoCorrect={false}
-							autoCapitalize="characters"
-							placeholder="Symbol..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-							onChangeText={(value) => popupRef.current.staking.symbol = value}
-						/>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Amount</Text>
-						<TextInput 
-							spellCheck={false}
-							keyboardType="decimal-pad"
-							autoCorrect={false}
-							placeholder="Amount..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-							onChangeText={(value) => popupRef.current.staking.amount = value}
-						/>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>APY</Text>
-						<TextInput 
-							spellCheck={false}
-							keyboardType="decimal-pad"
-							autoCorrect={false}
-							placeholder="APY..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
-							onChangeText={(value) => popupRef.current.staking.apy = value}
-						/>
-					</View>
-					<View style={styles.popupButtonWrapper}>
-						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
-							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => showStakingOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
-							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
-						</TouchableOpacity>
-					</View>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Staking Calculator</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
+							<TextInput 
+								spellCheck={false}
+								autoCorrect={false}
+								autoCapitalize="characters"
+								placeholder="Symbol..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.staking.symbol = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Amount</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Amount..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.staking.amount = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>APY</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="APY..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+								onChangeText={(value) => popupRef.current.staking.apy = value}
+							/>
+						</View>
+						<View style={styles.popupButtonWrapper}>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showStakingOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+							</TouchableOpacity>
+						</View>
+					</ScrollView>
 				</View>
 			);
 		};
@@ -688,63 +707,65 @@ export default function Activity({ navigation }: any) {
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Mining Calculator</Text>
-					</View>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
-						<TextInput 
-							spellCheck={false}
-							autoCorrect={false}
-							autoCapitalize="characters"
-							placeholder="Symbol..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-							onChangeText={(value) => popupRef.current.mining.symbol = value}
-						/>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Equipment Cost</Text>
-						<TextInput 
-							spellCheck={false}
-							keyboardType="decimal-pad"
-							autoCorrect={false}
-							placeholder="Equipment Cost..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-							onChangeText={(value) => popupRef.current.mining.equipmentCost = value}
-						/>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Daily Amount</Text>
-						<TextInput 
-							spellCheck={false}
-							keyboardType="decimal-pad"
-							autoCorrect={false}
-							placeholder="Daily Amount..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-							onChangeText={(value) => popupRef.current.mining.amount = value}
-						/>
-						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Power Cost</Text>
-						<TextInput 
-							spellCheck={false}
-							keyboardType="decimal-pad"
-							autoCorrect={false}
-							placeholder="Power Cost..." 
-							selectionColor={Colors[theme].mainContrast} 
-							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
-							onChangeText={(value) => popupRef.current.mining.powerCost = value}
-						/>
-					</View>
-					<View style={styles.popupButtonWrapper}>
-						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
-							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => showMiningOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
-							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
-						</TouchableOpacity>
-					</View>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Mining Calculator</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
+							<TextInput 
+								spellCheck={false}
+								autoCorrect={false}
+								autoCapitalize="characters"
+								placeholder="Symbol..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mining.symbol = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Equipment Cost</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Equipment Cost..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mining.equipmentCost = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Daily Amount</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Daily Amount..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mining.amount = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Power Cost</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Power Cost..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+								onChangeText={(value) => popupRef.current.mining.powerCost = value}
+							/>
+						</View>
+						<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showMiningOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+							</TouchableOpacity>
+						</View>
+					</ScrollView>
 				</View>
 			);
 		};
@@ -815,7 +836,7 @@ export default function Activity({ navigation }: any) {
 		let content = () => {
 			return (
 				<View style={styles.popupContent}>
-					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Dividends Calculator</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
@@ -842,7 +863,7 @@ export default function Activity({ navigation }: any) {
 							onChangeText={(value) => popupRef.current.dividends.dividend = value}
 						/>
 					</View>
-					<View style={styles.popupButtonWrapper}>
+					<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
@@ -865,6 +886,173 @@ export default function Activity({ navigation }: any) {
 
 			if(!Utils.empty(shares) && !Utils.empty(dividend) && !isNaN(shares) && shares > 0 && !isNaN(dividend) && dividend > 0) {
 				let results = calculateDividendRewards(settings.currency, shares, dividend);
+
+				showPopup(outputHTML(`<span>${results}</span>`));
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function showMortgagePopup() {
+		setPopupType("tools");
+
+		popupRef.current.mortgage = {
+			price: "",
+			deposit: "",
+			term: "",
+			interest: ""
+		};
+
+		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Mortgage Calculator</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Price</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Price..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mortgage.price = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Deposit</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Deposit..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mortgage.deposit = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Term</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Term..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+								onChangeText={(value) => popupRef.current.mortgage.term = value}
+							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Interest</Text>
+							<TextInput 
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Interest..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+								onChangeText={(value) => popupRef.current.mortgage.interest = value}
+							/>
+						</View>
+						<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => showMortgageOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+							</TouchableOpacity>
+						</View>
+					</ScrollView>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function showMortgageOutput(args: any) {
+		try {
+			let settings: any = store.getState().settings.settings;
+			
+			let { price, deposit, term, interest } = popupRef.current.mortgage;
+
+			price = parseFloat(price);
+			deposit = parseFloat(deposit);
+			term = parseFloat(term);
+			interest = parseFloat(interest);
+
+			if(!isNaN(price) && price > 0 && !isNaN(deposit) && deposit > 0 && !isNaN(term) && term > 0 && !isNaN(interest) && interest > 0) {
+				let results = calculateMortgage(settings.currency, price, deposit, term, interest);
+
+				showPopup(outputHTML(`<span>${results}</span>`));
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function showTaxPopup() {
+		setPopupType("tools");
+
+		popupRef.current.tax = {
+			income: ""
+		};
+
+		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Tax Calculator</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Income</Text>
+						<TextInput 
+							spellCheck={false}
+							keyboardType="decimal-pad"
+							autoCorrect={false}
+							placeholder="Income..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.tax.income = value}
+						/>
+					</View>
+					<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showTaxOutput({})} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Calculate</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function showTaxOutput(args: any) {
+		try {
+			let settings: any = store.getState().settings.settings;
+			
+			let { income } = popupRef.current.tax;
+
+			income = parseFloat(income);
+
+			if(!isNaN(income) && income > 0) {
+				let results = calculateTax(settings.currency, income);
 
 				showPopup(outputHTML(`<span>${results}</span>`));
 			}
@@ -1045,6 +1233,112 @@ function calculateDividendRewards(currency: string, amount: number, dividend: nu
 		Weekly Value: ${currencySymbol + Utils.separateThousands(weeklyValue)}<br>
 		Daily Value: ${currencySymbol + Utils.separateThousands(dailyValue)}
 	`;
+}
+
+function calculateMortgage(currency: string, price: number, deposit: number, term: number, interest: number) {
+	let currencySymbol = Utils.currencySymbols[currency];
+
+	let toPay = price - deposit;
+	let interestAmount = (toPay * interest) / 100;
+	let total = price + interestAmount;
+
+	let yearly = parseFloat((total / term).toFixed(0));
+	let monthly = parseFloat((yearly / 12).toFixed(0));
+
+	return `
+		This is a rough estimate, and likely only applicable in the UK:<br><br>
+		Yearly Payment: ${currencySymbol + Utils.separateThousands(yearly)}<br>
+		Monthly Payment: ${currencySymbol + Utils.separateThousands(monthly)}<br>
+		Total Interest: ${currencySymbol + Utils.separateThousands(interestAmount)}<br>
+		Total Cost: ${currencySymbol + Utils.separateThousands(total)}
+	`;
+}
+
+function calculateTax(currency: string, income: number) {
+	let currencySymbol = Utils.currencySymbols[currency];
+
+	let brackets = {
+		personalAllowance: {
+			from: 0,
+			to: 12570,
+			rate: 0
+		},
+		basicRate: {
+			from: 12571,
+			to: 50270,
+			rate: 20
+		},
+		higherRate: {
+			from: 50271,
+			to: 150000,
+			rate: 40
+		},
+		additionalRate: {
+			from: 150001,
+			to: Number.MAX_SAFE_INTEGER,
+			rate: 45
+		}
+	};
+
+	let output = `This may not be accurate, and would only be applicable in the UK:`;
+
+	let taxableBasic = 0, taxableHigher = 0, taxableAdditional = 0;
+
+	let toPay = 0;
+
+	let taxBracket = "";
+
+	if(income <= brackets.personalAllowance.to) {
+		// Personal Allowance.
+		taxBracket = "You aren't in any tax bracket. You don't need to pay tax.";
+
+		toPay = 0;
+	} else if(income >= brackets.basicRate.from && income <= brackets.basicRate.to) {
+		// Basic Rate.
+		taxBracket = "You are in the basic tax bracket.";
+
+		taxableBasic = income - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
+		toPay += amountBasic;
+	} else if(income >= brackets.higherRate.from && income <= brackets.higherRate.to) {
+		// Higher Rate.
+		taxBracket = "You are in the higher tax bracket.";
+
+		taxableBasic = brackets.basicRate.to - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
+		toPay += amountBasic;
+
+		taxableHigher = income - brackets.basicRate.to;
+		let amountHigher = parseFloat(((taxableHigher * brackets.higherRate.rate) / 100).toFixed(2));
+		toPay += amountHigher;
+	} else {
+		// Additional Rate.
+		taxBracket = "You are in the additional tax bracket.";
+
+		taxableBasic = brackets.basicRate.to - brackets.personalAllowance.to;
+		let amountBasic = parseFloat(((taxableBasic * brackets.basicRate.rate) / 100).toFixed(2));
+		toPay += amountBasic;
+
+		taxableHigher = brackets.higherRate.to - brackets.basicRate.to;
+		let amountHigher = parseFloat(((taxableHigher * brackets.higherRate.rate) / 100).toFixed(2));
+		toPay += amountHigher;
+
+		taxableAdditional = income - brackets.higherRate.to;
+		let amountAdditional = parseFloat(((taxableAdditional * brackets.additionalRate.rate) / 100).toFixed(2));
+		toPay += amountAdditional;
+	}
+
+	output += "<br><br>" + taxBracket;
+
+	output += "<br><br>Total Tax To Pay: ";
+
+	output += currencySymbol + Utils.separateThousands(toPay) + "<br><br>";
+
+	output += `Taxable Basic: ${currencySymbol + Utils.separateThousands(taxableBasic)}<br>`;
+	output += `Taxable Higher: ${currencySymbol + Utils.separateThousands(taxableHigher)}<br>`;
+	output += `Taxable Additional: ${currencySymbol + Utils.separateThousands(taxableAdditional)}`;
+
+	return output;
 }
 
 export function fetchActivity() {
