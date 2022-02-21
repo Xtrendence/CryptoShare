@@ -663,7 +663,7 @@ export default function Activity({ navigation }: any) {
 				if("matches" in asset) {
 					let content = () => {
 						return (
-							<View style={styles.popupContent}>
+							<View style={[styles.popupContent, { padding:20 }]}>
 								<MatchList onPress={selectStakingMatch} theme={theme} matches={asset.matches}/>
 								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
 									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
@@ -794,7 +794,7 @@ export default function Activity({ navigation }: any) {
 				if("matches" in asset) {
 					let content = () => {
 						return (
-							<View style={styles.popupContent}>
+							<View style={[styles.popupContent, { padding:20 }]}>
 								<MatchList onPress={selectMiningMatch} theme={theme} matches={asset.matches}/>
 								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
 									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
@@ -1144,16 +1144,18 @@ export default function Activity({ navigation }: any) {
 
 	function outputHTML(html: string) {
 		return (
-			<HTML 
-				contentWidth={screenWidth - 40}
-				source={{ html:html }} 
-				tagsStyles={{ 
-					span: { 
-						color: Colors[theme].mainContrast, 
-						fontSize: 16 
-					}
-				}}
-			/>
+			<View style={[styles.popupContent, { padding:20 }]}>
+				<HTML 
+					contentWidth={screenWidth - 40}
+					source={{ html:html }} 
+					tagsStyles={{ 
+						span: { 
+							color: Colors[theme].mainContrast, 
+							fontSize: 16 
+						}
+					}}
+				/>
+			</View>
 		);
 	}
 }
