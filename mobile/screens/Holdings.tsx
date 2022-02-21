@@ -370,6 +370,13 @@ export default function Holdings({ navigation }: any) {
 	}
 
 	function showHoldingPopup(assetType: string, action: string, info: any = {}) {
+		let settings: any = store.getState().settings.settings;
+
+		if(settings.transactionsAffectHoldings === "enabled") {
+			Utils.notify(theme, "Transactions cannot be affecting holdings.");
+			return;
+		}
+
 		popupRef.current.assetID = info.coinID;
 		popupRef.current.assetSymbol = info.symbol;
 		popupRef.current.assetAmount = info.amount;
@@ -829,7 +836,7 @@ export default function Holdings({ navigation }: any) {
 
 					output.rows.push(info);
 				} else {
-					let symbol = holding.holdingAssetSymbol;
+					let symbol = holding.holdingAssetSymbol.toUpperCase();
 
 					let stock = marketStocksData[symbol].priceData;
 
@@ -914,7 +921,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	
 		for(let holding in holdingsStocksData) {
-			let symbol = holdingsStocksData[holding].holdingAssetSymbol;
+			let symbol = holdingsStocksData[holding].holdingAssetSymbol.toUpperCase();
 			let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
 
 			if(value > 0) {
@@ -1344,7 +1351,7 @@ export default function Holdings({ navigation }: any) {
 						let priceData = await Stock.fetchStockPrice(currency, symbolsStock);
 
 						idsStocks.map(assetID => {
-							let symbol = assetID.replace("stock-", "");
+							let symbol = assetID.replace("stock-", "").toUpperCase();
 							let amount = dates[today].holdings[assetID].amount;
 							let value = amount * priceData[symbol].priceData.price;
 
