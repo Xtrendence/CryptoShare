@@ -40,6 +40,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 					</Text>
 				</View>
 				<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+					<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
 					<TextInput 
 						spellCheck={false}
 						defaultValue={data.activityAssetSymbol}
@@ -59,6 +60,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`], popupRef.current.activity.activityAssetType === "stock" ? styles[`choiceTextActive${theme}`] : null]}>Stock</Text>
 						</TouchableOpacity>
 					</View>
+					<Text style={[styles.labelInput, styles[`labelInput${theme}`], { marginTop:10 }]}>Amount</Text>
 					<TextInput 
 						spellCheck={false}
 						defaultValue={data.activityAssetAmount}
@@ -67,9 +69,10 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						placeholder="Amount..." 
 						selectionColor={Colors[theme].mainContrast} 
 						placeholderTextColor={Colors[theme].mainContrastDarker} 
-						style={[styles.popupInput, styles[`popupInput${theme}`], { marginTop:10 }]} 
+						style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 						onChangeText={(value) => popupRef.current.activity.activityAssetAmount = value}
 					/>
+					<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Date</Text>
 					<View style={styles.popupButtonWrapper}>
 						<TextInput 
 							spellCheck={false}
@@ -85,6 +88,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 							<Icon name="calendar" size={20} color={Colors[theme].mainContrastLight}></Icon>
 						</TouchableOpacity>
 					</View>
+					<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Fee</Text>
 					<TextInput 
 						spellCheck={false}
 						defaultValue={data.activityFee}
@@ -96,6 +100,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 						onChangeText={(value) => popupRef.current.activity.activityFee = value}
 					/>
+					<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Notes</Text>
 					<TextInput 
 						spellCheck={true}
 						defaultValue={data.activityNotes}
@@ -119,6 +124,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 					</View>
 					{ ["buy", "sell"].includes(popupRef.current.activity.activityType) &&
 						<View>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`], { marginTop:10 }]}>Exchange</Text>
 							<TextInput 
 								spellCheck={false}
 								defaultValue={data.activityExchange}
@@ -126,9 +132,10 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								placeholder="Exchange..." 
 								selectionColor={Colors[theme].mainContrast} 
 								placeholderTextColor={Colors[theme].mainContrastDarker} 
-								style={[styles.popupInput, styles[`popupInput${theme}`], { marginTop:10 }]} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 								onChangeText={(value) => popupRef.current.activity.activityExchange = value}
 							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Pair</Text>
 							<TextInput 
 								spellCheck={false}
 								defaultValue={data.activityPair}
@@ -139,6 +146,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 								onChangeText={(value) => popupRef.current.activity.activityPair = value}
 							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Price</Text>
 							<TextInput 
 								spellCheck={false}
 								keyboardType="decimal-pad"
@@ -154,6 +162,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 					}
 					{ popupRef.current.activity.activityType === "transfer" &&
 						<View>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`], { marginTop:10 }]}>From</Text>
 							<TextInput 
 								spellCheck={true}
 								defaultValue={data.activityFrom}
@@ -161,9 +170,10 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 								placeholder="From..." 
 								selectionColor={Colors[theme].mainContrast} 
 								placeholderTextColor={Colors[theme].mainContrastDarker} 
-								style={[styles.popupInput, styles[`popupInput${theme}`], { marginTop:10 }]} 
+								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 								onChangeText={(value) => popupRef.current.activity.activityFrom = value}
 							/>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>To</Text>
 							<TextInput 
 								spellCheck={true}
 								defaultValue={data.activityTo}

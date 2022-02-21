@@ -299,4 +299,17 @@ export default createStyle<any>({
 		alignItems: "center", 
 		flexGrow: 1,
 	},
+	labelInput: {
+		color: Colors.Dark.mainContrastDark,
+		backgroundColor: Colors.Dark.mainFirst,
+		fontSize: 14,
+		textAlign: "center",
+		lineHeight: 30,
+		marginBottom: 10,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	labelInputLight: {
+		color: Colors.Light.mainContrast,
+		backgroundColor: Colors.Light.mainFifth
+	}
 });

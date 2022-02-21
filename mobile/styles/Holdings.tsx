@@ -344,5 +344,18 @@ export default createStyle<any>({
 	},
 	dangerButtonLight: {
 		backgroundColor: Colors.Light.negativeFirst
+	},
+	labelInput: {
+		color: Colors.Dark.mainContrastDark,
+		backgroundColor: Colors.Dark.mainFirst,
+		fontSize: 14,
+		textAlign: "center",
+		lineHeight: 30,
+		marginBottom: 10,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	labelInputLight: {
+		color: Colors.Light.mainContrast,
+		backgroundColor: Colors.Light.mainFifth
 	}
 });

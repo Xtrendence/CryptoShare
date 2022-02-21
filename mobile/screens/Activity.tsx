@@ -564,6 +564,7 @@ export default function Activity({ navigation }: any) {
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Staking Calculator</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
 						<TextInput 
 							spellCheck={false}
 							autoCorrect={false}
@@ -574,6 +575,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.staking.symbol = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Amount</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -584,6 +586,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.staking.amount = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>APY</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -689,6 +692,7 @@ export default function Activity({ navigation }: any) {
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Mining Calculator</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
 						<TextInput 
 							spellCheck={false}
 							autoCorrect={false}
@@ -699,6 +703,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.mining.symbol = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Equipment Cost</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -709,6 +714,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.mining.equipmentCost = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Daily Amount</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -719,6 +725,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.mining.amount = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Power Cost</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -812,6 +819,7 @@ export default function Activity({ navigation }: any) {
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Dividends Calculator</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Number Of Shares</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"
@@ -822,6 +830,7 @@ export default function Activity({ navigation }: any) {
 							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
 							onChangeText={(value) => popupRef.current.dividends.shares = value}
 						/>
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Dividend Per Share</Text>
 						<TextInput 
 							spellCheck={false}
 							keyboardType="decimal-pad"

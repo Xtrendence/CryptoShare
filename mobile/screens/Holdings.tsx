@@ -393,17 +393,21 @@ export default function Holdings({ navigation }: any) {
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						{ action === "createHolding" &&
-							<TextInput 
-								spellCheck={false}
-								autoCorrect={false}
-								autoCapitalize="characters"
-								placeholder="Symbol..." 
-								selectionColor={Colors[theme].mainContrast} 
-								placeholderTextColor={Colors[theme].mainContrastDarker} 
-								style={[styles.popupInput, styles[`popupInput${theme}`]]} 
-								onChangeText={(value) => popupRef.current.assetSymbol = value}
-							/>
+							<View>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Symbol</Text>
+								<TextInput 
+									spellCheck={false}
+									autoCorrect={false}
+									autoCapitalize="characters"
+									placeholder="Symbol..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.assetSymbol = value}
+								/>
+							</View>
 						}
+						<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Amount</Text>
 						<TextInput 
 							spellCheck={false}
 							defaultValue={info?.amount?.toString()}
