@@ -786,6 +786,10 @@ function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistDa
 			let asset = watchlistData[id];
 
 			if(asset.assetType === "crypto") {
+				if(empty(marketCryptoData)) {
+					continue;
+				}
+
 				let coin = marketCryptoData[asset.assetID];
 
 				let coinID = coin.id;
