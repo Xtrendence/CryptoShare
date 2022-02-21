@@ -59,6 +59,14 @@ export default function Dashboard({ navigation }: any) {
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
+				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:40 }]}>
+					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
+					</TouchableOpacity>
+					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Edit Budget</Text>
+					</TouchableOpacity>
+				</View>
 				{ list === "budget" &&
 					<ScrollView style={[styles.wrapper, styles[`wrapper${theme}`]]} contentContainerStyle={styles.budgetScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
 						{budgetChart}

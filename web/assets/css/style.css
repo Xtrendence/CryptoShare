@@ -1405,13 +1405,14 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	position:absolute;
 	left:120px;
 	top:5px;
+	border-radius:var(--border-radius);
+	overflow:hidden;
 }
 .dashboard-list.budget .stats-container .background, .dashboard-list.budget .stats-container .foreground {
 	position:absolute;
 	width:100%;
 	height:100%;
 	background:rgb(60,60,60);
-	border-radius:var(--border-radius);
 }
 .dashboard-list.budget .stats-container .foreground.food {
 	background:rgb(254,137,112);

@@ -20,10 +20,10 @@ export default createStyle<any>({
 	},
 	wrapper: {
 		position: "absolute",
-		top: 40,
+		top: 120,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 20 - 70 - 20,
+		height: windowHeight - barHeight - 40 - 20 - 70 - 20 - 80,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
