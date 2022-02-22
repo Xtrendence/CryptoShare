@@ -14,10 +14,12 @@ import CryptoFN from "../utils/CryptoFN";
 import Requests from "../utils/Requests";
 import BudgetStats from "../components/BudgetStats";
 import Loading from "../components/Loading";
+import Item from "../components/TransactionItem";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
 
 	const [loading, setLoading] = useState<boolean>(false);
 	const [loadingText, setLoadingText] = useState<string>("");
@@ -56,6 +58,18 @@ export default function Dashboard({ navigation }: any) {
 	const [budgetSummary, setBudgetSummary] = useState<any>(null);
 
 	const [watchlistRows, setWatchlistRows] = useState<any>({});
+
+	const [modal, setModal] = useState<boolean>(false);
+	const [transactionRows, setTransactionRows] = useState<any>({});
+	const [transactionHeader, setTransactionHeader] = useState<any>(null);
+
+	const renderItem = ({ item }: any) => {
+		let info = transactionRows[item];
+
+		return (
+			<Item info={info} theme={theme} settings={settings} showPopup={showPopup} hidePopup={hidePopup}/>
+		);
+	}
 	
 	useFocusEffect(Utils.backHandler(navigation));
 
@@ -65,10 +79,12 @@ export default function Dashboard({ navigation }: any) {
 				setBudgetChart(null);
 				setBudgetStats(null);
 				setBudgetSummary(null);
+				setTransactionRows({});
 				
 				setTimeout(() => {
 					populateBudgetList(true);
 					populateWatchlist();
+					listTransactions();
 				}, 500);
 			}
 		});
@@ -77,6 +93,7 @@ export default function Dashboard({ navigation }: any) {
 			if(navigation.isFocused()) {
 				populateBudgetList(false);
 				populateWatchlist();
+				listTransactions();
 			}
 		}, 15000);
 
@@ -89,7 +106,7 @@ export default function Dashboard({ navigation }: any) {
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:40 }]}>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity onPress={() => showModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 					</TouchableOpacity>
 					<TouchableOpacity onPress={() => showEditPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
@@ -129,6 +146,27 @@ export default function Dashboard({ navigation }: any) {
 					</View>
 				</View>
 			</Modal>
+			<Modal visible={modal} onRequestClose={() => hideModal()} transparent={false}>
+				<View style={[styles.modalContent, styles[`modalContent${theme}`]]}>
+					<FlatList
+						contentContainerStyle={{ paddingTop:20, paddingLeft:20, paddingRight:20 }}
+						data={Object.keys(transactionRows)}
+						renderItem={renderItem}
+						keyExtractor={item => transactionRows[item].transactionID}
+						style={[styles.modalList, styles[`modalList${theme}`]]}
+						ListHeaderComponent={transactionHeader}
+						ListHeaderComponentStyle={styles.listHeader}
+					/>
+					<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:"auto", bottom:20 }]}>
+						<TouchableOpacity onPress={() => hideModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Back</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showAddPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add Transaction</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
@@ -142,15 +180,7 @@ export default function Dashboard({ navigation }: any) {
 			}
 
 			let state = store.getState();
-			let settings: any = state.settings.settings;
 			let theme: any = state.theme.theme;
-
-			let userID = await AsyncStorage.getItem("userID");
-			let token = await AsyncStorage.getItem("token");
-			let key = await AsyncStorage.getItem("key") || "";
-			let api = await AsyncStorage.getItem("api");
-
-			let currency = settings.currency;
 
 			let budgetData = await fetchBudget();
 			let transactionData = await fetchTransaction();
@@ -184,6 +214,37 @@ export default function Dashboard({ navigation }: any) {
 		
 	}
 
+	async function listTransactions() {
+		try {
+			let transactions: any = await fetchTransaction() || {};
+
+			if(Utils.empty(transactions)) {
+				setTransactionHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Transactions Found</Text></View>);
+				setLoading(false);
+				return;
+			}
+
+			let sorted = sortTransactionDataByDate(transactions);
+
+			let rows: any = {};
+
+			transactions = sorted.sorted;
+
+			let keys = sorted.sortedKeys;
+			for(let i = 0; i < keys.length; i++) {
+				let transaction = transactions[keys[i]];
+				rows[i] = transaction;
+			}
+
+			setTransactionRows(rows);
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
 	function showPopup(content: any) {
 		Keyboard.dismiss();
 		setPopup(true);
@@ -196,12 +257,30 @@ export default function Dashboard({ navigation }: any) {
 		setPopupContent(null);
 	}
 
+	function showModal() {
+		setLoading(true);
+		listTransactions();
+		Keyboard.dismiss();
+		setModal(true);
+		setTransactionRows({});
+	}
+
+	function hideModal() {
+		Keyboard.dismiss();
+		setModal(false);
+		setTransactionRows({});
+	}
+
+	function showAddPopup() {
+
+	}
+
 	function showEditPopup() {
 		let content = () => {
 			return (
 				<View style={[styles.popupContent, { padding:20 }]}>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Tools</Text>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Edit Budget</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<TouchableOpacity onPress={() => showBudgetPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
@@ -442,6 +521,8 @@ export default function Dashboard({ navigation }: any) {
 
 			populateBudgetList(true);
 
+			listTransactions();
+
 			setLoading(false);
 
 			hidePopup();
@@ -495,6 +576,8 @@ export default function Dashboard({ navigation }: any) {
 			await requests.updateBudget(token, userID, encrypted);
 
 			populateBudgetList(true);
+
+			listTransactions();
 
 			setLoading(false);
 
@@ -836,4 +919,25 @@ export default function Dashboard({ navigation }: any) {
 			}
 		});
 	}
+}
+
+function sortTransactionDataByDate(transactionData: any) {
+	let sorted: any = {};
+	let sortedKeys: any = [];
+	let array = [];
+
+	for(let transaction in transactionData) {
+		array.push([transaction, transactionData[transaction].transactionDate]);
+	}
+
+	array.sort(function(a, b) {
+		return new Date(a[1]).getTime() - new Date(b[1]).getTime();
+	});
+
+	array.map(item => {
+		sorted[item[0]] = transactionData[item[0]];
+		sortedKeys.push(item[0]);
+	});
+
+	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
 }

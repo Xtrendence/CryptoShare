@@ -8,7 +8,7 @@ const store = configureStore({
 		settings: settingsReducer
 	},
 	// Disable serializable state check.
-	middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck:false }),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck:false, immutableCheck:false }),
 });
 
 export default store;

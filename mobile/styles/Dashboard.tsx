@@ -350,5 +350,42 @@ export default createStyle<any>({
 	},
 	statsHeaderLight: {
 		color: Colors.Light.mainContrast
-	}
+	},
+	modalContent: {
+		width: "100%",
+		height: "100%",
+		backgroundColor: Colors.Dark.mainFirst
+	},
+	modalContentLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	modalList: {
+		position: "absolute",
+		top: 16,
+		left: 20,
+		width: screenWidth - 40,
+		height: windowHeight - barHeight - 40 - 40,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainSecond,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	modalListLight: {
+		backgroundColor: Colors.Light.mainThird,
+	},
+	listHeader: {
+		alignItems: "center"
+	},
+	listText: {
+		fontSize: 18,
+		fontWeight: "bold",
+		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 10,
+		color: Colors.Dark.mainContrast
+	},
+	listTextLight: {
+		color: Colors.Light.mainContrast
+	},
 });
