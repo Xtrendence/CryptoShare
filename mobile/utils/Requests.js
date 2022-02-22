@@ -247,6 +247,25 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	createTransaction(token, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
+		let query = {
+			query: `mutation createTransaction($token: String!, $userID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+				createTransaction(token: $token, userID: $userID, transactionType: $transactionType, transactionDate: $transactionDate, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				transactionType: transactionType,
+				transactionDate: transactionDate,
+				transactionCategory: transactionCategory,
+				transactionAmount: transactionAmount,
+				transactionNotes: transactionNotes
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	createHolding(token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType) {
 		let query = {
 			query: `mutation createHolding($token: String!, $userID: Int!, $holdingAssetID: String!, $holdingAssetSymbol: String!, $holdingAssetAmount: String!, $holdingAssetType: String!) {

@@ -15,6 +15,7 @@ import Requests from "../utils/Requests";
 import BudgetStats from "../components/BudgetStats";
 import Loading from "../components/Loading";
 import Item from "../components/TransactionItem";
+import TransactionPopup from "../components/TransactionPopup";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -71,7 +72,7 @@ export default function Dashboard({ navigation }: any) {
 		info.showDatePicker = popupRef.current.transaction.showDatePicker;
 
 		return (
-			<Item info={info} theme={theme} settings={settings} setLoading={setLoading} showPopup={showPopup} hidePopup={hidePopup} popupRef={popupRef} listTransactions={listTransactions}/>
+			<Item info={info} theme={theme} settings={settings} setLoading={setLoading} showPopup={showPopup} hidePopup={hidePopup} popupRef={popupRef} listTransactions={listTransactions} showTransactionPopup={showTransactionPopup}/>
 		);
 	}
 	
@@ -276,7 +277,18 @@ export default function Dashboard({ navigation }: any) {
 	}
 
 	function showAddPopup() {
+		let info = {
+			transactionID: "",
+			transactionAmount: "",
+			transactionType: "spent",
+			transactionCategory: "",
+			transactionDate: "",
+			transactionNotes: "",
+			showDatePicker: false,
+			action: "create"
+		}
 
+		showTransactionPopup(info, "create");
 	}
 
 	function showEditPopup() {
@@ -828,6 +840,181 @@ export default function Dashboard({ navigation }: any) {
 		});
 	}
 
+	function showTransactionPopup(info: any, action: string) {
+		try {
+			setLoading(true);
+
+			popupRef.current.transaction = {
+				transactionID: info.transactionID,
+				amount: info.transactionAmount,
+				type: info.transactionType,
+				category: Utils.capitalizeFirstLetter(info.transactionCategory),
+				date: info.transactionDate,
+				notes: info.transactionNotes,
+				showDatePicker: info.showDatePicker,
+				action: action
+			};
+
+			hidePopup();
+
+			let content = () => {
+				return (
+					<TransactionPopup popupRef={popupRef} changeContent={changeContent} theme={theme} setDate={setDate} action={action} showConfirmationPopup={showConfirmationPopup} hidePopup={hidePopup} updateTransaction={updateTransaction} createTransaction={createTransaction}/>
+				);
+			};
+
+			setLoading(false);
+
+			showPopup(content);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function showConfirmationPopup() {
+		Keyboard.dismiss();
+		hidePopup();
+
+		let content = () => {
+			return (
+				<View style={[styles.popupContent, { paddingTop:20, paddingBottom:20 }]}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => deleteTransaction()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	function setDate(value: any) {
+		popupRef.current.transaction.date = Utils.replaceAll("/", "-", value);
+		popupRef.current.transaction.showDatePicker = false;
+		changeContent();
+	}
+	
+	function changeContent() {
+		let info = {
+			transactionID: popupRef.current.transaction.transactionID,
+			transactionAmount: popupRef.current.transaction.amount,
+			transactionType: popupRef.current.transaction.type,
+			transactionCategory: popupRef.current.transaction.category,
+			transactionDate: popupRef.current.transaction.date,
+			transactionNotes: popupRef.current.transaction.notes,
+			showDatePicker: popupRef.current.transaction.showDatePicker,
+			action: popupRef.current.transaction.action
+		};
+
+		showTransactionPopup(info, info.action);
+	}
+
+	async function deleteTransaction() {
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			await requests.deleteTransaction(token, userID, popupRef.current.transaction.transactionID);
+
+			setLoading(false);
+
+			hidePopup();
+
+			listTransactions();
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	async function updateTransaction() {
+		try {
+			setLoading(true);
+
+			let transaction = popupRef.current.transaction;
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let data: any = parseTransactionPopupData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
+
+			if("error" in data) {
+				ToastAndroid.show(data?.error, 5000);
+				return;
+			}
+
+			let encrypted = Utils.encryptObjectValues(key, data);
+
+			await requests.updateTransaction(token, userID, transaction.transactionID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+
+			setLoading(false);
+
+			hidePopup();
+
+			listTransactions();
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	async function createTransaction() {
+		try {
+			setLoading(true);
+
+			let transaction = popupRef.current.transaction;
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let data: any = parseTransactionPopupData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
+
+			if("error" in data) {
+				ToastAndroid.show(data?.error, 5000);
+				return;
+			}
+
+			let encrypted = Utils.encryptObjectValues(key, data);
+
+			await requests.createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+
+			setLoading(false);
+
+			hidePopup();
+
+			listTransactions();
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
 	function fetchBudget() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -922,6 +1109,40 @@ export default function Dashboard({ navigation }: any) {
 				reject(error);
 			}
 		});
+	}
+}
+
+export function parseTransactionPopupData(amount: any, type: any, category: any, date: any, notes: any) {
+	try {
+		type = type.toLowerCase();
+		category = category.toLowerCase();
+
+		if(Utils.empty(amount) || isNaN(amount) || parseFloat(amount) <= 0) {
+			return { error:"Amount must be a number, and greater than zero." };
+		}
+
+		if(Utils.empty(category) || (!Object.keys(Utils.defaultBudgetData.categories).includes(category.toLowerCase()) && category.toLowerCase() !== "income")) {
+			return { error:"Invalid category." };
+		}
+
+		if(type === "earned" && !["income", "savings"].includes(category.toLowerCase())) {
+			return { error:"Category must be set to Income or Savings if you earned money." };
+		}
+
+		try {
+			new Date(Date.parse(date));
+		} catch(error) {
+			return { error:"Invalid date." };
+		}
+
+		if(Utils.empty(notes)) {
+			notes = "-";
+		}
+
+		return { transactionAmount:amount, transactionType:type, transactionCategory:category.toLowerCase(), transactionDate:date, transactionNotes:notes };
+	} catch(error) {
+		console.log(error);
+		return { error:"Invalid data." };
 	}
 }
 

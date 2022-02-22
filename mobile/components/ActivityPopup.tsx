@@ -4,6 +4,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import DatePicker from "react-native-modern-datepicker";
 import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
+import Utils from "../utils/Utils";
 
 export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
 	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
@@ -204,7 +205,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 	);
 
 	function setDate(value: any) {
-		popupRef.current.activity.activityDate = value;
+		popupRef.current.activity.activityDate = Utils.replaceAll("/", "-", value);
 		setShowDatePicker(false);
 	}
 
