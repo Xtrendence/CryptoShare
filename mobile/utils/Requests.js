@@ -339,6 +339,36 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	deleteTransaction(token, userID, transactionID) {
+		let query = {
+			query: `mutation deleteTransaction($token: String!, $userID: Int!, $transactionID: Int!) {
+				deleteTransaction(token: $token, userID: $userID, transactionID: $transactionID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				transactionID: parseInt(transactionID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	deleteWatchlist(token, userID, watchlistID) {
+		let query = {
+			query: `mutation deleteWatchlist($token: String!, $userID: Int!, $watchlistID: Int!) {
+				deleteWatchlist(token: $token, userID: $userID, watchlistID: $watchlistID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				watchlistID: parseInt(watchlistID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	deleteHolding(token, userID, holdingID) {
 		let query = {
 			query: `mutation deleteHolding($token: String!, $userID: Int!, $holdingID: Int!) {
@@ -398,6 +428,26 @@ export default class Requests {
 			variables: {
 				token: token,
 				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	updateTransaction(token, userID, transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
+		let query = {
+			query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+				updateTransaction(token: $token, userID: $userID, transactionID: $transactionID, transactionType: $transactionType, transactionDate: $transactionDate, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				transactionID: parseInt(transactionID),
+				transactionType: transactionType,
+				transactionDate: transactionDate,
+				transactionCategory: transactionCategory, 
+				transactionAmount: transactionAmount, 
+				transactionNotes: transactionNotes
 			}
 		};
 

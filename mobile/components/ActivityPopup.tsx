@@ -5,7 +5,6 @@ import DatePicker from "react-native-modern-datepicker";
 import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
 
-// TODO: Add calendar input.
 export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
 	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 

@@ -43,9 +43,12 @@ export default function Dashboard({ navigation }: any) {
 		transaction: {
 			transactionID: "",
 			amount: "",
+			type: "",
 			category: "",
 			date: "",
-			notes: ""
+			notes: "",
+			showDatePicker: false,
+			action: "create",
 		}
 	});
 
@@ -65,9 +68,10 @@ export default function Dashboard({ navigation }: any) {
 
 	const renderItem = ({ item }: any) => {
 		let info = transactionRows[item];
+		info.showDatePicker = popupRef.current.transaction.showDatePicker;
 
 		return (
-			<Item info={info} theme={theme} settings={settings} showPopup={showPopup} hidePopup={hidePopup}/>
+			<Item info={info} theme={theme} settings={settings} setLoading={setLoading} showPopup={showPopup} hidePopup={hidePopup} popupRef={popupRef} listTransactions={listTransactions}/>
 		);
 	}
 	

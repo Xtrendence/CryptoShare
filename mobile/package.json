@@ -19,6 +19,7 @@
 		"@react-native-community/masked-view": "^0.1.11",
 		"@react-native-firebase/app": "^14.1.0",
 		"@react-native-firebase/messaging": "^14.1.0",
+		"@react-native-picker/picker": "^2.3.0",
 		"@react-navigation/native": "^6.0.6",
 		"@react-navigation/native-stack": "^6.2.5",
 		"@react-navigation/stack": "^6.0.11",

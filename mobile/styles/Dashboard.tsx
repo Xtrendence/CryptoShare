@@ -136,6 +136,11 @@ export default createStyle<any>({
 		marginLeft: 10,
 		marginRight: 10
 	},
+	popupChoiceButton: {
+		width: "100%",
+		marginLeft: 0,
+		marginBottom: 10
+	},
 	popupInput: {
 		width: 200,
 		borderRadius: GlobalStyle.borderRadius,
@@ -149,6 +154,20 @@ export default createStyle<any>({
 	popupInputLight: {
 		backgroundColor: Colors.Light.mainFirstTransparent,
 		color: Colors.Light.mainContrast,
+	},
+	pickerWrapper: {
+		marginBottom: 20,
+		borderRadius: GlobalStyle.borderRadius,
+		overflow: "hidden",
+	},
+	picker: {
+		fontSize: 14,
+		backgroundColor: Colors.Dark.mainFirst,
+		color: Colors.Dark.mainContrast,
+	},
+	pickerLight: {
+		backgroundColor: Colors.Light.mainFirst,
+		color: Colors.Light.mainContrast
 	},
 	labelInput: {
 		color: Colors.Dark.mainContrastDark,
@@ -204,6 +223,13 @@ export default createStyle<any>({
 	},
 	actionButtonLight: {
 		backgroundColor: Colors.Light.Dashboard.accentSecond
+	},
+	dangerButton: {
+		backgroundColor: Colors.Dark.negativeFirst,
+		marginTop: 20
+	},
+	dangerButtonLight: {
+		backgroundColor: Colors.Light.negativeFirst
 	},
 	choiceButton: {
 		backgroundColor: "transparent",

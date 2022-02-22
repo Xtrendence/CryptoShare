@@ -231,7 +231,7 @@ export default function Activity({ navigation }: any) {
 
 		let content = () => {
 			return (
-				<View style={styles.popupContent}>
+				<View style={[styles.popupContent, { paddingTop:20, paddingBottom:20 }]}>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
 					</View>
