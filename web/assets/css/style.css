@@ -1278,8 +1278,22 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	width:440px;
 	height:calc(100% - 135px - 20px);
 }
+html.navbar-compact .page.dashboard .page-container.half.bottom-right {
+	height:calc(100% - 120px - 20px);
+}
+html.navbar-compact .page.dashboard.show-holdings .page-container.half.bottom-right {
+	height:calc(50% - 40px - 40px - 7.5px);
+}
 .page.dashboard.show-holdings .page-container.half.bottom-right {
 	height:calc(50% - 40px - 40px - 7.5px);
+}
+html.navbar-compact .page.dashboard .page-container.half.left {
+	top:120px;
+	height:calc(100% - 120px - 20px);
+}
+html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right {
+	top:120px;
+	height:calc(50% - 40px - 25px - 7.5px);
 }
 .page.dashboard .page-container-toolbar {
 	position:absolute;
