@@ -75,7 +75,7 @@ export default function Dashboard({ navigation }: any) {
 		
 		let refresh = setInterval(() => {
 			if(navigation.isFocused()) {
-				populateBudgetList(true);
+				populateBudgetList(false);
 				populateWatchlist();
 			}
 		}, 15000);
