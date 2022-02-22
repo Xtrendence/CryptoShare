@@ -18,6 +18,60 @@ export default createStyle<any>({
 		justifyContent: "center",
 		alignItems: "center",
 	},
+	areaSearchWrapper: {
+		flexDirection: "row",
+		position: "absolute",
+		left: 20,
+		top: 16,
+		width: screenWidth - 40,
+		height: 50,
+		backgroundColor: Colors.Dark.mainSecond,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	areaSearchWrapperLight: {
+		backgroundColor: Colors.Light.mainThird,
+	},
+	inputSearch: {
+		fontSize: 16,
+		paddingLeft: 14,
+		paddingRight: 14,
+		width: screenWidth - 40 - 20 - 60,
+		color: Colors.Dark.mainContrast,
+		height: "100%",
+		marginBottom: 20,
+		fontWeight: "bold",
+		borderTopLeftRadius: GlobalStyle.borderRadius,
+		borderBottomLeftRadius: GlobalStyle.borderRadius,
+	},
+	inputSearchLight: {
+		color: Colors.Light.mainContrast,
+	},
+	buttonSearch: {
+		borderTopLeftRadius: 0,
+		borderBottomLeftRadius: 0,
+		borderTopRightRadius: GlobalStyle.borderRadius,
+		borderBottomRightRadius: GlobalStyle.borderRadius,
+		marginLeft: 0,
+		marginRight: 0,
+		height: "100%",
+		width: 80,
+		backgroundColor: Colors.Dark.Dashboard.accentFirst
+	},
+	buttonSearchLight: {
+		backgroundColor: Colors.Light.Dashboard.accentFirst
+	},
+	searchText: {
+		fontWeight: "bold",
+		color: Colors.Dark.accentContrast
+	},
+	searchTextLight: {
+		color: Colors.Light.accentContrast
+	},
 	wrapper: {
 		position: "absolute",
 		top: 120,
@@ -387,10 +441,10 @@ export default createStyle<any>({
 	},
 	modalList: {
 		position: "absolute",
-		top: 16,
+		top: 86,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 40,
+		height: windowHeight - barHeight - 40 - 48 - 60,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,

@@ -125,7 +125,7 @@ export default function Activity({ navigation }: any) {
 				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
 					<TextInput 
 						spellCheck={false}
-						placeholder="Query..." 
+						placeholder="Search..." 
 						selectionColor={Colors[theme].mainContrast} 
 						placeholderTextColor={Colors[theme].mainContrastDarker} 
 						style={[styles.inputSearch, styles[`inputSearch${theme}`]]} 

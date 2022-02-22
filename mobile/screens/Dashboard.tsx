@@ -63,9 +63,12 @@ export default function Dashboard({ navigation }: any) {
 
 	const [watchlistRows, setWatchlistRows] = useState<any>({});
 
+	const [query, setQuery] = useState<string>("");
+
 	const [modal, setModal] = useState<boolean>(false);
 	const [transactionRows, setTransactionRows] = useState<any>({});
 	const [transactionHeader, setTransactionHeader] = useState<any>(null);
+	const [filteredRows, setFilteredRows] = useState<any>({});
 
 	const renderItem = ({ item }: any) => {
 		let info = transactionRows[item];
@@ -103,9 +106,16 @@ export default function Dashboard({ navigation }: any) {
 		}, 15000);
 
 		return () => {
+			setFilteredRows({});
 			clearInterval(refresh);
 		};
 	}, []);
+
+	useEffect(() => {
+		if(Object.keys(transactionRows).length < 100 || Utils.empty(query)) {
+			searchTransactions(query);
+		}
+	}, [query]);
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
@@ -153,9 +163,23 @@ export default function Dashboard({ navigation }: any) {
 			</Modal>
 			<Modal visible={modal} onRequestClose={() => hideModal()} transparent={false}>
 				<View style={[styles.modalContent, styles[`modalContent${theme}`]]}>
+					<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
+						<TextInput 
+							spellCheck={false}
+							placeholder="Search..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.inputSearch, styles[`inputSearch${theme}`]]} 
+							onChangeText={(value) => setQuery(value)}
+							value={query}
+						/>
+						<TouchableOpacity onPress={() => searchTransactions(query)} style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
+							<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>
+						</TouchableOpacity>
+					</View>
 					<FlatList
 						contentContainerStyle={{ paddingTop:20, paddingLeft:20, paddingRight:20 }}
-						data={Object.keys(transactionRows)}
+						data={getRows(filteredRows, transactionRows, query)}
 						renderItem={renderItem}
 						keyExtractor={item => transactionRows[item].transactionID}
 						style={[styles.modalList, styles[`modalList${theme}`]]}
@@ -175,6 +199,45 @@ export default function Dashboard({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	function getRows(filteredRows: any, activityRows: any, query: any) {
+		if(!Utils.empty(query) && Utils.empty(filteredRows)) {
+			return null;
+		}
+
+		if(!Utils.empty(query) && Object.keys(filteredRows).length > 0) {
+			return Object.keys(filteredRows).reverse();
+		}
+		
+		return Object.keys(activityRows).reverse();
+	}
+
+	function searchTransactions(query: string) {
+		let settings: any = store.getState().settings.settings;
+
+		if(Utils.empty(query)) {
+			setFilteredRows(transactionRows);
+			return;
+		}
+
+		query = query.toLowerCase();
+
+		let filtered: any = {};
+
+		Object.keys(transactionRows).map(id => {
+			let transaction = transactionRows[id];
+
+			let date = settings?.dateFormat === "dd-mm-yyyy" ? Utils.formatDateHyphenatedHuman(new Date(Date.parse(transaction.transactionDate))) : Utils.formatDateHyphenated(new Date(Date.parse(transaction.transactionDate)));
+
+			let data = [date, transaction.transactionType, transaction.transactionAmount, transaction.transactionCategory, transaction.transactionNotes];
+
+			if(data.join("|").toLowerCase().includes(query)) {
+				filtered[id] = transaction;
+			}
+		});
+
+		setFilteredRows(filtered);
+	}
 
 	async function populateBudgetList(recreate: boolean) {
 		try {
