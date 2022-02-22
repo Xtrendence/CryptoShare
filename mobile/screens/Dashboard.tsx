@@ -111,11 +111,11 @@ export default function Dashboard({ navigation }: any) {
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:40 }]}>
-					<TouchableOpacity onPress={() => showModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
-						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
+					<TouchableOpacity onPress={() => changeList("budget")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], list === "budget" ? styles[`choiceButtonActive${theme}`] : null]}>
+						<Text style={[styles.choiceText, styles[`choiceText${theme}`], list === "budget" ? styles[`choiceTextActive${theme}`] : null]}>Budget</Text>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => showEditPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
-						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Edit Budget</Text>
+					<TouchableOpacity onPress={() => changeList("watchlist")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], list === "watchlist" ? styles[`choiceButtonActive${theme}`] : null]}>
+						<Text style={[styles.choiceText, styles[`choiceText${theme}`], list === "watchlist" ? styles[`choiceTextActive${theme}`] : null]}>Watchlist</Text>
 					</TouchableOpacity>
 				</View>
 				{ list === "budget" &&
@@ -135,11 +135,11 @@ export default function Dashboard({ navigation }: any) {
 					/>
 				}
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
-					<TouchableOpacity onPress={() => changeList("budget")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], list === "budget" ? styles[`choiceButtonActive${theme}`] : null]}>
-						<Text style={[styles.choiceText, styles[`choiceText${theme}`], list === "budget" ? styles[`choiceTextActive${theme}`] : null]}>Budget</Text>
+					<TouchableOpacity onPress={() => showModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 					</TouchableOpacity>
-					<TouchableOpacity onPress={() => changeList("watchlist")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], list === "watchlist" ? styles[`choiceButtonActive${theme}`] : null]}>
-						<Text style={[styles.choiceText, styles[`choiceText${theme}`], list === "watchlist" ? styles[`choiceTextActive${theme}`] : null]}>Watchlist</Text>
+					<TouchableOpacity onPress={() => showEditPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Edit Budget</Text>
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
