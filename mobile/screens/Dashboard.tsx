@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
@@ -409,13 +409,42 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
-	function updateIncome() {
+	async function updateIncome() {
 		try {
 			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let budgetData: any = await fetchBudget();
+
+			if(Utils.empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			let income = popupRef.current.income.income;
+
+			if(isNaN(income) || parseFloat(income) < 0) {
+				ToastAndroid.show("Income has to be zero or greater.", 5000);
+				return;
+			}
+
+			budgetData.income = parseFloat(income);
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+			await requests.updateBudget(token, userID, encrypted);
 
 			populateBudgetList(true);
 
 			setLoading(false);
+
+			hidePopup();
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
@@ -423,18 +452,102 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
-	function updateBudget() {
+	async function updateBudget() {
 		try {
 			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let budgetData: any = await fetchBudget();
+
+			if(Utils.empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			let values = popupRef.current.budget;
+
+			let data: any = parseBudgetPopupData(values.food, values.housing, values.transport, values.entertainment, values.insurance, values.savings, values.other);
+
+			if("error" in data) {
+				setLoading(false);
+				ToastAndroid.show(data.error, 5000);
+				return;
+			}
+
+			let { food, housing, transport, entertainment, insurance, savings, other } = data;
+
+			budgetData.categories.food = food;
+			budgetData.categories.housing = housing;
+			budgetData.categories.transport = transport;
+			budgetData.categories.entertainment = entertainment;
+			budgetData.categories.insurance = insurance;
+			budgetData.categories.savings = savings;
+			budgetData.categories.other = other;
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+			await requests.updateBudget(token, userID, encrypted);
 
 			populateBudgetList(true);
 
 			setLoading(false);
+
+			hidePopup();
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
 			Utils.notify(theme, "Something went wrong...");
 		}
+	}
+
+	function parseBudgetPopupData(food: any, housing: any, transport: any, entertainment: any, insurance: any, savings: any, other: any) {
+		if(isNaN(food) || parseFloat(food) < 0) {
+			return { error:"Budget for food has to be zero or greater." };
+		}
+
+		if(isNaN(housing) || parseFloat(housing) < 0) {
+			return { error:"Budget for housing has to be zero or greater." };
+		}
+
+		if(isNaN(transport) || parseFloat(transport) < 0) {
+			return { error:"Budget for transport has to be zero or greater." };
+		}
+
+		if(isNaN(entertainment) || parseFloat(entertainment) < 0) {
+			return { error:"Budget for entertainment has to be zero or greater." };
+		}
+
+		if(isNaN(insurance) || parseFloat(insurance) < 0) {
+			return { error:"Budget for insurance has to be zero or greater." };
+		}
+
+		if(isNaN(savings) || parseFloat(savings) < 0) {
+			return { error:"Budget for savings has to be zero or greater." };
+		}
+
+		if(isNaN(other) || parseFloat(other) < 0) {
+			return { error:"Budget for other has to be zero or greater." };
+		}
+
+		food = parseFloat(food);
+		housing = parseFloat(housing);
+		transport = parseFloat(transport);
+		entertainment = parseFloat(entertainment);
+		insurance = parseFloat(insurance);
+		savings = parseFloat(savings);
+		other = parseFloat(other);
+	
+		if((food + housing + transport + entertainment + insurance + savings + other) !== 100) {
+			return { error:"Budget data must add up to 100%." };
+		}
+
+		return { food:food, housing:housing, transport:transport, entertainment:entertainment, insurance:insurance, savings:savings, other:other };
 	}
 
 	function generatePieChart(theme: string, budgetData: any, backgroundColors: any) {
