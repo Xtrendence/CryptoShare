@@ -68,7 +68,7 @@ export default createStyle<any>({
 		marginRight: 20,
 		marginLeft: 20,
 		borderRadius: GlobalStyle.borderRadius,
-		backgroundColor: Colors.Dark.mainFourth,
+		backgroundColor: Colors.Dark.mainFirst,
 		shadowColor: GlobalStyle.shadowColor,
 		shadowOffset: GlobalStyle.shadowOffset,
 		shadowOpacity: GlobalStyle.shadowOpacity,
@@ -160,7 +160,7 @@ export default createStyle<any>({
 	},
 	trackBar: {
 		activeBackgroundColor: Colors.Light.Settings.accentFirst,
-		inActiveBackgroundColor: Colors.Dark.mainFirst,
+		inActiveBackgroundColor: Colors.Dark.mainFourth,
 		borderActiveColor: Colors.Light.Settings.accentFirst,
 		borderInActiveColor: Colors.Dark.Settings.accentFirst,
 		borderWidth: 0,
