@@ -1269,9 +1269,17 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 .page.dashboard .page-container.half.top-right {
 	width:440px;
 	min-height:300px;
+	display:none;
+}
+.page.dashboard.show-holdings .page-container.half.top-right {
+	display:block;
 }
 .page.dashboard .page-container.half.bottom-right {
 	width:440px;
+	height:calc(100% - 135px - 20px);
+}
+.page.dashboard.show-holdings .page-container.half.bottom-right {
+	height:calc(50% - 40px - 40px - 7.5px);
 }
 .page.dashboard .page-container-toolbar {
 	position:absolute;

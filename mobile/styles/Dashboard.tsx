@@ -58,6 +58,117 @@ export default createStyle<any>({
 	areaActionsWrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	modalScroll: {
+		backgroundColor: "rgba(0,0,0,0.9)"
+	},
+	modalSection: {
+		maxWidth: screenWidth - 40,
+		padding: 20,
+		marginBottom: 20,
+		backgroundColor: Colors.Dark.mainFirst,
+		borderRadius: GlobalStyle.borderRadius,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	modalSectionLight: {
+		backgroundColor: Colors.Light.mainFirst,
+	},
+	modalInfo: {
+		fontSize: 16,
+		fontWeight: "bold",
+		color: Colors.Dark.mainContrast,
+		padding: 4,
+	},
+	modalInfoLight: {
+		color: Colors.Light.mainContrast
+	},
+	popup: {
+		justifyContent: "center",
+		alignItems: "center",
+		width: "100%",
+		height: "100%",
+	},
+	popupBackground: {
+		position: "absolute",
+		zIndex: 2,
+		width: "100%",
+		height: "100%",
+		backgroundColor: "rgba(0,0,0,0.9)",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	popupForeground: {
+		position: "absolute",
+		zIndex: 3,
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	popupWrapper: {
+		backgroundColor: Colors.Dark.mainFirst,
+		justifyContent: "center",
+		alignItems: "center",
+		width: screenWidth - 80,
+		maxHeight: windowHeight - 200,
+		padding: 20,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	popupWrapperLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	popupContent: {
+		alignItems: "center",
+		justifyContent: "center",
+		width: "100%"
+	},
+	popupChoicesWrapper: {
+		flexDirection: "column",
+		flexWrap: "nowrap",
+		width: 200
+	},
+	popupButtonWrapper: {
+		flexDirection: "row",
+	},
+	popupButton: {
+		width: 110,
+		marginLeft: 10,
+		marginRight: 10
+	},
+	popupInput: {
+		width: 200,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		color: Colors.Dark.mainContrast,
+		paddingLeft: 10,
+		paddingRight: 10,
+		height: 40,
+		marginBottom: 20,
+	},
+	popupInputLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent,
+		color: Colors.Light.mainContrast,
+	},
+	labelInput: {
+		color: Colors.Dark.mainContrastDark,
+		backgroundColor: Colors.Dark.mainFirst,
+		fontSize: 14,
+		textAlign: "center",
+		lineHeight: 30,
+		marginBottom: 10,
+		borderRadius: GlobalStyle.borderRadius
+	},
+	labelInputLight: {
+		color: Colors.Light.mainContrast,
+		backgroundColor: Colors.Light.mainFifth
+	},
+	sectionButton: {
+		width: 200,
+		marginLeft: 0,
+		marginRight: 0,
+		marginBottom: 20
+	},
 	button: {
 		width: (screenWidth / 2) - 35,
 		paddingLeft: 10,

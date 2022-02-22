@@ -10,7 +10,8 @@ let defaultChoices = {
 	"assetIconBackdrop": "disabled",
 	"dateFormat": "yyyy-mm-dd",
 	"navbarStyle": "normal",
-	"transactionsAffectHoldings": "enabled"
+	"transactionsAffectHoldings": "enabled",
+	"holdingsOnDashboard": "disabled"
 };
 
 let defaultBudgetData = {

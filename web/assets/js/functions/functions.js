@@ -156,6 +156,16 @@ function checkBackdrop() {
 	}
 }
 
+function checkHoldingsOnDashboard() {
+	let choices = getSettingsChoices();
+
+	if("holdingsOnDashboard" in choices && choices.holdingsOnDashboard === "enabled") {
+		divPageDashboard.classList.add("show-holdings");
+	} else {
+		divPageDashboard.classList.remove("show-holdings");
+	}
+}
+
 async function assetHoldingExists(id) {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");
@@ -240,8 +250,8 @@ function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
 	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
 	tippy(buttonChatMenu, { content:"Chat Actions", placement:"bottom" });
-	tippy(buttonDashboardBudgetEdit, { content:"Edit", placement:"bottom" });
-	tippy(buttonDashboardWatchlistAdd, { content:"Add", placement:"bottom" });
+	tippy(buttonDashboardBudgetEdit, { content:"Edit Budget", placement:"bottom" });
+	tippy(buttonDashboardWatchlistAdd, { content:"Add Asset", placement:"bottom" });
 	tippy(buttonMarketInfo, { content:"Crypto Market Info", placement:"top" });
 	tippy(buttonMarketSearch, { content:"Search", placement:"top" });
 	tippy(buttonMarketCrypto, { content:"Crypto Market", placement:"left" });

@@ -1,6 +1,6 @@
 import { useFocusEffect } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
-import { FlatList, ImageBackground, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
@@ -13,6 +13,7 @@ import store from "../store/store";
 import CryptoFN from "../utils/CryptoFN";
 import Requests from "../utils/Requests";
 import BudgetStats from "../components/BudgetStats";
+import Loading from "../components/Loading";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -23,6 +24,28 @@ export default function Dashboard({ navigation }: any) {
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
+
+	const popupRef = useRef<any>({
+		budget: {
+			food: "",
+			housing: "",
+			transport: "",
+			entertainment: "",
+			insurance: "",
+			savings: "",
+			other: "",
+		},
+		income: {
+			income: ""
+		},
+		transaction: {
+			transactionID: "",
+			amount: "",
+			category: "",
+			date: "",
+			notes: ""
+		}
+	});
 
 	const [list, setList] = useState<string>("budget");
 
@@ -40,14 +63,16 @@ export default function Dashboard({ navigation }: any) {
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {
 				setTimeout(() => {
-					populateDashboardList(true);
+					populateBudgetList();
+					populateWatchlist();
 				}, 500);
 			}
 		});
 		
 		let refresh = setInterval(() => {
 			if(navigation.isFocused()) {
-				populateDashboardList(false);
+				populateBudgetList();
+				populateWatchlist();
 			}
 		}, 15000);
 
@@ -63,7 +88,7 @@ export default function Dashboard({ navigation }: any) {
 					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 					</TouchableOpacity>
-					<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+					<TouchableOpacity onPress={() => showEditPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 						<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Edit Budget</Text>
 					</TouchableOpacity>
 				</View>
@@ -92,10 +117,19 @@ export default function Dashboard({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
+			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
+				<View style={styles.popup}>
+					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
+					<View style={styles.popupForeground}>
+						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], { padding:0 }]}>{popupContent}</View>
+					</View>
+				</View>
+			</Modal>
+			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
 
-	async function populateDashboardList(recreate: boolean) {
+	async function populateBudgetList() {
 		try {
 			let settings: any = store.getState().settings.settings;
 
@@ -131,6 +165,263 @@ export default function Dashboard({ navigation }: any) {
 				Utils.notify(theme, "Something went wrong...");
 				console.log(error);
 			}
+		}
+	}
+
+	function populateWatchlist() {
+		
+	}
+
+	function showPopup(content: any) {
+		Keyboard.dismiss();
+		setPopup(true);
+		setPopupContent(content);
+	}
+
+	function hidePopup() {
+		Keyboard.dismiss();
+		setPopup(false);
+		setPopupContent(null);
+	}
+
+	function showEditPopup() {
+		let content = () => {
+			return (
+				<View style={[styles.popupContent, { padding:20 }]}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Tools</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TouchableOpacity onPress={() => showBudgetPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Set Monthly Budget</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => showIncomePopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:0 }]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Set Yearly Income</Text>
+						</TouchableOpacity>
+					</View>
+					<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`]]}>
+						<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
+					</TouchableOpacity>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function showBudgetPopup() {
+		try {
+			setLoading(true);
+
+			let budgetData: any = await fetchBudget();
+
+			popupRef.current.budget = {
+				food: budgetData?.categories?.food,
+				housing: budgetData?.categories?.housing,
+				transport: budgetData?.categories?.transport,
+				entertainment: budgetData?.categories?.entertainment,
+				insurance: budgetData?.categories?.insurance,
+				savings: budgetData?.categories?.savings,
+				other: budgetData?.categories?.other
+			};
+
+			hidePopup();
+
+			let content = () => {
+				return (
+					<View style={styles.popupContent}>
+						<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+							<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
+								<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Monthly Budget</Text>
+							</View>
+							<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Food</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.food.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Food..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.food = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Housing</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.housing.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Housing..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.housing = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Transport</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.transport.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Transport..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.transport = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Entertainment</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.entertainment.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Entertainment..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.entertainment = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Insurance</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.insurance.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Insurance..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.insurance = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Savings</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.savings.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Savings..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+									onChangeText={(value) => popupRef.current.budget.savings = value}
+								/>
+								<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Other</Text>
+								<TextInput 
+									defaultValue={popupRef.current.budget.other.toString()}
+									spellCheck={false}
+									keyboardType="decimal-pad"
+									autoCorrect={false}
+									placeholder="Other..." 
+									selectionColor={Colors[theme].mainContrast} 
+									placeholderTextColor={Colors[theme].mainContrastDarker} 
+									style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+									onChangeText={(value) => popupRef.current.budget.other = value}
+								/>
+							</View>
+							<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
+								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+								</TouchableOpacity>
+								<TouchableOpacity onPress={() => updateBudget()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+									<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+								</TouchableOpacity>
+							</View>
+						</ScrollView>
+					</View>
+				);
+			};
+
+			setLoading(false);
+
+			showPopup(content);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	async function showIncomePopup() {
+		try {
+			setLoading(true);
+
+			let budgetData: any = await fetchBudget();
+
+			popupRef.current.income = {
+				income: budgetData.income
+			};
+
+			hidePopup();
+
+			let content = () => {
+				return (
+					<View style={styles.popupContent}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { marginTop:20, backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Yearly Income</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.labelInput, styles[`labelInput${theme}`]]}>Income</Text>
+							<TextInput 
+								defaultValue={popupRef.current.income.income.toString()}
+								spellCheck={false}
+								keyboardType="decimal-pad"
+								autoCorrect={false}
+								placeholder="Income..." 
+								selectionColor={Colors[theme].mainContrast} 
+								placeholderTextColor={Colors[theme].mainContrastDarker} 
+								style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+								onChangeText={(value) => popupRef.current.income.income = value}
+							/>
+						</View>
+						<View style={[styles.popupButtonWrapper, { marginBottom:20 }]}>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => updateIncome()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				);
+			};
+
+			setLoading(false);
+
+			showPopup(content);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function updateIncome() {
+		try {
+			setLoading(true);
+
+			populateBudgetList();
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			Utils.notify(theme, "Something went wrong...");
+		}
+	}
+
+	function updateBudget() {
+		try {
+			setLoading(true);
+
+			populateBudgetList();
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			Utils.notify(theme, "Something went wrong...");
 		}
 	}
 

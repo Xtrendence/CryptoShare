@@ -87,6 +87,8 @@ async function populateDashboardBudget(recreate) {
 			}
 			
 			generateBudgetStats(budgetData, transactionData);
+
+			checkHoldingsOnDashboard();
 		} catch(error) {
 			console.log(error);
 			errorNotification("Something went wrong...");
