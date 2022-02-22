@@ -62,8 +62,12 @@ export default function Dashboard({ navigation }: any) {
 	useEffect(() => {
 		navigation.addListener("focus", () => {
 			if(navigation.isFocused()) {
+				setBudgetChart(null);
+				setBudgetStats(null);
+				setBudgetSummary(null);
+				
 				setTimeout(() => {
-					populateBudgetList();
+					populateBudgetList(true);
 					populateWatchlist();
 				}, 500);
 			}
@@ -71,7 +75,7 @@ export default function Dashboard({ navigation }: any) {
 		
 		let refresh = setInterval(() => {
 			if(navigation.isFocused()) {
-				populateBudgetList();
+				populateBudgetList(true);
 				populateWatchlist();
 			}
 		}, 15000);
@@ -129,9 +133,17 @@ export default function Dashboard({ navigation }: any) {
 		</ImageBackground>
 	);
 
-	async function populateBudgetList() {
+	async function populateBudgetList(recreate: boolean) {
 		try {
-			let settings: any = store.getState().settings.settings;
+			if(recreate) {
+				setBudgetChart(null);
+				setBudgetStats(null);
+				setBudgetSummary(null);
+			}
+
+			let state = store.getState();
+			let settings: any = state.settings.settings;
+			let theme: any = state.theme.theme;
 
 			let userID = await AsyncStorage.getItem("userID");
 			let token = await AsyncStorage.getItem("token");
@@ -158,8 +170,8 @@ export default function Dashboard({ navigation }: any) {
 				other: "rgb(182,137,251)",
 			};
 
-			generatePieChart(budgetData, backgroundColors);
-			generateBudgetStats(budgetData, transactionData, backgroundColors);
+			generatePieChart(theme, budgetData, backgroundColors);
+			generateBudgetStats(theme, budgetData, transactionData, backgroundColors);
 		} catch(error) {
 			if(error !== "Timeout.") {
 				Utils.notify(theme, "Something went wrong...");
@@ -401,7 +413,7 @@ export default function Dashboard({ navigation }: any) {
 		try {
 			setLoading(true);
 
-			populateBudgetList();
+			populateBudgetList(true);
 
 			setLoading(false);
 		} catch(error) {
@@ -415,7 +427,7 @@ export default function Dashboard({ navigation }: any) {
 		try {
 			setLoading(true);
 
-			populateBudgetList();
+			populateBudgetList(true);
 
 			setLoading(false);
 		} catch(error) {
@@ -425,7 +437,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
-	function generatePieChart(budgetData: any, backgroundColors: any) {
+	function generatePieChart(theme: string, budgetData: any, backgroundColors: any) {
 		let settings: any = store.getState().settings.settings;
 
 		let currency = settings.currency;
@@ -491,7 +503,7 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 
-	function generateBudgetStats(budgetData: any, transactionData: any, backgroundColors: any) {
+	function generateBudgetStats(theme: string, budgetData: any, transactionData: any, backgroundColors: any) {
 		if(Utils.empty(transactionData)) {
 			setBudgetStats(defaultBudgetStats);
 			return;
