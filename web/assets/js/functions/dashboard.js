@@ -238,6 +238,8 @@ function generateBudgetStats(budgetData, transactionData) {
 
 	let currency = getCurrency();
 
+	transactionData = filterTransactionsByCurrentMonth(transactionData);
+
 	let parsed = parseTransactionData(transactionData);
 
 	let budgetAmounts = {};
@@ -282,6 +284,27 @@ function generateBudgetStats(budgetData, transactionData) {
 			tippyInstances.budgetStats[div.id + "-background"] = tippy(div.parentElement.getElementsByClassName("background")[0], { content:`Remaining: ${currencySymbols[currency] + separateThousands(remaining)}`, placement:"right" });
 		}
 	});
+}
+
+function filterTransactionsByCurrentMonth(transactionData) {
+	let filtered = {};
+
+	Object.keys(transactionData).map(key => {
+		try {
+			let transaction = transactionData[key];
+
+			let currentDate = new Date();
+			let date = new Date(Date.parse(transaction.transactionDate));
+
+			if(currentDate.getMonth() === date.getMonth() && currentDate.getFullYear() === date.getFullYear()) {
+				filtered[key] = transaction;
+			}
+		} catch(error) {
+			console.log(error);
+		}
+	});
+
+	return filtered;
 }
 
 function parseTransactionData(transactionData) {

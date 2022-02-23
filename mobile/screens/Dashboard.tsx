@@ -957,6 +957,8 @@ export default function Dashboard({ navigation }: any) {
 			return;
 		}
 
+		transactionData = filterTransactionsByCurrentMonth(transactionData);
+
 		let settings: any = store.getState().settings.settings;
 
 		let currency = settings.currency;
@@ -999,6 +1001,27 @@ export default function Dashboard({ navigation }: any) {
 		});
 
 		setBudgetStats(<BudgetStats theme={theme} currency={currency} stats={budgetAmounts} backgroundColors={backgroundColors}/>)
+	}
+
+	function filterTransactionsByCurrentMonth(transactionData: any) {
+		let filtered: any = {};
+
+		Object.keys(transactionData).map(key => {
+			try {
+				let transaction = transactionData[key];
+
+				let currentDate = new Date();
+				let date = new Date(Date.parse(transaction.transactionDate));
+
+				if(currentDate.getMonth() === date.getMonth() && currentDate.getFullYear() === date.getFullYear()) {
+					filtered[key] = transaction;
+				}
+			} catch(error) {
+				console.log(error);
+			}
+		});
+
+		return filtered;
 	}
 
 	function parseTransactionData(transactionData: any) {
