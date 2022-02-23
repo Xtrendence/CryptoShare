@@ -1,26 +1,25 @@
-import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Utils from "../utils/Utils";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Pie from "react-native-pie";
-import styles from "../styles/Dashboard";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "../styles/Global";
-import store from "../store/store";
-import CryptoFN from "../utils/CryptoFN";
-import Requests, { cryptoAPI } from "../utils/Requests";
 import BudgetStats from "../components/BudgetStats";
 import Loading from "../components/Loading";
+import MarketPopup from "../components/MarketPopup";
 import TransactionItem from "../components/TransactionItem";
-import WatchlistItem from "../components/WatchlistItem";
 import TransactionPopup from "../components/TransactionPopup";
+import WatchlistItem from "../components/WatchlistItem";
+import store from "../store/store";
+import styles from "../styles/Dashboard";
+import { Colors } from "../styles/Global";
+import CryptoFN from "../utils/CryptoFN";
+import Requests, { cryptoAPI } from "../utils/Requests";
 import Stock from "../utils/Stock";
+import Utils from "../utils/Utils";
 import { sortMarketDataByCoinID } from "./Holdings";
 import { parseMarketData } from "./Market";
-import MarketPopup from "../components/MarketPopup";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();

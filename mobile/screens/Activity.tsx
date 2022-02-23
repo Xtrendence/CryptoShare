@@ -1,24 +1,23 @@
-import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Utils from "../utils/Utils";
+import { useFocusEffect } from "@react-navigation/native";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import HTML from "react-native-render-html";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/Activity";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
-import HTML from "react-native-render-html";
-import LinearGradient from "react-native-linear-gradient";
-import { Colors } from "../styles/Global";
-import Requests, { cryptoAPI } from "../utils/Requests";
-import Loading from "../components/Loading";
 import Item from "../components/ActivityItem";
-import CryptoFinder from "../utils/CryptoFinder";
+import ActivityPopup from "../components/ActivityPopup";
+import Loading from "../components/Loading";
 import MatchList from "../components/MatchList";
 import store from "../store/store";
+import styles from "../styles/Activity";
+import { Colors } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
-import ActivityPopup from "../components/ActivityPopup";
+import CryptoFinder from "../utils/CryptoFinder";
+import Requests, { cryptoAPI } from "../utils/Requests";
 import Stock from "../utils/Stock";
+import Utils from "../utils/Utils";
 
 export default function Activity({ navigation }: any) {
 	const dispatch = useDispatch();

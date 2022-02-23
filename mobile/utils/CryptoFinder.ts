@@ -1,6 +1,6 @@
-import Utils from "./Utils";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { cryptoAPI } from "./Requests";
+import Utils from "./Utils";
 
 export default class CryptoFinder {
 	static async getCoin(args: any) {

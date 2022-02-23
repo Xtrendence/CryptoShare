@@ -1,17 +1,17 @@
 import React from "react";
-import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
-import { NavigationContainer, DarkTheme, DefaultTheme } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-
-import Login from "../../screens/Login";
+import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
+import { useSelector } from "react-redux";
+import Activity from "../../screens/Activity";
 import ChatBot from "../../screens/ChatBot";
 import Dashboard from "../../screens/Dashboard";
-import Market from "../../screens/Market";
 import Holdings from "../../screens/Holdings";
-import Activity from "../../screens/Activity";
+import Login from "../../screens/Login";
+import Market from "../../screens/Market";
 import Settings from "../../screens/Settings";
 import NavigationBar from "./NavigationBar";
-import { useSelector } from "react-redux";
+
 
 const Stack = createStackNavigator();
 

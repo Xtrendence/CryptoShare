@@ -1,11 +1,10 @@
-import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
-import { ImageBackground, ScrollView, View } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Utils from "../utils/Utils";
+import { useFocusEffect } from "@react-navigation/native";
+import { ImageBackground, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/ChatBot";
 import { useDispatch, useSelector } from "react-redux";
+import styles from "../styles/ChatBot";
+import Utils from "../utils/Utils";
 
 export default function ChatBot({ navigation }: any) {
 	const dispatch = useDispatch();

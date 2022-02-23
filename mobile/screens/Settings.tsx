@@ -1,18 +1,18 @@
-import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { ImageBackground, Keyboard, Modal, ScrollView, Text, View, TouchableOpacity, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Utils from "../utils/Utils";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import Toggle from "react-native-toggle-element";
+import { useFocusEffect } from "@react-navigation/native";
+import { ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/Settings";
+import Toggle from "react-native-toggle-element";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "../styles/Global";
-import { switchTheme } from "../store/reducers/theme";
-import Requests from "../utils/Requests";
-import { changeSetting, setSettingsState } from "../store/reducers/settings";
 import ChoiceButton from "../components/ChoiceButton";
+import { changeSetting } from "../store/reducers/settings";
+import { switchTheme } from "../store/reducers/theme";
+import { Colors } from "../styles/Global";
+import styles from "../styles/Settings";
+import Requests from "../utils/Requests";
+import Utils from "../utils/Utils";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();

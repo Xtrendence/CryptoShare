@@ -1,23 +1,23 @@
-import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, ImageBackground, Keyboard, Modal, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import Utils from "../utils/Utils";
+import { useFocusEffect } from "@react-navigation/native";
+import { FlatList, ImageBackground, Keyboard, Modal, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import styles from "../styles/Market";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { useDispatch, useSelector } from "react-redux";
-import { Colors } from "../styles/Global";
-import Requests, { cryptoAPI } from "../utils/Requests";
 import Loading from "../components/Loading";
-import CryptoFinder from "../utils/CryptoFinder";
-import MatchList from "../components/MatchList";
-import store from "../store/store";
 import CryptoItem from "../components/MarketItem";
-import StockItem from "../components/WatchlistItem";
-import Stock from "../utils/Stock";
 import MarketPopup from "../components/MarketPopup";
-import { createWatchlistListRows, fetchWatchlist, filterWatchlistByType, getWatchlistIDs, getWatchlistSymbols } from "./Dashboard";
+import MatchList from "../components/MatchList";
+import StockItem from "../components/WatchlistItem";
+import store from "../store/store";
+import { Colors } from "../styles/Global";
+import styles from "../styles/Market";
+import CryptoFinder from "../utils/CryptoFinder";
+import Requests, { cryptoAPI } from "../utils/Requests";
+import Stock from "../utils/Stock";
+import Utils from "../utils/Utils";
+import { createWatchlistListRows, fetchWatchlist, filterWatchlistByType, getWatchlistSymbols } from "./Dashboard";
 
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();

@@ -1,6 +1,6 @@
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
+import { barHeight, screenWidth, windowHeight } from "./NavigationBar";
 
 export default createStyle<any>({
 	scrollView: {

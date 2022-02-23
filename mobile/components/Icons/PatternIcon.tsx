@@ -1,6 +1,6 @@
 import React from "react";
 import { View } from "react-native";
-import Svg, { Defs, G, Path } from "react-native-svg";
+import Svg, { G, Path } from "react-native-svg";
 
 export default function PatternIcon(props: any) {
 	return (

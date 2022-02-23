@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import DatePicker from "react-native-modern-datepicker";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
 import Utils from "../utils/Utils";

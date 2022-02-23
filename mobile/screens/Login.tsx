@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { BackHandler, ImageBackground, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { BottomModal, ModalContent, ModalButton, ModalFooter } from "react-native-modals";
+import React, { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Utils from "../utils/Utils";
-import { Colors } from "../styles/Global";
-import { switchTheme } from "../store/reducers/theme";
-import Icon from "react-native-vector-icons/FontAwesome5";
-import Toggle from "react-native-toggle-element";
+import { BackHandler, ImageBackground, ScrollView, Text, TextInput, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import styles from "../styles/Login";
-import Requests from "../utils/Requests";
+import { BottomModal, ModalButton, ModalContent, ModalFooter } from "react-native-modals";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Toggle from "react-native-toggle-element";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { useDispatch, useSelector } from "react-redux";
 import Loading from "../components/Loading";
+import { switchTheme } from "../store/reducers/theme";
+import { Colors } from "../styles/Global";
+import styles from "../styles/Login";
 import CryptoFN from "../utils/CryptoFN";
+import Requests from "../utils/Requests";
+import Utils from "../utils/Utils";
 
 export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();

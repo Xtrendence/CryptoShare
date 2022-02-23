@@ -1,8 +1,6 @@
 import React from "react";
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import store from "../store/store";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors, GlobalStyle } from "../styles/Global";
-import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
 export default function Item({ info, showActivityPopup, theme, dateFormat }: any) {

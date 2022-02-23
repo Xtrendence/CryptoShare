@@ -1,6 +1,6 @@
-import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
+import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
 
 export const themeSlice = createSlice({
 	name: "theme",

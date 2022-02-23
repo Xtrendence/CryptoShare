@@ -1,14 +1,14 @@
 import React from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Linking, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
+import HTML from "react-native-render-html";
+import { getWatchlistID, watchlistExists } from "../screens/Dashboard";
 import { Colors } from "../styles/Global";
 import styles, { gradientColor } from "../styles/Market";
 import { screenWidth } from "../styles/NavigationBar";
-import HTML from "react-native-render-html";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
 import Chart from "./Charts/Chart";
-import { getWatchlistID, watchlistExists } from "../screens/Dashboard";
-import Requests from "../utils/Requests";
 
 export default function MarketPopup({ modal, hideModal, loading, setLoading, theme, settings, chartVerticalLabels, chartData, chartLabels, chartSegments, labelsRef, modalInfo, modalType, modalDescription, page, watchlistData, populateList }: any) {
 	let assetID = modalType === "crypto" ? modalInfo?.id : "stock-" + modalInfo?.id;

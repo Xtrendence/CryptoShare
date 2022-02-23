@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import LinearGradient from "react-native-linear-gradient";
-import { useDispatch, useSelector } from "react-redux";
-import { Colors, GlobalStyle } from "../../styles/Global";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { useSelector } from "react-redux";
+import { Colors } from "../../styles/Global";
 import styles from "../../styles/NavigationBar";
 import PatternIcon from "../Icons/PatternIcon";
 

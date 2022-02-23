@@ -5,7 +5,7 @@ import { showMessage } from "react-native-flash-message";
 import { changeSetting } from "../store/reducers/settings";
 import { Colors } from "../styles/Global";
 import CryptoFN from "./CryptoFN";
-import Requests from "./Requests";
+
 export default class Utils {
 	static defaultSettings: any = {
 		defaultPage: "Dashboard",

@@ -1,4 +1,4 @@
-import { StyleSheet, ViewStyle, TextStyle, ImageStyle, ColorValue, FlexStyle } from "react-native";
+import { ColorValue, ImageStyle, StyleSheet, TextStyle, ViewStyle } from "react-native";
 
 export interface ToggleStyle extends ViewStyle {
 	activeBackgroundColor: ColorValue | undefined;

@@ -1,8 +1,8 @@
 import React from "react";
+import { LinearGradient as SVGLinearGradient, Stop } from "react-native-svg";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
-import { Stop, LinearGradient as SVGLinearGradient } from "react-native-svg";
+import { barHeight, screenHeight, screenWidth, windowHeight } from "./NavigationBar";
 
 export const gradientColor = () => {
 	return (
