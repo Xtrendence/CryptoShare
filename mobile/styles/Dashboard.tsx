@@ -459,10 +459,17 @@ export default createStyle<any>({
 	listHeader: {
 		alignItems: "center"
 	},
+	listTextWrapper: {
+		height: windowHeight - barHeight - 40 - 20 - 70 - 110 - 10,
+		alignItems: "center",
+		justifyContent: "center",
+		width: screenWidth - 40 - 80
+	},
 	listText: {
+		lineHeight: 30,
 		fontSize: 18,
 		fontWeight: "bold",
-		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 10,
+		textAlign: "center",
 		color: Colors.Dark.mainContrast
 	},
 	listTextLight: {

@@ -33,6 +33,7 @@ export default function Market({ navigation }: any) {
 	const [type, setType] = useState<string>("crypto");
 
 	const [modal, setModal] = useState<boolean>(false);
+	const [modalData, setModalData] = useState<any>({});
 	const [modalType, setModalType] = useState<string>("");
 	const [modalInfo, setModalInfo] = useState<any>(null);
 	const [modalDescription, setModalDescription] = useState<string>("");
@@ -158,7 +159,7 @@ export default function Market({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
-			<MarketPopup modal={modal} hideModal={hideModal} loading={loading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription}/>
+			<MarketPopup modal={modal} hideModal={hideModal} loading={loading} setLoading={setLoading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription} page="Market" watchlistData={modalData} populateList={populateMarketListStocks}/>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
@@ -409,6 +410,8 @@ export default function Market({ navigation }: any) {
 				setModalDescription(description);
 			}
 			
+			info.id = assetID;
+
 			setModalInfo(info);
 
 			let check = setInterval(() => {
@@ -440,6 +443,7 @@ export default function Market({ navigation }: any) {
 		setModalDescription("");
 		setModalInfo(null);
 		setModal(false);
+		populateMarketListStocks();
 	}
 
 	function changeType(type: string) {
@@ -502,9 +506,13 @@ export default function Market({ navigation }: any) {
 			let watchlistData: any = await fetchWatchlist();
 
 			if(Utils.empty(watchlistData)) {
+				setModalData({});
+				setMarketRowsStocks({});
 				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
 				return;
 			}
+			
+			setModalData(watchlistData);
 
 			let filteredWatchlist = filterWatchlistByType(watchlistData);
 
@@ -520,6 +528,8 @@ export default function Market({ navigation }: any) {
 			let rows: any = createWatchlistListRows({}, marketStocksData, watchlistData, currency);
 
 			if(Utils.empty(rows)) {
+				setModalData({});
+				setMarketRowsStocks({});
 				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
 				return;
 			}

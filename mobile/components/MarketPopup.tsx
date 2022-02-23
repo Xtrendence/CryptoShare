@@ -1,13 +1,18 @@
 import React from "react";
-import { Linking, Modal, ScrollView, Text, View } from "react-native";
+import { Linking, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { Colors } from "../styles/Global";
 import styles, { gradientColor } from "../styles/Market";
 import { screenWidth } from "../styles/NavigationBar";
 import HTML from "react-native-render-html";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Utils from "../utils/Utils";
 import Chart from "./Charts/Chart";
+import { getWatchlistID, watchlistExists } from "../screens/Dashboard";
+import Requests from "../utils/Requests";
 
-export default function MarketPopup({ modal, hideModal, loading, theme, settings, chartVerticalLabels, chartData, chartLabels, chartSegments, labelsRef, modalInfo, modalType, modalDescription }: any) {
+export default function MarketPopup({ modal, hideModal, loading, setLoading, theme, settings, chartVerticalLabels, chartData, chartLabels, chartSegments, labelsRef, modalInfo, modalType, modalDescription, page, watchlistData, populateList }: any) {
+	let assetID = modalType === "crypto" ? modalInfo?.id : "stock-" + modalInfo?.id;
+
 	return (
 		<Modal style={styles.modal} visible={modal} onRequestClose={hideModal} transparent={true}>
 			<View style={[styles.modalOverlay, loading ? { opacity:0 } : null]}></View>
@@ -81,6 +86,18 @@ export default function MarketPopup({ modal, hideModal, loading, theme, settings
 					</ScrollView>
 				</View>
 				<ScrollView style={[styles.modalWrapperScrollView, styles[`modalWrapperScrollView${theme}`]]} contentContainerStyle={styles.modalWrapperScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={true} nestedScrollEnabled={true}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { alignItems:"center" }]}>
+						{ watchlistExists(watchlistData, assetID) &&
+							<TouchableOpacity onPress={() => deleteWatchlist(getWatchlistID(watchlistData, assetID))} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], { backgroundColor:Colors[theme][page].accentFirst, width:220 }]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Remove From Watchlist</Text>
+							</TouchableOpacity>
+						}
+						{ !watchlistExists(watchlistData, assetID) &&
+							<TouchableOpacity onPress={() => createWatchlist(assetID, modalInfo?.symbol, modalType)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], { backgroundColor:Colors[theme][page].accentFirst, width:220 }]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Add To Watchlist</Text>
+							</TouchableOpacity>
+						}
+					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
 						{ !Utils.empty(modalInfo) && modalType === "crypto" &&
 							<View style={styles.modalInfoWrapper}>
@@ -175,4 +192,62 @@ export default function MarketPopup({ modal, hideModal, loading, theme, settings
 			</View>
 		</Modal>
 	);
+
+	async function deleteWatchlist(watchlistID: any) {
+		try {
+			setLoading(true);
+
+			setTimeout(async () => {
+				let userID = await AsyncStorage.getItem("userID");
+				let token = await AsyncStorage.getItem("token");
+				let api = await AsyncStorage.getItem("api");
+
+				let requests = new Requests(api);
+
+				await requests.deleteWatchlist(token, userID, watchlistID);
+
+				setTimeout(() => {
+					setLoading(false);
+					populateList();
+				}, 1000);
+			}, 500);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	async function createWatchlist(assetID: string, assetSymbol: string, assetType: string) {
+		try {
+			setLoading(true);
+
+			setTimeout(async () => {
+				let userID = await AsyncStorage.getItem("userID");
+				let token = await AsyncStorage.getItem("token");
+				let key = await AsyncStorage.getItem("key") || "";
+				let api = await AsyncStorage.getItem("api");
+
+				let requests = new Requests(api);
+
+				let encrypted = Utils.encryptObjectValues(key, {
+					assetID: assetID,
+					assetSymbol: assetSymbol,
+					assetType: assetType,
+				});
+
+				await requests.createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
+
+				populateList();
+
+				setTimeout(() => {
+					setLoading(false);
+				}, 1000);
+			}, 500);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
 }

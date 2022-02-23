@@ -989,16 +989,21 @@ function filterWatchlistByType(watchlistData) {
 }
 
 function watchlistExists(watchlist, id) {
-	let exists = false;
+	try {
+		let exists = false;
 
-	Object.keys(watchlist).map(index => {
-		let asset = watchlist[index];
-		if(asset?.assetID === id) {
-			exists = true;
-		}
-	});
+		Object.keys(watchlist).map(index => {
+			let asset = watchlist[index];
+			if(asset?.assetID.toLowerCase() === id.toLowerCase()) {
+				exists = true;
+			}
+		});
 
-	return exists;
+		return exists;
+	} catch(error) {
+		console.log(error);
+		return false;
+	}
 }
 
 function fetchWatchlist() {

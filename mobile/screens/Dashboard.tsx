@@ -77,6 +77,7 @@ export default function Dashboard({ navigation }: any) {
 	const [filteredRows, setFilteredRows] = useState<any>({});
 
 	const [marketModal, setMarketModal] = useState<boolean>(false);
+	const [modalData, setModalData] = useState<any>({});
 	const [modalType, setModalType] = useState<string>("");
 	const [modalInfo, setModalInfo] = useState<any>(null);
 	const [modalDescription, setModalDescription] = useState<string>("");
@@ -191,7 +192,7 @@ export default function Dashboard({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
-			<MarketPopup modal={marketModal} hideModal={hideMarketModal} loading={loading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription}/>
+			<MarketPopup modal={marketModal} hideModal={hideMarketModal} loading={loading} setLoading={setLoading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription} page="Dashboard" watchlistData={modalData} populateList={populateWatchlist}/>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
@@ -299,7 +300,7 @@ export default function Dashboard({ navigation }: any) {
 
 				setModalDescription(description);
 			}
-			
+
 			setModalInfo(info);
 
 			let check = setInterval(() => {
@@ -331,6 +332,7 @@ export default function Dashboard({ navigation }: any) {
 		setModalDescription("");
 		setModalInfo(null);
 		setMarketModal(false);
+		populateWatchlist();
 	}
 
 	function getRows(filteredRows: any, activityRows: any, query: any) {
@@ -416,13 +418,17 @@ export default function Dashboard({ navigation }: any) {
 			let settings: any = store.getState().settings.settings;
 
 			let currency = settings.currency;
-			
+
 			let watchlistData: any = await fetchWatchlist();
 
 			if(Utils.empty(watchlistData)) {
-				setWatchlistHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
+				setModalData({});
+				setWatchlistRows({});
+				setWatchlistHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>Add assets to your watchlist through the Market page</Text></View>);
 				return;
 			}
+			
+			setModalData(watchlistData);
 
 			let filteredWatchlist = filterWatchlistByType(watchlistData);
 
@@ -1400,17 +1406,48 @@ export function filterWatchlistByType(watchlistData: any) {
 	return { crypto:watchlistCrypto, stocks:watchlistStocks };
 }
 
-function watchlistExists(watchlist: any, id: string) {
-	let exists = false;
-
-	Object.keys(watchlist).map(index => {
-		let asset = watchlist[index];
-		if(asset?.assetID === id) {
-			exists = true;
+export function watchlistExists(watchlist: any, id: string) {
+	try {
+		if(Utils.empty(id)) {
+			return false;
 		}
-	});
+		
+		let exists = false;
 
-	return exists;
+		Object.keys(watchlist).map(index => {
+			let asset = watchlist[index];
+			if(asset?.assetID.toLowerCase() === id.toLowerCase()) {
+				exists = true;
+			}
+		});
+
+		return exists;
+	} catch(error) {
+		console.log(error);
+		return false;
+	}
+}
+
+export function getWatchlistID(watchlist: any, assetID: string) {
+	try {
+		if(Utils.empty(assetID)) {
+			return false;
+		}
+
+		let id: any = null;
+
+		Object.keys(watchlist).map(index => {
+			let asset = watchlist[index];
+			if(asset?.assetID.toLowerCase() === assetID.toLowerCase()) {
+				id = asset?.watchlistID;
+			}
+		});
+
+		return id;
+	} catch(error) {
+		console.log(error);
+		return false;
+	}
 }
 
 export function createWatchlistListRows(marketCryptoData: any, marketStocksData: any, watchlistData: any, currency: string) {
