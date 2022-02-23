@@ -1,23 +1,23 @@
 import { useFocusEffect } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
-import { FlatList, Image, ImageBackground, Keyboard, Linking, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { FlatList, ImageBackground, Keyboard, Modal, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import Utils from "../utils/Utils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import HTML from "react-native-render-html";
-import styles, { gradientColor } from "../styles/Market";
+import styles from "../styles/Market";
 import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../styles/Global";
 import Requests, { cryptoAPI } from "../utils/Requests";
-import Chart from "../components/Charts/Chart";
-import { screenWidth } from "../styles/NavigationBar";
 import Loading from "../components/Loading";
 import CryptoFinder from "../utils/CryptoFinder";
 import MatchList from "../components/MatchList";
 import store from "../store/store";
-import Item from "../components/MarketItem";
+import CryptoItem from "../components/MarketItem";
+import StockItem from "../components/WatchlistItem";
 import Stock from "../utils/Stock";
+import MarketPopup from "../components/MarketPopup";
+import { createWatchlistListRows, fetchWatchlist, filterWatchlistByType, getWatchlistIDs, getWatchlistSymbols } from "./Dashboard";
 
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -48,11 +48,19 @@ export default function Market({ navigation }: any) {
 	const [marketRowsStocks, setMarketRowsStocks] = useState<any>({});
 	const [marketHeader, setMarketHeader] = useState<any>(null);
 
-	const renderItem = ({ item }: any) => {
+	const renderItemCrypto = ({ item }: any) => {
 		let info = marketRowsCrypto[item];
 
 		return (
-			<Item info={info} showModal={showModal} theme={theme} settings={settings}/>
+			<CryptoItem info={info} showModal={showModal} theme={theme} settings={settings}/>
+		);
+	}
+
+	const renderItemStock = ({ item }: any) => {
+		let info = marketRowsStocks[item];
+
+		return (
+			<StockItem info={info} theme={theme} settings={settings} page="Market" onPress={() => showModal(info.id, info.symbol.toUpperCase(), info.price, info, "stock")}/>
 		);
 	}
 	
@@ -118,7 +126,7 @@ export default function Market({ navigation }: any) {
 					<FlatList
 						contentContainerStyle={{ paddingTop:10 }}
 						data={Object.keys(marketRowsCrypto)}
-						renderItem={renderItem}
+						renderItem={renderItemCrypto}
 						keyExtractor={item => marketRowsCrypto[item].coinID}
 						style={[styles.wrapper, styles[`wrapper${theme}`]]}
 					/>
@@ -127,8 +135,8 @@ export default function Market({ navigation }: any) {
 					<FlatList
 						contentContainerStyle={{ paddingTop:10 }}
 						data={Object.keys(marketRowsStocks)}
-						renderItem={renderItem}
-						keyExtractor={item => marketRowsStocks[item].assetID}
+						renderItem={renderItemStock}
+						keyExtractor={item => marketRowsStocks[item].symbol}
 						style={[styles.wrapper, styles[`wrapper${theme}`]]}
 						ListHeaderComponent={marketHeader}
 						ListHeaderComponentStyle={styles.header}
@@ -150,171 +158,7 @@ export default function Market({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
-			<Modal style={styles.modal} visible={modal} onRequestClose={hideModal} transparent={true}>
-				<View style={[styles.modalOverlay, loading ? { opacity:0 } : null]}></View>
-				<View style={[styles.modalWrapper, loading ? { opacity:0 } : null]}>
-					<View style={[styles.modalChartWrapper, styles[`modalChartWrapper${theme}`]]}>
-						<View style={[styles.modalChartLeft, styles[`modalChartLeft${theme}`]]}>
-							{
-								Utils.sortLabels(settings.currency, chartVerticalLabels).map((label: any) => {
-									return (
-										<Text key={`label-${chartVerticalLabels.indexOf(label) + Utils.randomBetween(0, 9999999)}`} style={[styles.modalChartText, styles[`modalChartText${theme}`]]}>{label}</Text>
-									);
-								})
-							}
-						</View>
-						<ScrollView horizontal={true} style={[styles.modalScrollView, styles[`modalScrollView${theme}`]]}>
-							{ !Utils.empty(chartData) && !Utils.empty(chartLabels) ? 
-								<Chart
-									data={{ labels:chartLabels, datasets:[{ data:chartData }]}}
-									width={1400}
-									height={300}
-									segments={chartSegments}
-									withHorizontalLines={true}
-									withVerticalLines={false}
-									withVerticalLabels={true}
-									yAxisInterval={500}
-									formatYLabel={(label): any => {
-										if(Utils.empty(labelsRef.current)) {
-											labelsRef.current = [];
-										}
-										let current = labelsRef.current;
-										current.push(label);
-										labelsRef.current = current;
-										return "";
-									}}
-									withShadow={false}
-									chartConfig={{
-										backgroundColor: "rgba(0,0,0,0)",
-										backgroundGradientFrom: "rgba(0,0,0,0)",
-										backgroundGradientTo: "rgba(0,0,0,0)",
-										decimalPlaces: 6,
-										color: () => "url(#gradient)",
-										labelColor: () => Colors[theme].mainContrast,
-										style: {
-											borderRadius: 0
-										},
-										propsForDots: {
-											r: "0",
-											strokeWidth: "2",
-											stroke: Colors[theme].mainFifth
-										},
-										propsForVerticalLabels: {
-											fontSize: 12,
-											rotation: 0,
-											fontWeight: "bold",
-										},
-										propsForBackgroundLines: {
-											strokeWidth: 2,
-											stroke: Colors[theme].mainSecond
-										}
-									}}
-									bezier
-									style={{
-										backgroundColor: "rgba(255,255,255,0)",
-									}}
-									// @ts-ignore
-									gradient={gradientColor()}
-								/>
-							: 
-								<View style={{ height:320, width:screenWidth }}></View>
-							}
-						</ScrollView>
-					</View>
-					<ScrollView style={[styles.modalWrapperScrollView, styles[`modalWrapperScrollView${theme}`]]} contentContainerStyle={styles.modalWrapperScrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={true} nestedScrollEnabled={true}>
-						<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
-							{ !Utils.empty(modalInfo) && modalType === "crypto" &&
-								<View style={styles.modalInfoWrapper}>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Name: {modalInfo.name} ({modalInfo.symbol.toUpperCase()})
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Rank: #{modalInfo.rank}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.price)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Market Cap: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.marketCap)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Volume: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.volume)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Supply: {Utils.separateThousands(modalInfo.supply)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										ATH: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.ath)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										ATH Change: {modalInfo.athChange}%
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										24h High: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.high24h)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										24h Low: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(modalInfo.low24h)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										24h Change: {modalInfo.priceChangeDay}%
-									</Text>
-								</View>
-							}
-							{ !Utils.empty(modalInfo) && modalType === "stock" &&
-								<View style={styles.modalInfoWrapper}>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Name: {modalInfo.shortName}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Symbol: {modalInfo.symbol.toUpperCase()}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Price: {Utils.currencySymbols[modalInfo.currency] + Utils.separateThousands(modalInfo.price)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										1Y High: {Utils.currencySymbols[modalInfo.currency] + Utils.separateThousands(modalInfo.high1y)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										1Y Low: {Utils.currencySymbols[modalInfo.currency] + Utils.separateThousands(modalInfo.low1y)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										Market Cap: {Utils.currencySymbols[modalInfo.currency] + Utils.separateThousands(modalInfo.marketCap)}
-									</Text>
-									<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>
-										24h Change: {Utils.formatPercentage(modalInfo.change)}
-									</Text>
-								</View>
-							}
-						</View>
-						{ !Utils.empty(modalDescription) &&
-							<View style={[styles.modalSection, styles[`modalSection${theme}`]]}>
-								<HTML 
-									renderersProps={{
-										a: {
-											onPress(event: any, url: any, htmlAttribs: any, target: any) {
-												Linking.openURL(url);
-											}
-										}
-									}}
-									contentWidth={screenWidth - 40}
-									source={{ html:modalDescription }} 
-									tagsStyles={{ 
-										a: { 
-											color: Colors[theme].Market.accentFirst,
-											textDecorationLine: "none",
-											fontSize: 16
-										}, 
-										span: { 
-											color: Colors[theme].mainContrast, 
-											fontSize: 16 
-										}
-									}}
-								/>
-							</View>
-						}
-					</ScrollView>
-				</View>
-			</Modal>
+			<MarketPopup modal={modal} hideModal={hideModal} loading={loading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription}/>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
@@ -530,10 +374,11 @@ export default function Market({ navigation }: any) {
 
 				data = parseMarketData(historicalData, new Date().getTime(), currentPrice);
 			} else {
-				let resultHistorical = await Stock.fetchStockHistorical(settings.currency, symbol);
+				let resultHistorical = await Stock.fetchStockHistorical(settings.currency, assetSymbol);
 
 				if("error" in resultHistorical) {
 					Utils.notify(theme, resultHistorical.error);
+					setLoading(false);
 					return;
 				}
 
@@ -581,7 +426,7 @@ export default function Market({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			ToastAndroid.show("Something went wrong...", 5000);
 		}
 	}
 
@@ -649,18 +494,39 @@ export default function Market({ navigation }: any) {
 	}
 
 	async function populateMarketListStocks() {
-		let parsedData = await parseWatchlistAsMarket();
+		try {
+			let settings: any = store.getState().settings.settings;
 
-		if(Utils.empty(parsedData)) {
-			setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
-			return;
+			let currency = settings.currency;
+			
+			let watchlistData: any = await fetchWatchlist();
+
+			if(Utils.empty(watchlistData)) {
+				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
+				return;
+			}
+
+			let filteredWatchlist = filterWatchlistByType(watchlistData);
+
+			let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
+
+			let marketStocksData = !Utils.empty(watchlistStockSymbols) ? await Stock.fetchStockPrice(currency, watchlistStockSymbols) : {};
+			if("error" in marketStocksData) {
+				marketStocksData = {};
+				watchlistStockSymbols = [];
+				filteredWatchlist.stocks = {};
+			}
+
+			let rows: any = createWatchlistListRows({}, marketStocksData, watchlistData, currency);
+
+			setMarketHeader(null);
+			setMarketRowsStocks(rows);
+		} catch(error) {
+			if(error !== "Timeout.") {
+				Utils.notify(theme, "Something went wrong...");
+				console.log(error);
+			}
 		}
-	}
-
-	function parseWatchlistAsMarket() {
-		return new Promise((resolve, reject) => {
-			resolve({});
-		});
 	}
 
 	function parseMarketData(data: any, currentTime: any, currentPrice: any) {

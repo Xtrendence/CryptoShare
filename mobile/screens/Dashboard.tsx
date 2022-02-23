@@ -87,7 +87,7 @@ export default function Dashboard({ navigation }: any) {
 		let info = watchlistRows[item];
 
 		return (
-			<WatchlistItem info={info} theme={theme} settings={settings}/>
+			<WatchlistItem info={info} theme={theme} settings={settings} page="Dashboard"/>
 		);
 	}
 	
@@ -304,11 +304,6 @@ export default function Dashboard({ navigation }: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
 
-			let userID = await AsyncStorage.getItem("userID");
-			let token = await AsyncStorage.getItem("token");
-			let key = await AsyncStorage.getItem("key") || "";
-			let api = await AsyncStorage.getItem("api");
-
 			let currency = settings.currency;
 			
 			let watchlistData: any = await fetchWatchlist();
@@ -334,6 +329,7 @@ export default function Dashboard({ navigation }: any) {
 
 			let rows: any = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData, currency);
 
+			setWatchlistHeader(null);
 			setWatchlistRows(rows);
 		} catch(error) {
 			if(error !== "Timeout.") {
@@ -341,61 +337,6 @@ export default function Dashboard({ navigation }: any) {
 				console.log(error);
 			}
 		}
-	}
-
-	function createWatchlistListRows(marketCryptoData: any, marketStocksData: any, watchlistData: any, currency: string) {
-		let rows: any = {};
-
-		let ids = Object.keys(watchlistData);
-
-		marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
-
-		for(let i = 0; i < ids.length; i++) {
-			try {
-				let id = ids[i];
-			
-				let asset = watchlistData[id];
-
-				if(asset.assetType === "crypto") {
-					if(Utils.empty(marketCryptoData)) {
-						continue;
-					}
-
-					let coin = marketCryptoData[asset.assetID];
-
-					let coinID = coin.id;
-					let price = coin.current_price;
-					let priceChangeDay = Utils.formatPercentage(coin.market_cap_change_percentage_24h);
-					let name = coin.name;
-					let symbol = coin.symbol;
-					let marketCap = coin.market_cap;
-					let volume = coin.total_volume;
-					let rank = coin.market_cap_rank || "-";
-
-					let info = { coinID:coinID, price:price, priceChangeDay:priceChangeDay, name:name, symbol:symbol, marketCap:marketCap, volume:volume, rank:rank, watchlistID:id };
-
-					rows[id] = info;
-				} else {
-					let symbol = asset.assetSymbol.toUpperCase();
-
-					let stock = marketStocksData[symbol].priceData;
-
-					let shortName = stock.shortName;
-					let price = stock.price;
-					let marketCap = stock.marketCap;
-					let volume = stock.volume;
-					let priceChangeDay = Utils.formatPercentage(stock.change);
-
-					let info = { symbol:symbol, price:price, priceChangeDay:priceChangeDay, name:shortName, marketCap:marketCap, volume:volume, watchlistID:id };
-
-					rows[id] = info;
-				}
-			} catch(error) {
-				console.log(error);
-			}
-		}
-
-		return rows;
 	}
 
 	async function listTransactions() {
@@ -984,41 +925,6 @@ export default function Dashboard({ navigation }: any) {
 		setList(list);
 	}
 
-	function fetchWatchlist() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let userID = await AsyncStorage.getItem("userID");
-				let token = await AsyncStorage.getItem("token");
-				let key = await AsyncStorage.getItem("key") || "";
-				let api = await AsyncStorage.getItem("api");
-
-				let requests = new Requests(api);
-
-				let watchlist = await requests.readWatchlist(token, userID);
-
-				if(Utils.empty(watchlist?.data?.readWatchlist)) {
-					resolve(null);
-					return;
-				}
-
-				let watchlistData: any = {};
-	
-				let encrypted = watchlist?.data?.readWatchlist;
-	
-				Object.keys(encrypted).map(index => {
-					let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
-					decrypted.watchlistID = encrypted[index].watchlistID;
-					watchlistData[decrypted.watchlistID] = decrypted;
-				});
-
-				resolve(watchlistData);
-			} catch(error) {
-				console.log(error);
-				reject(error);
-			}
-		});
-	}
-
 	function showTransactionPopup(info: any, action: string) {
 		try {
 			setLoading(true);
@@ -1346,7 +1252,7 @@ function sortTransactionDataByDate(transactionData: any) {
 	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
 }
 
-function getWatchlistIDs(watchlist: any) {
+export function getWatchlistIDs(watchlist: any) {
 	let ids: any = [];
 
 	Object.keys(watchlist).map(id => {
@@ -1356,7 +1262,7 @@ function getWatchlistIDs(watchlist: any) {
 	return ids;
 }
 
-function getWatchlistSymbols(watchlist: any) {
+export function getWatchlistSymbols(watchlist: any) {
 	let symbols: any = [];
 
 	Object.keys(watchlist).map(id => {
@@ -1366,7 +1272,7 @@ function getWatchlistSymbols(watchlist: any) {
 	return symbols;
 }
 
-function filterWatchlistByType(watchlistData: any) {
+export function filterWatchlistByType(watchlistData: any) {
 	let watchlistCrypto: any = {};
 	let watchlistStocks: any = {};
 
@@ -1394,4 +1300,99 @@ function watchlistExists(watchlist: any, id: string) {
 	});
 
 	return exists;
+}
+
+export function createWatchlistListRows(marketCryptoData: any, marketStocksData: any, watchlistData: any, currency: string) {
+	let rows: any = {};
+
+	let ids = Object.keys(watchlistData);
+
+	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
+
+	for(let i = 0; i < ids.length; i++) {
+		try {
+			let id = ids[i];
+			
+			let asset = watchlistData[id];
+
+			if(asset.assetType === "crypto") {
+				if(Utils.empty(marketCryptoData)) {
+					continue;
+				}
+
+				let coin = marketCryptoData[asset.assetID];
+
+				let coinID = coin.id;
+				let price = coin.current_price;
+				let priceChangeDay = Utils.formatPercentage(coin.market_cap_change_percentage_24h);
+				let name = coin.name;
+				let symbol = coin.symbol;
+				let marketCap = coin.market_cap;
+				let volume = coin.total_volume;
+				let athChange = Utils.formatPercentage(coin?.ath_change_percentage);
+				let ath = coin?.ath;
+				let high24h = coin?.high_24h;
+				let low24h = coin?.low_24h;
+				let supply = coin?.circulating_supply;
+				let rank = coin.market_cap_rank || "-";
+
+				let info = { id:coinID, price:price, priceChangeDay:priceChangeDay, name:name, symbol:symbol, marketCap:marketCap, volume:volume, rank:rank, watchlistID:id, type:"crypto", athChange:athChange, ath:ath, high24h:high24h, low24h, supply:supply };
+
+				rows[id] = info;
+			} else {
+				let symbol = asset.assetSymbol.toUpperCase();
+
+				let stock = marketStocksData[symbol].priceData;
+
+				let shortName = stock.shortName;
+				let price = stock.price;
+				let marketCap = stock.marketCap;
+				let volume = stock.volume;
+				let priceChangeDay = Utils.formatPercentage(stock.change);
+
+				let info = { id:symbol, symbol:symbol, price:price, priceChangeDay:priceChangeDay, name:shortName, marketCap:marketCap, volume:volume, watchlistID:id, type:"stock", change:stock.change, currency:currency, displayName:stock.displayName, high1y:stock.high1y, low1y:stock.low1y, longName:stock.longName, shortName:shortName };
+
+				rows[id] = info;
+			}
+		} catch(error) {
+			console.log(error);
+		}
+	}
+
+	return rows;
+}
+
+export function fetchWatchlist() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let watchlist = await requests.readWatchlist(token, userID);
+
+			if(Utils.empty(watchlist?.data?.readWatchlist)) {
+				resolve(null);
+				return;
+			}
+
+			let watchlistData: any = {};
+	
+			let encrypted = watchlist?.data?.readWatchlist;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
+				decrypted.watchlistID = encrypted[index].watchlistID;
+				watchlistData[decrypted.watchlistID] = decrypted;
+			});
+
+			resolve(watchlistData);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }

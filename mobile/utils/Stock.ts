@@ -41,6 +41,7 @@ export default class Stock {
 
 			return { error:"No data found." };
 		} catch(error) {
+			console.log(error);
 			return { error:"Something went wrong..." };
 		}
 	}
@@ -75,6 +76,7 @@ export default class Stock {
 
 			return { error:"No data found." };
 		} catch(error) {
+			console.log(error);
 			return { error:"Something went wrong..." };
 		}
 	}

@@ -4,27 +4,25 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
-export default function Item({ info, theme, settings }: any) {
+export default function Item({ info, theme, settings, page, onPress }: any) {
 	return (
 		<TouchableOpacity
-			onPress={() => {
-				
-			}}
+			onPress={onPress}
 			style={[styles.itemCard, styles[`itemCard${theme}`]]}
 		>
 			<View style={styles.itemTop}>
 				<View style={styles.itemIconWrapper}>
-					<Text style={[styles.itemSymbol, styles[`itemSymbol${theme}`]]}>{info.symbol.toUpperCase()}</Text>
+					<Text style={[styles.itemSymbol, styles[`itemSymbol${theme}`], { backgroundColor:Colors[theme][page].accentFirst }]}>{info.symbol.toUpperCase()}</Text>
 				</View>
 				<Text style={[styles.itemText, styles.itemTextName, styles[`itemTextName${theme}`]]} numberOfLines={1} ellipsizeMode="tail">{info.name} ({info.symbol.toUpperCase()})</Text>
 			</View>
 			<View style={styles.itemBottom}>
 				<ScrollView style={[styles.itemScrollView]} contentContainerStyle={styles.itemScrollViewContent} horizontal={true} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 					{ info.type === "crypto" &&
-						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">#{info.rank}</Text>
+						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`], { backgroundColor:Colors[theme][page].accentSecond }]} numberOfLines={1} ellipsizeMode="tail">#{info.rank}</Text>
 					}
 					{ info.type === "stock" &&
-						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`]]} numberOfLines={1} ellipsizeMode="tail">-</Text>
+						<Text style={[styles.itemText, styles[`itemText${theme}`], styles.itemTextRank, styles[`itemTextRank${theme}`], { backgroundColor:Colors[theme][page].accentSecond }]} numberOfLines={1} ellipsizeMode="tail">-</Text>
 					}
 					<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">24h: {info.priceChangeDay}%</Text>
 					<Text style={[styles.itemText, styles[`itemText${theme}`]]} numberOfLines={1} ellipsizeMode="tail">Price: {Utils.currencySymbols[settings.currency] + Utils.separateThousands(info.price)}</Text>
@@ -69,7 +67,6 @@ let styles: any = StyleSheet.create({
 		padding: 4,
 	},
 	itemSymbol: {
-		backgroundColor: Colors.Dark.Holdings.accentFirst,
 		color: Colors.Dark.accentContrast,
 		fontWeight: "bold",
 		borderRadius: GlobalStyle.borderRadius,
@@ -79,7 +76,6 @@ let styles: any = StyleSheet.create({
 		paddingBottom: 4,
 	},
 	itemSymbolLight: {
-		backgroundColor: Colors.Light.Holdings.accentFirst,
 		color: Colors.Light.accentContrast,
 	},
 	itemText: {
@@ -121,11 +117,9 @@ let styles: any = StyleSheet.create({
 		color: Colors.Light.mainContrast
 	},
 	itemTextRank: {
-		backgroundColor: Colors.Dark.Holdings.accentThird,
 		color: Colors.Dark.accentContrast
 	},
 	itemTextRankLight: {
-		backgroundColor: Colors.Light.Holdings.accentThird,
 		color: Colors.Light.accentContrast
 	},
 	itemScrollView: {
