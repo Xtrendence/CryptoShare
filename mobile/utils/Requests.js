@@ -247,6 +247,23 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	createWatchlist(token, userID, assetID, assetSymbol, assetType) {
+		let query = {
+			query: `mutation createWatchlist($token: String!, $userID: Int!, $assetID: String!, $assetSymbol: String!, $assetType: String!) {
+				createWatchlist(token: $token, userID: $userID, assetID: $assetID, assetSymbol: $assetSymbol, assetType: $assetType)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				assetID: assetID,
+				assetSymbol: assetSymbol,
+				assetType: assetType
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	createTransaction(token, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
 		let query = {
 			query: `mutation createTransaction($token: String!, $userID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {

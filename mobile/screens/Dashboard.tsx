@@ -11,11 +11,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Colors } from "../styles/Global";
 import store from "../store/store";
 import CryptoFN from "../utils/CryptoFN";
-import Requests from "../utils/Requests";
+import Requests, { cryptoAPI } from "../utils/Requests";
 import BudgetStats from "../components/BudgetStats";
 import Loading from "../components/Loading";
-import Item from "../components/TransactionItem";
+import TransactionItem from "../components/TransactionItem";
+import WatchlistItem from "../components/WatchlistItem";
 import TransactionPopup from "../components/TransactionPopup";
+import Stock from "../utils/Stock";
+import { sortMarketDataByCoinID } from "./Holdings";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -62,6 +65,7 @@ export default function Dashboard({ navigation }: any) {
 	const [budgetSummary, setBudgetSummary] = useState<any>(null);
 
 	const [watchlistRows, setWatchlistRows] = useState<any>({});
+	const [watchlistHeader, setWatchlistHeader] = useState<any>(null);
 
 	const [query, setQuery] = useState<string>("");
 
@@ -70,12 +74,20 @@ export default function Dashboard({ navigation }: any) {
 	const [transactionHeader, setTransactionHeader] = useState<any>(null);
 	const [filteredRows, setFilteredRows] = useState<any>({});
 
-	const renderItem = ({ item }: any) => {
+	const renderItemTransaction = ({ item }: any) => {
 		let info = transactionRows[item];
 		info.showDatePicker = popupRef.current.transaction.showDatePicker;
 
 		return (
-			<Item info={info} theme={theme} settings={settings} setLoading={setLoading} showPopup={showPopup} hidePopup={hidePopup} popupRef={popupRef} listTransactions={listTransactions} showTransactionPopup={showTransactionPopup}/>
+			<TransactionItem info={info} theme={theme} settings={settings} setLoading={setLoading} showPopup={showPopup} hidePopup={hidePopup} popupRef={popupRef} listTransactions={listTransactions} showTransactionPopup={showTransactionPopup}/>
+		);
+	}
+
+	const renderItemWatchlist = ({ item }: any) => {
+		let info = watchlistRows[item];
+
+		return (
+			<WatchlistItem info={info} theme={theme} settings={settings}/>
 		);
 	}
 	
@@ -117,6 +129,14 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}, [query]);
 
+	useEffect(() => {
+		if(list === "budget") {
+			populateBudgetList(false);
+		} else {
+			populateWatchlist();
+		}
+	}, [list]);
+
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
@@ -139,9 +159,11 @@ export default function Dashboard({ navigation }: any) {
 					<FlatList
 						contentContainerStyle={{ paddingTop:10 }}
 						data={Object.keys(watchlistRows)}
-						renderItem={watchlistRows}
+						renderItem={renderItemWatchlist}
 						keyExtractor={item => watchlistRows[item].watchlistID}
 						style={[styles.wrapper, styles[`wrapper${theme}`]]}
+						ListHeaderComponent={watchlistHeader}
+						ListHeaderComponentStyle={styles.listHeader}
 					/>
 				}
 				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
@@ -180,7 +202,7 @@ export default function Dashboard({ navigation }: any) {
 					<FlatList
 						contentContainerStyle={{ paddingTop:20, paddingLeft:20, paddingRight:20 }}
 						data={getRows(filteredRows, transactionRows, query)}
-						renderItem={renderItem}
+						renderItem={renderItemTransaction}
 						keyExtractor={item => transactionRows[item].transactionID}
 						style={[styles.modalList, styles[`modalList${theme}`]]}
 						ListHeaderComponent={transactionHeader}
@@ -278,8 +300,102 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
-	function populateWatchlist() {
-		
+	async function populateWatchlist() {
+		try {
+			let settings: any = store.getState().settings.settings;
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let currency = settings.currency;
+			
+			let watchlistData: any = await fetchWatchlist();
+
+			if(Utils.empty(watchlistData)) {
+				setWatchlistHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
+				return;
+			}
+
+			let filteredWatchlist = filterWatchlistByType(watchlistData);
+
+			let watchlistCryptoIDs = getWatchlistIDs(filteredWatchlist.crypto);
+			let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
+
+			let marketCryptoData = !Utils.empty(watchlistCryptoIDs) ? await cryptoAPI.getMarketByID(currency, watchlistCryptoIDs.join(",")) : {};
+
+			let marketStocksData = !Utils.empty(watchlistStockSymbols) ? await Stock.fetchStockPrice(currency, watchlistStockSymbols) : {};
+			if("error" in marketStocksData) {
+				marketStocksData = {};
+				watchlistStockSymbols = [];
+				filteredWatchlist.stocks = {};
+			}
+
+			let rows: any = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData, currency);
+
+			setWatchlistRows(rows);
+		} catch(error) {
+			if(error !== "Timeout.") {
+				Utils.notify(theme, "Something went wrong...");
+				console.log(error);
+			}
+		}
+	}
+
+	function createWatchlistListRows(marketCryptoData: any, marketStocksData: any, watchlistData: any, currency: string) {
+		let rows: any = {};
+
+		let ids = Object.keys(watchlistData);
+
+		marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
+
+		for(let i = 0; i < ids.length; i++) {
+			try {
+				let id = ids[i];
+			
+				let asset = watchlistData[id];
+
+				if(asset.assetType === "crypto") {
+					if(Utils.empty(marketCryptoData)) {
+						continue;
+					}
+
+					let coin = marketCryptoData[asset.assetID];
+
+					let coinID = coin.id;
+					let price = coin.current_price;
+					let priceChangeDay = Utils.formatPercentage(coin.market_cap_change_percentage_24h);
+					let name = coin.name;
+					let symbol = coin.symbol;
+					let marketCap = coin.market_cap;
+					let volume = coin.total_volume;
+					let rank = coin.market_cap_rank || "-";
+
+					let info = { coinID:coinID, price:price, priceChangeDay:priceChangeDay, name:name, symbol:symbol, marketCap:marketCap, volume:volume, rank:rank, watchlistID:id };
+
+					rows[id] = info;
+				} else {
+					let symbol = asset.assetSymbol.toUpperCase();
+
+					let stock = marketStocksData[symbol].priceData;
+
+					let shortName = stock.shortName;
+					let price = stock.price;
+					let marketCap = stock.marketCap;
+					let volume = stock.volume;
+					let priceChangeDay = Utils.formatPercentage(stock.change);
+
+					let info = { symbol:symbol, price:price, priceChangeDay:priceChangeDay, name:shortName, marketCap:marketCap, volume:volume, watchlistID:id };
+
+					rows[id] = info;
+				}
+			} catch(error) {
+				console.log(error);
+			}
+		}
+
+		return rows;
 	}
 
 	async function listTransactions() {
@@ -1228,4 +1344,54 @@ function sortTransactionDataByDate(transactionData: any) {
 	});
 
 	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
+}
+
+function getWatchlistIDs(watchlist: any) {
+	let ids: any = [];
+
+	Object.keys(watchlist).map(id => {
+		ids.push(watchlist[id].assetID);
+	});
+
+	return ids;
+}
+
+function getWatchlistSymbols(watchlist: any) {
+	let symbols: any = [];
+
+	Object.keys(watchlist).map(id => {
+		symbols.push(watchlist[id].assetSymbol);
+	});
+
+	return symbols;
+}
+
+function filterWatchlistByType(watchlistData: any) {
+	let watchlistCrypto: any = {};
+	let watchlistStocks: any = {};
+
+	let ids = Object.keys(watchlistData);
+	ids.map(id => {
+		let asset = watchlistData[id];
+		if(asset.assetType === "crypto") {
+			watchlistCrypto[id] = asset;
+		} else {
+			watchlistStocks[id] = asset;
+		}
+	});
+
+	return { crypto:watchlistCrypto, stocks:watchlistStocks };
+}
+
+function watchlistExists(watchlist: any, id: string) {
+	let exists = false;
+
+	Object.keys(watchlist).map(index => {
+		let asset = watchlist[index];
+		if(asset?.assetID === id) {
+			exists = true;
+		}
+	});
+
+	return exists;
 }

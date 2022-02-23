@@ -897,17 +897,6 @@ export default function Holdings({ navigation }: any) {
 		return symbols;
 	}
 
-	function sortMarketDataByCoinID(marketData: any) {
-		let prices: any = {};
-
-		Object.keys(marketData).map(index => {
-			let coin = marketData[index];
-			prices[coin.id] = coin;
-		});
-
-		return prices;
-	}
-
 	function sortHoldingsDataByValue(holdingsCryptoData: any, holdingsStocksData: any, marketCryptoData: any, marketStocksData: any) {
 		let combined = { ...holdingsCryptoData, ...holdingsStocksData };
 		let sorted: any = {};
@@ -1433,6 +1422,17 @@ export default function Holdings({ navigation }: any) {
 
 		return activities;
 	}
+}
+
+export function sortMarketDataByCoinID(marketData: any) {
+	let prices: any = {};
+
+	Object.keys(marketData).map(index => {
+		let coin = marketData[index];
+		prices[coin.id] = coin;
+	});
+
+	return prices;
 }
 
 export async function assetHoldingExists(id: string) {

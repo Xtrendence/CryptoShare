@@ -96,6 +96,63 @@ async function populateDashboardBudget(recreate) {
 	}
 }
 
+async function populateDashboardWatchlist(recreate) {
+	if(getActivePage().id === "dashboard-page") {
+		if(recreate) {
+			divDashboardWatchlistList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
+		}
+		
+		try {
+			let watchlistData = await fetchWatchlist();
+
+			if(empty(watchlistData)) {
+				divDashboardWatchlistList.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
+				return;
+			}
+
+			let currency = getCurrency();
+
+			let filteredWatchlist = filterWatchlistByType(watchlistData);
+
+			let watchlistCryptoIDs = getWatchlistIDs(filteredWatchlist.crypto);
+			let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
+
+			let marketCryptoData = !empty(watchlistCryptoIDs) ? await cryptoAPI.getMarketByID(currency, watchlistCryptoIDs.join(",")) : {};
+
+			let marketStocksData = !empty(watchlistStockSymbols) ? await fetchStockPrice(currency, watchlistStockSymbols, false) : {};
+			if("error" in marketStocksData) {
+				marketStocksData = {};
+				watchlistStockSymbols = [];
+				filteredWatchlist.stocks = {};
+			}
+
+			let rows = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData);
+
+			if(divDashboardWatchlistList.getElementsByClassName("loading-icon").length > 0 || divDashboardWatchlistList.childElementCount !== rows.length) {
+				divDashboardWatchlistList.innerHTML = "";
+			}
+
+			for(let i = 0; i < rows.length; i++) {
+				if(divDashboardWatchlistList.childElementCount >= i + 1) {
+					let current = divDashboardWatchlistList.getElementsByClassName("watchlist-list-row")[i];
+					if(current.innerHTML !== rows[i].innerHTML) {
+						let currentInfo = current.getElementsByClassName("info-wrapper")[0];
+
+						if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
+							currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
+						}
+					}
+				} else {
+					divDashboardWatchlistList.appendChild(rows[i]);
+				}
+			}
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+		}
+	}
+}
+
 function generatePieChart(budgetData) {
 	let canvas = document.getElementById("pie-chart-canvas");
 
@@ -713,63 +770,6 @@ function addTransactionCategoryEvent(previousPopup, input) {
 			previousPopup.element.classList.remove("hidden");
 		});
 	});
-}
-
-async function populateDashboardWatchlist(recreate) {
-	if(getActivePage().id === "dashboard-page") {
-		if(recreate) {
-			divDashboardWatchlistList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
-		}
-		
-		try {
-			let watchlistData = await fetchWatchlist();
-
-			if(empty(watchlistData)) {
-				divDashboardWatchlistList.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;
-				return;
-			}
-
-			let currency = getCurrency();
-
-			let filteredWatchlist = filterWatchlistByType(watchlistData);
-
-			let watchlistCryptoIDs = getWatchlistIDs(filteredWatchlist.crypto);
-			let watchlistStockSymbols = getWatchlistSymbols(filteredWatchlist.stocks);
-
-			let marketCryptoData = !empty(watchlistCryptoIDs) ? await cryptoAPI.getMarketByID(currency, watchlistCryptoIDs.join(",")) : {};
-
-			let marketStocksData = !empty(watchlistStockSymbols) ? await fetchStockPrice(currency, watchlistStockSymbols, false) : {};
-			if("error" in marketStocksData) {
-				marketStocksData = {};
-				watchlistStockSymbols = [];
-				filteredWatchlist.stocks = {};
-			}
-
-			let rows = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData);
-
-			if(divDashboardWatchlistList.getElementsByClassName("loading-icon").length > 0 || divDashboardWatchlistList.childElementCount !== rows.length) {
-				divDashboardWatchlistList.innerHTML = "";
-			}
-
-			for(let i = 0; i < rows.length; i++) {
-				if(divDashboardWatchlistList.childElementCount >= i + 1) {
-					let current = divDashboardWatchlistList.getElementsByClassName("watchlist-list-row")[i];
-					if(current.innerHTML !== rows[i].innerHTML) {
-						let currentInfo = current.getElementsByClassName("info-wrapper")[0];
-
-						if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
-							currentInfo.innerHTML = rows[i].getElementsByClassName("info-wrapper")[0].innerHTML;
-						}
-					}
-				} else {
-					divDashboardWatchlistList.appendChild(rows[i]);
-				}
-			}
-		} catch(error) {
-			console.log(error);
-			errorNotification("Something went wrong...");
-		}
-	}
 }
 
 function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
