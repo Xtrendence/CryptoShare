@@ -9,7 +9,7 @@ export default function addStockAPIRoutes(app: core.Express) {
 				let querySymbols: string = request?.query?.symbols?.toString() || "";
 				if(!Utils.empty(querySymbols)) {
 					let symbols = querySymbols?.split(",");
-					let result = await YahooFinance.quote(symbols);
+					let result = await YahooFinance.quote(symbols, {}, { validateResult:false });
 
 					let output = {
 						quoteResponse: { 
@@ -40,7 +40,7 @@ export default function addStockAPIRoutes(app: core.Express) {
 						period1: Utils.previousYear(new Date),
 						period2: new Date(),
 						interval: "1d"
-					});
+					}, { validateResult:false });
 
 					let timestamp: any = [];
 					let close: any = [];
