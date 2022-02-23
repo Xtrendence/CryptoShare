@@ -424,7 +424,7 @@ export default function Dashboard({ navigation }: any) {
 			if(Utils.empty(watchlistData)) {
 				setModalData({});
 				setWatchlistRows({});
-				setWatchlistHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>Add assets to your watchlist through the Market page</Text></View>);
+				setWatchlistHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>Search for and add assets to your watchlist through the Market page</Text></View>);
 				return;
 			}
 			
