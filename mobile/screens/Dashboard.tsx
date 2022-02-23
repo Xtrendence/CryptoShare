@@ -19,6 +19,8 @@ import WatchlistItem from "../components/WatchlistItem";
 import TransactionPopup from "../components/TransactionPopup";
 import Stock from "../utils/Stock";
 import { sortMarketDataByCoinID } from "./Holdings";
+import { parseMarketData } from "./Market";
+import MarketPopup from "../components/MarketPopup";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -74,6 +76,18 @@ export default function Dashboard({ navigation }: any) {
 	const [transactionHeader, setTransactionHeader] = useState<any>(null);
 	const [filteredRows, setFilteredRows] = useState<any>({});
 
+	const [marketModal, setMarketModal] = useState<boolean>(false);
+	const [modalType, setModalType] = useState<string>("");
+	const [modalInfo, setModalInfo] = useState<any>(null);
+	const [modalDescription, setModalDescription] = useState<string>("");
+
+	const labelsRef = useRef<any>(null);
+
+	const [chartLabels, setChartLabels] = useState<any>();
+	const [chartVerticalLabels, setChartVerticalLabels] = useState<any>([]);
+	const [chartData, setChartData] = useState<any>();
+	const [chartSegments, setChartSegments] = useState<any>(1);
+
 	const renderItemTransaction = ({ item }: any) => {
 		let info = transactionRows[item];
 		info.showDatePicker = popupRef.current.transaction.showDatePicker;
@@ -87,7 +101,7 @@ export default function Dashboard({ navigation }: any) {
 		let info = watchlistRows[item];
 
 		return (
-			<WatchlistItem info={info} theme={theme} settings={settings} page="Dashboard"/>
+			<WatchlistItem info={info} theme={theme} settings={settings} page="Dashboard" onPress={() => showMarketModal(info.id, info.symbol.toUpperCase(), info.price, info, info.type)}/>
 		);
 	}
 	
@@ -119,6 +133,8 @@ export default function Dashboard({ navigation }: any) {
 
 		return () => {
 			setFilteredRows({});
+			setChartVerticalLabels([]);
+			labelsRef.current = [];
 			clearInterval(refresh);
 		};
 	}, []);
@@ -175,6 +191,7 @@ export default function Dashboard({ navigation }: any) {
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>
+			<MarketPopup modal={marketModal} hideModal={hideMarketModal} loading={loading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription}/>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
 					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
@@ -221,6 +238,100 @@ export default function Dashboard({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	async function showMarketModal(assetID: string, assetSymbol: string, currentPrice: number, info: any, type: string) {
+		Keyboard.dismiss();
+
+		try {
+			setModalType(type);
+
+			let settings: any = store.getState().settings.settings;
+
+			setLoading(true);
+
+			labelsRef.current = [];
+
+			let api = await AsyncStorage.getItem("api");
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+
+			let data;
+
+			if(type === "crypto") {
+				let requests = new Requests(api);
+				let marketData =  await requests.readCoin(token, userID, assetID, assetSymbol, settings.currency);
+
+				let historicalData = JSON.parse(marketData?.data?.readCoin?.data)?.historicalData;
+
+				data = parseMarketData(historicalData, new Date().getTime(), currentPrice);
+			} else {
+				let resultHistorical = await Stock.fetchStockHistorical(settings.currency, assetSymbol);
+
+				if("error" in resultHistorical) {
+					Utils.notify(theme, resultHistorical.error);
+					setLoading(false);
+					return;
+				}
+
+				let infoHistorical = resultHistorical.data.historicalData.chart.result[0];
+				infoHistorical.currency = settings.currency;
+
+				let timestamps = infoHistorical.timestamp;
+				let prices = infoHistorical.indicators.quote[0].close;
+
+				data = Stock.parseHistoricalStockData(timestamps, prices);
+
+				setModalDescription("");
+			}
+			
+			let months = data?.months;
+			let prices = data?.prices;
+
+			setChartVerticalLabels([]);
+
+			setChartLabels(months);
+			setChartData(prices);
+			setChartSegments(4);
+
+			if(type === "crypto") {
+				let coinData = await cryptoAPI.getCoinData(assetID);
+				let description = Utils.empty(coinData?.description?.en) ? "<span>No description found.</span>" : `<span>${coinData?.description?.en}</span>`;
+
+				setModalDescription(description);
+			}
+			
+			setModalInfo(info);
+
+			let check = setInterval(() => {
+				if(!Utils.empty(labelsRef.current)) {
+					labelsRef.current.length = 5;
+					setTimeout(() => {
+						setChartVerticalLabels(labelsRef.current);
+						clearInterval(check);
+						setLoading(false);
+					}, 250);
+				}
+			}, 100);
+			
+			setMarketModal(true);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	function hideMarketModal() {
+		Keyboard.dismiss();
+		labelsRef.current = [];
+		setChartVerticalLabels([]);
+		setChartLabels(null);
+		setChartData(null);
+		setChartSegments(1);
+		setModalDescription("");
+		setModalInfo(null);
+		setMarketModal(false);
+	}
 
 	function getRows(filteredRows: any, activityRows: any, query: any) {
 		if(!Utils.empty(query) && Utils.empty(filteredRows)) {

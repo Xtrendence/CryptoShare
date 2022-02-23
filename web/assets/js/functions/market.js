@@ -66,7 +66,6 @@ async function populateMarketListCrypto(page, currency) {
 	}
 }
 
-// TODO: Add functionality.
 async function populateMarketListStocks(page, currency) {		
 	try {
 		let watchlistData = await fetchWatchlist();

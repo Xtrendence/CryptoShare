@@ -60,7 +60,7 @@ export default function Market({ navigation }: any) {
 		let info = marketRowsStocks[item];
 
 		return (
-			<StockItem info={info} theme={theme} settings={settings} page="Market" onPress={() => showModal(info.id, info.symbol.toUpperCase(), info.price, info, "stock")}/>
+			<StockItem info={info} theme={theme} settings={settings} page="Market" onPress={() => showModal(info.id, info.symbol.toUpperCase(), info.price, info, info.type)}/>
 		);
 	}
 	
@@ -519,6 +519,11 @@ export default function Market({ navigation }: any) {
 
 			let rows: any = createWatchlistListRows({}, marketStocksData, watchlistData, currency);
 
+			if(Utils.empty(rows)) {
+				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
+				return;
+			}
+
 			setMarketHeader(null);
 			setMarketRowsStocks(rows);
 		} catch(error) {
@@ -528,44 +533,44 @@ export default function Market({ navigation }: any) {
 			}
 		}
 	}
+}
 
-	function parseMarketData(data: any, currentTime: any, currentPrice: any) {
-		let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-		let prices = data.prices;
+export function parseMarketData(data: any, currentTime: any, currentPrice: any) {
+	let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	let prices = data.prices;
 
-		prices.push([currentTime, currentPrice]);
+	prices.push([currentTime, currentPrice]);
 
-		let parsed: any = {
-			labels: [],
-			tooltips: [],
-			prices: [],
-			months: []
-		};
+	let parsed: any = {
+		labels: [],
+		tooltips: [],
+		prices: [],
+		months: []
+	};
 
-		Object.keys(prices).map((key: any) => {
-			let time = prices[key][0];
-			let price = parseFloat(prices[key][1]);
+	Object.keys(prices).map((key: any) => {
+		let time = prices[key][0];
+		let price = parseFloat(prices[key][1]);
 
-			parsed.labels.push(new Date(time));
-			parsed.tooltips.push(Utils.formatDateHuman(new Date(time)));
-			parsed.prices.push(price);
+		parsed.labels.push(new Date(time));
+		parsed.tooltips.push(Utils.formatDateHuman(new Date(time)));
+		parsed.prices.push(price);
 
-			let date = new Date(time);
-			let month = date.getMonth();
-			let monthName = months[month];
+		let date = new Date(time);
+		let month = date.getMonth();
+		let monthName = months[month];
 
-			let lastMonth = parsed.months.slice(key - 31, key);
-			if(key - 31 < 0) {
-				lastMonth = parsed.months.slice(0, key);
-			}
+		let lastMonth = parsed.months.slice(key - 31, key);
+		if(key - 31 < 0) {
+			lastMonth = parsed.months.slice(0, key);
+		}
 
-			if(!lastMonth.includes(monthName)) {
-				parsed.months.push(monthName);
-			} else {
-				parsed.months.push("");
-			}
-		});
+		if(!lastMonth.includes(monthName)) {
+			parsed.months.push(monthName);
+		} else {
+			parsed.months.push("");
+		}
+	});
 
-		return parsed;
-	}
+	return parsed;
 }
