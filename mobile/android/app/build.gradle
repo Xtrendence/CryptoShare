@@ -131,6 +131,10 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
+	dexOptions {
+		javaMaxHeapSize "3g"
+	}
+
     defaultConfig {
         applicationId "com.cryptoshare"
         minSdkVersion rootProject.ext.minSdkVersion

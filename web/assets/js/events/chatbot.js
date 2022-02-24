@@ -1,4 +1,3 @@
-// TODO: Add functionality.
 buttonChatMenu.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-clear">Clear Messages</button>

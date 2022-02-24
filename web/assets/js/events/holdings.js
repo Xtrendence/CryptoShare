@@ -7,7 +7,6 @@ divHoldingsCardValue.addEventListener("click", () => {
 	buttonHoldingsPerformance.click();
 });
 
-// TODO: Add functionality.
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
 		try {

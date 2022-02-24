@@ -193,7 +193,6 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
-// TODO: Add watchlist, holdings, and activity buttons.
 function addMarketCryptoData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
@@ -218,7 +217,6 @@ function addMarketCryptoData(previousElement, info) {
 	insertAfter(div, previousElement);
 }
 
-// TODO: Add watchlist, holdings, and activity buttons.
 function addMarketStockData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
