@@ -24,7 +24,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 			</div>
 		`;
 
-		let popup = new Popup(400, "auto", "Global Crypto Market Info", html, { cancelText:"Dismiss", confirmText:"-" });
+		let popup = new Popup(400, "auto", "Global Crypto Market Info", html, { cancelText:"Dismiss", confirmText:"-", page:"market" });
 		popup.show();
 		popup.bottom.classList.add("less-margin");
 		popup.updateHeight();
@@ -45,7 +45,7 @@ buttonMarketSearch.addEventListener("click", () => {
 			</div>
 		`;
 
-		let popup = new Popup(240, "auto", "Market Search", html, { confirmText:"Search" });
+		let popup = new Popup(240, "auto", "Market Search", html, { confirmText:"Search", page:"market" });
 		popup.show();
 		popup.updateHeight();
 

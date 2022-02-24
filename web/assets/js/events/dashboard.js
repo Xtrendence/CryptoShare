@@ -9,7 +9,7 @@ buttonDashboardBudgetEdit.addEventListener("click", () => {
 		<button class="action-button block" id="popup-button-income">Set Yearly Income</button>
 	`;
 
-	let popup = new Popup(250, "auto", "Update Budget", html, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup(250, "auto", "Update Budget", html, { cancelText:"Dismiss", confirmText:"-", page:"dashboard" });
 	popup.show();
 	popup.updateHeight();
 
@@ -35,7 +35,7 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 			</div>
 		`;
 
-		let popup = new Popup(240, "auto", "Add To Watchlist", html, { confirmText:"Add" });
+		let popup = new Popup(240, "auto", "Add To Watchlist", html, { confirmText:"Add", page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 

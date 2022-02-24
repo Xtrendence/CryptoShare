@@ -30,7 +30,7 @@ buttonActivityHelp.addEventListener("click", () => {
 		<span class="margin-top">Only the asset symbol, asset type, amount, date, and activity type need to be provided. The rest of the fields can be left empty.</span>
 	`;
 
-	let popup = new Popup(360, "auto", "Help", html, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup(360, "auto", "Help", html, { cancelText:"Dismiss", confirmText:"-", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 });
@@ -44,7 +44,7 @@ buttonActivityTools.addEventListener("click", () => {
 		<button class="action-button block" id="popup-button-tax">Tax Calculator</button>
 	`;
 
-	let popup = new Popup(250, "auto", "Tools", html, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup(250, "auto", "Tools", html, { cancelText:"Dismiss", confirmText:"-", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 
@@ -112,7 +112,7 @@ buttonActivityAdd.addEventListener("click", () => {
 			</div>
 		`;
 
-		let popup = new Popup(300, 500, "Add Activity", html, { confirmText:"Add" });
+		let popup = new Popup(300, 500, "Add Activity", html, { confirmText:"Add", page:"activity" });
 		popup.show();
 
 		let popupElements = getActivityPopupElements();

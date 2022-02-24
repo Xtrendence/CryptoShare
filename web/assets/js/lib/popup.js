@@ -43,6 +43,11 @@ class Popup {
 
 		this.element = document.createElement("div");
 		this.element.setAttribute("class", "popup-wrapper");
+
+		if("page" in this.options) {
+			this.element.classList.add(this.options.page);
+		}
+
 		this.setSize(this.width, this.height);
 		
 		this.top = document.createElement("div");

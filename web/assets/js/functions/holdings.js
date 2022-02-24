@@ -418,7 +418,7 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 				<input id="popup-input-amount" type="number" placeholder="Amount..." value="${amount}" spellcheck="false" autocomplete="off">
 				<button class="action-button delete" id="popup-button-delete">Delete Asset</button>
 			`;
-			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update" });
+			let popup = new Popup(300, "auto", `Update ${holdingAssetSymbol.toUpperCase()} Amount`, html, { confirmText:"Update", page:"holdings" });
 			popup.show();
 			popup.updateHeight();
 
@@ -470,7 +470,7 @@ function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID, hold
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${holdingAssetSymbol.toUpperCase()} from your portfolio?</span>`);
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${holdingAssetSymbol.toUpperCase()} from your portfolio?</span>`, { page:"holdings" });
 		popup.show();
 		popup.updateHeight();
 
@@ -918,7 +918,7 @@ function parseActivityAsDatedValue(days, prices, activities) {
 function showHoldingsPerformanceChart(dates, args = {}) {
 	let currency = getCurrency();
 
-	let popup = new Popup("full", "full", ("symbol" in args ? `${args.symbol.toUpperCase()} Performance` : `Portfolio Performance`), `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup("full", "full", ("symbol" in args ? `${args.symbol.toUpperCase()} Performance` : `Portfolio Performance`), `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-", page:"holdings" });
 
 	popup.show();
 	popup.bottom.classList.add("less-margin");

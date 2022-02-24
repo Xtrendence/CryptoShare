@@ -67,7 +67,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 				<span class="popup-input-span">Amount</span>
 				<input id="popup-input-amount-crypto" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
 			`;
-			let popup = new Popup(240, "auto", "Add Crypto Asset", html, { confirmText:"Add" });
+			let popup = new Popup(240, "auto", "Add Crypto Asset", html, { confirmText:"Add", page:"holdings" });
 			popup.show();
 			popup.updateHeight();
 
@@ -175,7 +175,7 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 				<span class="popup-input-span">Amount</span>
 				<input id="popup-input-amount-stock" type="number" placeholder="Amount..." spellcheck="false" autocomplete="off">
 			`;
-			let popup = new Popup(240, "auto", "Add Stock Asset", html, { confirmText:"Add" });
+			let popup = new Popup(240, "auto", "Add Stock Asset", html, { confirmText:"Add", page:"holdings" });
 			popup.show();
 			popup.updateHeight();
 

@@ -234,7 +234,7 @@ function addActivityListRowEvent(div, activity) {
 				<button class="action-button delete" id="popup-button-delete-activity">Delete Activity</button>
 			`;
 
-			let popup = new Popup(300, 500, "Update Activity", html, { confirmText:"Update" });
+			let popup = new Popup(300, 500, "Update Activity", html, { confirmText:"Update", page:"activity" });
 			popup.show();
 
 			let popupElements = getActivityPopupElements();
@@ -326,7 +326,7 @@ function addActivityPopupDeleteEvent(previousPopup, buttonDelete, activityID) {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Activity", `<span>Are you sure you want to remove this activity?</span>`);
+		let popup = new Popup(300, "auto", "Delete Activity", `<span>Are you sure you want to remove this activity?</span>`, { page:"activity" });
 		popup.show();
 		popup.updateHeight();
 
@@ -561,7 +561,7 @@ function showActivityStakingPopup() {
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(300, "auto", "Staking Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	let popup = new Popup(300, "auto", "Staking Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 	
@@ -639,7 +639,7 @@ function showActivityMiningPopup() {
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(340, "auto", "Mining Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	let popup = new Popup(340, "auto", "Mining Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 	
@@ -715,7 +715,7 @@ function showActivityDividendPopup() {
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(340, "auto", "Dividend Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	let popup = new Popup(340, "auto", "Dividend Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 
@@ -755,7 +755,7 @@ function showActivityMortgagePopup() {
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(340, "auto", "Mortgage Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	let popup = new Popup(340, "auto", "Mortgage Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 
@@ -793,7 +793,7 @@ function showActivityTaxPopup() {
 		<span class="hidden" id="popup-span-output"></span>
 	`;
 
-	let popup = new Popup(340, "auto", "Tax Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate" });
+	let popup = new Popup(340, "auto", "Tax Calculator", html, { cancelText:"Dismiss", confirmText:"Calculate", page:"activity" });
 	popup.show();
 	popup.updateHeight();
 

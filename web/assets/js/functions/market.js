@@ -266,7 +266,7 @@ async function showCryptoMarketData(info) {
 
 		let data = await cryptoAPI.getCoinData(info.coinID);
 
-		let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${empty(data?.description?.en) ? "No description found." : data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-" });
+		let popup = new Popup("full", "full", `${info.name} - ${info.symbol.toUpperCase()} - Market Data`, `<div class="chart-wrapper"></div><span>${empty(data?.description?.en) ? "No description found." : data?.description?.en}</span>`, { cancelText:"Dismiss", confirmText:"-", page:"market" });
 
 		popup.show();
 
@@ -314,7 +314,7 @@ function showStockMarketData(infoPrice, infoHistorical) {
 	try {
 		showLoading(2500, "Parsing Market Data...");
 
-		let popup = new Popup("full", "full", `${infoHistorical.meta.symbol} - Market Data`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-" });
+		let popup = new Popup("full", "full", `${infoHistorical.meta.symbol} - Market Data`, `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-", page:"market" });
 
 		popup.show();
 

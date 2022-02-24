@@ -354,7 +354,7 @@ function addBudgetDateEvents(buttonMonth, buttonYear) {
 			</div>
 		`;
 
-		let popup = new Popup(360, "auto", "Select Month", html, { confirmText:"-", cancelText:"Dismiss" });
+		let popup = new Popup(360, "auto", "Select Month", html, { confirmText:"-", cancelText:"Dismiss", page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 
@@ -393,7 +393,7 @@ function addBudgetDateEvents(buttonMonth, buttonYear) {
 			</div>
 		`;
 
-		let popup = new Popup(360, "auto", "Select Year", html, { confirmText:"-", cancelText:"Dismiss" });
+		let popup = new Popup(360, "auto", "Select Year", html, { confirmText:"-", cancelText:"Dismiss", page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 
@@ -549,7 +549,7 @@ function addTransactionListRowEvent(transaction, div) {
 				<button class="action-button delete" id="popup-button-delete-transaction">Delete Transaction</button>
 			`;
 	
-			let popup = new Popup(300, "auto", "Update Transaction", html, { confirmText:"Add" });
+			let popup = new Popup(300, "auto", "Update Transaction", html, { confirmText:"Add", page:"dashboard" });
 			popup.show();
 			popup.updateHeight();
 
@@ -624,7 +624,7 @@ function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transaction
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Transaction", `<span>Are you sure you want to remove this transaction?</span>`);
+		let popup = new Popup(300, "auto", "Delete Transaction", `<span>Are you sure you want to remove this transaction?</span>`, { page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 
@@ -755,7 +755,7 @@ function addTransactionButtonEvent(button) {
 				<input id="popup-input-notes" type="text" placeholder="Notes..." autocomplete="off">
 			`;
 	
-			let popup = new Popup(300, "auto", "Add Transaction", html, { confirmText:"Add" });
+			let popup = new Popup(300, "auto", "Add Transaction", html, { confirmText:"Add", page:"dashboard" });
 			popup.show();
 			popup.updateHeight();
 
@@ -892,7 +892,7 @@ function addTransactionCategoryEvent(previousPopup, input) {
 			`;
 		}
 		
-		let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back" });
+		let popup = new Popup(360, "auto", "Transaction Category", html, { confirmText:"-", cancelText:"Back", page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 
@@ -1036,7 +1036,7 @@ function addWatchlistDeleteEvent(div, asset) {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${asset.assetSymbol} from your watchlist?</span>`);
+		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${asset.assetSymbol.toUpperCase()} from your watchlist?</span>`, { page:"dashboard" });
 		popup.show();
 		popup.updateHeight();
 
@@ -1289,7 +1289,7 @@ async function showBudgetPopup() {
 		<input type="number" id="popup-input-other" placeholder="Other..." spellcheck="false" autocomplete="off">
 	`;
 
-	let popup = new Popup(250, "auto", "Set Monthly Budget", html);
+	let popup = new Popup(250, "auto", "Set Monthly Budget", html, { page:"dashboard" });
 	popup.show();
 	popup.updateHeight();
 	
@@ -1419,7 +1419,7 @@ async function showIncomePopup() {
 		<input type="number" id="popup-input-income" placeholder="Yearly Income..." spellcheck="false" autocomplete="off">
 	`;
 
-	let popup = new Popup(250, "auto", "Set Yearly Income", html);
+	let popup = new Popup(250, "auto", "Set Yearly Income", html, { page:"dashboard" });
 	popup.show();
 	popup.updateHeight();
 	

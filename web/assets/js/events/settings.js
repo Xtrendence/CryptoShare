@@ -39,7 +39,7 @@ buttonSettingsLogoutEverywhere.addEventListener("click", () => {
 	let userID = localStorage.getItem("userID");
 	let token = localStorage.getItem("token");
 
-	let popup = new Popup(300, "auto", "Logout Everywhere", `<span>Are you sure you want to log out from every active session?</span>`);
+	let popup = new Popup(300, "auto", "Logout Everywhere", `<span>Are you sure you want to log out from every active session?</span>`, { page:"settings" });
 	popup.show();
 
 	popup.on("confirm", () => {
@@ -67,7 +67,7 @@ buttonSettingsPassword.addEventListener("click", () => {
 		<input type="password" id="popup-input-repeat-password" placeholder="Repeat Password..." spellcheck="false">
 	`;
 
-	let popup = new Popup(300, "auto", "Change Password", html);
+	let popup = new Popup(300, "auto", "Change Password", html, { page:"settings" });
 	popup.show();
 
 	let inputCurrentPassword = document.getElementById("popup-input-current-password");
@@ -138,7 +138,7 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 });
 
 buttonSettingsStockAPIKey.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Set Stock API Key", `<span class="margin-bottom">If internal stock API is being used, set the API key to "-" or anything besides leaving it empty.</span><input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`);
+	let popup = new Popup(300, "auto", "Set Stock API Key", `<span class="margin-bottom">If internal stock API is being used, set the API key to "-" or anything besides leaving it empty.</span><input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`, { page:"settings" });
 	popup.show();
 
 	let inputStockAPIKey = document.getElementById("popup-input-stock-api-key");
@@ -204,7 +204,7 @@ buttonSettingsStockAPIType.addEventListener("click", async () => {
 });
 
 buttonSettingsReset.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`);
+	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`, { page:"settings" });
 	popup.show();
 
 	popup.on("confirm", () => {

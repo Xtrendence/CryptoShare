@@ -78,6 +78,10 @@ function hideSideMenu() {
 }
 
 function getActivePage() {
+	if(!divPageLogin.classList.contains("hidden")) {
+		return divPageLogin.id;
+	}
+
 	let pages = divPageApp.getElementsByClassName("page");
 	for(let i = 0; i < pages.length; i++) {
 		if(!pages[i].classList.contains("hidden")) {

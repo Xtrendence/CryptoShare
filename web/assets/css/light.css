@@ -39,32 +39,32 @@ html.light {
 	--ocean-gradient:linear-gradient(110deg, #04bde4 15%, #0253b9 100%);
 }
 
-html.light .page.chatbot {
+html.light .page.chatbot, html.light .popup-wrapper.chatbot {
 	--accent-first:#8a2387;
 	--accent-second:#c2374a;
 	--accent-third:#cc8932;
 }
-html.light .page.dashboard {
+html.light .page.dashboard, html.light .popup-wrapper.dashboard {
 	--accent-first:#4facfe;
 	--accent-second:#00bdc7;
 	--accent-third:#6499c7;
 }
-html.light .page.market {
+html.light .page.market, html.light .popup-wrapper.market {
 	--accent-first:#ac64b4;
 	--accent-second:#ec9e55;
 	--accent-third:#45b2b9;
 }
-html.light .page.holdings {
+html.light .page.holdings, html.light .popup-wrapper.holdings {
 	--accent-first:#11998e;
 	--accent-second:#57b67b;
 	--accent-third:#306845;
 }
-html.light .page.activity {
+html.light .page.activity, html.light .popup-wrapper.activity {
 	--accent-first:#667eea;
 	--accent-second:#764ba2;
 	--accent-third:#735e88;
 }
-html.light .page.settings {
+html.light .page.settings, html.light .popup-wrapper.settings {
 	--accent-first:#d67054;
 	--accent-second:#cf995a;
 	--accent-third:#e7bc4f;

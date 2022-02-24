@@ -4,7 +4,7 @@ buttonChatMenu.addEventListener("click", () => {
 		<button class="action-button block" id="popup-button-clear">Clear Messages</button>
 	`;
 
-	let popup = new Popup(250, "auto", "Chat Actions", html, { cancelText:"Dismiss", confirmText:"-" });
+	let popup = new Popup(250, "auto", "Chat Actions", html, { cancelText:"Dismiss", confirmText:"-", page:"chatbot" });
 	popup.show();
 	popup.updateHeight();
 
@@ -14,7 +14,7 @@ buttonChatMenu.addEventListener("click", () => {
 		let userID = localStorage.getItem("userID");
 		let token = localStorage.getItem("token");
 
-		popup = new Popup(300, "auto", "Delete Messages", `<span>Are you sure you want to delete all messages?</span>`);
+		popup = new Popup(300, "auto", "Delete Messages", `<span>Are you sure you want to delete all messages?</span>`, { page:"chatbot" });
 		popup.show();
 		popup.updateHeight();
 
