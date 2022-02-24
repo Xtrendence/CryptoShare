@@ -34,7 +34,7 @@ let styles: any = StyleSheet.create({
 		borderLeftWidth: 4,
 		borderStyle: "solid",
 		borderColor: Colors.Dark.mainContrast,
-		marginBottom: 20,
+		marginBottom: 10,
 		padding: 20,
 		backgroundColor: Colors.Dark.mainFirst,
 		borderRadius: GlobalStyle.borderRadius,

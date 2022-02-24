@@ -9,6 +9,7 @@
 		"test": "jest",
 		"lint": "eslint .",
 		"postinstall": "patch-package",
+		"build": "cd android && ./gradlew assembleRelease",
 		"emulator": "emulator -avd Pixel_3a_API_31_arm64-v8a"
 	},
 	"dependencies": {

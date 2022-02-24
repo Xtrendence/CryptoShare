@@ -12,7 +12,6 @@ import Market from "../../screens/Market";
 import Settings from "../../screens/Settings";
 import NavigationBar from "./NavigationBar";
 
-
 const Stack = createStackNavigator();
 
 const screenOptions = {

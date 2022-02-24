@@ -1,6 +1,6 @@
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenWidth, windowHeight } from "./NavigationBar";
+import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
 export default createStyle<any>({
 	scrollView: {
@@ -20,7 +20,7 @@ export default createStyle<any>({
 	},
 	search: {
 		position: "absolute",
-		top: 40,
+		top: statusBarHeight + 20,
 		left: 20,
 		height: 50,
 		width: screenWidth - 40,
@@ -43,10 +43,10 @@ export default createStyle<any>({
 	},
 	wrapper: {
 		position: "absolute",
-		top: 40 + 70,
+		top: statusBarHeight + 80 + 10,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 20 - 80,
+		height: screenHeight - statusBarHeight - barHeight - actionBarHeight - 20 - 70 - 20,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
@@ -59,14 +59,14 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.mainThird,
 	},
 	wrapperContent: {
-		paddingBottom: 20
+		paddingBottom: 10
 	},
 	section: {
-		width: screenWidth - 40 - 40,
+		width: screenWidth - 40 - 20,
 		padding: 20,
-		marginTop: 20,
-		marginRight: 20,
-		marginLeft: 20,
+		marginTop: 10,
+		marginRight: 10,
+		marginLeft: 10,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainFirst,
 		shadowColor: GlobalStyle.shadowColor,

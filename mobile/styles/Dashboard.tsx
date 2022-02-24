@@ -1,6 +1,6 @@
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenWidth, windowHeight } from "./NavigationBar";
+import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
 export default createStyle<any>({
 	scrollView: {
@@ -22,7 +22,7 @@ export default createStyle<any>({
 		flexDirection: "row",
 		position: "absolute",
 		left: 20,
-		top: 16,
+		top: statusBarHeight,
 		width: screenWidth - 40,
 		height: 50,
 		backgroundColor: Colors.Dark.mainSecond,
@@ -74,10 +74,10 @@ export default createStyle<any>({
 	},
 	wrapper: {
 		position: "absolute",
-		top: 120,
+		top: statusBarHeight + 80 + 20,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 20 - 70 - 20 - 80,
+		height: screenHeight - statusBarHeight - barHeight - actionBarHeight - 20 - 70 - 20 - 80 - 10,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
@@ -98,7 +98,7 @@ export default createStyle<any>({
 		flexDirection: "row",
 		position: "absolute",
 		left: 20,
-		top: barHeight + 80 + (windowHeight - barHeight - 40 - 20 - 70 - 130) + 28,
+		top: barHeight + 80 + (screenHeight - actionBarHeight - barHeight - 40 - 70 - 130) + 18,
 		width: screenWidth - 40,
 		height: 60,
 		backgroundColor: Colors.Dark.mainSecond,
@@ -315,13 +315,13 @@ export default createStyle<any>({
 		color: Colors.Light.accentContrast
 	},
 	budgetScrollViewContent: {
-		paddingTop: 20,
-		paddingRight: 20,
-		paddingLeft: 20,
+		paddingTop: 10,
+		paddingRight: 10,
+		paddingLeft: 10,
 	},
 	budgetItem: {
 		padding: 20,
-		marginBottom: 20,
+		marginBottom: 10,
 		justifyContent: "center",
 		alignItems: "center",
 		backgroundColor: Colors.Dark.mainFirst,
@@ -441,10 +441,10 @@ export default createStyle<any>({
 	},
 	modalList: {
 		position: "absolute",
-		top: 86,
+		top: statusBarHeight + 70,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 48 - 60,
+		height: screenHeight - statusBarHeight - barHeight - actionBarHeight - 20 - 70 - 20 - 40,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,

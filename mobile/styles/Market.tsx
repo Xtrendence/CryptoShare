@@ -2,7 +2,7 @@ import React from "react";
 import { LinearGradient as SVGLinearGradient, Stop } from "react-native-svg";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
-import { barHeight, screenHeight, screenWidth, windowHeight } from "./NavigationBar";
+import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
 export const gradientColor = () => {
 	return (
@@ -25,7 +25,7 @@ export default createStyle<any>({
 		flexDirection: "row",
 		position: "absolute",
 		left: 20,
-		top: 40,
+		top: statusBarHeight + 20,
 		width: screenWidth - 40,
 		height: 50,
 		backgroundColor: Colors.Dark.mainSecond,
@@ -77,10 +77,10 @@ export default createStyle<any>({
 	},
 	wrapper: {
 		position: "absolute",
-		top: 40 + 70,
+		top: statusBarHeight + 80 + 10,
 		left: 20,
 		width: screenWidth - 40,
-		height: windowHeight - barHeight - 40 - 20 - 70 - 90,
+		height: screenHeight - statusBarHeight - barHeight - actionBarHeight - 20 - 70 - 20 - 80,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
@@ -101,7 +101,7 @@ export default createStyle<any>({
 		flexDirection: "row",
 		position: "absolute",
 		left: 20,
-		top: 40 + 80 + (windowHeight - barHeight - 40 - 20 - 70 - 100) + 20,
+		top: barHeight + 80 + (screenHeight - actionBarHeight - barHeight - 40 - 70 - 130) + 18,
 		width: screenWidth - 40,
 		height: 60,
 		backgroundColor: Colors.Dark.mainSecond,
@@ -247,7 +247,7 @@ export default createStyle<any>({
 		borderColor: Colors.Light.mainFifth
 	},
 	modalWrapperScrollView: {
-		height: screenHeight - barHeight - 40 - 280,
+		height: screenHeight - barHeight - 40 - 275,
 		backgroundColor: Colors.Dark.mainFirstTransparent,
 	},
 	modalWrapperScrollViewLight: {

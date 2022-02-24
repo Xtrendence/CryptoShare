@@ -20,6 +20,7 @@ import Stock from "../utils/Stock";
 import Utils from "../utils/Utils";
 import { sortMarketDataByCoinID } from "./Holdings";
 import { parseMarketData } from "./Market";
+import { actionBarHeight, statusBarHeight } from "../styles/NavigationBar";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -161,7 +162,7 @@ export default function Dashboard({ navigation }: any) {
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:40 }]}>
+				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:statusBarHeight + 20 }]}>
 					<TouchableOpacity onPress={() => changeList("budget")} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], list === "budget" ? styles[`choiceButtonActive${theme}`] : null]}>
 						<Text style={[styles.choiceText, styles[`choiceText${theme}`], list === "budget" ? styles[`choiceTextActive${theme}`] : null]}>Budget</Text>
 					</TouchableOpacity>
@@ -222,7 +223,7 @@ export default function Dashboard({ navigation }: any) {
 						</TouchableOpacity>
 					</View>
 					<FlatList
-						contentContainerStyle={{ paddingTop:20, paddingLeft:20, paddingRight:20 }}
+						contentContainerStyle={{ paddingTop:10, paddingLeft:10, paddingRight:10 }}
 						data={getRows(filteredRows, transactionRows, query)}
 						renderItem={renderItemTransaction}
 						keyExtractor={item => transactionRows[item].transactionID}
@@ -230,7 +231,7 @@ export default function Dashboard({ navigation }: any) {
 						ListHeaderComponent={transactionHeader}
 						ListHeaderComponentStyle={styles.listHeader}
 					/>
-					<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:"auto", bottom:20 }]}>
+					<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:"auto", bottom:actionBarHeight }]}>
 						<TouchableOpacity onPress={() => hideModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Back</Text>
 						</TouchableOpacity>

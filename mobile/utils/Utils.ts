@@ -4,6 +4,7 @@ import { BackHandler } from "react-native";
 import { showMessage } from "react-native-flash-message";
 import { changeSetting } from "../store/reducers/settings";
 import { Colors } from "../styles/Global";
+import { statusBarHeight } from "../styles/NavigationBar";
 import CryptoFN from "./CryptoFN";
 
 export default class Utils {
@@ -234,10 +235,11 @@ export default class Utils {
 			message: message,
 			type: "info",
 			floating: true,
-			hideStatusBar: true,
+			hideStatusBar: false,
 			backgroundColor: Colors[theme].accentSecond,
 			color: Colors[theme].accentContrast,
-			duration: duration
+			duration: duration,
+			statusBarHeight: statusBarHeight
 		});
 	}
 

@@ -1,4 +1,4 @@
-import { Dimensions } from "react-native";
+import { Dimensions, StatusBar } from "react-native";
 import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 
@@ -8,15 +8,18 @@ const screenHeight = Dimensions.get("screen").height;
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
-const statusBarHeight = screenHeight - windowHeight; 
+const barDifference = screenHeight - windowHeight + 10;
+
+const statusBarHeight = StatusBar.currentHeight || 32;
+const actionBarHeight = barDifference > 60 ? 60 : barDifference;
 const barHeight = 62;
 
-export { screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight, barHeight };
+export { screenWidth, screenHeight, windowWidth, windowHeight, statusBarHeight, actionBarHeight, barHeight };
 
 export default createStyle<any>({
 	bar: {
 		position: "absolute",
-		bottom: statusBarHeight + 10,
+		bottom: actionBarHeight,
 		left: 20,
 		width: screenWidth - 40,
 		height: barHeight,
