@@ -122,7 +122,7 @@ export default function Dashboard({ navigation }: any) {
 				setTransactionRows({});
 				
 				setTimeout(() => {
-					populateBudgetList(true);
+					populateBudgetList(false);
 					populateWatchlist();
 					listTransactions();
 				}, 500);
@@ -153,7 +153,7 @@ export default function Dashboard({ navigation }: any) {
 
 	useEffect(() => {
 		if(list === "budget") {
-			populateBudgetList(false);
+			populateBudgetList(true);
 		} else {
 			populateWatchlist();
 		}
