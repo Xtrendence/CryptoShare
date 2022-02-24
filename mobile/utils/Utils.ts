@@ -39,6 +39,8 @@ export default class Utils {
 		cad: "$"
 	};
 
+	static monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 	static getBackground(theme: string) {
 		let background = require("../assets/img/BG-Black.png");
 		if(theme === "Light") {
@@ -310,6 +312,10 @@ export default class Utils {
 		let hours = ("00" + date.getHours()).slice(-2);
 		let minutes = ("00" + date.getMinutes()).slice(-2);
 		return hours + ":" + minutes;
+	}
+
+	static formatDateSQL(date: Date) {
+		return date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0];
 	}
 
 	static formatDate(date: Date) {

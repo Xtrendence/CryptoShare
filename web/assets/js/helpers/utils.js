@@ -150,6 +150,10 @@ function formatHour(date) {
 	return hours + ":" + minutes;
 }
 
+function formatDateSQL(date) {
+	return date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0];
+}
+
 function formatDate(date) {
 	let day = date.getDate();
 	let month = date.getMonth() + 1;

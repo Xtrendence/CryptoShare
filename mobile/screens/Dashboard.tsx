@@ -57,6 +57,11 @@ export default function Dashboard({ navigation }: any) {
 		}
 	});
 
+	const dateRef = useRef<any>({
+		month: new Date().getMonth(),
+		year: new Date().getFullYear()
+	});
+
 	const [list, setList] = useState<string>("budget");
 
 	const defaultBudgetStats = null;
@@ -951,13 +956,88 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 
+	function showMonthPopup() {
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird, marginTop:20 }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Select Month</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							{ 
+								Utils.monthNames.map(name => {
+									return (
+										<TouchableOpacity key={name} onPress={() => setMonth(Utils.monthNames.indexOf(name))} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:name === "December" ? 0 : 20 }]}>
+											<Text style={[styles.actionText, styles[`actionText${theme}`]]}>{name}</Text>
+										</TouchableOpacity>
+									);
+								})
+							}
+						</View>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginBottom:20 }]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
+						</TouchableOpacity>
+					</ScrollView>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	function showYearPopup() {
+		let currentYear = new Date().getFullYear();
+		let years = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3, currentYear - 4, currentYear - 5];
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird, marginTop:20 }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Select Year</Text>
+						</View>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							{ 
+								years.map((year: number) => {
+									return (
+										<TouchableOpacity key={year} onPress={() => setYear(year)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:year === years[5] ? 0 : 20 }]}>
+											<Text style={[styles.actionText, styles[`actionText${theme}`]]}>{year.toString()}</Text>
+										</TouchableOpacity>
+									);
+								})
+							}
+						</View>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginBottom:20 }]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Dismiss</Text>
+						</TouchableOpacity>
+					</ScrollView>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	function setMonth(month: number) {
+		hidePopup();
+		dateRef.current.month = month;
+		populateBudgetList(false);
+	}
+
+	function setYear(year: number) {
+		hidePopup();
+		dateRef.current.year = year;
+		populateBudgetList(false);
+	}
+
 	function generateBudgetStats(theme: string, budgetData: any, transactionData: any, backgroundColors: any) {
 		if(Utils.empty(transactionData)) {
 			setBudgetStats(defaultBudgetStats);
 			return;
 		}
 
-		transactionData = filterTransactionsByCurrentMonth(transactionData);
+		transactionData = filterTransactionsByMonth(transactionData, dateRef.current.month, dateRef.current.year);
 
 		let settings: any = store.getState().settings.settings;
 
@@ -1000,20 +1080,19 @@ export default function Dashboard({ navigation }: any) {
 			budgetAmounts[category] = { budget:amount, remaining:remaining, remainingPercentage:remainingPercentage, used:used, usedPercentage:usedPercentage };
 		});
 
-		setBudgetStats(<BudgetStats theme={theme} currency={currency} stats={budgetAmounts} backgroundColors={backgroundColors}/>)
+		setBudgetStats(<BudgetStats theme={theme} currency={currency} stats={budgetAmounts} backgroundColors={backgroundColors} showMonthPopup={showMonthPopup} showYearPopup={showYearPopup} month={parseInt(dateRef.current.month)} year={dateRef.current.year}/>)
 	}
 
-	function filterTransactionsByCurrentMonth(transactionData: any) {
+	function filterTransactionsByMonth(transactionData: any, month: any, year: any) {
 		let filtered: any = {};
 
 		Object.keys(transactionData).map(key => {
 			try {
 				let transaction = transactionData[key];
 
-				let currentDate = new Date();
 				let date = new Date(Date.parse(transaction.transactionDate));
 
-				if(currentDate.getMonth() === date.getMonth() && currentDate.getFullYear() === date.getFullYear()) {
+				if(parseFloat(month) === date.getMonth() && parseFloat(year) === date.getFullYear()) {
 					filtered[key] = transaction;
 				}
 			} catch(error) {
