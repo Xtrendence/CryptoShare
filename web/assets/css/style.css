@@ -1410,7 +1410,29 @@ html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right
 	font-size:16px;
 	color:var(--main-contrast);
 	display:block;
-	margin-bottom:20px;
+	margin-bottom:30px;
+}
+.dashboard-list.budget .stats-wrapper {
+	position:relative;
+}
+.dashboard-list.budget .date-wrapper {
+	position:absolute;
+	top:10px;
+	right:10px;
+}
+.dashboard-list.budget .date.month, .dashboard-list.budget .date.year {
+	border-radius:var(--border-radius);
+	height:40px;
+	background:var(--main-third);
+	font-size:18px;
+	color:var(--main-contrast);
+	padding:0 10px 0 10px;
+}
+.dashboard-list.budget .date.month {
+	margin-right:10px;
+}
+#desktop .dashboard-list.budget .date.month:hover, #desktop .dashboard-list.budget .date.year:hover {
+	background:var(--main-fourth);
 }
 .dashboard-list.budget .stats-container {
 	text-align:center;

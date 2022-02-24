@@ -10,6 +10,8 @@ let currencySymbols = {
 	cad: "$"
 };
 
+let monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
 let firstFetch = {
 	chatBot: true,
 	dashboard: true,

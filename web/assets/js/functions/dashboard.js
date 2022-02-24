@@ -14,6 +14,30 @@ async function populateDashboardBudget(recreate) {
 				budgetData = await fetchBudget();
 			}
 
+			let currentDate = new Date();
+			let currentMonth = currentDate.getMonth();
+			let currentYear = currentDate.getFullYear();
+
+			if(empty(divDashboardBudgetList.getAttribute("data-month"))) {
+				divDashboardBudgetList.setAttribute("data-month", currentMonth);
+			} else {
+				currentMonth = parseFloat(divDashboardBudgetList.getAttribute("data-month"));
+			}
+
+			if(empty(divDashboardBudgetList.getAttribute("data-year"))) {
+				divDashboardBudgetList.setAttribute("data-year", currentYear);
+			} else {
+				currentYear = parseFloat(divDashboardBudgetList.getAttribute("data-year"));
+			}
+
+			if(document.getElementById("button-budget-month")) {
+				document.getElementById("button-budget-month").textContent = monthNames[currentMonth];
+			}
+
+			if(document.getElementById("button-budget-year")) {
+				document.getElementById("button-budget-year").textContent = currentYear;
+			}
+
 			if(divDashboardBudgetList.getElementsByTagName("canvas").length === 0) {
 				divDashboardBudgetList.innerHTML = `
 					<div class="chart-wrapper">
@@ -21,6 +45,10 @@ async function populateDashboardBudget(recreate) {
 					</div>
 					<div class="stats-wrapper noselect">
 						<span class="header">Used Budget</span>
+						<div class="date-wrapper">
+							<button class="date month" id="button-budget-month">${monthNames[currentMonth]}</button>
+							<button class="date year" id="button-budget-year">${currentYear}</button>
+						</div>
 						<div class="stats-container">
 							<span class="title">Food</span>
 							<div class="progress-container">
@@ -86,7 +114,7 @@ async function populateDashboardBudget(recreate) {
 				generatePieChart(budgetData);
 			}
 			
-			generateBudgetStats(budgetData, transactionData);
+			generateBudgetStats(budgetData, transactionData, recreate);
 
 			checkHoldingsOnDashboard();
 		} catch(error) {
@@ -222,7 +250,7 @@ function generatePieChart(budgetData) {
 	});
 }
 
-function generateBudgetStats(budgetData, transactionData) {
+function generateBudgetStats(budgetData, transactionData, recreate) {
 	let spanIncome = document.getElementById("span-income");
 	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
 	let divStats = divDashboardBudgetList.getElementsByClassName("foreground");
@@ -238,7 +266,18 @@ function generateBudgetStats(budgetData, transactionData) {
 
 	let currency = getCurrency();
 
-	transactionData = filterTransactionsByCurrentMonth(transactionData);
+	let buttonMonth = document.getElementById("button-budget-month");
+	let buttonYear = document.getElementById("button-budget-year");
+
+	if(recreate) {
+		addBudgetDateEvents(buttonMonth, buttonYear);
+	}
+
+	let monthName = buttonMonth.textContent;
+	let month = monthNames.indexOf(monthName);
+	let year = buttonYear.textContent;
+
+	transactionData = filterTransactionsByMonth(transactionData, month, year);
 
 	let parsed = parseTransactionData(transactionData);
 
@@ -286,17 +325,101 @@ function generateBudgetStats(budgetData, transactionData) {
 	});
 }
 
-function filterTransactionsByCurrentMonth(transactionData) {
+function addBudgetDateEvents(buttonMonth, buttonYear) {
+	buttonMonth.addEventListener("click", () => {
+		let html = `
+			<div class="popup-button-wrapper no-margin-top">
+				<button class="popup-choice" data-value="January">January</button>
+				<button class="popup-choice" data-value="February">February</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="March">March</button>
+				<button class="popup-choice" data-value="April">April</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="May">May</button>
+				<button class="popup-choice" data-value="June">June</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="July">July</button>
+				<button class="popup-choice" data-value="August">August</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="September">September</button>
+				<button class="popup-choice" data-value="October">October</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="November">November</button>
+				<button class="popup-choice" data-value="December">December</button>
+			</div>
+		`;
+
+		let popup = new Popup(360, "auto", "Select Month", html, { confirmText:"-", cancelText:"Dismiss" });
+		popup.show();
+		popup.updateHeight();
+
+		let choices = popup.bottom.getElementsByClassName("popup-choice");
+		
+		for(let i = 0; i < choices.length; i++) {
+			choices[i].addEventListener("click", () => {
+				popup.hide();
+				buttonMonth.textContent = choices[i].textContent;
+				divDashboardBudgetList.setAttribute("data-month", monthNames.indexOf(choices[i].textContent));
+				populateDashboardBudget();
+			});
+		}
+	});
+
+	buttonYear.addEventListener("click", () => {
+		let currentYear = new Date().getFullYear();
+		let year1 = currentYear - 1;
+		let year2 = currentYear - 2;
+		let year3 = currentYear - 3;
+		let year4 = currentYear - 4;
+		let year5 = currentYear - 5;
+
+		let html = `
+			<div class="popup-button-wrapper no-margin-top">
+				<button class="popup-choice" data-value="${currentYear}">${currentYear}</button>
+				<button class="popup-choice" data-value="${year1}">${year1}</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="${year2}">${year2}</button>
+				<button class="popup-choice" data-value="${year3}">${year3}</button>
+			</div>
+			<div class="popup-button-wrapper">
+				<button class="popup-choice" data-value="${year4}">${year4}</button>
+				<button class="popup-choice" data-value="${year5}">${year5}</button>
+			</div>
+		`;
+
+		let popup = new Popup(360, "auto", "Select Year", html, { confirmText:"-", cancelText:"Dismiss" });
+		popup.show();
+		popup.updateHeight();
+
+		let choices = popup.bottom.getElementsByClassName("popup-choice");
+		
+		for(let i = 0; i < choices.length; i++) {
+			choices[i].addEventListener("click", () => {
+				popup.hide();
+				buttonYear.textContent = choices[i].textContent;
+				divDashboardBudgetList.setAttribute("data-year", choices[i].textContent);
+				populateDashboardBudget();
+			});
+		}
+	});
+}
+
+function filterTransactionsByMonth(transactionData, month, year) {
 	let filtered = {};
 
 	Object.keys(transactionData).map(key => {
 		try {
 			let transaction = transactionData[key];
 
-			let currentDate = new Date();
 			let date = new Date(Date.parse(transaction.transactionDate));
 
-			if(currentDate.getMonth() === date.getMonth() && currentDate.getFullYear() === date.getFullYear()) {
+			if(parseFloat(month) === date.getMonth() && parseFloat(year) === date.getFullYear()) {
 				filtered[key] = transaction;
 			}
 		} catch(error) {
