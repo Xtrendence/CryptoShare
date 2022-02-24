@@ -144,7 +144,7 @@ export default class DB {
 				let statement = (`
 					CREATE TABLE IF NOT EXISTS Coin (
 						coinID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-						assetID VARCHAR(64) NOT NULL,
+						assetID VARCHAR(64) NOT NULL UNIQUE,
 						assetSymbol VARCHAR(16) NOT NULL,
 						data BLOB
 					);
