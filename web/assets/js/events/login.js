@@ -29,11 +29,11 @@ buttonLoginAccount.addEventListener("click", () => {
 
 				setSettings(settings);
 				setAccountInfo(result, true);
+				
+				showApp();
 
 				setPage(choices?.defaultPage);
 				setSettingsPage(choices?.defaultSettingsPage);
-
-				showApp();
 			}
 		}).catch(error => {
 			errorNotification(error);

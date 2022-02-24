@@ -26,14 +26,15 @@ function attemptLogin() {
 				}
 
 				let choices = JSON.parse(settings?.choices);
-
-				setPage(choices?.defaultPage);
-				setSettingsPage(choices?.defaultSettingsPage);
-
+				
 				setSettings(settings);
 
 				setAccountInfo(result, false);
+				
 				showApp();
+
+				setPage(choices?.defaultPage);
+				setSettingsPage(choices?.defaultSettingsPage);
 			}
 		}).catch(error => {
 			errorNotification(error);
