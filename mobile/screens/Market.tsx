@@ -504,15 +504,14 @@ export default function Market({ navigation }: any) {
 			let currency = settings.currency;
 			
 			let watchlistData: any = await fetchWatchlist();
+			
+			setModalData(watchlistData);
 
 			if(Utils.empty(watchlistData)) {
-				setModalData({});
 				setMarketRowsStocks({});
 				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
 				return;
 			}
-			
-			setModalData(watchlistData);
 
 			let filteredWatchlist = filterWatchlistByType(watchlistData);
 
@@ -528,7 +527,6 @@ export default function Market({ navigation }: any) {
 			let rows: any = createWatchlistListRows({}, marketStocksData, watchlistData, currency);
 
 			if(Utils.empty(rows)) {
-				setModalData({});
 				setMarketRowsStocks({});
 				setMarketHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Assets In Watchlist</Text></View>);
 				return;
