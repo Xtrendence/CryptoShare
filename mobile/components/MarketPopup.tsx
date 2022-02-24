@@ -2,7 +2,7 @@ import React from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Linking, Modal, ScrollView, Text, ToastAndroid, TouchableOpacity, View } from "react-native";
 import HTML from "react-native-render-html";
-import { getWatchlistID, watchlistExists } from "../screens/Dashboard";
+import { fetchWatchlist, getWatchlistID, watchlistExists } from "../screens/Dashboard";
 import { Colors } from "../styles/Global";
 import styles, { gradientColor } from "../styles/Market";
 import { screenWidth } from "../styles/NavigationBar";
@@ -223,6 +223,14 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 			setLoading(true);
 
 			setTimeout(async () => {
+				let watchlist = await fetchWatchlist() || {};
+
+				if(watchlistExists(watchlist, assetID)) {
+					setLoading(false);
+					ToastAndroid.show("Asset already in watchlist.", 5000);
+					return;
+				}
+
 				let userID = await AsyncStorage.getItem("userID");
 				let token = await AsyncStorage.getItem("token");
 				let key = await AsyncStorage.getItem("key") || "";
