@@ -170,9 +170,11 @@ export default createStyle<any>({
 		borderColor: Colors.Light.Market.accentFirst
 	},
 	choiceButtonActiveDark: {
+		borderWidth: 0,
 		backgroundColor: Colors.Dark.Market.accentFirst
 	},
 	choiceButtonActiveLight: {
+		borderWidth: 0,
 		backgroundColor: Colors.Light.Market.accentFirst
 	},
 	choiceText: {

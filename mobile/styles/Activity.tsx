@@ -161,9 +161,11 @@ export default createStyle<any>({
 		borderColor: Colors.Light.Activity.accentFirst
 	},
 	choiceButtonActiveDark: {
+		borderWidth: 0,
 		backgroundColor: Colors.Dark.Activity.accentFirst
 	},
 	choiceButtonActiveLight: {
+		borderWidth: 0,
 		backgroundColor: Colors.Light.Activity.accentFirst
 	},
 	choiceText: {
