@@ -64,10 +64,11 @@ function verifyToken(userID, token) {
 	return request("POST", urlAPI.replace("graphql", "verifyToken"), body, null);
 }
 
-function changePassword(userID, token, currentPassword, newPassword) {
+function changePassword(userID, token, key, currentPassword, newPassword) {
 	let body = {
 		userID: userID,
 		token: token,
+		key: key,
 		currentPassword: currentPassword,
 		newPassword: newPassword
 	};

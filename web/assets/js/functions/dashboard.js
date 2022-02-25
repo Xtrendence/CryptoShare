@@ -259,10 +259,6 @@ function generateBudgetStats(budgetData, transactionData, recreate) {
 		spanStats[i].textContent = "0%";
 		divStats[i].style.width = "0%";
 	}
-	
-	if(empty(transactionData)) {
-		return;
-	}
 
 	let currency = getCurrency();
 
@@ -1214,6 +1210,10 @@ function fetchBudget() {
 
 			resolve(JSON.parse(budgetData));
 		} catch(error) {
+			if(error.toString().includes("Malformed")) {
+				setDefaultBudgetData();
+			}
+
 			console.log(error);
 			reject(error);
 		}

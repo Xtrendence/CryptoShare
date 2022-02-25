@@ -56,6 +56,11 @@ export default class Utils {
 				if(updateKey) {
 					await AsyncStorage.setItem("key", info?.key.toString());
 				}
+
+				let keyAPI = await AsyncStorage.getItem("keyAPI");
+				if(Utils.empty(keyAPI)) {
+					await AsyncStorage.setItem("keyAPI", "-");
+				}
 				
 				await AsyncStorage.setItem("token", info?.token.toString());
 				await AsyncStorage.setItem("userID", info?.userID.toString());
@@ -75,6 +80,7 @@ export default class Utils {
 				await AsyncStorage.removeItem("token");
 				await AsyncStorage.removeItem("userID");
 				await AsyncStorage.removeItem("username");
+				await AsyncStorage.removeItem("keyAPI");
 				resolve(null);
 			} catch(error) {
 				console.log(error);

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -13,11 +13,15 @@ import { Colors } from "../styles/Global";
 import styles from "../styles/Settings";
 import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
+import Loading from "../components/Loading";
+import CryptoFN from "../utils/CryptoFN";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
+
+	const [loading, setLoading] = useState<boolean>(false);
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
@@ -88,10 +92,10 @@ export default function Settings({ navigation }: any) {
 									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]} onPress={() => logout()}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Logout</Text>
 									</TouchableOpacity>
-									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => showConfirmationPopup("logoutEverywhere", null)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Logout Everywhere</Text>
 									</TouchableOpacity>
-									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => showPasswordPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Change Password</Text>
 									</TouchableOpacity>
 								</View>
@@ -168,6 +172,7 @@ export default function Settings({ navigation }: any) {
 					</View>
 				</View>
 			</Modal>
+			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
 
@@ -181,6 +186,165 @@ export default function Settings({ navigation }: any) {
 		Keyboard.dismiss();
 		setPopup(false);
 		setPopupContent(null);
+	}
+
+	function showConfirmationPopup(action: string, args: any) {
+		Keyboard.dismiss();
+		setPopup(true);
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => processAction(action)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		setPopupContent(content);
+	}
+
+	async function processAction(action: string) {
+		try {
+			hidePopup();
+
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			switch(action) {
+				case "logoutEverywhere":
+					await requests.logoutEverywhere(userID, token);
+					finishLogout();
+					break;
+			}
+
+			setLoading(false);
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	async function showPasswordPopup() {
+		popupRef.current.currentPassword = "";
+		popupRef.current.newPassword = "";
+		popupRef.current.repeatPassword = "";
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Change Password</Text>
+					</View>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<TextInput 
+							spellCheck={false}
+							autoCorrect={false}
+							placeholder="Current Password..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.currentPassword = value}
+							secureTextEntry
+						/>
+						<TextInput 
+							spellCheck={false}
+							autoCorrect={false}
+							placeholder="New Password..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`]]} 
+							onChangeText={(value) => popupRef.current.newPassword = value}
+							secureTextEntry
+						/>
+						<TextInput 
+							spellCheck={false}
+							autoCorrect={false}
+							placeholder="Repeat Password..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.popupInput, styles[`popupInput${theme}`], { marginBottom:0 }]} 
+							onChangeText={(value) => popupRef.current.repeatPassword = value}
+							secureTextEntry
+						/>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => changePassword()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		showPopup(content);
+	}
+
+	async function changePassword() {
+		try {
+			let currentPassword = popupRef.current.currentPassword;
+			let newPassword = popupRef.current.newPassword;
+			let repeatPassword = popupRef.current.repeatPassword;
+
+			if(newPassword !== repeatPassword) {
+				ToastAndroid.show("Passwords don't match.", 5000);
+				return;
+			}
+
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let key = await AsyncStorage.getItem("key") || "";
+
+			if(Utils.empty(key)) {
+				ToastAndroid.show("Couldn't change encryption key.", 5000);
+				return;
+			}
+
+			let encrypted = CryptoFN.encryptAES(key, newPassword);
+
+			let result: any = await requests.changePassword(userID, token, encrypted, currentPassword, newPassword);
+
+			setLoading(false);
+
+			if("error" in result) {
+				ToastAndroid.show(result.error, 5000);
+			} else {
+				if("username" in result) {
+					await requests.logoutEverywhere(userID, token);
+					hidePopup();
+					finishLogout();
+					Utils.notify(theme, "Password has been changed.");
+				}
+			}
+		} catch(error) {
+			setLoading(false);
+			console.log(error);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
 	}
 
 	async function showStockAPIPopup() {

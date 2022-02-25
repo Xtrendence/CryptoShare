@@ -1034,11 +1034,6 @@ export default function Dashboard({ navigation }: any) {
 	}
 
 	function generateBudgetStats(theme: string, budgetData: any, transactionData: any, backgroundColors: any) {
-		if(Utils.empty(transactionData)) {
-			setBudgetStats(defaultBudgetStats);
-			return;
-		}
-
 		transactionData = filterTransactionsByMonth(transactionData, dateRef.current.month, dateRef.current.year);
 
 		let settings: any = store.getState().settings.settings;

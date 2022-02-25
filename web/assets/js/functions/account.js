@@ -71,6 +71,10 @@ function setAccountInfo(info, updateKey) {
 	if(updateKey) {
 		localStorage.setItem("key", info.key);
 	}
+
+	if(empty(localStorage.getItem("keyAPI"))) {
+		localStorage.setItem("keyAPI", "-");
+	}
 }
 
 function removeAccountInfo() {

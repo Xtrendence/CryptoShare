@@ -136,10 +136,11 @@ export default class Requests {
 		return request("POST", this.urlAPI.replace("graphql", "verifyToken"), body, null);
 	}
 
-	changePassword(userID, token, currentPassword, newPassword) {
+	changePassword(userID, token, key, currentPassword, newPassword) {
 		let body = {
 			userID: userID,
 			token: token,
+			key: key,
 			currentPassword: currentPassword,
 			newPassword: newPassword
 		};

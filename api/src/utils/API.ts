@@ -130,11 +130,12 @@ export default class API {
 				app.post("/changePassword", async (request, response) => {
 					let userID = request.body.userID;
 					let token = request.body.token;
+					let key = request.body.key;
 					let currentPassword = request.body.currentPassword;
 					let newPassword = request.body.newPassword;
 
 					try {
-						response.send(await Utils.changePassword(userID, token, currentPassword, newPassword));
+						response.send(await Utils.changePassword(userID, token, key, currentPassword, newPassword));
 					} catch(error) {
 						response.send({ error:error });
 					}

@@ -14,9 +14,11 @@ document.addEventListener("click", (event) => {
 document.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		if(document.getElementById("popup-button-confirm")) {
+			event.preventDefault();
 			document.getElementById("popup-button-confirm").click();
 		} else {
 			if(document.getElementById("popup-button-cancel")) {
+				event.preventDefault();
 				document.getElementById("popup-button-cancel").click();
 			}
 		}
@@ -24,6 +26,7 @@ document.addEventListener("keydown", (event) => {
 
 	if(event.key.toLowerCase() === "escape") {
 		if(document.getElementById("popup-button-cancel")) {
+			event.preventDefault();
 			document.getElementById("popup-button-cancel").click();
 		}
 	}

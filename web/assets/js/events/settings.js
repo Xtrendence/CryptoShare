@@ -83,7 +83,16 @@ buttonSettingsPassword.addEventListener("click", () => {
 		let repeatPassword = document.getElementById("popup-input-repeat-password").value;
 
 		if(newPassword === repeatPassword) {
-			changePassword(userID, token, currentPassword, newPassword).then(result => {
+			let key = localStorage.getItem("key");
+
+			if(empty(key)) {
+				errorNotification("Couldn't change encryption key.");
+				return;
+			}
+
+			let encrypted = CryptoFN.encryptAES(key, newPassword);
+
+			changePassword(userID, token, encrypted, currentPassword, newPassword).then(result => {
 				if("error" in result) {
 					errorNotification(result.error);
 				} else {
@@ -94,6 +103,16 @@ buttonSettingsPassword.addEventListener("click", () => {
 							duration: 5000,
 							background: "var(--accent-second)",
 							color: "var(--accent-contrast)"
+						});
+
+						logoutEverywhere(userID, token).then(result => {
+							if("error" in result) {
+								errorNotification(result.error);
+							} else {
+								finishLogout();
+							}
+						}).catch(error => {
+							errorNotification(error);
 						});
 
 						popup.hide();
