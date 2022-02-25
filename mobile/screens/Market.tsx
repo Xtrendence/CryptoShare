@@ -111,6 +111,11 @@ export default function Market({ navigation }: any) {
 						style={[styles.inputSearch, styles[`inputSearch${theme}`]]} 
 						onChangeText={(value) => setSymbol(value)}
 						value={symbol}
+						onSubmitEditing={() => {
+							if(!Utils.empty(symbol)) { 
+								showSearchPopup();
+							}
+						}}
 					/>
 					<TouchableOpacity 
 						onPress={() => { 

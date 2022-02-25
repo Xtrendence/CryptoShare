@@ -130,6 +130,7 @@ export default function Activity({ navigation }: any) {
 						style={[styles.inputSearch, styles[`inputSearch${theme}`]]} 
 						onChangeText={(value) => setQuery(value)}
 						value={query}
+						onSubmitEditing={() => searchActivity(query)}
 					/>
 					<TouchableOpacity onPress={() => searchActivity(query)} style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
 						<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>

@@ -85,8 +85,8 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 						}
 
 						let encrypted = encryptObjectValues(key, {
-							assetID: id,
-							assetSymbol: symbol,
+							assetID: id.toLowerCase(),
+							assetSymbol: symbol.toUpperCase(),
 							assetType: "crypto",
 						});
 
@@ -120,8 +120,8 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 									}
 
 									let encrypted = encryptObjectValues(key, {
-										assetID: id,
-										assetSymbol: symbol,
+										assetID: id.toLowerCase(),
+										assetSymbol: symbol.toUpperCase(),
 										assetType: "crypto",
 									});
 

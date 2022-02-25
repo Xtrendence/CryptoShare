@@ -101,6 +101,7 @@ export default function Login({ navigation }: any) {
 										style={[styles.input, styles[`input${theme}`]]} 
 										onChangeText={(value) => setLoginPassword(value)}
 										value={loginPassword}
+										onSubmitEditing={() => login(url, loginUsername, loginPassword)}
 										secureTextEntry
 									/>
 									<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("create")}>
@@ -149,6 +150,7 @@ export default function Login({ navigation }: any) {
 										style={[styles.input, styles[`input${theme}`]]} 
 										onChangeText={(value) => setCreateRepeatPassword(value)} 
 										value={createRepeatPassword} 
+										onSubmitEditing={() => showBottomModal(url, createUsername, createPassword, createRepeatPassword)}
 										secureTextEntry
 									/>
 									<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("login")}>

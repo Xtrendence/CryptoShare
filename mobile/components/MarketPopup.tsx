@@ -239,8 +239,8 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 				let requests = new Requests(api);
 
 				let encrypted = Utils.encryptObjectValues(key, {
-					assetID: assetID,
-					assetSymbol: assetSymbol,
+					assetID: assetID.toLowerCase(),
+					assetSymbol: assetSymbol.toUpperCase(),
 					assetType: assetType,
 				});
 

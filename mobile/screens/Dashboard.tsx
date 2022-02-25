@@ -20,7 +20,7 @@ import Stock from "../utils/Stock";
 import Utils from "../utils/Utils";
 import { sortMarketDataByCoinID } from "./Holdings";
 import { parseMarketData } from "./Market";
-import { actionBarHeight, statusBarHeight } from "../styles/NavigationBar";
+import { actionBarHeight, barHeight, screenHeight, statusBarHeight } from "../styles/NavigationBar";
 
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -217,6 +217,7 @@ export default function Dashboard({ navigation }: any) {
 							style={[styles.inputSearch, styles[`inputSearch${theme}`]]} 
 							onChangeText={(value) => setQuery(value)}
 							value={query}
+							onSubmitEditing={() => searchTransactions(query)}
 						/>
 						<TouchableOpacity onPress={() => searchTransactions(query)} style={[styles.button, styles.buttonSearch, styles[`buttonSearch${theme}`]]}>
 							<Text style={[styles.searchText, styles[`searchText${theme}`]]}>Search</Text>
@@ -231,7 +232,7 @@ export default function Dashboard({ navigation }: any) {
 						ListHeaderComponent={transactionHeader}
 						ListHeaderComponentStyle={styles.listHeader}
 					/>
-					<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:"auto", bottom:actionBarHeight }]}>
+					<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], { top:barHeight + 80 + (screenHeight - actionBarHeight - barHeight - 40 - 70 - 130) + 18 + 20, }]}>
 						<TouchableOpacity onPress={() => hideModal()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Back</Text>
 						</TouchableOpacity>
