@@ -1260,14 +1260,14 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 }
 
 .page.dashboard .page-container.half.left {
-	left:calc(50% - 440px / 2 - 220px - 10px);
-	width:440px;
+	left:calc(50% - 450px / 2 - 225px - 10px);
+	width:450px;
 }
 .page.dashboard .page-container.half.top-right, .page.dashboard .page-container.half.bottom-right {
-	right:calc(50% - 440px / 2 - 220px - 10px);
+	right:calc(50% - 450px / 2 - 225px - 10px);
 }
 .page.dashboard .page-container.half.top-right {
-	width:440px;
+	width:450px;
 	min-height:300px;
 	display:none;
 }
@@ -1275,7 +1275,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	display:block;
 }
 .page.dashboard .page-container.half.bottom-right {
-	width:440px;
+	width:450px;
 	height:calc(100% - 135px - 20px);
 }
 html.navbar-compact .page.dashboard .page-container.half.bottom-right {
