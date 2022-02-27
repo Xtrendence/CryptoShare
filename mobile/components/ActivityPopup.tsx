@@ -187,7 +187,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 						</View>
 					}
 					{ action === "updateActivity" &&
-						<TouchableOpacity onPress={() => showConfirmationPopup("deleteActivity", { activityID:popupRef.current.activity.activityID })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`], styles.sectionButton, { marginBottom:0 }]}>
+						<TouchableOpacity onPress={() => showConfirmationPopup("deleteActivity", { activityTransactionID:popupRef.current.activity.activityTransactionID })} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.dangerButton, styles[`dangerButton${theme}`], styles.sectionButton, { marginBottom:0 }]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Activity</Text>
 						</TouchableOpacity>
 					}
@@ -214,6 +214,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 
 		let data = {
 			activityID: info.activityID, 
+			activityTransactionID: info.activityTransactionID,
 			activityAssetID: info.activityAssetID, 
 			activityAssetSymbol: info.activityAssetSymbol, 
 			activityAssetType: info.activityAssetType || "crypto", 

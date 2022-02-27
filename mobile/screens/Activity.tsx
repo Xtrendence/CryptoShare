@@ -63,6 +63,7 @@ export default function Activity({ navigation }: any) {
 		},
 		activity: {
 			activityID: "", 
+			activityTransactionID: "",
 			activityAssetID: "", 
 			activityAssetSymbol: "", 
 			activityAssetType: "crypto", 
@@ -254,6 +255,7 @@ export default function Activity({ navigation }: any) {
 		try {
 			popupRef.current.activity = {
 				activityID: info.activityID || "", 
+				activityTransactionID: info.activityTransactionID || "",
 				activityAssetID: info.activityAssetID || "", 
 				activityAssetSymbol: Utils.empty(info.activityAssetSymbol) ? "" : info.activityAssetSymbol.toUpperCase(), 
 				activityAssetType: info.activityAssetType || "crypto", 
@@ -457,7 +459,7 @@ export default function Activity({ navigation }: any) {
 
 			let encrypted = Utils.encryptObjectValues(key, data);
 
-			await requests.updateActivity(token, userID, data.activityID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+			await requests.updateActivity(token, userID, data.activityTransactionID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
 
 			setTimeout(() => {
 				populateActivityList();

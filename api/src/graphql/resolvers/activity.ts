@@ -9,7 +9,8 @@ export async function createActivity({ token, userID, activityAssetID, activityA
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			let activityTransactionID = "tx-" + await Utils.generateToken();
+			let txID = await Utils.generateToken();
+			let activityTransactionID = `tx-${userID.toString()}-${txID}`;
 
 			db.runQuery("INSERT INTO Activity (userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo]);
 			return "Done";
@@ -59,12 +60,12 @@ export async function readActivity({ token, userID }: any) {
 	});
 }
 
-export async function updateActivity({ token, userID, activityID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
+export async function updateActivity({ token, userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("UPDATE Activity SET activityAssetID = ?, activityAssetSymbol = ?, activityAssetType = ?, activityDate = ?, activityType = ?, activityAssetAmount = ?, activityFee = ?, activityNotes = ?, activityExchange = ?, activityPair = ?, activityPrice = ?, activityFrom = ?, activityTo = ? WHERE activityID = ? AND userID = ?", [activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo, activityID, userID]);
+			db.runQuery("UPDATE Activity SET activityAssetID = ?, activityAssetSymbol = ?, activityAssetType = ?, activityDate = ?, activityType = ?, activityAssetAmount = ?, activityFee = ?, activityNotes = ?, activityExchange = ?, activityPair = ?, activityPrice = ?, activityFrom = ?, activityTo = ? WHERE activityTransactionID = ? AND userID = ?", [activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo, activityTransactionID, userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";

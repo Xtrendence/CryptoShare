@@ -112,7 +112,7 @@ type Mutation {
 	deleteUser(token: String!, userID: Int!): String
 
 	createActivity(token: String!, userID: Int!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
-	updateActivity(token: String!, userID: Int!, activityID: Int!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
+	updateActivity(token: String!, userID: Int!, activityTransactionID: String!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
 	deleteActivity(token: String!, userID: Int!, activityID: Int!): String
 
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
