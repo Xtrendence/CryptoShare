@@ -9,7 +9,10 @@ export async function createTransaction({ token, userID, transactionType, transa
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("INSERT INTO [Transaction] (userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?, ?)", [userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes]);
+			let txID = await Utils.generateToken();
+			let transactionID = `tx-${userID.toString()}-${txID}`;
+
+			db.runQuery("INSERT INTO [Transaction] (transactionID, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) VALUES (?, ?, ?, ?, ?, ?, ?)", [transactionID, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes]);
 			return "Done";
 		} else {
 			return "Unauthorized";

@@ -262,7 +262,7 @@ export default class DB {
 			this.db?.serialize(() => {
 				let statement = (`
 					CREATE TABLE IF NOT EXISTS [Transaction] (
-						transactionID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+						transactionID VARCHAR(32) NOT NULL PRIMARY KEY,
 						userID INTEGER NOT NULL,
 						transactionType BLOB NOT NULL,
 						transactionDate BLOB NOT NULL,

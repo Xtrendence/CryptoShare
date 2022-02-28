@@ -492,6 +492,7 @@ async function listTransactions() {
 			let transaction = transactions[key];
 
 			let div = document.createElement("div");
+			div.id = "transaction-list-" + transaction.transactionID;
 			div.setAttribute("class", `transaction-row noselect ${transaction.transactionCategory}`);
 
 			let date = choices?.dateFormat === "dd-mm-yyyy" ? formatDateHyphenatedHuman(new Date(Date.parse(transaction.transactionDate))) : formatDateHyphenated(new Date(Date.parse(transaction.transactionDate)));

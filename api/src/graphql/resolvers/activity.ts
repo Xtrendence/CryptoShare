@@ -10,7 +10,7 @@ export async function createActivity({ token, userID, activityAssetID, activityA
 
 		if(valid) {
 			let txID = await Utils.generateToken();
-			let activityTransactionID = `tx-${userID.toString()}-${txID}`;
+			let activityTransactionID = `ac-${userID.toString()}-${txID}`;
 
 			db.runQuery("INSERT INTO Activity (userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", [userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo]);
 			return "Done";

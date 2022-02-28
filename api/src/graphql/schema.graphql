@@ -32,7 +32,7 @@ type Message {
 }
 
 type Transaction {
-	transactionID: Int!,
+	transactionID: String!,
 	userID: Int!,
 	transactionType: String!,
 	transactionDate: String!,
@@ -129,8 +129,8 @@ type Mutation {
 	deleteMessageAll(token: String!, userID: Int!): String
 
 	createTransaction(token: String!, userID: Int!, transactionType: String!, transactionDate: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
-	updateTransaction(token: String!, userID: Int!, transactionID: Int!, transactionType: String!, transactionDate: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
-	deleteTransaction(token: String!, userID: Int!, transactionID: Int!): String
+	updateTransaction(token: String!, userID: Int!, transactionID: String!, transactionType: String!, transactionDate: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
+	deleteTransaction(token: String!, userID: Int!, transactionID: String!): String
 
 	createHolding(token: String!, userID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	updateHolding(token: String!, userID: Int!, holdingID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String

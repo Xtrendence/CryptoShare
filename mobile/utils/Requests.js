@@ -378,13 +378,13 @@ export default class Requests {
 
 	deleteTransaction(token, userID, transactionID) {
 		let query = {
-			query: `mutation deleteTransaction($token: String!, $userID: Int!, $transactionID: Int!) {
+			query: `mutation deleteTransaction($token: String!, $userID: Int!, $transactionID: String!) {
 				deleteTransaction(token: $token, userID: $userID, transactionID: $transactionID)
 			}`,
 			variables: {
 				token: token,
 				userID: parseInt(userID),
-				transactionID: parseInt(transactionID)
+				transactionID: transactionID
 			}
 		};
 
@@ -473,13 +473,13 @@ export default class Requests {
 
 	updateTransaction(token, userID, transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes) {
 		let query = {
-			query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: Int!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
+			query: `mutation updateTransaction($token: String!, $userID: Int!, $transactionID: String!, $transactionType: String!, $transactionDate: String!, $transactionCategory: String!, $transactionAmount: String!, $transactionNotes: String!) {
 				updateTransaction(token: $token, userID: $userID, transactionID: $transactionID, transactionType: $transactionType, transactionDate: $transactionDate, transactionCategory: $transactionCategory, transactionAmount: $transactionAmount, transactionNotes: $transactionNotes)
 			}`,
 			variables: {
 				token: token,
 				userID: parseInt(userID),
-				transactionID: parseInt(transactionID),
+				transactionID: transactionID,
 				transactionType: transactionType,
 				transactionDate: transactionDate,
 				transactionCategory: transactionCategory, 
