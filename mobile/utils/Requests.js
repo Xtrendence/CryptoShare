@@ -376,6 +376,20 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	deleteUser(token, userID) {
+		let query = {
+			query: `mutation deleteUser($token: String!, $userID: Int!) {
+				deleteUser(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST",this. urlAPI, query, null);
+	}
+
 	deleteTransaction(token, userID, transactionID) {
 		let query = {
 			query: `mutation deleteTransaction($token: String!, $userID: Int!, $transactionID: String!) {

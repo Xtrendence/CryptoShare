@@ -98,6 +98,9 @@ export default function Settings({ navigation }: any) {
 									<TouchableOpacity onPress={() => showPasswordPopup()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Change Password</Text>
 									</TouchableOpacity>
+									<TouchableOpacity onPress={() => showDeleteAccountPopup(1)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete Account</Text>
+									</TouchableOpacity>
 								</View>
 							</View>
 						}
@@ -238,6 +241,60 @@ export default function Settings({ navigation }: any) {
 			console.log(error);
 			ToastAndroid.show("Something went wrong...", 5000);
 		}
+	}
+
+	function showDeleteAccountPopup(popupNumber: number) {
+		Keyboard.dismiss();
+		setPopup(true);
+
+		let warning = popupNumber === 1 ? "Are you sure you want to delete your account?" : "Are you absolutely sure? All your data will be deleted.";
+
+		let content = () => {
+			return (
+				<View style={styles.popupContent}>
+					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>{warning}</Text>
+					</View>
+					<View style={styles.popupButtonWrapper}>
+						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => processAccountPopupAction(popupNumber)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Delete</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			);
+		};
+
+		async function processAccountPopupAction(popupNumber: number) {
+			if(popupNumber === 1) {
+				showDeleteAccountPopup(2);
+			} else {
+				try {
+					setLoading(true);
+
+					let userID = await AsyncStorage.getItem("userID");
+					let token = await AsyncStorage.getItem("token");
+					let api = await AsyncStorage.getItem("api");
+
+					let requests = new Requests(api);
+
+					await requests.deleteUser(token, userID);
+
+					hidePopup();
+					finishLogout();
+
+					ToastAndroid.show("Your account has been deleted.", 5000);
+				} catch(error) {
+					setLoading(false);
+					console.log(error);
+					Utils.notify(theme, "Something went wrong...");
+				}
+			}
+		}
+
+		setPopupContent(content);
 	}
 
 	async function showPasswordPopup() {
