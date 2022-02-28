@@ -115,6 +115,16 @@ export async function deleteUser({ token, userID }: any) {
 
 		if(valid) {
 			db.runQuery("DELETE FROM User WHERE userID = ?", [userID]);
+
+			db.runQuery("DELETE FROM Activity WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Budget WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Holding WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Login WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Message WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Setting WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Transaction WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM Watchlist WHERE userID = ?", [userID]);
+			
 			return "Done";
 		} else {
 			return "Unauthorized";

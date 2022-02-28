@@ -127,6 +127,47 @@ buttonSettingsPassword.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsDeleteAccount.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Delete Account", `<span>Are you sure you want to delete your account?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", () => {
+		popup.hide();
+		popup.show();
+		popup.setHTML(`<span>Are you absolutely sure? This will delete all of your data as well.</span>`);
+
+		popup.on("confirm", async () => {
+			try {
+				popup.hide();
+
+				showLoading(5000, "Deleting Account...");
+
+				let token = localStorage.getItem("token");
+				let userID = localStorage.getItem("userID");
+				
+				await deleteUser(token, userID);
+
+				setTimeout(() => {
+					hideLoading();
+					finishLogout();
+
+					Notify.success({
+						title: "Account Deleted",
+						description: `Your account has been deleted.`,
+						duration: 5000,
+						background: "var(--accent-second)",
+						color: "var(--accent-contrast)"
+					});
+				}, 2500);
+			} catch(error) {
+				hideLoading();
+				console.log(error);
+				errorNotification("Something went wrong...");
+			}
+		});
+	});
+});
+
 buttonSettingsUserRegistration.addEventListener("click", async () => {
 	try {
 		let token = localStorage.getItem("token");
