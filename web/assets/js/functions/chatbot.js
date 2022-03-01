@@ -4,6 +4,8 @@ attachSocketEvents(socket);
 async function populateChatList(recreate) {
 	if(getActivePage().id === "chatbot-page") {
 		if(recreate) {
+			dismissChatOptions();
+			clearChatOptions();
 			divChatList.removeAttribute("data-checksum");
 			divChatList.innerHTML = `<div class="loading-icon"><div></div><div></div></div>`;
 		}
@@ -11,11 +13,24 @@ async function populateChatList(recreate) {
 		try {
 			let messages = await fetchMessage() || "";
 			let checksum = sha256(JSON.stringify(messages));
+			
+			if(divChatList.getElementsByClassName("loading-icon").length > 0 || divChatList.getAttribute("data-checksum") !== checksum) {
+				divChatList.innerHTML = "";
 
-			console.log(messages);
+				Object.keys(messages).map(index => {
+					let message = messages[index];
+					let text = message.message;
+
+					if(validJSON(text)) {
+						let parsed = JSON.parse(text);
+						let from = parsed.from;
+						let content = parsed.message;
+						listMessage(from, content);
+					}
+				});
+			}
 
 			divChatList.setAttribute("data-checksum", checksum);
-			divChatList.innerHTML = "";
 
 			scrollChatToBottom();
 		} catch(error) {
@@ -44,9 +59,7 @@ function sendMessage(message) {
 	}
 }
 
-async function addMessage(from, message) {
-	clearChatOptions();
-
+function listMessage(from, message) {
 	message = stripHTMLCharacters(message);
 	
 	let div = document.createElement("div");
@@ -55,6 +68,24 @@ async function addMessage(from, message) {
 	div.innerHTML = `<div class="chat-bubble"><span>${message}</span></div>`;
 
 	divChatList.appendChild(div);
+}
+
+async function addMessage(from, message) {
+	message = stripHTMLCharacters(message);
+
+	clearChatOptions();
+
+	listMessage(from, message);
+
+	let userID = localStorage.getItem("userID");
+	let token = localStorage.getItem("token");
+	let key = localStorage.getItem("key");
+
+	let json = JSON.stringify({ from:from, message:message });
+
+	let encrypted = CryptoFN.encryptAES(json, key);
+
+	await createMessage(token, userID, encrypted);
 }
 
 function determineIntent(processed) {
@@ -526,6 +557,16 @@ function requireClarification(message, options) {
 	scrollChatToBottom();
 }
 
+function dismissChatOptions() {
+	let options = divChatOptions.getElementsByTagName("button");
+	for(let i = 0; i < options.length; i++) {
+		let option = options[i];
+		if(option.textContent === "Nevermind") {
+			option.click();
+		}
+	}
+}
+
 function clearChatOptions() {
 	divChatList.classList.remove("options");
 	divPageChatBot.classList.remove("scroll-options");
@@ -621,6 +662,7 @@ function fetchMessage() {
 			Object.keys(encrypted).map(index => {
 				let decrypted = decryptObjectValues(key, encrypted[index]);
 				decrypted.messageID = encrypted[index].messageID;
+				decrypted.messageDate = encrypted[index].messageDate;
 				messageData[decrypted.messageID] = decrypted;
 			});
 

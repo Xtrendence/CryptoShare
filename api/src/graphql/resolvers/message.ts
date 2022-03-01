@@ -9,7 +9,7 @@ export async function createMessage({ token, userID, message }: any) {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("INSERT INTO Message (userID, message, messageDate) VALUES (?, ?, TIME())", [userID, message]);
+			db.runQuery("INSERT INTO Message (userID, message, messageDate) VALUES (?, ?, DATETIME('now'))", [userID, message]);
 			return "Done";
 		} else {
 			return "Unauthorized";
