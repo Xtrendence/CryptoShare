@@ -26,8 +26,7 @@ type Activity {
 type Message {
 	messageID: Int!,
 	userID: Int!,
-	userMessage: String!,
-	botMessage: String!,
+	message: String!,
 	messageDate: String!
 }
 
@@ -123,8 +122,8 @@ type Mutation {
 	updateBudget(token: String!, userID: Int!, budgetData: String!): String
 	deleteBudget(token: String!, userID: Int!): String
 
-	createMessage(token: String!, userID: Int!, userMessage: String!, botMessage: String!): String
-	updateMessage(token: String!, userID: Int!, messageID: Int!, userMessage: String!, botMessage: String!): String
+	createMessage(token: String!, userID: Int!, message: String!): String
+	updateMessage(token: String!, userID: Int!, messageID: Int!, message: String!): String
 	deleteMessage(token: String!, userID: Int!, messageID: Int!): String
 	deleteMessageAll(token: String!, userID: Int!): String
 

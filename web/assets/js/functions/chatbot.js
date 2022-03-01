@@ -44,7 +44,7 @@ function sendMessage(message) {
 	}
 }
 
-function addMessage(from, message) {
+async function addMessage(from, message) {
 	clearChatOptions();
 
 	message = stripHTMLCharacters(message);

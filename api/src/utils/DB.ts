@@ -243,8 +243,7 @@ export default class DB {
 					CREATE TABLE IF NOT EXISTS Message (
 						messageID INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 						userID INTEGER NOT NULL,
-						userMessage BLOB NOT NULL,
-						botMessage BLOB,
+						message BLOB NOT NULL,
 						messageDate DATETIME NOT NULL,
 						FOREIGN KEY (userID) REFERENCES User(userID) ON UPDATE CASCADE ON DELETE CASCADE
 					);

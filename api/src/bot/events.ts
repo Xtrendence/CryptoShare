@@ -13,7 +13,7 @@ export default async function addEvents(io: Server) {
 
 				if(valid) {
 					let processed = await manager.process(data.message);
-					socket.emit("process", { processed:processed, userMessage:data.message });
+					socket.emit("process", { processed:processed, message:data.message });
 				} else {
 					socket.emit("response", { message:"Invalid credentials." });
 				}

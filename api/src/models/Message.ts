@@ -1,14 +1,12 @@
 export default class Message {
 	messageID: number | undefined;
 	userID: number;
-	userMessage: string;
-	botMessage: string | undefined;
+	message: string;
 	messageDate: string;
 
-	constructor(userID: number, userMessage: string, botMessage: string | undefined, messageDate: string) {
+	constructor(userID: number, message: string, messageDate: string) {
 		this.userID = userID;
-		this.userMessage = userMessage;
-		this.botMessage = botMessage;
+		this.message = message;
 		this.messageDate = messageDate;
 	}
 }

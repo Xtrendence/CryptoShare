@@ -4,12 +4,12 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
-export async function createMessage({ token, userID, userMessage, botMessage }: any) {
+export async function createMessage({ token, userID, message }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("INSERT INTO Message (userID, userMessage, botMessage, messageDate) VALUES (?, ?, ?, TIME())", [userID, userMessage, botMessage]);
+			db.runQuery("INSERT INTO Message (userID, message, messageDate) VALUES (?, ?, TIME())", [userID, message]);
 			return "Done";
 		} else {
 			return "Unauthorized";
@@ -39,7 +39,7 @@ export async function readMessage({ token, userID }: any) {
 						let messages: Array<Message> = [];
 
 						rows.map(row => {
-							let message = new Message(userID, row.userMessage, row.botMessage, row.messageDate);
+							let message = new Message(userID, row.message, row.messageDate);
 							message.messageID = row.messageID;
 							messages.push(message);
 						});
@@ -57,12 +57,12 @@ export async function readMessage({ token, userID }: any) {
 	});
 }
 
-export async function updateMessage({ token, userID, messageID, userMessage, botMessage }: any) {
+export async function updateMessage({ token, userID, messageID, message }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("UPDATE Message SET userMessage = ?, botMessage = ? WHERE messageID = ? AND userID = ?", [userMessage, botMessage, messageID, userID]);
+			db.runQuery("UPDATE Message SET message = ? WHERE messageID = ? AND userID = ?", [message, messageID, userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";

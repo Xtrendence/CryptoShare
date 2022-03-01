@@ -143,7 +143,7 @@ function readMessage(token, userID) {
 	let query = {
 		query: `query readMessage($token: String!, $userID: Int!) {
 			readMessage(token: $token, userID: $userID) {
-				messageID, userMessage, botMessage, messageDate
+				messageID, message, messageDate
 			}
 		}`,
 		variables: {
@@ -220,16 +220,15 @@ function createWatchlist(token, userID, assetID, assetSymbol, assetType) {
 	return request("POST", urlAPI, query, null);
 }
 
-function createMessage(token, userID, userMessage, botMessage) {
+function createMessage(token, userID, message) {
 	let query = {
-		query: `mutation createMessage($token: String!, $userID: Int!, $userMessage: String!, $botMessage: String!) {
-			createMessage(token: $token, userID: $userID, userMessage: $userMessage, botMessage: $botMessage)
+		query: `mutation createMessage($token: String!, $userID: Int!, $message: String!) {
+			createMessage(token: $token, userID: $userID, message: $message)
 		}`,
 		variables: {
 			token: token,
 			userID: parseInt(userID),
-			userMessage: userMessage,
-			botMessage: botMessage
+			message: message,
 		}
 	};
 
