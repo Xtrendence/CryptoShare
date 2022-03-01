@@ -112,6 +112,18 @@ async function processRequest(processedIntent) {
 			document.getElementById("popup-input-price").value = processedIntent?.price || "";
 			document.getElementById("popup-button-confirm").click();
 		}
+
+		if(processedIntent.category === "holding") {
+			if(processedIntent.type === "crypto") {
+				buttonHoldingsAddCryptoAsset.click();
+			} else {
+				buttonHoldingsAddStockAsset.click();
+			}
+
+			document.getElementById(`popup-input-symbol-${processedIntent.type}`).value = processedIntent?.asset || "";
+			document.getElementById(`popup-input-amount-${processedIntent.type}`).value = processedIntent?.amount || "";
+			document.getElementById("popup-button-confirm").click();
+		}
 	} catch(error) {
 		console.log(error);
 		addMessage("bot", "Sorry, I couldn't process that request.");
@@ -131,8 +143,13 @@ function processIntent(entities, intent) {
 			processActivity(entities, intent, details);
 			break;
 		case "holding":
-			processHolding(entities, intent, details);
-			break;
+			if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+				processHolding(entities, intent, details);
+				break;
+			} else {
+				addMessage("bot", "Please set transactions to not affect holdings in the settings page first.");
+				break;
+			}
 		case "watchlist":
 			processWatchlist(intent, details);
 			break;
@@ -244,7 +261,7 @@ function processHolding(entities, intent, details) {
 
 	let match;
 
-	if(intent.utterance.match("(set)")) {
+	if(intent.utterance.match("(set|add)")) {
 		match = intent.utterance.match(/\w+(?=\s+((holding)))/gi);
 		details["amount"] = parseFloat(lastEntity.resolution.value);
 	} else if(intent.utterance.match("(remove|delete)")) {
@@ -380,6 +397,8 @@ function attachSocketEvents(socket) {
 
 			return;
 		}
+
+		processIntent(entities, intent);
 	});
 }
 
