@@ -98,8 +98,24 @@ function determineIntent(processed) {
 	}
 }
 
-function processRequest(processedIntent) {
-	console.log(processedIntent);
+async function processRequest(processedIntent) {
+	try {
+		console.log(processedIntent);
+
+		if(processedIntent.category === "activity") {
+			buttonActivityAdd.click();
+			document.getElementById("popup-input-symbol").value = processedIntent?.asset || "";
+			document.getElementById(`popup-choice-${processedIntent.type}`).click();
+			document.getElementById("popup-input-amount").value = processedIntent?.amount || "";
+			document.getElementById("popup-input-date").value = processedIntent?.date || "";
+			document.getElementById(`popup-choice-${processedIntent.action}`).click();
+			document.getElementById("popup-input-price").value = processedIntent?.price || "";
+			document.getElementById("popup-button-confirm").click();
+		}
+	} catch(error) {
+		console.log(error);
+		addMessage("bot", "Sorry, I couldn't process that request.");
+	}
 }
 
 function processIntent(entities, intent) {
@@ -150,6 +166,11 @@ function processActivity(entities, intent, details) {
 
 	if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && intent.utterance.match("(for)")) {
 		regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+		valueGiven = true;
+	}
+
+	if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
+		regex = /(?<=bought [0-9]*.[0-9]* )\w+/gi;
 		valueGiven = true;
 	}
 

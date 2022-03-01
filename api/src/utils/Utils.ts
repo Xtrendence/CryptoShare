@@ -127,6 +127,8 @@ export default class Utils {
 	static verifyTokenTime(token: string) {
 		let now = Math.floor(new Date().getTime() / 1000);
 		let time = parseInt(token.split("-")[0]);
+
+		// Tokens last 30 days.
 		if(now - time > 2629746) {
 			return false;
 		}
