@@ -170,7 +170,7 @@ let botFunctions = {
 	async createTransaction(details) {
 
 	},
-	
+
 	async createActivity(details) {
 
 	},
@@ -188,7 +188,33 @@ let botFunctions = {
 	},
 
 	async updateIncome(details) {
+		let income = details.income;
+		
+		let currency = getCurrency();
 
+		let budgetData = await fetchBudget();
+
+		let userID = localStorage.getItem("userID");
+		let token = localStorage.getItem("token");
+		let key = localStorage.getItem("key");
+
+		if(empty(budgetData)) {
+			await setDefaultBudgetData();
+			budgetData = await fetchBudget();
+		}
+
+		if(isNaN(income) || parseFloat(income) < 0) {
+			errorNotification("Income has to be zero or greater.");
+			return;
+		}
+
+		budgetData.income = parseFloat(income);
+
+		let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+		await updateBudget(token, userID, encrypted);
+
+		addMessage("bot", `Your yearly income has been set to ${currencySymbols[currency] + separateThousands(budgetData.income)}.`);
 	},
 
 	async checkAffordability(details) {
