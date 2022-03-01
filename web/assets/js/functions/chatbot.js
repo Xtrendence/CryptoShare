@@ -95,6 +95,10 @@ function determineIntent(processed) {
 		let action;
 
 		switch(utterance) {
+			case utterance.match("(rent|mortgage|bill|fuel|gas|insurance|spent)")?.input:
+				category = "transaction";
+				action = "buy";
+				break;
 			case utterance.match("(bought|buy)")?.input:
 				category = "activity-or-transaction";
 				action = "buy";
@@ -325,6 +329,25 @@ function processOther(entities, intent, details) {
 
 function processTransaction(entities, intent, details) {
 	try {
+		if(intent.utterance.match("(rent|gas|fuel|mortgage)")) {
+			if(intent.utterance.match("(rent)")) {
+				details["item"] = "Rent";
+				details["type"] = "housing";
+			} else if(intent.utterance.match("(gas)")) {
+				details["item"] = "Gas";
+				details["type"] = "transport";
+			} else if(intent.utterance.match("(fuel)")) {
+				details["item"] = "Fuel";
+				details["type"] = "transport";
+			} else if(intent.utterance.match("(mortgage)")) {
+				details["item"] = "Mortgage";
+				details["type"] = "housing";
+			} else if(intent.utterance.match("(insurance)")) {
+				details["item"] = "Insurance";
+				details["type"] = "insurance";
+			}
+		}
+
 		if(empty(details?.type)) {
 			requireClarification("What budget category does this belong to?", {
 				Food: () => {
@@ -370,13 +393,16 @@ function processTransaction(entities, intent, details) {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
 
-		if(intent.action.match("(buy|sell)") && intent.utterance.match("(for)")) {
-			regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+		let regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+
+		if(!("item") in details || empty(details?.item)) {
+			let match = intent.utterance.match(regex);
+			details["item"] = match[0];
 		}
 
-		let match = intent.utterance.match(regex);
-
-		details["item"] = match[0];
+		if(entities[0]?.typeName.includes("number")) {
+			details["price"] = parseFloat(entities[0].resolution.value);
+		}
 
 		if(entities[1]?.typeName.includes("number")) {
 			details["price"] = parseFloat(entities[1].resolution.value);
