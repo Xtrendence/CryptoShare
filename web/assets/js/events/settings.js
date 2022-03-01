@@ -128,7 +128,7 @@ buttonSettingsPassword.addEventListener("click", () => {
 });
 
 buttonSettingsDeleteAccount.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Delete Account", `<span>Are you sure you want to delete your account?</span>`, { page:"settings" });
+	let popup = new Popup(300, "auto", "Delete Account", `<span>Are you sure you want to delete your account?</span>`, { confirmText:"Delete", page:"settings" });
 	popup.show();
 
 	popup.on("confirm", () => {
