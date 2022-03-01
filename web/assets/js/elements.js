@@ -34,6 +34,7 @@ let divSideMenuBottom = document.getElementById("side-menu-bottom");
 
 let buttonSideMenuClose = document.getElementById("button-side-menu-close");
 
+let divPageChatBot = document.getElementById("chatbot-page");
 let divChatList = document.getElementById("chat-list");
 let divChatStatus = document.getElementById("chat-status");
 let divChatOptions = document.getElementById("chat-options");

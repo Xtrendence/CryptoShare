@@ -1209,6 +1209,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	background:var(--main-first-transparent);
 }
 .page.chatbot .chat-list.options {
+	height:calc(100% - 60px - 60px - 44px - 6px);
+}
+.page.chatbot.scroll-options .chat-list.options {
 	height:calc(100% - 60px - 60px - 50px - 6px);
 }
 .page.chatbot .chat-list .chat-bubble-wrapper {
@@ -1251,7 +1254,7 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-width:2px 0 0 0;
 	background:var(--main-second-transparent);
 }
-.page.chatbot .chat-options-wrapper.scroll {
+.page.chatbot.scroll-options .chat-options-wrapper {
 	height:50px;
 }
 .page.chatbot .chat-options-wrapper button {

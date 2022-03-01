@@ -88,7 +88,14 @@ function determineIntent(processed) {
 				} else if(utterance.match("(stop|remove|delete)")) {
 					action = "delete";
 				}
-
+				break;
+			case utterance.match("(income|yearly|salary)")?.input:
+				category = "income";
+				action = "update";
+				break;
+			case utterance.match("(afford)")?.input:
+				category = "afford";
+				action = "read";
 				break;
 		}
 
@@ -102,28 +109,7 @@ async function processRequest(processedIntent) {
 	try {
 		console.log(processedIntent);
 
-		if(processedIntent.category === "activity") {
-			buttonActivityAdd.click();
-			document.getElementById("popup-input-symbol").value = processedIntent?.asset || "";
-			document.getElementById(`popup-choice-${processedIntent.type}`).click();
-			document.getElementById("popup-input-amount").value = processedIntent?.amount || "";
-			document.getElementById("popup-input-date").value = processedIntent?.date || "";
-			document.getElementById(`popup-choice-${processedIntent.action}`).click();
-			document.getElementById("popup-input-price").value = processedIntent?.price || "";
-			document.getElementById("popup-button-confirm").click();
-		}
-
-		if(processedIntent.category === "holding") {
-			if(processedIntent.type === "crypto") {
-				buttonHoldingsAddCryptoAsset.click();
-			} else {
-				buttonHoldingsAddStockAsset.click();
-			}
-
-			document.getElementById(`popup-input-symbol-${processedIntent.type}`).value = processedIntent?.asset || "";
-			document.getElementById(`popup-input-amount-${processedIntent.type}`).value = processedIntent?.amount || "";
-			document.getElementById("popup-button-confirm").click();
-		}
+		
 	} catch(error) {
 		console.log(error);
 		addMessage("bot", "Sorry, I couldn't process that request.");
@@ -131,186 +117,392 @@ async function processRequest(processedIntent) {
 }
 
 function processIntent(entities, intent) {
-	clearChatOptions();
+	try {
+		clearChatOptions();
 
-	let details = {};
-	details["category"] = intent.category;
-	details["action"] = intent.action;
-	details["type"] = null;
+		let details = {};
+		details["category"] = intent.category;
+		details["action"] = intent.action;
+		details["type"] = null;
 
-	switch(intent.category) {
-		case "activity":
-			processActivity(entities, intent, details);
-			break;
-		case "holding":
-			if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
-				processHolding(entities, intent, details);
-				break;
-			} else {
-				addMessage("bot", "Please set transactions to not affect holdings in the settings page first.");
-				break;
+		switch(intent.category) {
+			case "transaction":
+				processTransaction(entities, intent, details);
+				return;
+			case "activity":
+				processActivity(entities, intent, details);
+				return;
+			case "holding":
+				if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+					processHolding(entities, intent, details);
+					return;
+				} else {
+					addMessage("bot", "Please set transactions to not affect holdings in the settings page first.");
+					return;
+				}
+			case "watchlist":
+				processWatchlist(entities, intent, details);
+				return;
+			case "income":
+				processIncome(entities, intent, details);
+				return;
+			case "afford":
+				processAfford(entities, intent, details);
+				return;
+		}
+
+		processOther(entities, intent, details);
+	} catch(error) {
+		console.log(error);
+	}
+}
+
+function processOther(entities, intent, details) {
+	if(intent.utterance.match("(help)")) {
+		requireClarification("What are you trying to do?", {
+			"Check Affordability": () => {
+				addMessage("user", "See if I can afford something.");
+			},
+			"Set Income": () => {
+				addMessage("user", "Set income.");
+			},
+			"Set Holding": () => {
+				addMessage("user", "Set holding.");
+			},
+			"Record Transaction": () => {
+				addMessage("user", "Record a transaction.");
+			},
+			"Record Activity": () => {
+				addMessage("user", "Record an activity.");
+			},
+			"Edit Watchlist": () => {
+				addMessage("user", "Edit my watchlist.");
+			},
+		});
+	}
+}
+
+function processTransaction(entities, intent, details) {
+	try {
+		if(empty(details?.type)) {
+			requireClarification("What budget category does this belong to?", {
+				Food: () => {
+					details.type = "food";
+					addMessage("user", "Food.");
+					processTransaction(entities, intent, details);
+				},
+				Housing: () => {
+					details.type = "housing";
+					addMessage("user", "Housing.");
+					processTransaction(entities, intent, details);
+				},
+				Transport: () => {
+					details.type = "transport";
+					addMessage("user", "Transport.");
+					processTransaction(entities, intent, details);
+				},
+				Entertainment: () => {
+					details.type = "entertainment";
+					addMessage("user", "Entertainment.");
+					processTransaction(entities, intent, details);
+				},
+				Insurance: () => {
+					details.type = "insurance";
+					addMessage("user", "Insurance.");
+					processTransaction(entities, intent, details);
+				},
+				Savings: () => {
+					details.type = "savings";
+					addMessage("user", "Savings.");
+					processTransaction(entities, intent, details);
+				},
+				Other: () => {
+					details.type = "other";
+					addMessage("user", "Other.");
+					processTransaction(entities, intent, details);
+				},
+			});
+
+			return;
+		}
+
+		let numberOfEntities = entities.length;
+		let lastEntity = entities[numberOfEntities - 1];
+
+		if(intent.action.match("(buy|sell)") && intent.utterance.match("(for)")) {
+			regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+		}
+
+		let match = intent.utterance.match(regex);
+
+		details["item"] = match[0];
+
+		if(entities[1]?.typeName.includes("number")) {
+			details["price"] = parseFloat(entities[1].resolution.value);
+
+			if(!empty(lastEntity) && lastEntity?.typeName.includes("date")) {
+				details["date"] = lastEntity.resolution.values[0].value;
 			}
-		case "watchlist":
-			processWatchlist(intent, details);
-			break;
+		} else if(entities[1]?.typeName.includes("date")) {
+			details["date"] = entities[1].resolution.values[0].value;
+		} else if(lastEntity?.typeName.includes("date")) {
+			details["date"] = lastEntity.resolution.values[0].value;
+		}
+
+		if(!("date" in details)) {
+			details["date"] = new Date().toISOString().split("T")[0]
+		}
+
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
+	}
+}
+
+function processIncome(entities, intent, details) {
+	try {
+		let income = entities[0]?.resolution?.value;
+		details.income = income;
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
+	}
+}
+
+function processAfford(entities, intent, details) {
+	try {
+		let price = entities[0]?.resolution?.value;
+		let item = intent.utterance.split(price)[1];
+		
+		details.price = price;
+		details.item = item.replaceAll("?", "");
+
+		if(empty(details?.type)) {
+			requireClarification("What budget category does this belong to?", {
+				Food: () => {
+					details.type = "food";
+					addMessage("user", "Food.");
+					processAfford(entities, intent, details);
+				},
+				Housing: () => {
+					details.type = "housing";
+					addMessage("user", "Housing.");
+					processAfford(entities, intent, details);
+				},
+				Transport: () => {
+					details.type = "transport";
+					addMessage("user", "Transport.");
+					processAfford(entities, intent, details);
+				},
+				Entertainment: () => {
+					details.type = "entertainment";
+					addMessage("user", "Entertainment.");
+					processAfford(entities, intent, details);
+				},
+				Insurance: () => {
+					details.type = "insurance";
+					addMessage("user", "Insurance.");
+					processAfford(entities, intent, details);
+				},
+				Savings: () => {
+					details.type = "savings";
+					addMessage("user", "Savings.");
+					processAfford(entities, intent, details);
+				},
+				Other: () => {
+					details.type = "other";
+					addMessage("user", "Other.");
+					processAfford(entities, intent, details);
+				},
+			});
+		}
+
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
 	}
 }
 
 function processActivity(entities, intent, details) {
-	if(empty(details?.type)) {
-		requireClarification("Is this a crypto or stock?", {
-			Crypto: () => {
-				addMessage("user", "Crypto.");
-				details.type = "crypto";
-				processActivity(entities, intent, details);
-			},
-			Stock: () => {
-				addMessage("user", "Stock.");
-				details.type = "stock";
-				processActivity(entities, intent, details);
-			}
-		});
+	try {
+		if(empty(details?.type)) {
+			requireClarification("Is this a crypto or stock?", {
+				Crypto: () => {
+					addMessage("user", "Crypto.");
+					details.type = "crypto";
+					processActivity(entities, intent, details);
+				},
+				Stock: () => {
+					addMessage("user", "Stock.");
+					details.type = "stock";
+					processActivity(entities, intent, details);
+				}
+			});
 
-		return;
-	}
-
-	let numberOfEntities = entities.length;
-	let lastEntity = entities[numberOfEntities - 1];
-
-	let valueGiven = false;
-
-	let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
-
-	if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && intent.utterance.match("(for)")) {
-		regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
-		valueGiven = true;
-	}
-
-	if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
-		regex = /(?<=bought [0-9]*.[0-9]* )\w+/gi;
-		valueGiven = true;
-	}
-
-	if(intent.action === "transfer") {
-		regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
-	}
-
-	let match = intent.utterance.match(regex);
-
-	let asset = match[0];
-	if(intent.action === "transfer") {
-		asset = match[0].split(" ").pop();
-
-		if(intent.utterance.includes("from")) {
-			let from = intent.utterance.match(/(from )+[A-Z]*/gi)[0].split(" ")[1];
-			details["from"] = capitalizeFirstLetter(from);
-			details["to"] = "Me";
-		} else if(intent.utterance.includes("to")) {
-			let to = intent.utterance.match(/(to )+[A-Z]*/gi)[0].split(" ")[1];
-			details["from"] = "Me";
-			details["to"] = capitalizeFirstLetter(to);
+			return;
 		}
-	}
 
-	details["amount"] = parseFloat(entities[0].resolution.value);
-	details["asset"] = asset;
+		let numberOfEntities = entities.length;
+		let lastEntity = entities[numberOfEntities - 1];
 
-	if(entities[1]?.typeName.includes("number")) {
-		if(intent.action !== "transfer") {
-			if(valueGiven) {
-				details["price"] = parseFloat(entities[1].resolution.value) / details.amount;
-			} else {
-				details["price"] = parseFloat(entities[1].resolution.value);
+		let valueGiven = false;
+
+		let regex = /\w+(?=\s+((at |@ )\$?[0-9]\d*\.?\d))/;
+
+		if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && intent.utterance.match("(for)")) {
+			regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+			valueGiven = true;
+		}
+
+		if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
+			regex = /(?<=bought [0-9]*.[0-9]* )\w+/gi;
+			valueGiven = true;
+		}
+
+		if(intent.action === "transfer") {
+			regex = /(transfer |transferred |send |sent |received )\$?\d*\.?\d\s+[A-Z]*/gi;
+		}
+
+		let match = intent.utterance.match(regex);
+
+		let asset = match[0];
+		if(intent.action === "transfer") {
+			asset = match[0].split(" ").pop();
+
+			if(intent.utterance.includes("from")) {
+				let from = intent.utterance.match(/(from )+[A-Z]*/gi)[0].split(" ")[1];
+				details["from"] = capitalizeFirstLetter(from);
+				details["to"] = "Me";
+			} else if(intent.utterance.includes("to")) {
+				let to = intent.utterance.match(/(to )+[A-Z]*/gi)[0].split(" ")[1];
+				details["from"] = "Me";
+				details["to"] = capitalizeFirstLetter(to);
 			}
 		}
 
-		if(!empty(lastEntity) && lastEntity?.typeName.includes("date")) {
+		details["amount"] = parseFloat(entities[0].resolution.value);
+		details["asset"] = asset;
+
+		if(entities[1]?.typeName.includes("number")) {
+			if(intent.action !== "transfer") {
+				if(valueGiven) {
+					details["price"] = parseFloat(entities[1].resolution.value) / details.amount;
+				} else {
+					details["price"] = parseFloat(entities[1].resolution.value);
+				}
+			}
+
+			if(!empty(lastEntity) && lastEntity?.typeName.includes("date")) {
+				details["date"] = lastEntity.resolution.values[0].value;
+			}
+		} else if(entities[1]?.typeName.includes("date")) {
+			details["date"] = entities[1].resolution.values[0].value;
+		} else if(lastEntity?.typeName.includes("date")) {
 			details["date"] = lastEntity.resolution.values[0].value;
 		}
-	} else if(entities[1]?.typeName.includes("date")) {
-		details["date"] = entities[1].resolution.values[0].value;
-	}
 
-	if(!("date" in details)) {
-		details["date"] = new Date().toISOString().split("T")[0]
-	}
+		if(!("date" in details)) {
+			details["date"] = new Date().toISOString().split("T")[0]
+		}
 
-	processRequest(details);
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
+	}
 }
 
 function processHolding(entities, intent, details) {
-	if(empty(details?.type)) {
-		requireClarification("Is this a crypto or stock?", {
-			Crypto: () => {
-				addMessage("user", "Crypto.");
-				details.type = "crypto";
-				processHolding(entities, intent, details);
-			},
-			Stock: () => {
-				addMessage("user", "Stock.");
-				details.type = "stock";
-				processHolding(entities, intent, details);
-			}
-		});
+	try {
+		if(empty(details?.type)) {
+			requireClarification("Is this a crypto or stock?", {
+				Crypto: () => {
+					addMessage("user", "Crypto.");
+					details.type = "crypto";
+					processHolding(entities, intent, details);
+				},
+				Stock: () => {
+					addMessage("user", "Stock.");
+					details.type = "stock";
+					processHolding(entities, intent, details);
+				}
+			});
 
-		return;
+			return;
+		}
+
+		let numberOfEntities = entities.length;
+		let lastEntity = entities[numberOfEntities - 1];
+
+		let match;
+
+		if(intent.utterance.match("(set|add)")) {
+			match = intent.utterance.match(/\w+(?=\s+((holding)))/gi);
+			details["amount"] = parseFloat(lastEntity.resolution.value);
+		} else if(intent.utterance.match("(remove|delete)")) {
+			match = intent.utterance.match(/\w+(?=\s+((from )))/);
+			details["action"] = "delete";
+		}
+
+		let asset = match[0];
+		details["asset"] = asset;
+
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
 	}
-
-	let numberOfEntities = entities.length;
-	let lastEntity = entities[numberOfEntities - 1];
-
-	let match;
-
-	if(intent.utterance.match("(set|add)")) {
-		match = intent.utterance.match(/\w+(?=\s+((holding)))/gi);
-		details["amount"] = parseFloat(lastEntity.resolution.value);
-	} else if(intent.utterance.match("(remove|delete)")) {
-		match = intent.utterance.match(/\w+(?=\s+((from )))/);
-		details["action"] = "delete";
-	}
-
-	let asset = match[0];
-	details["asset"] = asset;
-
-	processRequest(details);
 }
 
-function processWatchlist(intent, details) {
-	if(empty(details?.type)) {
-		requireClarification("Is this a crypto or stock?", {
-			Crypto: () => {
-				addMessage("user", "Crypto.");
-				details.type = "crypto";
-				processWatchlist(entities, intent, details);
-			},
-			Stock: () => {
-				addMessage("user", "Stock.");
-				details.type = "stock";
-				processWatchlist(entities, intent, details);
-			}
-		});
+function processWatchlist(entities, intent, details) {
+	try {
+		if(empty(details?.type)) {
+			requireClarification("Is this a crypto or stock?", {
+				Crypto: () => {
+					addMessage("user", "Crypto.");
+					details.type = "crypto";
+					processWatchlist(entities, intent, details);
+				},
+				Stock: () => {
+					addMessage("user", "Stock.");
+					details.type = "stock";
+					processWatchlist(entities, intent, details);
+				}
+			});
 
-		return;
+			return;
+		}
+
+		let match;
+
+		if(intent.utterance.match("(add|set)")) {
+			match = intent.utterance.match(/\w+(?=\s+((to )))/gi);
+		} else if(intent.utterance.match("(remove|delete)")) {
+			match = intent.utterance.match(/\w+(?=\s+((from )))/gi);
+		}
+
+		let asset = match[0];
+		details["asset"] = asset;
+
+		processRequest(details);
+	} catch(error) {
+		addMessage("bot", `Something went wrong. Please type "help" to learn how to use me.`);
+		console.log(error);
 	}
-
-	let match;
-
-	if(intent.utterance.match("(add|set)")) {
-		match = intent.utterance.match(/\w+(?=\s+((to )))/gi);
-	} else if(intent.utterance.match("(remove|delete)")) {
-		match = intent.utterance.match(/\w+(?=\s+((from )))/gi);
-	}
-
-	let asset = match[0];
-	details["asset"] = asset;
-
-	processRequest(details);
 }
 
 function requireClarification(message, options) {
 	addMessage("bot", message);
 
 	clearChatOptions();
+
+	options["Nevermind"] = () => {
+		addMessage("user", "Nevermind.");
+		clearChatOptions();
+	}
 
 	let choices = Object.keys(options);
 
@@ -323,18 +515,24 @@ function requireClarification(message, options) {
 		divChatOptions.appendChild(button);
 	});
 
+	divChatList.classList.add("options");
+
 	inputMessage.setAttribute("readonly", "true");
 
 	if(divChatOptions.scrollWidth > divChatOptions.clientWidth) {
-		divChatOptions.classList.add("scroll");
+		divPageChatBot.classList.add("scroll-options");
 	}
+
+	scrollChatToBottom();
 }
 
 function clearChatOptions() {
+	divChatList.classList.remove("options");
+	divPageChatBot.classList.remove("scroll-options");
 	inputMessage.removeAttribute("readonly");
 	divChatOptions.innerHTML = "";
 	divChatOptions.classList.add("hidden");
-	divChatOptions.classList.remove("scroll");
+	scrollChatToBottom();
 }
 
 function chatConnected() {
@@ -383,14 +581,14 @@ function attachSocketEvents(socket) {
 		
 		if(intent.category === "activity-or-transaction") {
 			requireClarification("Is this activity an asset trade?", {
-				No: () => {
-					addMessage("user", "No.");
-					intent.category = "transaction";
-					processIntent(entities, intent);
-				},
 				Yes: () => {
 					addMessage("user", "Yes.");
 					intent.category = "activity";
+					processIntent(entities, intent);
+				},
+				No: () => {
+					addMessage("user", "No.");
+					intent.category = "transaction";
 					processIntent(entities, intent);
 				}
 			});
