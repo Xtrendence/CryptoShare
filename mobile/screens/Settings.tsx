@@ -142,6 +142,22 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("currency") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Currency</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<ChoiceButton setting="USD" active={settings.currency} text="USD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"usd" }))}/>
+									<ChoiceButton setting="GBP" active={settings.currency} text="GBP" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"gbp" }))}/>
+									<ChoiceButton setting="EUR" active={settings.currency} text="EUR" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"eur" }))}/>
+									<ChoiceButton setting="CHF" active={settings.currency} text="CHF" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"chf" }))}/>
+									<ChoiceButton setting="AUD" active={settings.currency} text="AUD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"aud" }))}/>
+									<ChoiceButton setting="JPY" active={settings.currency} text="JPY" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"jpy" }))}/>
+									<ChoiceButton setting="CAD" active={settings.currency} text="CAD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"cad" }))}/>
+								</View>
+							</View>
+						}
 						{ Utils.filterSettings(search).includes("assetIconBackdrop") &&
 							<View style={[styles.section, styles[`section${theme}`]]}>
 								<View style={styles.sectionTop}>

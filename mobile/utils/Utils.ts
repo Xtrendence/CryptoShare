@@ -181,6 +181,7 @@ export default class Utils {
 			stockAPI: ["stock", "api", "key", "set", "change", "input"],
 			defaultPage: ["page", "default", "login", "area", "section", "load"],
 			transactionsAffectHoldings: ["transactions", "affect", "holdings", "activity", "record", "base"],
+			currency: ["currency", "fiat", "money", "cash", "region"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 			dateFormat: ["date", "format", "time", "activity", "transaction"],
 		};
