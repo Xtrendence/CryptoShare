@@ -136,16 +136,100 @@ function determineIntent(processed) {
 	}
 }
 
-async function processRequest(processedIntent) {
+function processRequest(processedIntent) {
 	try {
 		console.log(processedIntent);
 
-		
+		switch(processedIntent.category) {
+			case "transaction":
+				botFunctions.createTransaction(processedIntent);
+				break;
+			case "activity":
+				botFunctions.createActivity(processedIntent);
+				break;
+			case "holding":
+				botFunctions.updateHolding(processedIntent);
+				break;
+			case "watchlist":
+				botFunctions.createWatchlist(processedIntent);
+				break;
+			case "income":
+				botFunctions.updateIncome(processedIntent);
+				break;
+			case "afford":
+				botFunctions.checkAffordability(processedIntent);
+				break;
+		}
 	} catch(error) {
 		console.log(error);
 		addMessage("bot", "Sorry, I couldn't process that request.");
 	}
 }
+
+let botFunctions = {
+	async createTransaction(details) {
+
+	},
+	
+	async createActivity(details) {
+
+	},
+
+	async updateHolding(details) {
+
+	},
+
+	async createWatchlist(details) {
+
+	},
+
+	async deleteWatchlist(details) {
+
+	},
+
+	async updateIncome(details) {
+
+	},
+
+	async checkAffordability(details) {
+		let budgetData = await fetchBudget() || {};
+		let transactionData = await fetchTransaction() || {};
+
+		let currentDate = new Date();
+		let currentMonth = currentDate.getMonth();
+		let currentYear = currentDate.getFullYear();
+
+		transactionData = filterTransactionsByMonth(transactionData, currentMonth, currentYear);
+
+		let parsed = parseTransactionData(transactionData);
+	
+		let categories = budgetData.categories;
+		let income = budgetData.income;
+
+		let category = details.type;
+
+		let percentage = categories[category];
+		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
+		let remaining = amount - parsed[category];
+		let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
+		let used = amount - remaining;
+		let usedPercentage = 100 - remainingPercentage;
+
+		if(usedPercentage > 100) {
+			usedPercentage = 100;
+		}
+
+		let currency = getCurrency();
+
+		let price = parseFloat(details.price);
+
+		if(remaining >= price) {
+			addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you can afford to buy that.`);
+		} else {
+			addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you cannot afford to buy that.`);
+		}
+	}
+};
 
 function processIntent(entities, intent) {
 	try {
@@ -308,7 +392,11 @@ function processAfford(entities, intent, details) {
 		let item = intent.utterance.split(price)[1];
 		
 		details.price = price;
-		details.item = item.replaceAll("?", "");
+		details.item = item.replaceAll("?", "").toLowerCase().trim();
+
+		if(defaultFood.includes(details.item)) {
+			details.type = "food";
+		}
 
 		if(empty(details?.type)) {
 			requireClarification("What budget category does this belong to?", {
@@ -348,6 +436,8 @@ function processAfford(entities, intent, details) {
 					processAfford(entities, intent, details);
 				},
 			});
+
+			return;
 		}
 
 		processRequest(details);
