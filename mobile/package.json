@@ -72,7 +72,8 @@
 		"react-native-unimodules": "^0.14.10",
 		"react-native-vector-icons": "^9.0.0",
 		"react-native-web": "^0.17.5",
-		"react-redux": "^7.2.6"
+		"react-redux": "^7.2.6",
+		"socket.io-client": "^4.4.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.15.8",

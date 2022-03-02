@@ -1,6 +1,6 @@
 import React from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { ImageBackground, ScrollView } from "react-native";
+import { ImageBackground } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import styles from "../styles/ChatBot";
@@ -14,11 +14,9 @@ export default function ChatBot({ navigation }: any) {
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
-			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
-				<SafeAreaView style={styles.area}>
+			<SafeAreaView style={styles.area}>
 
-				</SafeAreaView>
-			</ScrollView>
+			</SafeAreaView>
 		</ImageBackground>
 	);
 }
