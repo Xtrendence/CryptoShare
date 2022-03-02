@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, ImageBackground, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import styles from "../styles/ChatBot";
+import styles, { wrapperHeight } from "../styles/ChatBot";
 import Utils from "../utils/Utils";
 import { sha256 } from "react-native-sha256";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -20,6 +20,7 @@ import Stock from "../utils/Stock";
 import { assetHoldingExists } from "./Holdings";
 import Item from "../components/MessageItem";
 import { Colors } from "../styles/Global";
+import { barHeight } from "../styles/NavigationBar";
 
 export default function ChatBot({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -34,6 +35,14 @@ export default function ChatBot({ navigation }: any) {
 	const [checksum, setChecksum] = useState<string>("");
 	const [header, setHeader] = useState<any>(null);
 	const [messageRows, setMessageRows] = useState<any>({});
+
+	const [input, setInput] = useState<string>("");
+	const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
+	const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+	const inputRef: any = useRef();
+
+	let keyboardDidHideListener: any = null;
+	let keyboardDidShowListener: any = null;
 
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
@@ -64,12 +73,15 @@ export default function ChatBot({ navigation }: any) {
 		}).catch(error => {
 			console.log(error);
 		});
+
+		keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", keyboardDidHide);
+		keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", keyboardDidShow);
 	}, []);
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
+				<KeyboardAvoidingView style={[styles.wrapper, styles[`wrapper${theme}`], keyboardVisible ? { height:wrapperHeight - keyboardHeight + barHeight } : null]}>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarTop]}>
 						<TouchableOpacity onPress={() => showMenu()} style={[styles.button, styles.iconButton, styles[`iconButton`], { width:44, position:"absolute", top:10, right:4, zIndex:10 }]}>
 							<Icon
@@ -89,9 +101,24 @@ export default function ChatBot({ navigation }: any) {
 						ListHeaderComponentStyle={styles.header}
 					/>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarBottom]}>
-
+						<TextInput
+							onSubmitEditing={() => sendMessage(input)}
+							ref={inputRef}
+							value={input}
+							spellCheck={true}
+							keyboardType="default"
+							autoCorrect={true}
+							placeholder="Say Something..." 
+							selectionColor={Colors[theme].mainContrast} 
+							placeholderTextColor={Colors[theme].mainContrastDarker} 
+							style={[styles.input, styles[`input${theme}`]]} 
+							onChangeText={(value) => setInput(value)}
+						/>
+						<TouchableOpacity onPress={() => sendMessage(input)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.sendButton]}>
+							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Send</Text>
+						</TouchableOpacity>
 					</View>
-				</View>
+				</KeyboardAvoidingView>
 			</SafeAreaView>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
@@ -114,6 +141,16 @@ export default function ChatBot({ navigation }: any) {
 		Keyboard.dismiss();
 		setPopup(false);
 		setPopupContent(null);
+	}
+
+	function keyboardDidHide(event: any) {
+		inputRef?.current?.blur();
+		setKeyboardVisible(false);
+	}
+
+	function keyboardDidShow(event: any) {
+		setKeyboardHeight(event.endCoordinates.height);
+		setKeyboardVisible(true);
 	}
 
 	function showMenu() {
@@ -140,7 +177,7 @@ export default function ChatBot({ navigation }: any) {
 
 	async function deleteChat() {
 		hidePopup();
-		
+
 		let userID = await AsyncStorage.getItem("userID");
 		let token = await AsyncStorage.getItem("token");
 		let api = await AsyncStorage.getItem("api");
@@ -914,18 +951,22 @@ export default function ChatBot({ navigation }: any) {
 	function attachSocketEvents(socket: any) {
 		socket.on("connect", () => {
 			setStatus("Connected");
+			setChatConnected(true);
 		});
 
 		socket.on("disconnect", () => {
 			setStatus("Disconnected");
+			setChatConnected(false);
 		});
 
 		socket.on("reconnection_attempt", () => {
 			setStatus("Reconnecting");
+			setChatConnected(false);
 		});
 
 		socket.on("reconnect", () => {
 			setStatus("Connected");
+			setChatConnected(true);
 		});
 
 		socket.on("response", (response: any) => {

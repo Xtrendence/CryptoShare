@@ -2,6 +2,8 @@ import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
+export let wrapperHeight = screenHeight - statusBarHeight - barHeight - actionBarHeight - 40;
+
 export default createStyle<any>({
 	scrollView: {
 		width: "100%",
@@ -36,7 +38,7 @@ export default createStyle<any>({
 		top: statusBarHeight + 20,
 		left: 20,
 		width: screenWidth - 40,
-		height: screenHeight - statusBarHeight - barHeight - actionBarHeight - 40,
+		height: wrapperHeight,
 		borderRadius: GlobalStyle.borderRadius,
 		backgroundColor: Colors.Dark.mainSecond,
 		shadowColor: GlobalStyle.shadowColor,
@@ -72,6 +74,31 @@ export default createStyle<any>({
 	wrapperBarBottom: {
 		bottom: 0,
 		borderTopWidth: 2
+	},
+	input: {
+		width: screenWidth - 40 - 110,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+		color: Colors.Dark.mainContrast,
+		paddingLeft: 10,
+		paddingRight: 10,
+		height: 40,
+		position: "absolute",
+		bottom: 10,
+		left: 10,
+		zIndex: 10,
+	},
+	inputLight: {
+		backgroundColor: Colors.Light.mainFirstTransparent,
+		color: Colors.Light.mainContrast,
+	},
+	sendButton: {
+		position: "absolute",
+		width: 80,
+		zIndex: 10,
+		right: 5,
+		bottom: 10,
+		margin: 0
 	},
 	button: {
 		width: (screenWidth / 2) - 35,
