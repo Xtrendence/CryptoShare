@@ -643,24 +643,33 @@ function processIntent(entities, intent) {
 
 function processOther(entities, intent, details) {
 	if(intent.utterance.match("(help)")) {
+		let currencySymbol = currencySymbols[getCurrency()];
+
 		requireClarification("What are you trying to do?", {
-			"Check Affordability": () => {
-				addMessage("user", "See if I can afford something.");
+			"Check Affordability": async () => {
+				await addMessage("user", "See if I can afford something.");
+				await addMessage("bot", `Example: Can I afford a ${currencySymbol}20 pizza?`);
 			},
-			"Set Income": () => {
-				addMessage("user", "Set income.");
+			"Set Income": async () => {
+				await addMessage("user", "Set income.");
+				await addMessage("bot", `Example: Set my income to ${currencySymbol}50000.`);
 			},
-			"Set Holding": () => {
-				addMessage("user", "Set holding.");
+			"Set Holding": async () => {
+				await addMessage("user", "Set holding.");
+				await addMessage("bot", `Example: Set my BTC holdings to 5.`);
 			},
-			"Record Transaction": () => {
-				addMessage("user", "Record a transaction.");
+			"Record Transaction": async () => {
+				await addMessage("user", "Record a transaction.");
+				await addMessage("bot", `Example: I bought a train ticket for $50 yesterday.`);
 			},
-			"Record Activity": () => {
-				addMessage("user", "Record an activity.");
+			"Record Activity": async () => {
+				await addMessage("user", "Record an activity.");
+				await addMessage("bot", `Example: I bought 2 BTC today.`);
 			},
-			"Edit Watchlist": () => {
-				addMessage("user", "Edit my watchlist.");
+			"Edit Watchlist": async () => {
+				await addMessage("user", "Edit my watchlist.");
+				await addMessage("bot", `Example: Add BTC to my watchlist.`);
+				await addMessage("bot", `Example: Remove BTC from my watchlist.`);
 			},
 		});
 	}
