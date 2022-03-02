@@ -818,14 +818,8 @@ function addTransactionButtonEvent(button) {
 	});
 }
 
-function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes) {
+function validateTransactionData(amount, type, category, date, notes) {
 	try {
-		let amount = popupInputAmount.value;
-		let type = popupChoiceEarned.classList.contains("active") ? "earned" : "spent";
-		let category = popupInputCategory.value;
-		let date = popupInputDate.value;
-		let notes = popupInputNotes.value;
-
 		if(empty(amount) || isNaN(amount) || parseFloat(amount) <= 0) {
 			return { error:"Amount must be a number, and greater than zero." };
 		}
@@ -849,6 +843,20 @@ function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInp
 		}
 
 		return { transactionAmount:amount, transactionType:type, transactionCategory:category.toLowerCase(), transactionDate:date, transactionNotes:notes };
+	} catch(error) {
+		return { error:error };
+	}
+}
+
+function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes) {
+	try {
+		let amount = popupInputAmount.value;
+		let type = popupChoiceEarned.classList.contains("active") ? "earned" : "spent";
+		let category = popupInputCategory.value;
+		let date = popupInputDate.value;
+		let notes = popupInputNotes.value;
+
+		return validateTransactionData(amount, type, category, date, notes);
 	} catch(error) {
 		console.log(error);
 		return { error:"Invalid data." };

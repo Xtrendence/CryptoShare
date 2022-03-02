@@ -23,6 +23,10 @@ buttonChatMenu.addEventListener("click", () => {
 
 				await deleteMessageAll(token, userID);
 
+				divChatList.removeAttribute("data-checksum");
+				divChatList.innerHTML = "";
+				clearChatOptions();
+
 				populateChatList(true);
 
 				hideLoading();

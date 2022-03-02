@@ -17,8 +17,10 @@ async function populateChatList(recreate) {
 			if(divChatList.getElementsByClassName("loading-icon").length > 0 || divChatList.getAttribute("data-checksum") !== checksum) {
 				divChatList.innerHTML = "";
 
-				Object.keys(messages).map(index => {
-					let message = messages[index];
+				let sorted = sortMessages(messages);
+
+				sorted.keys.map(index => {
+					let message = sorted.messages[index];
 					let text = message.message;
 
 					if(validJSON(text)) {
@@ -40,20 +42,46 @@ async function populateChatList(recreate) {
 	}
 }
 
-function sendMessage(message) {
+function sortMessages(messages) {
+	let sorted = {};
+	let sortedKeys = [];
+	let array = [];
+
+	for(let message in messages) {
+		array.push([message, messages[message].messageDate]);
+	}
+
+	array.sort(function(a, b) {
+		return new Date(a[1]).getTime() - new Date(b[1]).getTime();
+	});
+
+	array.map(item => {
+		sorted[item[0]] = messages[item[0]];
+		sortedKeys.push(item[0]);
+	});
+
+	return { messages:sorted, keys:sortedKeys };
+}
+
+async function sendMessage(message) {
 	if(empty(message)) {
 		return;
 	}
 
 	if(chatConnected()) {
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
 
-		addMessage("user", message);
+			await addMessage("user", message);
 
-		setTimeout(() => {
-			socket.emit("message", { userID:userID, token:token, message:message });
-		}, 500);
+			setTimeout(() => {
+				socket.emit("message", { userID:userID, token:token, message:message });
+			}, 500);
+		} catch(error) {
+			errorNotification("Something went wrong...");
+			console.log(error);
+		}
 	} else {
 		errorNotification("You aren't connected to the chat bot.");
 	}
@@ -71,21 +99,30 @@ function listMessage(from, message) {
 }
 
 async function addMessage(from, message) {
-	message = stripHTMLCharacters(message);
+	return new Promise(async (resolve, reject) => {
+		try {
+			message = stripHTMLCharacters(message);
 
-	clearChatOptions();
+			clearChatOptions();
 
-	listMessage(from, message);
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
 
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
-	let key = localStorage.getItem("key");
+			let json = JSON.stringify({ from:from, message:message });
 
-	let json = JSON.stringify({ from:from, message:message });
+			let encrypted = CryptoFN.encryptAES(json, key);
 
-	let encrypted = CryptoFN.encryptAES(json, key);
+			await createMessage(token, userID, encrypted);
+			
+			listMessage(from, message);
 
-	await createMessage(token, userID, encrypted);
+			resolve(null);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }
 
 function determineIntent(processed) {
@@ -172,91 +209,140 @@ function processRequest(processedIntent) {
 
 let botFunctions = {
 	async createTransaction(details) {
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
 
+			let data = validateTransactionData(details.price, "spent", details.type, details.date, details.item);
+
+			if("error" in data) {
+				addMessage("bot", data.error);
+				return;
+			}
+
+			let encrypted = encryptObjectValues(key, data);
+
+			await createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+		} catch(error) {
+			console.log(error);
+		}
 	},
 
 	async createActivity(details) {
-
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+		} catch(error) {
+			console.log(error);
+		}
 	},
 
 	async updateHolding(details) {
-
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+		} catch(error) {
+			console.log(error);
+		}
 	},
 
 	async createWatchlist(details) {
-
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+		} catch(error) {
+			console.log(error);
+		}
 	},
 
 	async deleteWatchlist(details) {
-
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
+		} catch(error) {
+			console.log(error);
+		}
 	},
 
 	async updateIncome(details) {
-		let income = details.income;
-		
-		let currency = getCurrency();
+		try {
+			let userID = localStorage.getItem("userID");
+			let token = localStorage.getItem("token");
+			let key = localStorage.getItem("key");
 
-		let budgetData = await fetchBudget();
+			let income = details.income;
+			
+			let currency = getCurrency();
 
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
-		let key = localStorage.getItem("key");
+			let budgetData = await fetchBudget();
 
-		if(empty(budgetData)) {
-			await setDefaultBudgetData();
-			budgetData = await fetchBudget();
+			if(empty(budgetData)) {
+				await setDefaultBudgetData();
+				budgetData = await fetchBudget();
+			}
+
+			if(isNaN(income) || parseFloat(income) < 0) {
+				errorNotification("Income has to be zero or greater.");
+				return;
+			}
+
+			budgetData.income = parseFloat(income);
+
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+			await updateBudget(token, userID, encrypted);
+
+			addMessage("bot", `Your yearly income has been set to ${currencySymbols[currency] + separateThousands(budgetData.income)}.`);
+		} catch(error) {
+			console.log(error);
 		}
-
-		if(isNaN(income) || parseFloat(income) < 0) {
-			errorNotification("Income has to be zero or greater.");
-			return;
-		}
-
-		budgetData.income = parseFloat(income);
-
-		let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
-
-		await updateBudget(token, userID, encrypted);
-
-		addMessage("bot", `Your yearly income has been set to ${currencySymbols[currency] + separateThousands(budgetData.income)}.`);
 	},
 
 	async checkAffordability(details) {
-		let budgetData = await fetchBudget() || {};
-		let transactionData = await fetchTransaction() || {};
+		try {
+			let budgetData = await fetchBudget() || {};
+			let transactionData = await fetchTransaction() || {};
 
-		let currentDate = new Date();
-		let currentMonth = currentDate.getMonth();
-		let currentYear = currentDate.getFullYear();
+			let currentDate = new Date();
+			let currentMonth = currentDate.getMonth();
+			let currentYear = currentDate.getFullYear();
 
-		transactionData = filterTransactionsByMonth(transactionData, currentMonth, currentYear);
+			transactionData = filterTransactionsByMonth(transactionData, currentMonth, currentYear);
 
-		let parsed = parseTransactionData(transactionData);
-	
-		let categories = budgetData.categories;
-		let income = budgetData.income;
+			let parsed = parseTransactionData(transactionData);
+		
+			let categories = budgetData.categories;
+			let income = budgetData.income;
 
-		let category = details.type;
+			let category = details.type;
 
-		let percentage = categories[category];
-		let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
-		let remaining = amount - parsed[category];
-		let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
-		let used = amount - remaining;
-		let usedPercentage = 100 - remainingPercentage;
+			let percentage = categories[category];
+			let amount = parseFloat((((percentage * income) / 100) / 12).toFixed(0));
+			let remaining = amount - parsed[category];
+			let remainingPercentage = parseFloat(((remaining * 100) / amount).toFixed(0));
+			let used = amount - remaining;
+			let usedPercentage = 100 - remainingPercentage;
 
-		if(usedPercentage > 100) {
-			usedPercentage = 100;
-		}
+			if(usedPercentage > 100) {
+				usedPercentage = 100;
+			}
 
-		let currency = getCurrency();
+			let currency = getCurrency();
 
-		let price = parseFloat(details.price);
+			let price = parseFloat(details.price);
 
-		if(remaining >= price) {
-			addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you can afford to buy that.`);
-		} else {
-			addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you cannot afford to buy that.`);
+			if(remaining >= price) {
+				addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you can afford to buy that.`);
+			} else {
+				addMessage("bot", `You've used ${usedPercentage}% (${currencySymbols[currency] + used}) of your ${category} budget this month, so you cannot afford to buy that.`);
+			}
+		} catch(error) {
+			console.log(error);
 		}
 	}
 };
@@ -350,40 +436,75 @@ function processTransaction(entities, intent, details) {
 
 		if(empty(details?.type)) {
 			requireClarification("What budget category does this belong to?", {
-				Food: () => {
-					details.type = "food";
-					addMessage("user", "Food.");
-					processTransaction(entities, intent, details);
+				Food: async () => {
+					try {
+						details.type = "food";
+						await addMessage("user", "Food.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Housing: () => {
-					details.type = "housing";
-					addMessage("user", "Housing.");
-					processTransaction(entities, intent, details);
+				Housing: async () => {
+					try {
+						details.type = "housing";
+						await addMessage("user", "Housing.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Transport: () => {
-					details.type = "transport";
-					addMessage("user", "Transport.");
-					processTransaction(entities, intent, details);
+				Transport: async () => {
+					try {
+						details.type = "transport";
+						await addMessage("user", "Transport.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Entertainment: () => {
-					details.type = "entertainment";
-					addMessage("user", "Entertainment.");
-					processTransaction(entities, intent, details);
+				Entertainment: async () => {
+					try {
+						details.type = "entertainment";
+						await addMessage("user", "Entertainment.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Insurance: () => {
-					details.type = "insurance";
-					addMessage("user", "Insurance.");
-					processTransaction(entities, intent, details);
+				Insurance: async () => {
+					try {
+						details.type = "insurance";
+						await addMessage("user", "Insurance.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Savings: () => {
-					details.type = "savings";
-					addMessage("user", "Savings.");
-					processTransaction(entities, intent, details);
+				Savings: async () => {
+					try {
+						details.type = "savings";
+						await addMessage("user", "Savings.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Other: () => {
-					details.type = "other";
-					addMessage("user", "Other.");
-					processTransaction(entities, intent, details);
+				Other: async () => {
+					try {
+						details.type = "other";
+						await addMessage("user", "Other.");
+						processTransaction(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
 			});
 
@@ -393,11 +514,13 @@ function processTransaction(entities, intent, details) {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
 
-		let regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
-
 		if(!("item") in details || empty(details?.item)) {
-			let match = intent.utterance.match(regex);
-			details["item"] = match[0];
+			let start = intent.utterance.split("bought")[1];
+			let item = start.split("for")[0].replaceAll(" a ", "");
+			details["item"] = titleCase(item).trim();
+			// let regex = /\w+(?=\s+((for )\$?[0-9]\d*\.?\d))/;
+			// let match = intent.utterance.match(regex);
+			// details["item"] = match[0];
 		}
 
 		if(entities[0]?.typeName.includes("number")) {
@@ -452,40 +575,75 @@ function processAfford(entities, intent, details) {
 
 		if(empty(details?.type)) {
 			requireClarification("What budget category does this belong to?", {
-				Food: () => {
-					details.type = "food";
-					addMessage("user", "Food.");
-					processAfford(entities, intent, details);
+				Food: async () => {
+					try {
+						details.type = "food";
+						await addMessage("user", "Food.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Housing: () => {
-					details.type = "housing";
-					addMessage("user", "Housing.");
-					processAfford(entities, intent, details);
+				Housing: async () => {
+					try {
+						details.type = "housing";
+						await addMessage("user", "Housing.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Transport: () => {
-					details.type = "transport";
-					addMessage("user", "Transport.");
-					processAfford(entities, intent, details);
+				Transport: async () => {
+					try {
+						details.type = "transport";
+						await addMessage("user", "Transport.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Entertainment: () => {
-					details.type = "entertainment";
-					addMessage("user", "Entertainment.");
-					processAfford(entities, intent, details);
+				Entertainment: async () => {
+					try {
+						details.type = "entertainment";
+						await addMessage("user", "Entertainment.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Insurance: () => {
-					details.type = "insurance";
-					addMessage("user", "Insurance.");
-					processAfford(entities, intent, details);
+				Insurance: async () => {
+					try {
+						details.type = "insurance";
+						await addMessage("user", "Insurance.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Savings: () => {
-					details.type = "savings";
-					addMessage("user", "Savings.");
-					processAfford(entities, intent, details);
+				Savings: async () => {
+					try {
+						details.type = "savings";
+						await addMessage("user", "Savings.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Other: () => {
-					details.type = "other";
-					addMessage("user", "Other.");
-					processAfford(entities, intent, details);
+				Other: async () => {
+					try {
+						details.type = "other";
+						await addMessage("user", "Other.");
+						processAfford(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
 			});
 
@@ -503,15 +661,25 @@ function processActivity(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
 			requireClarification("Is this a crypto or stock?", {
-				Crypto: () => {
-					addMessage("user", "Crypto.");
-					details.type = "crypto";
-					processActivity(entities, intent, details);
+				Crypto: async () => {
+					try {
+						await addMessage("user", "Crypto.");
+						details.type = "crypto";
+						processActivity(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Stock: () => {
-					addMessage("user", "Stock.");
-					details.type = "stock";
-					processActivity(entities, intent, details);
+				Stock: async () => {
+					try {
+						await addMessage("user", "Stock.");
+						details.type = "stock";
+						processActivity(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				}
 			});
 
@@ -592,15 +760,25 @@ function processHolding(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
 			requireClarification("Is this a crypto or stock?", {
-				Crypto: () => {
-					addMessage("user", "Crypto.");
-					details.type = "crypto";
-					processHolding(entities, intent, details);
+				Crypto: async () => {
+					try {
+						await addMessage("user", "Crypto.");
+						details.type = "crypto";
+						processHolding(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Stock: () => {
-					addMessage("user", "Stock.");
-					details.type = "stock";
-					processHolding(entities, intent, details);
+				Stock: async () => {
+					try {
+						await addMessage("user", "Stock.");
+						details.type = "stock";
+						processHolding(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				}
 			});
 
@@ -634,15 +812,25 @@ function processWatchlist(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
 			requireClarification("Is this a crypto or stock?", {
-				Crypto: () => {
-					addMessage("user", "Crypto.");
-					details.type = "crypto";
-					processWatchlist(entities, intent, details);
+				Crypto: async () => {
+					try {
+						await addMessage("user", "Crypto.");
+						details.type = "crypto";
+						processWatchlist(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				Stock: () => {
-					addMessage("user", "Stock.");
-					details.type = "stock";
-					processWatchlist(entities, intent, details);
+				Stock: async () => {
+					try {
+						await addMessage("user", "Stock.");
+						details.type = "stock";
+						processWatchlist(entities, intent, details);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				}
 			});
 
@@ -667,36 +855,41 @@ function processWatchlist(entities, intent, details) {
 	}
 }
 
-function requireClarification(message, options) {
-	addMessage("bot", message);
+async function requireClarification(message, options) {
+	try {
+		await addMessage("bot", message);
 
-	clearChatOptions();
-
-	options["Nevermind"] = () => {
-		addMessage("user", "Nevermind.");
 		clearChatOptions();
+
+		options["Nevermind"] = async () => {
+			await addMessage("user", "Nevermind.");
+			clearChatOptions();
+		}
+
+		let choices = Object.keys(options);
+
+		choices.map(choice => {
+			let button = document.createElement("button");
+			button.textContent = choice;
+			button.setAttribute("class", "audible-pop");
+			button.addEventListener("click", options[choice]);
+			divChatOptions.classList.remove("hidden");
+			divChatOptions.appendChild(button);
+		});
+
+		divChatList.classList.add("options");
+
+		inputMessage.setAttribute("readonly", "true");
+
+		if(divChatOptions.scrollWidth > divChatOptions.clientWidth) {
+			divPageChatBot.classList.add("scroll-options");
+		}
+
+		scrollChatToBottom();
+	} catch(error) {
+		errorNotification("Something went wrong...");
+		console.log(error);
 	}
-
-	let choices = Object.keys(options);
-
-	choices.map(choice => {
-		let button = document.createElement("button");
-		button.textContent = choice;
-		button.setAttribute("class", "audible-pop");
-		button.addEventListener("click", options[choice]);
-		divChatOptions.classList.remove("hidden");
-		divChatOptions.appendChild(button);
-	});
-
-	divChatList.classList.add("options");
-
-	inputMessage.setAttribute("readonly", "true");
-
-	if(divChatOptions.scrollWidth > divChatOptions.clientWidth) {
-		divPageChatBot.classList.add("scroll-options");
-	}
-
-	scrollChatToBottom();
 }
 
 function dismissChatOptions() {
@@ -764,15 +957,25 @@ function attachSocketEvents(socket) {
 		
 		if(intent.category === "activity-or-transaction") {
 			requireClarification("Is this activity an asset trade?", {
-				Yes: () => {
-					addMessage("user", "Yes.");
-					intent.category = "activity";
-					processIntent(entities, intent);
+				Yes: async () => {
+					try {
+						await addMessage("user", "Yes.");
+						intent.category = "activity";
+						processIntent(entities, intent);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				},
-				No: () => {
-					addMessage("user", "No.");
-					intent.category = "transaction";
-					processIntent(entities, intent);
+				No: async () => {
+					try {
+						await addMessage("user", "No.");
+						intent.category = "transaction";
+						processIntent(entities, intent);
+					} catch(error) {
+						errorNotification("Something went wrong...");
+						console.log(error);
+					}
 				}
 			});
 

@@ -226,6 +226,10 @@ function capitalizeFirstLetter(string) {
 	return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+function titleCase(string) {
+	return string.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
+}
+
 function insertAfter(newNode, referenceNode) {
 	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
