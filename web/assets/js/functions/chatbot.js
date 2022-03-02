@@ -236,6 +236,88 @@ let botFunctions = {
 			let userID = localStorage.getItem("userID");
 			let token = localStorage.getItem("token");
 			let key = localStorage.getItem("key");
+
+			let currency = getCurrency();
+			let symbol = details.asset;
+
+			let amount = details.amount;
+			let type = details.type;
+			let date = details.date;
+			let action = details.action;
+
+			let values = {
+				activityAssetSymbol: symbol,
+				activityAssetType: type,
+				activityAssetAmount: amount,
+				activityDate: date,
+				activityFee: "",
+				activityNotes: "",
+				activityType: action,
+				activityExchange: "",
+				activityPair: "",
+				activityPrice: details?.price || "",
+				activityFrom: "",
+				activityTo: ""
+			};
+
+			let data = validateActivityData(values);
+
+			if(type === "crypto") {
+				let result = await getCoin({ symbol:symbol });
+
+				if("id" in details) {
+					result.id = details.id;
+				}
+
+				if("id" in result) {
+					let id = result.id;
+
+					data.activityAssetID = id;
+
+					let encrypted = encryptObjectValues(key, data);
+
+					await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+					addMessage("bot", "I've recorded that activity.");
+				} else {
+					let clarification = {};
+
+					Object.keys(result.matches).map(index => {
+						let match = result.matches[index];
+						let symbol = Object.keys(match)[0];
+						let id = match[symbol];
+
+						clarification[id] = async () => {
+							details.id = id;
+							await addMessage("user", id);
+							botFunctions.createActivity(details);
+						}
+					});
+
+					requireClarification("I found multiple assets with that symbol. Please choose one.", clarification);
+
+					return;
+				}
+			} else {
+				symbol = symbol.toUpperCase();
+
+				let resultPrice = await fetchStockPrice(currency, [symbol], true);
+
+				if("error" in resultPrice) {
+					addMessage("bot", resultPrice.error);
+					return;
+				}
+
+				let id = "stock-" + symbol;
+
+				data.activityAssetID = id;
+
+				let encrypted = encryptObjectValues(key, data);
+
+				await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+
+				addMessage("bot", "I've recorded that activity.");
+			}
 		} catch(error) {
 			console.log(error);
 		}
@@ -246,6 +328,87 @@ let botFunctions = {
 			let userID = localStorage.getItem("userID");
 			let token = localStorage.getItem("token");
 			let key = localStorage.getItem("key");
+
+			let currency = getCurrency();
+			let symbol = details.asset;
+
+			let amount = details.amount;
+			let type = details.type;
+
+			if(type === "crypto") {
+				let result = await getCoin({ symbol:symbol });
+
+				if("id" in details) {
+					result.id = details.id;
+				}
+
+				if("id" in result) {
+					let id = result.id;
+
+					let exists = await assetHoldingExists(id);
+
+					let encrypted = encryptObjectValues(key, {
+						holdingAssetID: id,
+						holdingAssetSymbol: symbol,
+						holdingAssetAmount: amount,
+						holdingAssetType: type
+					});
+
+					if(exists.exists) {
+						await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					} else {
+						await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					}
+
+					addMessage("bot", "I've updated your holdings.");
+				} else {
+					let clarification = {};
+
+					Object.keys(result.matches).map(index => {
+						let match = result.matches[index];
+						let symbol = Object.keys(match)[0];
+						let id = match[symbol];
+
+						clarification[id] = async () => {
+							details.id = id;
+							await addMessage("user", id);
+							botFunctions.updateHolding(details);
+						}
+					});
+
+					requireClarification("I found multiple assets with that symbol. Please choose one.", clarification);
+
+					return;
+				}
+			} else {
+				symbol = symbol.toUpperCase();
+
+				let resultPrice = await fetchStockPrice(currency, [symbol], true);
+
+				if("error" in resultPrice) {
+					addMessage("bot", resultPrice.error);
+					return;
+				}
+
+				let id = "stock-" + symbol;
+
+				let exists = await assetHoldingExists(id);
+
+				let encrypted = encryptObjectValues(key, {
+					holdingAssetID: id,
+					holdingAssetSymbol: symbol,
+					holdingAssetAmount: amount,
+					holdingAssetType: type
+				});
+
+				if(exists.exists) {
+					await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+				} else {
+					await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+				}
+
+				addMessage("bot", "I've updated your holdings.");
+			}
 		} catch(error) {
 			console.log(error);
 		}
@@ -296,8 +459,9 @@ let botFunctions = {
 						let symbol = Object.keys(match)[0];
 						let id = match[symbol];
 
-						clarification[id] = () => {
+						clarification[id] = async () => {
 							details.id = id;
+							await addMessage("user", id);
 							botFunctions.createWatchlist(details);
 						}
 					});
@@ -787,8 +951,13 @@ function processActivity(entities, intent, details) {
 			valueGiven = true;
 		}
 
-		if(intent.action.match("(buy|sell)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
+		if(intent.action.match("(buy)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
 			regex = /(?<=bought [0-9]*.[0-9]* )\w+/gi;
+			valueGiven = true;
+		}
+
+		if(intent.action.match("(sell)") && !intent.utterance.match("(at|@)") && !intent.utterance.match("(for)")) {
+			regex = /(?<=sold [0-9]*.[0-9]* )\w+/gi;
 			valueGiven = true;
 		}
 

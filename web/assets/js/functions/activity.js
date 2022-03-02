@@ -372,7 +372,6 @@ function fillActivityPopupElements(elements, activity) {
 	}
 }
 
-// Add stock functionality.
 async function getActivityPopupAssetID(type, symbol) {
 	return new Promise(async (resolve, reject) => {
 		try {
