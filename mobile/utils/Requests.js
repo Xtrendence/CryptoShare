@@ -200,6 +200,22 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	readMessage(token, userID) {
+		let query = {
+			query: `query readMessage($token: String!, $userID: Int!) {
+				readMessage(token: $token, userID: $userID) {
+					messageID, message, messageDate
+				}
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	readActivity(token, userID) {
 		let query = {
 			query: `query readActivity($token: String!, $userID: Int!) {
@@ -278,6 +294,21 @@ export default class Requests {
 				transactionCategory: transactionCategory,
 				transactionAmount: transactionAmount,
 				transactionNotes: transactionNotes
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	createMessage(token, userID, message) {
+		let query = {
+			query: `mutation createMessage($token: String!, $userID: Int!, $message: String!) {
+				createMessage(token: $token, userID: $userID, message: $message)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID),
+				message: message,
 			}
 		};
 
@@ -370,6 +401,20 @@ export default class Requests {
 				activityPrice: activityPrice, 
 				activityFrom: activityFrom, 
 				activityTo: activityTo  
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	deleteMessageAll(token, userID) {
+		let query = {
+			query: `mutation deleteMessageAll($token: String!, $userID: Int!) {
+				deleteMessageAll(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
 			}
 		};
 

@@ -776,7 +776,7 @@ function processTransaction(entities, intent, details) {
 		let numberOfEntities = entities.length;
 		let lastEntity = entities[numberOfEntities - 1];
 
-		if(!("item") in details || empty(details?.item)) {
+		if(!("item" in details) || empty(details?.item)) {
 			let start = intent.utterance.split("bought")[1];
 			let item = start.split("for")[0].replaceAll(" a ", "");
 			details["item"] = titleCase(item).trim();

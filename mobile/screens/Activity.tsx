@@ -329,7 +329,7 @@ export default function Activity({ navigation }: any) {
 			let assetSymbol: string;
 			let asset: any;
 			
-			let data = parseActivityPopupData(popupRef.current.activity);
+			let data = validateActivityData(popupRef.current.activity);
 
 			if(data?.activityAssetType === "crypto") {
 				if("symbol" in args) {
@@ -420,7 +420,7 @@ export default function Activity({ navigation }: any) {
 				assetSymbol = asset.symbol;
 			}
 
-			let data = parseActivityPopupData(popupRef.current.activity);
+			let data = validateActivityData(popupRef.current.activity);
 
 			if("error" in data) {
 				setLoading(false);
@@ -1078,72 +1078,6 @@ export default function Activity({ navigation }: any) {
 		setPopupType(null);
 	}
 
-	function parseActivityPopupData(values: any) {
-		try {
-			values.activityAssetAmount = parseFloat(values.activityAssetAmount);
-
-			if(Utils.empty(values.activityFee)) {
-				values.activityFee = 0;
-			}
-
-			if(Utils.empty(values.activityPrice)) {
-				values.activityFee = 0;
-			}
-
-			if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
-				return { error:"The values of the amount, fee, and price fields must be numbers."};
-			}
-
-			if(values.activityAssetAmount <= 0) {
-				return { error:"Amount must be greater than zero." };
-			}
-
-			try {
-				new Date(Date.parse(values.activityDate));
-			} catch(error) {
-				return { error:"Invalid date." };
-			}
-
-			if(Utils.empty(values.activityAssetSymbol) || Utils.empty(values.activityAssetType) || Utils.empty(values.activityAssetAmount) || Utils.empty(values.activityDate) || Utils.empty(values.activityType)) {
-				return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
-			}
-
-			if(values.activityType === "buy" || values.activityType === "sell") {
-				if(Utils.empty(values.activityExchange)) {
-					values.activityExchange = "";
-				}
-
-				if(Utils.empty(values.activityPair)) {
-					values.activityPair = "";
-				}
-
-				values.activityFrom = "";
-				values.activityTo = "";
-			} else {
-				if(Utils.empty(values.activityFrom)) {
-					values.activityFrom = "";
-				}
-
-				if(Utils.empty(values.activityTo)) {
-					values.activityTo = "";
-				}
-
-				values.activityExchange = "";
-				values.activityPair = "";
-				values.activityPrice = 0;
-			}
-
-			if(Utils.empty(values.activityNotes)) {
-				values.activityNotes = "-";
-			}
-
-			return values;
-		} catch(error) {
-			console.log(error);
-			return { error:"Something went wrong..." };
-		}
-	}
-
 	function outputHTML(html: string) {
 		return (
 			<View style={[styles.popupContent, { padding:20 }]}>
@@ -1417,4 +1351,70 @@ export function filterActivitiesByType(activityData: any) {
 	});
 
 	return { crypto:activitiesCrypto, stocks:activitiesStocks };
+}
+
+export function validateActivityData(values: any) {
+	try {
+		values.activityAssetAmount = parseFloat(values.activityAssetAmount);
+
+		if(Utils.empty(values.activityFee)) {
+			values.activityFee = 0;
+		}
+
+		if(Utils.empty(values.activityPrice)) {
+			values.activityFee = 0;
+		}
+
+		if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
+			return { error:"The values of the amount, fee, and price fields must be numbers."};
+		}
+
+		if(values.activityAssetAmount <= 0) {
+			return { error:"Amount must be greater than zero." };
+		}
+
+		try {
+			new Date(Date.parse(values.activityDate));
+		} catch(error) {
+			return { error:"Invalid date." };
+		}
+
+		if(Utils.empty(values.activityAssetSymbol) || Utils.empty(values.activityAssetType) || Utils.empty(values.activityAssetAmount) || Utils.empty(values.activityDate) || Utils.empty(values.activityType)) {
+			return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
+		}
+
+		if(values.activityType === "buy" || values.activityType === "sell") {
+			if(Utils.empty(values.activityExchange)) {
+				values.activityExchange = "";
+			}
+
+			if(Utils.empty(values.activityPair)) {
+				values.activityPair = "";
+			}
+
+			values.activityFrom = "";
+			values.activityTo = "";
+		} else {
+			if(Utils.empty(values.activityFrom)) {
+				values.activityFrom = "";
+			}
+
+			if(Utils.empty(values.activityTo)) {
+				values.activityTo = "";
+			}
+
+			values.activityExchange = "";
+			values.activityPair = "";
+			values.activityPrice = 0;
+		}
+
+		if(Utils.empty(values.activityNotes)) {
+			values.activityNotes = "-";
+		}
+
+		return values;
+	} catch(error) {
+		console.log(error);
+		return { error:"Something went wrong..." };
+	}
 }

@@ -63,6 +63,7 @@
 		"react-native-restart": "^0.0.22",
 		"react-native-safe-area-context": "^3.3.2",
 		"react-native-screens": "^3.10.1",
+		"react-native-sha256": "^1.4.7",
 		"react-native-sound": "^0.11.1",
 		"react-native-svg": "^12.1.1",
 		"react-native-svg-animations": "^0.2.6",

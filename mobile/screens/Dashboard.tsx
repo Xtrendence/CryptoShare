@@ -1080,62 +1080,6 @@ export default function Dashboard({ navigation }: any) {
 		setBudgetStats(<BudgetStats theme={theme} currency={currency} stats={budgetAmounts} backgroundColors={backgroundColors} showMonthPopup={showMonthPopup} showYearPopup={showYearPopup} month={parseInt(dateRef.current.month)} year={dateRef.current.year}/>)
 	}
 
-	function filterTransactionsByMonth(transactionData: any, month: any, year: any) {
-		let filtered: any = {};
-
-		Object.keys(transactionData).map(key => {
-			try {
-				let transaction = transactionData[key];
-
-				let date = new Date(Date.parse(transaction.transactionDate));
-
-				if(parseFloat(month) === date.getMonth() && parseFloat(year) === date.getFullYear()) {
-					filtered[key] = transaction;
-				}
-			} catch(error) {
-				console.log(error);
-			}
-		});
-
-		return filtered;
-	}
-
-	function parseTransactionData(transactionData: any) {
-		let categories = Object.keys(Utils.defaultBudgetData.categories);
-		let parsed: any = {};
-
-		parsed.earned = 0;
-
-		categories.map(category => {
-			parsed[category] = 0;
-		});
-
-		let keys = Object.keys(transactionData);
-	
-		keys.map(key => {
-			let transaction = transactionData[key];
-
-			try {
-				let amount = parseFloat(transaction.transactionAmount);
-
-				if(transaction.transactionType === "spent") {
-					parsed[transaction.transactionCategory] += amount;
-				} else {
-					if(transaction.transactionCategory === "savings") {
-						parsed[transaction.transactionCategory] += amount;
-					} else {
-						parsed.earned += amount;
-					}
-				}
-			} catch(error) {
-				console.log(error);
-				Utils.notify(theme, "Couldn't parse all transactions.");
-			}
-		});
-
-		return parsed;
-	}
-
 	function changeList(list: string) {
 		setList(list);
 	}
@@ -1256,7 +1200,7 @@ export default function Dashboard({ navigation }: any) {
 
 			let requests = new Requests(api);
 
-			let data: any = parseTransactionPopupData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
+			let data: any = validateTransactionData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
 
 			if("error" in data) {
 				ToastAndroid.show(data?.error, 5000);
@@ -1292,7 +1236,7 @@ export default function Dashboard({ navigation }: any) {
 
 			let requests = new Requests(api);
 
-			let data: any = parseTransactionPopupData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
+			let data: any = validateTransactionData(transaction.amount, transaction.type, transaction.category, transaction.date, transaction.notes);
 
 			if("error" in data) {
 				ToastAndroid.show(data?.error, 5000);
@@ -1314,82 +1258,65 @@ export default function Dashboard({ navigation }: any) {
 			ToastAndroid.show("Something went wrong...", 5000);
 		}
 	}
+}
 
-	function fetchBudget() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let userID = await AsyncStorage.getItem("userID");
-				let token = await AsyncStorage.getItem("token");
-				let key = await AsyncStorage.getItem("key") || "";
-				let api = await AsyncStorage.getItem("api");
+export function parseTransactionData(transactionData: any) {
+	let categories = Object.keys(Utils.defaultBudgetData.categories);
+	let parsed: any = {};
 
-				let requests = new Requests(api);
+	parsed.earned = 0;
 
-				let budget = await requests.readBudget(token, userID);
+	categories.map(category => {
+		parsed[category] = 0;
+	});
 
-				if(Utils.empty(budget?.data?.readBudget)) {
-					resolve({});
-					return;
-				}
+	let keys = Object.keys(transactionData);
 	
-				let encrypted = budget?.data?.readBudget?.budgetData;
+	keys.map(key => {
+		let transaction = transactionData[key];
 
-				if(Utils.empty(encrypted)) {
-					resolve({});
-					return;
+		try {
+			let amount = parseFloat(transaction.transactionAmount);
+
+			if(transaction.transactionType === "spent") {
+				parsed[transaction.transactionCategory] += amount;
+			} else {
+				if(transaction.transactionCategory === "savings") {
+					parsed[transaction.transactionCategory] += amount;
+				} else {
+					parsed.earned += amount;
 				}
-
-				let budgetData = CryptoFN.decryptAES(encrypted, key);
-
-				if(!Utils.validJSON(budgetData)) {
-					resolve({});
-					return;
-				}
-
-				resolve(JSON.parse(budgetData));
-			} catch(error) {
-				console.log(error);
-				reject(error);
 			}
-		});
-	}
+		} catch(error) {
+			console.log(error);
+			ToastAndroid.show("Couldn't parse all transactions.", 5000);
+		}
+	});
 
-	function fetchTransaction() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let userID = await AsyncStorage.getItem("userID");
-				let token = await AsyncStorage.getItem("token");
-				let key = await AsyncStorage.getItem("key") || "";
-				let api = await AsyncStorage.getItem("api");
+	return parsed;
+}
 
-				let requests = new Requests(api);
+export function filterTransactionsByMonth(transactionData: any, month: any, year: any) {
+	let filtered: any = {};
 
-				let transaction = await requests.readTransaction(token, userID);
+	Object.keys(transactionData).map(key => {
+		try {
+			let transaction = transactionData[key];
 
-				if(Utils.empty(transaction?.data?.readTransaction)) {
-					resolve({});
-					return;
-				}
-	
-				let transactionData: any = {};
-	
-				let encrypted = transaction?.data?.readTransaction;
-	
-				Object.keys(encrypted).map(index => {
-					let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
-					decrypted.transactionID = encrypted[index].transactionID;
-					transactionData[decrypted.transactionID] = decrypted;
-				});
+			let date = new Date(Date.parse(transaction.transactionDate));
 
-				resolve(transactionData);
-			} catch(error) {
-				console.log(error);
-				reject(error);
+			if(parseFloat(month) === date.getMonth() && parseFloat(year) === date.getFullYear()) {
+				filtered[key] = transaction;
 			}
-		});
-	}
+		} catch(error) {
+			console.log(error);
+		}
+	});
 
-	function setDefaultBudgetData() {
+	return filtered;
+}
+
+export function setDefaultBudgetData() {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let userID = await AsyncStorage.getItem("userID");
@@ -1410,9 +1337,27 @@ export default function Dashboard({ navigation }: any) {
 			}
 		});
 	}
+
+export function getWatchlistIDBySymbol(watchlist: any, symbol: string, type: string) {
+	try {
+		let result = { exists:false, id:null };
+
+		Object.keys(watchlist).map(index => {
+			let asset = watchlist[index];
+			if(asset?.assetSymbol.toLowerCase() === symbol.toLowerCase() && asset.assetType.toLowerCase() === type.toLowerCase()) {
+				result.exists = true;
+				result.id = asset.watchlistID;
+			}
+		});
+
+		return result;
+	} catch(error) {
+		console.log(error);
+		return { exists:false, id:null, error:error };
+	}
 }
 
-export function parseTransactionPopupData(amount: any, type: any, category: any, date: any, notes: any) {
+export function validateTransactionData(amount: any, type: any, category: any, date: any, notes: any) {
 	try {
 		type = type.toLowerCase();
 		category = category.toLowerCase();
@@ -1444,6 +1389,80 @@ export function parseTransactionPopupData(amount: any, type: any, category: any,
 		console.log(error);
 		return { error:"Invalid data." };
 	}
+}
+
+export function fetchBudget() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let budget = await requests.readBudget(token, userID);
+
+			if(Utils.empty(budget?.data?.readBudget)) {
+				resolve({});
+				return;
+			}
+	
+			let encrypted = budget?.data?.readBudget?.budgetData;
+
+			if(Utils.empty(encrypted)) {
+				resolve({});
+				return;
+			}
+
+			let budgetData = CryptoFN.decryptAES(encrypted, key);
+
+			if(!Utils.validJSON(budgetData)) {
+				resolve({});
+				return;
+			}
+
+			resolve(JSON.parse(budgetData));
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
+export function fetchTransaction() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			let transaction = await requests.readTransaction(token, userID);
+
+			if(Utils.empty(transaction?.data?.readTransaction)) {
+				resolve({});
+				return;
+			}
+	
+			let transactionData: any = {};
+	
+			let encrypted = transaction?.data?.readTransaction;
+	
+			Object.keys(encrypted).map(index => {
+				let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
+				decrypted.transactionID = encrypted[index].transactionID;
+				transactionData[decrypted.transactionID] = decrypted;
+			});
+
+			resolve(transactionData);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
 }
 
 function sortTransactionDataByDate(transactionData: any) {

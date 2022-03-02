@@ -278,6 +278,12 @@ export default class Utils {
 		}
 	}
 
+	static stripHTMLCharacters(string: string) {
+		string = Utils.replaceAll(string, "<", "&lt;");
+		string = Utils.replaceAll(string, ">", "&gt;");
+		return string;
+	}
+
 	static empty(value: any) {
 		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 			return true;
@@ -467,6 +473,10 @@ export default class Utils {
 
 	static capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
+	}
+
+	static titleCase(string: string) {
+		return string.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 	}
 
 	static rgbToHex(rgb: string) {
