@@ -426,32 +426,8 @@ function getActivityPopupElements() {
 	};
 }
 
-function parseActivityPopupData(elements) {
+function validateActivityData(values) {
 	try {
-		let activityAssetType = elements.popupChoiceCrypto.classList.contains("active") ? "crypto" : "stock";
-
-		let activityType = "buy";
-		if(elements.popupChoiceSell.classList.contains("active")) {
-			activityType = "sell";
-		} else if(elements.popupChoiceTransfer.classList.contains("active")) {
-			activityType = "transfer";
-		}
-
-		let values = {
-			activityAssetSymbol: elements.popupInputSymbol.value,
-			activityAssetType: activityAssetType,
-			activityAssetAmount: elements.popupInputAmount.value,
-			activityDate: elements.popupInputDate.value,
-			activityFee: elements.popupInputFee.value,
-			activityNotes: elements.popupInputNotes.value,
-			activityType: activityType,
-			activityExchange: elements.popupInputExchange.value,
-			activityPair: elements.popupInputPair.value,
-			activityPrice: elements.popupInputPrice.value,
-			activityFrom: elements.popupInputFrom.value,
-			activityTo: elements.popupInputTo.value
-		};
-
 		if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
 			return { error:"The values of the amount, fee, and price fields must be numbers."};
 		}
@@ -470,7 +446,7 @@ function parseActivityPopupData(elements) {
 			return { error:"At minimum, the symbol, asset type, amount, date, and activity type must be specified." };
 		}
 
-		if(activityType === "buy" || activityType === "sell") {
+		if(values.activityType === "buy" || values.activityType === "sell") {
 			if(empty(values.activityExchange)) {
 				values.activityExchange = "";
 			}
@@ -508,6 +484,39 @@ function parseActivityPopupData(elements) {
 		}
 
 		return values;
+	} catch(error) {
+		console.log(error);
+		return { error:"Something went wrong..." };
+	}
+}
+
+function parseActivityPopupData(elements) {
+	try {
+		let activityAssetType = elements.popupChoiceCrypto.classList.contains("active") ? "crypto" : "stock";
+
+		let activityType = "buy";
+		if(elements.popupChoiceSell.classList.contains("active")) {
+			activityType = "sell";
+		} else if(elements.popupChoiceTransfer.classList.contains("active")) {
+			activityType = "transfer";
+		}
+
+		let values = {
+			activityAssetSymbol: elements.popupInputSymbol.value,
+			activityAssetType: activityAssetType,
+			activityAssetAmount: elements.popupInputAmount.value,
+			activityDate: elements.popupInputDate.value,
+			activityFee: elements.popupInputFee.value,
+			activityNotes: elements.popupInputNotes.value,
+			activityType: activityType,
+			activityExchange: elements.popupInputExchange.value,
+			activityPair: elements.popupInputPair.value,
+			activityPrice: elements.popupInputPrice.value,
+			activityFrom: elements.popupInputFrom.value,
+			activityTo: elements.popupInputTo.value
+		};
+
+		return validateActivityData(values);
 	} catch(error) {
 		console.log(error);
 		return { error:"Something went wrong..." };

@@ -88,3 +88,19 @@ export async function deleteHolding({ token, userID, holdingID }: any) {
 		return error;
 	}
 }
+
+export async function deleteHoldingAll({ token, userID }: any) {
+	try {
+		let valid = await Utils.verifyToken(userID, token);
+
+		if(valid) {
+			db.runQuery("DELETE FROM Holding WHERE userID = ?", [userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
+		return error;
+	}
+}

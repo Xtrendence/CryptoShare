@@ -87,3 +87,19 @@ export async function deleteWatchlist({ token, userID, watchlistID }: any) {
 		return error;
 	}
 }
+
+export async function deleteWatchlistAll({ token, userID }: any) {
+	try {
+		let valid = await Utils.verifyToken(userID, token);
+
+		if(valid) {
+			db.runQuery("DELETE FROM Watchlist WHERE userID = ?", [userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
+		return error;
+	}
+}

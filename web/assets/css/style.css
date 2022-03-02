@@ -53,6 +53,13 @@ span.negative {
 	color:var(--negative-first) !important;
 }
 
+button.negative {
+	background:var(--negative-first);
+}
+#desktop button.negative:hover {
+	background:var(--negative-second);
+}
+
 #web .app-only {
 	display:none;
 }
@@ -2020,6 +2027,33 @@ html.light .page.activity .page-container-toolbar {
 	border-radius:var(--border-radius);
 	margin:0 20px 20px 0;
 	min-height:64px;
+}
+.settings-section.negative {
+	border-color:var(--negative-first);
+}
+.settings-section.negative .action-button {
+	background:var(--negative-first);
+}
+#desktop .settings-section.negative .action-button:hover {
+	background:var(--negative-second);
+}
+.settings-section.positive {
+	border-color:var(--positive-first);
+}
+.settings-section.positive .action-button {
+	background:var(--positive-first);
+}
+#desktop .settings-section.positive .action-button:hover {
+	background:var(--positive-second);
+}
+.settings-section.neutral {
+	border-color:var(--neutral-first);
+}
+.settings-section.neutral .action-button {
+	background:var(--neutral-first);
+}
+#desktop .settings-section.neutral .action-button:hover {
+	background:var(--neutral-second);
 }
 .settings-section .title {
 	font-size:18px;

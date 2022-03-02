@@ -439,6 +439,62 @@ function deleteMessageAll(token, userID) {
 	return request("POST", urlAPI, query, null);
 }
 
+function deleteActivityAll(token, userID) {
+	let query = {
+		query: `mutation deleteActivityAll($token: String!, $userID: Int!) {
+			deleteActivityAll(token: $token, userID: $userID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteTransactionAll(token, userID) {
+	let query = {
+		query: `mutation deleteTransactionAll($token: String!, $userID: Int!) {
+			deleteTransactionAll(token: $token, userID: $userID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteHoldingAll(token, userID) {
+	let query = {
+		query: `mutation deleteHoldingAll($token: String!, $userID: Int!) {
+			deleteHoldingAll(token: $token, userID: $userID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
+function deleteWatchlistAll(token, userID) {
+	let query = {
+		query: `mutation deleteWatchlistAll($token: String!, $userID: Int!) {
+			deleteWatchlistAll(token: $token, userID: $userID)
+		}`,
+		variables: {
+			token: token,
+			userID: parseInt(userID)
+		}
+	};
+
+	return request("POST", urlAPI, query, null);
+}
+
 function deleteHolding(token, userID, holdingID) {
 	let query = {
 		query: `mutation deleteHolding($token: String!, $userID: Int!, $holdingID: Int!) {

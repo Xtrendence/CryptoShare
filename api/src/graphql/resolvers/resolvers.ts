@@ -1,22 +1,22 @@
 import { userExists, createUser, readUser, updateUser, deleteUser } from "./user";
-import { createActivity, readActivity, updateActivity, deleteActivity } from "./activity";
+import { createActivity, readActivity, updateActivity, deleteActivity, deleteActivityAll } from "./activity";
 import { createSetting, readSetting, updateSetting, deleteSetting } from "./setting";
-import { createHolding, readHolding, updateHolding, deleteHolding } from "./holding";
-import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist } from "./watchlist";
+import { createHolding, readHolding, updateHolding, deleteHolding, deleteHoldingAll } from "./holding";
+import { createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist, deleteWatchlistAll } from "./watchlist";
 import { createMessage, readMessage, updateMessage, deleteMessage, deleteMessageAll } from "./message";
-import { createTransaction, readTransaction, updateTransaction, deleteTransaction } from "./transaction";
+import { createTransaction, readTransaction, updateTransaction, deleteTransaction, deleteTransactionAll } from "./transaction";
 import { createBudget, readBudget, updateBudget, deleteBudget } from "./budget";
 import { readCoin } from "./coin";
 import { readStockHistorical, readStockPrice } from "./stock";
 
 let resolvers = {
 	userExists, createUser, readUser, updateUser, deleteUser,
-	createActivity, readActivity, updateActivity, deleteActivity,
+	createActivity, readActivity, updateActivity, deleteActivity, deleteActivityAll,
 	createSetting, readSetting, updateSetting, deleteSetting,
-	createHolding, readHolding, updateHolding, deleteHolding,
-	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist,
+	createHolding, readHolding, updateHolding, deleteHolding, deleteHoldingAll,
+	createWatchlist, readWatchlist, updateWatchlist, deleteWatchlist, deleteWatchlistAll,
 	createMessage, readMessage, updateMessage, deleteMessage, deleteMessageAll,
-	createTransaction, readTransaction, updateTransaction, deleteTransaction,
+	createTransaction, readTransaction, updateTransaction, deleteTransaction, deleteTransactionAll,
 	createBudget, readBudget, updateBudget, deleteBudget,
 	readCoin,
 	readStockHistorical, readStockPrice

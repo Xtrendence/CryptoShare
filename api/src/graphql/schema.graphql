@@ -113,6 +113,7 @@ type Mutation {
 	createActivity(token: String!, userID: Int!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
 	updateActivity(token: String!, userID: Int!, activityTransactionID: String!, activityAssetID: String!, activityAssetSymbol: String!, activityAssetType: String!, activityDate: String!, activityType: String!, activityAssetAmount: String!, activityFee: String!, activityNotes: String!, activityExchange: String!, activityPair: String!, activityPrice: String!, activityFrom: String!, activityTo: String!): String
 	deleteActivity(token: String!, userID: Int!, activityID: Int!): String
+	deleteActivityAll(token: String!, userID: Int!): String
 
 	createSetting(token: String!, userID: Int!, userSettings: String!): String
 	updateSetting(token: String!, userID: Int!, userSettings: String!): String
@@ -130,12 +131,15 @@ type Mutation {
 	createTransaction(token: String!, userID: Int!, transactionType: String!, transactionDate: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
 	updateTransaction(token: String!, userID: Int!, transactionID: String!, transactionType: String!, transactionDate: String!, transactionCategory: String!, transactionAmount: String!, transactionNotes: String!): String
 	deleteTransaction(token: String!, userID: Int!, transactionID: String!): String
+	deleteTransactionAll(token: String!, userID: Int!): String
 
 	createHolding(token: String!, userID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	updateHolding(token: String!, userID: Int!, holdingID: Int!, holdingAssetID: String!, holdingAssetSymbol: String!, holdingAssetAmount: String!, holdingAssetType: String!): String
 	deleteHolding(token: String!, userID: Int!, holdingID: Int!): String
+	deleteHoldingAll(token: String!, userID: Int!): String
 
 	createWatchlist(token: String!, userID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
 	updateWatchlist(token: String!, userID: Int!, watchlistID: Int!, assetID: String!, assetSymbol: String!, assetType: String!): String
 	deleteWatchlist(token: String!, userID: Int!, watchlistID: Int!): String
+	deleteWatchlistAll(token: String!, userID: Int!): String
 }

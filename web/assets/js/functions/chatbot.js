@@ -256,6 +256,83 @@ let botFunctions = {
 			let userID = localStorage.getItem("userID");
 			let token = localStorage.getItem("token");
 			let key = localStorage.getItem("key");
+
+			let currency = getCurrency();
+			let symbol = details.asset;
+
+			let watchlist = await fetchWatchlist() || {};
+
+			let type = details.type;
+
+			if(type === "crypto") {
+				let result = await getCoin({ symbol:symbol });
+
+				if("id" in details) {
+					result.id = details.id;
+				}
+
+				if("id" in result) {
+					let id = result.id;
+
+					if(watchlistExists(watchlist, id)) {
+						addMessage("bot", "Asset already in watchlist.");
+						return;
+					}
+
+					let encrypted = encryptObjectValues(key, {
+						assetID: id.toLowerCase(),
+						assetSymbol: symbol.toUpperCase(),
+						assetType: "crypto",
+					});
+
+					await createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
+
+					addMessage("bot", "I've added that asset to your watchlist.");
+				} else {
+					let clarification = {};
+
+					Object.keys(result.matches).map(index => {
+						let match = result.matches[index];
+						let symbol = Object.keys(match)[0];
+						let id = match[symbol];
+
+						clarification[id] = () => {
+							details.id = id;
+							botFunctions.createWatchlist(details);
+						}
+					});
+
+					requireClarification("I found multiple assets with that symbol. Please choose one.", clarification);
+
+					return;
+				}
+			} else {
+				symbol = symbol.toUpperCase();
+
+				let resultPrice = await fetchStockPrice(currency, [symbol], true);
+
+				if("error" in resultPrice) {
+					addMessage("bot", resultPrice.error);
+					return;
+				}
+
+				let id = "stock-" + symbol;
+
+				if(watchlistExists(watchlist, id)) {
+					addMessage("bot", "Asset already in watchlist.");
+					return;
+				}
+
+				let encrypted = encryptObjectValues(key, {
+					assetID: id,
+					assetSymbol: symbol,
+					assetType: "stock",
+				});
+
+				await createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
+
+				addMessage("bot", "I've added that asset to your watchlist.");
+			}
 		} catch(error) {
 			console.log(error);
 		}

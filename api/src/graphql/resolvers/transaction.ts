@@ -91,3 +91,19 @@ export async function deleteTransaction({ token, userID, transactionID }: any) {
 		return error;
 	}
 }
+
+export async function deleteTransactionAll({ token, userID }: any) {
+	try {
+		let valid = await Utils.verifyToken(userID, token);
+
+		if(valid) {
+			db.runQuery("DELETE FROM Transaction WHERE userID = ?", [userID]);
+			return "Done";
+		} else {
+			return "Unauthorized";
+		}
+	} catch(error) {
+		console.log(error);
+		return error;
+	}
+}
