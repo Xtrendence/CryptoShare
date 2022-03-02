@@ -1157,6 +1157,25 @@ function watchlistExists(watchlist, id) {
 	}
 }
 
+function getWatchlistIDBySymbol(watchlist, symbol, type) {
+	try {
+		let result = { exists:false, id:null };
+
+		Object.keys(watchlist).map(index => {
+			let asset = watchlist[index];
+			if(asset?.assetSymbol.toLowerCase() === symbol.toLowerCase() && asset.assetType.toLowerCase() === type.toLowerCase()) {
+				result.exists = true;
+				result.id = asset.watchlistID;
+			}
+		});
+
+		return result;
+	} catch(error) {
+		console.log(error);
+		return { exists:false, id:null, error:error };
+	}
+}
+
 function fetchWatchlist() {
 	return new Promise(async (resolve, reject) => {
 		try {

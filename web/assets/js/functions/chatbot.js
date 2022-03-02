@@ -192,7 +192,7 @@ function processRequest(processedIntent) {
 				botFunctions.updateHolding(processedIntent);
 				break;
 			case "watchlist":
-				botFunctions.createWatchlist(processedIntent);
+				processedIntent.action === "delete" ? botFunctions.deleteWatchlist(processedIntent) : botFunctions.createWatchlist(processedIntent);
 				break;
 			case "income":
 				botFunctions.updateIncome(processedIntent);
@@ -224,6 +224,8 @@ let botFunctions = {
 			let encrypted = encryptObjectValues(key, data);
 
 			await createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+
+			addMessage("bot", "I've recorded that transaction.");
 		} catch(error) {
 			console.log(error);
 		}
@@ -263,7 +265,17 @@ let botFunctions = {
 		try {
 			let userID = localStorage.getItem("userID");
 			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+
+			let watchlist = await fetchWatchlist() || {};
+
+			let find = getWatchlistIDBySymbol(watchlist, details.asset, details.type);
+
+			if(find.exists === true) {
+				await deleteWatchlist(token, userID, find.id);
+				addMessage("bot", "I've removed that asset from your watchlist.");
+			} else {
+				addMessage("bot", "I couldn't find that asset in your watchlist.");
+			}
 		} catch(error) {
 			console.log(error);
 		}
