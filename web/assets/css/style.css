@@ -716,6 +716,15 @@ html.light .toggle-container {
 html.light .popup-wrapper .bottom .popup-input-span {
 	background:var(--main-fifth);
 }
+.popup-wrapper .bottom .popup-canvas-wrapper {
+	background:rgb(20,20,20);
+	border-radius:var(--border-radius);
+	padding:10px;
+	width:360px;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+}
 
 .navbar-wrapper {
 	height:140px;

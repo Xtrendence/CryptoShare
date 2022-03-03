@@ -105,4 +105,5 @@ let buttonSettingsDeleteAccount = document.getElementById("button-settings-delet
 let buttonSettingsUserRegistration = document.getElementById("button-settings-user-registration");
 let buttonSettingsStockAPIKey = document.getElementById("button-settings-stock-api-key");
 let buttonSettingsStockAPIType = document.getElementById("button-settings-stock-api-type");
+let buttonSettingsQRCode = document.getElementById("button-settings-qr-code");
 let buttonSettingsReset = document.getElementById("button-settings-reset");

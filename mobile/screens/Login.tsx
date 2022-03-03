@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { BackHandler, ImageBackground, ScrollView, Text, TextInput, View } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { BottomModal, ModalButton, ModalContent, ModalFooter } from "react-native-modals";
+import QRCodeScanner from "react-native-qrcode-scanner";
+import { RNCamera } from "react-native-camera";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -14,6 +16,7 @@ import styles from "../styles/Login";
 import CryptoFN from "../utils/CryptoFN";
 import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
+import LinearGradient from "react-native-linear-gradient";
 
 export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -32,6 +35,8 @@ export default function Login({ navigation }: any) {
 	const [createUsername, setCreateUsername] = useState<string>("Admin");
 	const [createPassword, setCreatePassword] = useState<string>("admin");
 	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("admin");
+
+	const [showCamera, setShowCamera] = useState<boolean>(false);
 
 	useCallback(() => {
 		function onBackPress(): boolean {
@@ -60,126 +65,159 @@ export default function Login({ navigation }: any) {
 				attemptLogin();
 			});
 		});
+
+		navigation.addListener("focus", () => {
+			setShowCamera(false);
+		});
+		
+		navigation.addListener("blur", () => {
+			setShowCamera(false);
+		});
 	}, []);
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
-					<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
-						<View style={[styles.titleContainer, styles[`titleContainer${theme}`]]}>
-							<Text style={styles.title}>CryptoShare</Text>
-						</View>
-					</View>
-					<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
-						<View style={[styles.loginContainer, styles[`loginContainer${theme}`]]}>
-							{ action === "login" &&
-								<View>
-									<TextInput 
-										spellCheck={false}
-										placeholder="API URL..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setURL(value)}
-										value={url}
-									/>
-									<TextInput 
-										spellCheck={false}
-										placeholder="Username..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setLoginUsername(value)}
-										value={loginUsername}
-									/>
-									<TextInput 
-										spellCheck={false}
-										placeholder="Password..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setLoginPassword(value)}
-										value={loginPassword}
-										onSubmitEditing={() => login(url, loginUsername, loginPassword)}
-										secureTextEntry
-									/>
-									<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("create")}>
-										<Text style={[styles.mainText, styles[`mainText${theme}`]]}>Need An Account?</Text>
-									</TouchableOpacity>
-									<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]} onPress={() => login(url, loginUsername, loginPassword)}>
-										<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Login</Text>
+					{ !showCamera &&
+						<View style={{ alignItems:"center" }}>
+							<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
+								<View style={[styles.titleContainer, styles[`titleContainer${theme}`]]}>
+									<Text style={styles.title}>CryptoShare</Text>
+								</View>
+							</View>
+							<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
+								<View style={[styles.loginContainer, styles[`loginContainer${theme}`]]}>
+									{ action === "login" &&
+										<View>
+											<TextInput 
+												spellCheck={false}
+												placeholder="API URL..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setURL(value)}
+												value={url}
+											/>
+											<TextInput 
+												spellCheck={false}
+												placeholder="Username..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setLoginUsername(value)}
+												value={loginUsername}
+											/>
+											<TextInput 
+												spellCheck={false}
+												placeholder="Password..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setLoginPassword(value)}
+												value={loginPassword}
+												onSubmitEditing={() => login(url, loginUsername, loginPassword)}
+												secureTextEntry
+											/>
+											<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("create")}>
+												<Text style={[styles.mainText, styles[`mainText${theme}`]]}>Need An Account?</Text>
+											</TouchableOpacity>
+											<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]} onPress={() => login(url, loginUsername, loginPassword)}>
+												<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Login</Text>
+											</TouchableOpacity>
+										</View>
+									}
+									{ action === "create" &&
+										<View>
+											<TextInput 
+												spellCheck={false}
+												placeholder="API URL..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setURL(value)}
+												value={url}
+											/>
+											<TextInput 
+												spellCheck={false}
+												placeholder="Username..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setCreateUsername(value)}
+												value={createUsername}
+											/>
+											<TextInput 
+												spellCheck={false}
+												placeholder="Password..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setCreatePassword(value)} 
+												value={createPassword}
+												secureTextEntry
+											/>
+											<TextInput 
+												spellCheck={false}
+												placeholder="Repeat Password..." 
+												selectionColor={Colors[theme].mainContrast} 
+												placeholderTextColor={Colors[theme].mainContrastDarker} 
+												style={[styles.input, styles[`input${theme}`]]} 
+												onChangeText={(value) => setCreateRepeatPassword(value)} 
+												value={createRepeatPassword} 
+												onSubmitEditing={() => showBottomModal(url, createUsername, createPassword, createRepeatPassword)}
+												secureTextEntry
+											/>
+											<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("login")}>
+												<Text style={[styles.mainText, styles[`mainText${theme}`]]}>Got An Account?</Text>
+											</TouchableOpacity>
+											<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]} onPress={() => showBottomModal(url, createUsername, createPassword, createRepeatPassword)}>
+												<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Create Account</Text>
+											</TouchableOpacity>
+										</View>
+									}
+									<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`], { marginTop:20 }]} onPress={() => setShowCamera(true)}>
+										<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Scan QR Code</Text>
 									</TouchableOpacity>
 								</View>
-							}
-							{ action === "create" &&
-								<View>
-									<TextInput 
-										spellCheck={false}
-										placeholder="API URL..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setURL(value)}
-										value={url}
+							</View>
+							<View style={[styles.wrapper, styles[`wrapper${theme}`], { alignItems:"center", width:120 }]}>
+								<View style={[styles.toggleContainer, styles[`toggleContainer${theme}`]]}>
+									<Toggle
+										value={theme === "Dark" ? false : true}
+										onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
+										thumbActiveComponent={
+											<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
+										}
+										thumbInActiveComponent={
+											<Icon name="moon" size={20} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
+										}
+										trackBar={styles.trackBar}
+										thumbButton={styles.thumbButton}
+										animationDuration={250}
 									/>
-									<TextInput 
-										spellCheck={false}
-										placeholder="Username..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setCreateUsername(value)}
-										value={createUsername}
-									/>
-									<TextInput 
-										spellCheck={false}
-										placeholder="Password..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setCreatePassword(value)} 
-										value={createPassword}
-										secureTextEntry
-									/>
-									<TextInput 
-										spellCheck={false}
-										placeholder="Repeat Password..." 
-										selectionColor={Colors[theme].mainContrast} 
-										placeholderTextColor={Colors[theme].mainContrastDarker} 
-										style={[styles.input, styles[`input${theme}`]]} 
-										onChangeText={(value) => setCreateRepeatPassword(value)} 
-										value={createRepeatPassword} 
-										onSubmitEditing={() => showBottomModal(url, createUsername, createPassword, createRepeatPassword)}
-										secureTextEntry
-									/>
-									<TouchableOpacity style={[styles.button, styles.mainButton, styles[`mainButton${theme}`]]} onPress={() => setAction("login")}>
-										<Text style={[styles.mainText, styles[`mainText${theme}`]]}>Got An Account?</Text>
-									</TouchableOpacity>
-									<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`]]} onPress={() => showBottomModal(url, createUsername, createPassword, createRepeatPassword)}>
-										<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Create Account</Text>
-									</TouchableOpacity>
 								</View>
-							}
+							</View>
 						</View>
-					</View>
-					<View style={[styles.wrapper, styles[`wrapper${theme}`]]}>
-						<View style={[styles.toggleContainer, styles[`toggleContainer${theme}`]]}>
-							<Toggle
-								value={theme === "Dark" ? false : true}
-								onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
-								thumbActiveComponent={
-									<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
+					}
+					{ showCamera &&
+						<View style={styles.cameraWrapper}>
+							<QRCodeScanner 
+								reactivate={true}
+								onRead={(e) => processCode(e.data)}
+								topContent={
+									<View style={styles.cameraTextWrapper}>
+										<Text style={styles.cameraText}>Generate a QR code through the web app's settings page.</Text>
+									</View>
 								}
-								thumbInActiveComponent={
-									<Icon name="moon" size={20} color={Colors[theme].accentFirst} style={{ padding:12 }}/>
+								bottomContent={
+									<TouchableOpacity style={[styles.button, styles.accentButton, styles[`accentButton${theme}`], { marginTop:20 }]} onPress={() => setShowCamera(false)}>
+										<Text style={[styles.accentText, styles[`accentText${theme}`]]}>Close Camera</Text>
+									</TouchableOpacity>
 								}
-								trackBar={styles.trackBar}
-								thumbButton={styles.thumbButton}
-								animationDuration={250}
 							/>
 						</View>
-					</View>
+					}
 				</SafeAreaView>
 			</ScrollView>
 			<BottomModal 
@@ -209,6 +247,23 @@ export default function Login({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	function processCode(code: string) {
+		setShowCamera(false);
+		
+		try {
+			let parts = code.split("!");
+
+			setURL(parts[0]);
+			setLoginUsername(parts[1]);
+			setLoginPassword(parts[2]);
+
+			login(parts[0], parts[1], parts[2]);
+		} catch(error) {
+			Utils.notify(theme, "Something went wrong...");
+			console.log(error);
+		}
+	}
 
 	function showBottomModal(url: string, username: string, password: string, repeatPassword: string) {
 		if(password === repeatPassword) {

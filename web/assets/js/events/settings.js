@@ -263,6 +263,55 @@ buttonSettingsStockAPIType.addEventListener("click", async () => {
 	}
 });
 
+buttonSettingsQRCode.addEventListener("click", () => {
+	if(urlAPI.includes("localhost") || urlAPI.includes("127.0.0.1")) {
+		errorNotification(`You can't generate a QR login code when accessing the web app as "localhost".`);
+		return;
+	}
+
+	let popup = new Popup(300, "auto", "Generate QR Code", `<span class="margin-bottom">Please enter your password to generate a login token.</span><input spellcheck="false" type="password" id="popup-input-qr-password" placeholder="Password...">`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		let password = document.getElementById("popup-input-qr-password").value;
+
+		if(empty(password)) {
+			errorNotification("Password cannot be empty.");
+			return;
+		}
+
+		try {
+			popup.hide();
+
+			popup = new Popup(420, 562, "QR Code", `<span class="margin-bottom">Please log in using the mobile app.</span><div class="popup-canvas-wrapper" id="popup-canvas-wrapper"></div>`, { page:"settings", confirmText:"-", cancelText:"Dismiss" });
+			popup.show();
+
+			let username = localStorage.getItem("username");
+			let response = await login(username, password);
+
+			if("error" in response) {
+				errorNotification(response.error);
+				console.log(response.error);
+				return;
+			}
+
+			let qrStyle = JSON.parse(qrCodeStyle);
+			qrStyle.width = 340;
+			qrStyle.height = 340;
+			qrStyle.data = new URL(urlAPI, document.baseURI).href + "!" + username + "!" + password;
+
+			let qrCode = new QRCodeStyling(qrStyle);
+
+			qrCode.append(document.getElementById("popup-canvas-wrapper"));
+
+			console.log(response);
+		} catch(error) {
+			errorNotification("Something went wrong...");
+			console.log(error);
+		}
+	});
+});
+
 buttonSettingsReset.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`, { page:"settings" });
 	popup.show();
