@@ -1,4 +1,24 @@
 async function attemptLogin() {
+	if(appPlatform === "app" || appBypass()) {
+		urlAPI = await appStorage.getItem("api");
+
+		try {
+			let url = new URL(urlAPI);
+			urlBot = `${url.protocol}//${url.hostname}:${url.port + 1}`;
+		} catch(error) {
+			console.log(error);
+			
+			errorNotification("Invalid API URL format.");
+
+			setTimeout(() => {
+				divLoading.classList.add("hidden");
+				divTitlebar.removeAttribute("style");
+			}, 1000);
+
+			return;
+		}
+	}
+
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
 

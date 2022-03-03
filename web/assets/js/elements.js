@@ -17,6 +17,7 @@ let divLoading = document.getElementById("loading-overlay");
 let divPageLogin = document.getElementById("login-page");
 let divPageApp = document.getElementById("app-page");
 
+let inputLoginAPI = document.getElementById("input-login-api");
 let inputLoginUsername = document.getElementById("input-login-username");
 let inputLoginPassword = document.getElementById("input-login-password");
 let inputCreateUsername = document.getElementById("input-create-username");

@@ -12,7 +12,7 @@ const appStorage = {
 	setItem(key, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(appPlatform === "web") {
+				if(appPlatform === "web" || appBypass()) {
 					localStorage.setItem(key, value);
 					resolve();
 				} else {
@@ -31,7 +31,7 @@ const appStorage = {
 	getItem(key) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(appPlatform === "web") {
+				if(appPlatform === "web" || appBypass()) {
 					let data = localStorage.getItem(key) || "";
 					resolve(data);
 				} else {
@@ -50,7 +50,7 @@ const appStorage = {
 	removeItem(key) {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if(appPlatform === "web") {
+				if(appPlatform === "web" || appBypass()) {
 					localStorage.removeItem(key);
 					resolve();
 				} else {
@@ -66,3 +66,7 @@ const appStorage = {
 		});
 	}
 };
+
+function appBypass() {
+	return (document.documentElement.getAttribute("data-bypass") === "enabled");
+}

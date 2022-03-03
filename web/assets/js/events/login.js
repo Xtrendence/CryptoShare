@@ -10,6 +10,24 @@ buttonLoginAccount.addEventListener("click", () => {
 			return;
 		}
 
+		if((empty(inputLoginAPI.value) && appPlatform === "app") || (empty(inputLoginAPI.value) && appBypass())) {
+			errorNotification("API URL must be provided.");
+			return;
+		}
+
+		if(appPlatform === "app" || appBypass()) {
+			urlAPI = inputLoginAPI.value;
+
+			try {
+				let url = new URL(urlAPI);
+				urlBot = `${url.protocol}//${url.hostname}:${url.port + 1}`;
+			} catch(error) {
+				console.log(error);
+				errorNotification("Invalid API URL format.");
+				return;
+			}
+		}
+
 		login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
 			if("error" in result) {
 				errorNotification(result.error.replaceAll("!", ""));

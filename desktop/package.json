@@ -2,10 +2,49 @@
 	"name": "CryptoShare",
 	"version": "1.0.0",
 	"description": "A tool that allows you to manage nearly every facet of your finances with an open-source web, mobile, and desktop application, along with a self-hosted RESTful GraphQL API.",
-	"main": "server.js",
+	"main": "app/server.js",
 	"scripts": {
-	"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "electron app/server.js",
+		"dev": "nodemon --exec electron app/server.js",
+		"pack": "build --dir",
+		"dist": "sudo electron-builder -mwl"
 	},
-	"author": "",
-	"license": "ISC"
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Xtrendence/CryptoShare.git"
+	},
+	"author": "Xtrendence <xtrendence@gmail.com>",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Xtrendence/CryptoShare/issues"
+	},
+	"homepage": "https://github.com/Xtrendence/CryptoShare#readme",
+	"build": {
+		"appId": "com.xtrendence.CryptoShare",
+		"asar": true,
+		"mac": {
+			"category": "public.app-category.finance"
+		},
+		"linux": {
+			"target": [
+				"AppImage",
+				"deb"
+			]
+		},
+		"win": {
+			"target": "NSIS",
+			"icon": "build/icon.ico"
+		}
+	},
+	"devDependencies": {
+		"electron": "^17.1.0",
+		"electron-builder": "^22.14.13"
+	},
+	"dependencies": {
+		"ejs": "^3.1.6",
+		"electron-localshortcut": "^3.2.1",
+		"electron-store": "^8.0.1",
+		"express": "^4.17.3"
+	}
 }
