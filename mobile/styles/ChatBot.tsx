@@ -61,11 +61,11 @@ export default createStyle<any>({
 		width: screenWidth - 40,
 		borderStyle: "solid",
 		borderColor: Colors.Dark.mainThird,
-		backgroundColor: Colors.Dark.mainFirstTransparent
+		backgroundColor: Colors.Dark.mainFirst
 	},
 	wrapperBarLight: {
 		borderColor: Colors.Light.mainThird,
-		backgroundColor: Colors.Light.mainFirstTransparent
+		backgroundColor: Colors.Light.mainFirst
 	},
 	wrapperBarTop: {
 		top: 0,
@@ -78,7 +78,7 @@ export default createStyle<any>({
 	input: {
 		width: screenWidth - 40 - 110,
 		borderRadius: GlobalStyle.borderRadius,
-		backgroundColor: Colors.Dark.mainFirstTransparent,
+		backgroundColor: Colors.Dark.mainSecond,
 		color: Colors.Dark.mainContrast,
 		paddingLeft: 10,
 		paddingRight: 10,
@@ -89,7 +89,7 @@ export default createStyle<any>({
 		zIndex: 10,
 	},
 	inputLight: {
-		backgroundColor: Colors.Light.mainFirstTransparent,
+		backgroundColor: Colors.Light.mainSecond,
 		color: Colors.Light.mainContrast,
 	},
 	sendButton: {

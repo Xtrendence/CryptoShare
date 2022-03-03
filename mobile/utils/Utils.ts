@@ -279,8 +279,8 @@ export default class Utils {
 	}
 
 	static stripHTMLCharacters(string: string) {
-		string = Utils.replaceAll(string, "<", "&lt;");
-		string = Utils.replaceAll(string, ">", "&gt;");
+		string = Utils.replaceAll("<", "&lt;", string);
+		string = Utils.replaceAll(">", "&gt;", string);
 		return string;
 	}
 

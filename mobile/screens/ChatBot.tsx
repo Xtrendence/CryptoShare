@@ -34,12 +34,17 @@ export default function ChatBot({ navigation }: any) {
 
 	const [checksum, setChecksum] = useState<string>("");
 	const [header, setHeader] = useState<any>(null);
+	
 	const [messageRows, setMessageRows] = useState<any>({});
+	const [updateMessages, setUpdatedMessages] = useState<any>(new Date());
+	const messageRef: any = useRef({});
 
 	const [input, setInput] = useState<string>("");
 	const [keyboardVisible, setKeyboardVisible] = useState<boolean>(false);
 	const [keyboardHeight, setKeyboardHeight] = useState<number>(0);
+
 	const inputRef: any = useRef();
+	const chatRef: any = useRef();
 
 	let keyboardDidHideListener: any = null;
 	let keyboardDidShowListener: any = null;
@@ -51,7 +56,7 @@ export default function ChatBot({ navigation }: any) {
 		let message = messageRows[item];
 
 		return (
-			<Item message={message}/>
+			<Item theme={theme} message={message}/>
 		);
 	}
 	
@@ -76,7 +81,29 @@ export default function ChatBot({ navigation }: any) {
 
 		keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", keyboardDidHide);
 		keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", keyboardDidShow);
+
+		navigation.addListener("focus", () => {
+			if(navigation.isFocused()) {
+				setTimeout(() => {
+					populateChatList(true);
+				}, 500);
+			}
+		});
+		
+		// let refresh = setInterval(() => {
+		// 	if(navigation.isFocused()) {
+		// 		populateChatList(false);
+		// 	}
+		// }, 15000);
+
+		return () => {
+			// clearInterval(refresh);
+		};
 	}, []);
+
+	useEffect(() => {
+		setMessageRows(messageRef.current);
+	}, [updateMessages]);
 
 	return (
 		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
@@ -92,13 +119,20 @@ export default function ChatBot({ navigation }: any) {
 						</TouchableOpacity>
 					</View>
 					<FlatList
-						contentContainerStyle={{ paddingTop:10 }}
-						data={Object.keys(messageRows)}
+						ref={chatRef}
+						contentContainerStyle={{ 
+							paddingTop: 70,
+							paddingBottom: 60,
+							flexGrow: 1,
+							justifyContent: "flex-end"
+						}}
+						data={Object.keys(messageRows).reverse()}
 						renderItem={renderItem}
-						keyExtractor={item => messageRows[item].messageID}
+						keyExtractor={item => messageRows[item].key}
 						style={[styles.chatList, styles[`chatList${theme}`]]}
 						ListHeaderComponent={header}
 						ListHeaderComponentStyle={styles.header}
+						inverted={true}
 					/>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarBottom]}>
 						<TextInput
@@ -146,11 +180,13 @@ export default function ChatBot({ navigation }: any) {
 	function keyboardDidHide(event: any) {
 		inputRef?.current?.blur();
 		setKeyboardVisible(false);
+		scrollChatToBottom();
 	}
 
 	function keyboardDidShow(event: any) {
 		setKeyboardHeight(event.endCoordinates.height);
 		setKeyboardVisible(true);
+		scrollChatToBottom();
 	}
 
 	function showMenu() {
@@ -186,7 +222,8 @@ export default function ChatBot({ navigation }: any) {
 
 		await requests.deleteMessageAll(token, userID);
 
-		setMessageRows({});
+		messageRef.current = {};
+		setUpdatedMessages(new Date());
 		setChecksum("");
 		clearChatOptions();
 	}
@@ -196,7 +233,8 @@ export default function ChatBot({ navigation }: any) {
 			dismissChatOptions();
 			clearChatOptions();
 			setChecksum("");
-			setMessageRows({});
+			messageRef.current = {};
+			setUpdatedMessages(new Date());
 		}
 
 		try {
@@ -204,6 +242,8 @@ export default function ChatBot({ navigation }: any) {
 			// let checksumHash = await sha256(JSON.stringify(messages));
 
 			let sorted: any = sortMessages(messages);
+
+			let rows: any = {};
 
 			sorted.keys.map((index: any) => {
 				let message = sorted.messages[index];
@@ -213,9 +253,14 @@ export default function ChatBot({ navigation }: any) {
 					let parsed = JSON.parse(text);
 					let from = parsed.from;
 					let content = parsed.message;
-					listMessage(from, content);
+					
+					let key = Object.keys(rows).length;
+					rows[key] = { from:from, message:content, key:key };
 				}
 			});
+
+			messageRef.current = rows;
+			setUpdatedMessages(new Date());
 
 			scrollChatToBottom();
 		} catch(error) {
@@ -252,6 +297,8 @@ export default function ChatBot({ navigation }: any) {
 
 		if(chatConnected) {
 			try {
+				setInput("");
+
 				let userID = await AsyncStorage.getItem("userID");
 				let token = await AsyncStorage.getItem("token");
 
@@ -271,9 +318,15 @@ export default function ChatBot({ navigation }: any) {
 
 	function listMessage(from: string, message: string) {
 		message = Utils.stripHTMLCharacters(message);
-		let current = messageRows;
-		let rows = { ...current, ...{ from:from, message:message }};
-		setMessageRows(rows);
+
+		let key = Object.keys(messageRef.current).length;
+
+		let current = messageRef.current;
+
+		current[key] = { from:from, message:message, key:key };
+
+		messageRef.current = current;
+		setUpdatedMessages(new Date());
 	}
 
 	async function addMessage(from: string, message: string) {
@@ -945,7 +998,7 @@ export default function ChatBot({ navigation }: any) {
 	}
 
 	function scrollChatToBottom() {
-		
+		Utils.wait(250).then(() => chatRef.current.scrollToOffset({ animated:true, offset:0 }));
 	}
 
 	function attachSocketEvents(socket: any) {
