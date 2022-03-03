@@ -1,6 +1,8 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-    </style>
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar"></style>
+	<style name="Theme.App.SplashScreen" parent="Theme.AppCompat.Light.NoActionBar">
+		<item name="android:windowBackground">@color/splashscreen_background</item>
+	</style>
 	<style name="Theme.FullScreenDialog">
 		<item name="android:windowNoTitle">true</item>
 		<item name="android:windowIsFloating">false</item>
