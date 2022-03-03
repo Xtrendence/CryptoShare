@@ -1,3 +1,11 @@
+if(appPlatform === "app") {
+	Neutralino.init();
+
+	Neutralino.events.on("windowClose", () => {
+		Neutralino.app.exit();
+	});
+}
+
 detectMobile() ? document.body.id = "mobile" : document.body.id = "desktop";
 
 let ignoredErrors = [];

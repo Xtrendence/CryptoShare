@@ -1,8 +1,8 @@
 async function fetchStockPrice(currency, symbols, showError) {
 	try {
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
-		let keyAPI = localStorage.getItem("keyAPI");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let keyAPI = await appStorage.getItem("keyAPI");
 
 		if(empty(symbols)) {
 			return { error:"No symbols provided." };
@@ -43,9 +43,9 @@ async function fetchStockPrice(currency, symbols, showError) {
 
 async function fetchStockHistorical(currency, assetSymbol, showError) {
 	try {
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
-		let keyAPI = localStorage.getItem("keyAPI");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let keyAPI = await appStorage.getItem("keyAPI");
 
 		if(empty(keyAPI)) {
 			return { error:"No stock API key provided. Please set this in settings." };
@@ -97,7 +97,7 @@ function parseHistoricalStockData(timestamps, prices) {
 async function fetchExchangeRates() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let current = localStorage.getItem("exchangeRates");
+			let current = await appStorage.getItem("exchangeRates");
 			
 			if(empty(current) || !validJSON(current) || refetchRequired(JSON.parse(current).time)) {
 				let data = await cryptoAPI.getExchangeRates();
@@ -109,7 +109,7 @@ async function fetchExchangeRates() {
 					data: rates
 				};
 
-				localStorage.setItem("exchangeRates", JSON.stringify(exchangeRates));
+				await appStorage.setItem("exchangeRates", JSON.stringify(exchangeRates));
 
 				resolve(rates);
 			} else {

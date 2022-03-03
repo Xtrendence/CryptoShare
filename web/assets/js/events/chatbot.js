@@ -7,11 +7,11 @@ buttonChatMenu.addEventListener("click", () => {
 	popup.show();
 	popup.updateHeight();
 
-	document.getElementById("popup-button-clear").addEventListener("click", () => {
+	document.getElementById("popup-button-clear").addEventListener("click", async () => {
 		popup.hide();
 
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		popup = new Popup(300, "auto", "Delete Messages", `<span>Are you sure you want to delete all messages?</span>`, { page:"chatbot" });
 		popup.show();

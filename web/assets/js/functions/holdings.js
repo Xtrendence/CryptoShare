@@ -11,9 +11,9 @@ async function populateHoldingsList(recreate, callback = null) {
 		checkBackdrop();
 
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let currency = getCurrency();
 
@@ -141,12 +141,14 @@ function removeHoldingsListErrorRow() {
 	}
 }
 
-function createHoldingsListErrorRow() {
+async function createHoldingsListErrorRow() {
 	let div = document.createElement("div");
 	div.id = "holdings-list-error-row";
 	div.setAttribute("class", "holdings-list-row error noselect");
 
-	if(!empty(localStorage.getItem("keyAPI"))) {
+	let keyAPI = await appStorage.getItem("keyAPI");
+
+	if(!empty(keyAPI)) {
 		div.innerHTML = `
 			<div class="icon-wrapper">
 				<div class="icon-symbol-wrapper">
@@ -434,9 +436,9 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 				let amount = inputAmount.value;
 		
 				if(!empty(amount) && !isNaN(amount) && amount > 0) {
-					let userID = localStorage.getItem("userID");
-					let token = localStorage.getItem("token");
-					let key = localStorage.getItem("key");
+					let userID = await appStorage.getItem("userID");
+					let token = await appStorage.getItem("token");
+					let key = await appStorage.getItem("key");
 
 					let encrypted = encryptObjectValues(key, {
 						holdingAssetID: holdingAssetID,
@@ -464,11 +466,11 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 }
 
 function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID, holdingAssetSymbol) {
-	buttonDelete.addEventListener("click", () => {
+	buttonDelete.addEventListener("click", async () => {
 		previousPopup.hide();
 		
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${holdingAssetSymbol.toUpperCase()} from your portfolio?</span>`, { page:"holdings" });
 		popup.show();
@@ -493,8 +495,8 @@ function addHoldingPopupDeleteEvent(previousPopup, buttonDelete, holdingID, hold
 	});
 }
 
-function setHoldingsUsername() {
-	let username = localStorage.getItem("username");
+async function setHoldingsUsername() {
+	let username = await appStorage.getItem("username");
 	spanHoldingsUsername.textContent = username;
 }
 
@@ -566,11 +568,11 @@ function parseActivityAsHoldings() {
 	});
 }
 
-function fetchHoldingsCryptoHistoricalData(ids = null) {
+async function fetchHoldingsCryptoHistoricalData(ids = null) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
 
 			let currency = getCurrency();
 

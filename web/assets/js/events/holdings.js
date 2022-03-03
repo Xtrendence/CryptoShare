@@ -80,9 +80,9 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 				let amount = inputAmount.value;
 
 				if(!empty(symbol) && !empty(amount) && !isNaN(amount) && amount > 0) {
-					let userID = localStorage.getItem("userID");
-					let token = localStorage.getItem("token");
-					let key = localStorage.getItem("key");
+					let userID = await appStorage.getItem("userID");
+					let token = await appStorage.getItem("token");
+					let key = await appStorage.getItem("key");
 
 					let result = await getCoin({ symbol:symbol });
 
@@ -194,9 +194,9 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 
 					symbol = symbol.toUpperCase();
 
-					let userID = localStorage.getItem("userID");
-					let token = localStorage.getItem("token");
-					let key = localStorage.getItem("key");
+					let userID = await appStorage.getItem("userID");
+					let token = await appStorage.getItem("token");
+					let key = await appStorage.getItem("key");
 
 					let result = await fetchStockPrice(currency, [symbol], true);
 

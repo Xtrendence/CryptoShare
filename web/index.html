@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" id="web">
 	<head>
+		<script src="./assets/js/lib/neutralino.js"></script>
+		<script src="./assets/js/helpers/storage.js"></script>
 		<script src="./assets/js/lib/jquery.js"></script>
 		<script src="./assets/js/lib/crypto-js.js"></script>
 		<script src="./assets/js/lib/chart.js"></script>
@@ -41,6 +43,7 @@
 			</div>
 			<!-- TODO: Remove preset values -->
 			<div class="login-wrapper">
+				<input class="app-only" id="input-login-api" placeholder="API URL..." type="text" spellcheck="false">
 				<div class="login-container">
 					<input id="input-login-username" placeholder="Username..." value="Admin" type="text" spellcheck="false">
 					<div class="input-password-wrapper">

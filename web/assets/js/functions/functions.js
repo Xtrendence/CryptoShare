@@ -170,9 +170,9 @@ function checkHoldingsOnDashboard() {
 }
 
 async function assetHoldingExists(id) {
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
-	let key = localStorage.getItem("key");
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+	let key = await appStorage.getItem("key");
 
 	return new Promise(async (resolve, reject) => {
 		try {

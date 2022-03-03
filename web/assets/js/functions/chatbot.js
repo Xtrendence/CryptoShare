@@ -70,8 +70,8 @@ async function sendMessage(message) {
 
 	if(chatConnected()) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
 
 			await addMessage("user", message);
 
@@ -105,9 +105,9 @@ async function addMessage(from, message) {
 
 			clearChatOptions();
 
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let json = JSON.stringify({ from:from, message:message });
 
@@ -179,8 +179,6 @@ function determineIntent(processed) {
 
 function processRequest(processedIntent) {
 	try {
-		console.log(processedIntent);
-
 		switch(processedIntent.category) {
 			case "transaction":
 				botFunctions.createTransaction(processedIntent);
@@ -210,9 +208,9 @@ function processRequest(processedIntent) {
 let botFunctions = {
 	async createTransaction(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let data = validateTransactionData(details.price, "spent", details.type, details.date, details.item);
 
@@ -233,9 +231,9 @@ let botFunctions = {
 
 	async createActivity(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let currency = getCurrency();
 			let symbol = details.asset;
@@ -325,9 +323,9 @@ let botFunctions = {
 
 	async updateHolding(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let currency = getCurrency();
 			let symbol = details.asset;
@@ -416,9 +414,9 @@ let botFunctions = {
 
 	async createWatchlist(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let currency = getCurrency();
 			let symbol = details.asset;
@@ -504,8 +502,8 @@ let botFunctions = {
 
 	async deleteWatchlist(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
 
 			let watchlist = await fetchWatchlist() || {};
 
@@ -524,9 +522,9 @@ let botFunctions = {
 
 	async updateIncome(details) {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let income = details.income;
 			
@@ -1256,9 +1254,9 @@ function attachSocketEvents(socket) {
 function fetchMessage() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let message = await readMessage(token, userID);
 

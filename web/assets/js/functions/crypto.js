@@ -25,7 +25,7 @@ async function getCoin(args) {
 async function fetchCoinList() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let current = localStorage.getItem("coinList");
+			let current = await appStorage.getItem("coinList");
 			
 			if(empty(current) || !validJSON(current) || refetchRequired(JSON.parse(current).time)) {
 				let list = await cryptoAPI.getCoinList();
@@ -43,7 +43,7 @@ async function fetchCoinList() {
 					data: pairs
 				};
 
-				localStorage.setItem("coinList", JSON.stringify(coinList));
+				await appStorage.setItem("coinList", JSON.stringify(coinList));
 
 				resolve(pairs);
 			} else {

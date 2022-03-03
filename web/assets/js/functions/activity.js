@@ -43,9 +43,9 @@ async function populateActivityList(recreate) {
 function fetchActivity() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let activity = await readActivity(token, userID);
 
@@ -252,9 +252,9 @@ function addActivityListRowEvent(div, activity) {
 			addActivityPopupDeleteEvent(popup, document.getElementById("popup-button-delete-activity"), activity.activityID);
 
 			popup.on("confirm", async () => {
-				let userID = localStorage.getItem("userID");
-				let token = localStorage.getItem("token");
-				let key = localStorage.getItem("key");
+				let userID = await appStorage.getItem("userID");
+				let token = await appStorage.getItem("token");
+				let key = await appStorage.getItem("key");
 
 				let data = parseActivityPopupData(popupElements);
 
@@ -320,11 +320,11 @@ function addActivityListRowEvent(div, activity) {
 }
 
 function addActivityPopupDeleteEvent(previousPopup, buttonDelete, activityID) {
-	buttonDelete.addEventListener("click", () => {
+	buttonDelete.addEventListener("click", async () => {
 		previousPopup.hide();
 		
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let popup = new Popup(300, "auto", "Delete Activity", `<span>Are you sure you want to remove this activity?</span>`, { page:"activity" });
 		popup.show();

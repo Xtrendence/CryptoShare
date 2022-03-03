@@ -1,4 +1,4 @@
-function setTheme(theme) {
+async function setTheme(theme) {
 	applicationSettings.theme = theme;
 
 	let themeToggles = document.getElementsByClassName("toggle-wrapper theme");
@@ -16,7 +16,7 @@ function setTheme(theme) {
 			themeToggles[i].classList.add("active");
 		}
 
-		localStorage.setItem("theme", "light");
+		await appStorage.setItem("theme", "light");
 
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
@@ -33,7 +33,7 @@ function setTheme(theme) {
 			themeToggles[i].classList.remove("active");
 		}
 
-		localStorage.setItem("theme", "dark");
+		await appStorage.setItem("theme", "dark");
 
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
@@ -46,7 +46,7 @@ function setBackground(theme) {
 	divBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
 }
 
-function setSounds(sounds) {
+async function setSounds(sounds) {
 	let soundToggles = document.getElementsByClassName("toggle-wrapper sounds");
 
 	if(sounds === "enabled") {
@@ -56,7 +56,7 @@ function setSounds(sounds) {
 			soundToggles[i].classList.add("active");
 		}
 
-		localStorage.setItem("sounds", "enabled");
+		await appStorage.setItem("sounds", "enabled");
 	} else {
 		applicationSettings.sounds = "disabled";
 
@@ -64,7 +64,7 @@ function setSounds(sounds) {
 			soundToggles[i].classList.remove("active");
 		}
 
-		localStorage.setItem("sounds", "disabled");
+		await appStorage.setItem("sounds", "disabled");
 	}
 }
 
@@ -110,8 +110,8 @@ function addSettingsChoiceEvents() {
 	}
 }
 
-function setChoice(key, value) {
-	let choicesJSON = localStorage.getItem("choices");
+async function setChoice(key, value) {
+	let choicesJSON = await appStorage.getItem("choices");
 	let choices = defaultChoices;
 
 	if(!empty(choicesJSON) && validJSON(choicesJSON)) {
@@ -124,13 +124,13 @@ function setChoice(key, value) {
 	
 	choices[key] = value;
 
-	localStorage.setItem("choices", JSON.stringify(choices));
+	await appStorage.setItem("choices", JSON.stringify(choices));
 }
 
-function fetchSettings() {
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
-	let key = localStorage.getItem("key");
+async function fetchSettings() {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+	let key = await appStorage.getItem("key");
 
 	return new Promise((resolve, reject) => {
 		readSetting(token, userID).then(result => {
@@ -146,17 +146,20 @@ function fetchSettings() {
 	});
 }
 
-function getSettings() {
+async function getSettings() {
 	let settings = {};
 
-	settings["theme"] = empty(localStorage.getItem("theme")) ? defaultSettings.theme : localStorage.getItem("theme");
-	settings["sounds"] = empty(localStorage.getItem("sounds")) ? defaultSettings.sounds : localStorage.getItem("sounds");
+	let theme = await appStorage.getItem("theme");
+	let sounds = await appStorage.getItem("sounds");
+
+	settings["theme"] = empty(theme) ? defaultSettings.theme : theme;
+	settings["sounds"] = empty(sounds) ? defaultSettings.sounds : sounds;
 
 	return settings;
 }
 
-function getSettingsChoices() {
-	let choicesJSON = localStorage.getItem("choices");
+async function getSettingsChoices() {
+	let choicesJSON = await appStorage.getItem("choices");
 
 	if(empty(choicesJSON) || !validJSON(choicesJSON)) {
 		return defaultChoices;
@@ -198,14 +201,14 @@ function processChoice(key, value) {
 	}
 }
 
-function setSettings(settings) {
+async function setSettings(settings) {
 	if(empty(settings)) {
 		settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 	}
 
-	Object.keys(settings).map(key => {
+	Object.keys(settings).map(async key => {
 		let value = settings[key];
-		localStorage.setItem(key, value);
+		await appStorage.setItem(key, value);
 	});
 
 	applicationSettings = getSettings();
@@ -224,13 +227,13 @@ function setSettingsPage(page) {
 	document.getElementById(`settings-page-${page}`).classList.remove("hidden");
 }
 
-function resetSettings() {
+async function resetSettings() {
 	showLoading(4000, "Resetting Settings...");
 	
-	localStorage.removeItem("theme");
-	localStorage.removeItem("background");
-	localStorage.removeItem("sounds");
-	localStorage.removeItem("choices");
+	await appStorage.removeItem("theme");
+	await appStorage.removeItem("background");
+	await appStorage.removeItem("sounds");
+	await appStorage.removeItem("choices");
 
 	setTimeout(() => {
 		window.location.reload();
@@ -238,9 +241,9 @@ function resetSettings() {
 }
 
 async function syncSettings(update) {
-	let token = localStorage.getItem("token");
-	let userID = localStorage.getItem("userID");
-	let key = localStorage.getItem("key");
+	let token = await appStorage.getItem("token");
+	let userID = await appStorage.getItem("userID");
+	let key = await appStorage.getItem("key");
 
 	let settings = { ...getSettings(), choices:JSON.stringify(getSettingsChoices()) };
 
@@ -275,8 +278,8 @@ async function syncSettings(update) {
 	}
 }
 
-function adminCheck() {
-	let username = localStorage.getItem("username");
+async function adminCheck() {
+	let username = await appStorage.getItem("username");
 
 	if(!empty(username) && username.toLowerCase() === "admin") {
 		buttonSettingsUserRegistration.classList.remove("hidden");
@@ -290,9 +293,9 @@ function adminCheck() {
 
 async function getAdminSettings() {
 	try {
-		let token = localStorage.getItem("token");
-		let userID = localStorage.getItem("userID");
-		let username = localStorage.getItem("username");
+		let token = await appStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let username = await appStorage.getItem("username");
 
 		let response = await performAdminAction(token, userID, username, "getSettings");
 

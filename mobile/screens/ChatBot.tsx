@@ -469,8 +469,6 @@ export default function ChatBot({ navigation }: any) {
 
 	function processRequest(processedIntent: any) {
 		try {
-			console.log(processedIntent);
-
 			switch(processedIntent.category) {
 				case "transaction":
 					createTransaction(processedIntent);

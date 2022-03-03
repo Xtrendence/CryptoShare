@@ -259,8 +259,8 @@ async function showCryptoMarketData(info) {
 	try {
 		showLoading(2500, "Fetching Market Data...");
 
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let data = await cryptoAPI.getCoinData(info.coinID);
 

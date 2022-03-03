@@ -20,9 +20,9 @@ settingsToggleSounds.addEventListener("click", () => {
 	syncSettings(true);
 });
 
-buttonSettingsLogout.addEventListener("click", () => {
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
+buttonSettingsLogout.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
 
 	logout(userID, token).then(result => {
 		if("error" in result) {
@@ -35,9 +35,9 @@ buttonSettingsLogout.addEventListener("click", () => {
 	});
 });
 
-buttonSettingsLogoutEverywhere.addEventListener("click", () => {
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
+buttonSettingsLogoutEverywhere.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
 
 	let popup = new Popup(300, "auto", "Logout Everywhere", `<span>Are you sure you want to log out from every active session?</span>`, { page:"settings" });
 	popup.show();
@@ -74,16 +74,16 @@ buttonSettingsPassword.addEventListener("click", () => {
 
 	inputCurrentPassword.focus();
 
-	popup.on("confirm", () => {
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+	popup.on("confirm", async () => {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let currentPassword = inputCurrentPassword.value;
 		let newPassword = document.getElementById("popup-input-new-password").value;
 		let repeatPassword = document.getElementById("popup-input-repeat-password").value;
 
 		if(newPassword === repeatPassword) {
-			let key = localStorage.getItem("key");
+			let key = await appStorage.getItem("key");
 
 			if(empty(key)) {
 				errorNotification("Couldn't change encryption key.");
@@ -142,8 +142,8 @@ buttonSettingsDeleteAccount.addEventListener("click", () => {
 
 				showLoading(5000, "Deleting Account...");
 
-				let token = localStorage.getItem("token");
-				let userID = localStorage.getItem("userID");
+				let token = await appStorage.getItem("token");
+				let userID = await appStorage.getItem("userID");
 				
 				await deleteUser(token, userID);
 
@@ -170,9 +170,9 @@ buttonSettingsDeleteAccount.addEventListener("click", () => {
 
 buttonSettingsUserRegistration.addEventListener("click", async () => {
 	try {
-		let token = localStorage.getItem("token");
-		let userID = localStorage.getItem("userID");
-		let username = localStorage.getItem("username");
+		let token = await appStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let username = await appStorage.getItem("username");
 		let type = "enabled";
 		let action = "enableRegistration";
 
@@ -197,19 +197,19 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 	}
 });
 
-buttonSettingsStockAPIKey.addEventListener("click", () => {
+buttonSettingsStockAPIKey.addEventListener("click", async () => {
 	let popup = new Popup(300, "auto", "Set Stock API Key", `<span class="margin-bottom">If internal stock API is being used, set the API key to "-" or anything besides leaving it empty.</span><input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`, { page:"settings" });
 	popup.show();
 
 	let inputStockAPIKey = document.getElementById("popup-input-stock-api-key");
 
-	inputStockAPIKey.value = localStorage.getItem("keyAPI");
+	inputStockAPIKey.value = await appStorage.getItem("keyAPI");
 
 	inputStockAPIKey.focus();
 
-	popup.on("confirm", () => {
+	popup.on("confirm", async () => {
 		if(!empty(inputStockAPIKey.value)) {
-			localStorage.setItem("keyAPI", inputStockAPIKey.value);
+			await appStorage.setItem("keyAPI", inputStockAPIKey.value);
 
 			Notify.success({
 				title: "Stock API Key Set",
@@ -219,7 +219,7 @@ buttonSettingsStockAPIKey.addEventListener("click", () => {
 				color: "var(--accent-contrast)"
 			});
 		} else {
-			localStorage.removeItem("keyAPI");
+			await appStorage.removeItem("keyAPI");
 
 			Notify.success({
 				title: "Stock API Key Removed",
@@ -236,9 +236,9 @@ buttonSettingsStockAPIKey.addEventListener("click", () => {
 
 buttonSettingsStockAPIType.addEventListener("click", async () => {
 	try {
-		let token = localStorage.getItem("token");
-		let userID = localStorage.getItem("userID");
-		let username = localStorage.getItem("username");
+		let token = await appStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let username = await appStorage.getItem("username");
 		let type = "internal";
 		let action = "internalStockAPI";
 
@@ -286,7 +286,7 @@ buttonSettingsQRCode.addEventListener("click", () => {
 			popup = new Popup(420, 562, "QR Code", `<span class="margin-bottom">Please log in using the mobile app.</span><div class="popup-canvas-wrapper" id="popup-canvas-wrapper"></div>`, { page:"settings", confirmText:"-", cancelText:"Dismiss" });
 			popup.show();
 
-			let username = localStorage.getItem("username");
+			let username = await appStorage.getItem("username");
 			let response = await login(username, password);
 
 			if("error" in response) {
@@ -303,8 +303,6 @@ buttonSettingsQRCode.addEventListener("click", () => {
 			let qrCode = new QRCodeStyling(qrStyle);
 
 			qrCode.append(document.getElementById("popup-canvas-wrapper"));
-
-			console.log(response);
 		} catch(error) {
 			errorNotification("Something went wrong...");
 			console.log(error);

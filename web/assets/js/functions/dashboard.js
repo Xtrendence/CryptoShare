@@ -582,9 +582,9 @@ function addTransactionListRowEvent(transaction, div) {
 			});
 	
 			popup.on("confirm", async () => {
-				let userID = localStorage.getItem("userID");
-				let token = localStorage.getItem("token");
-				let key = localStorage.getItem("key");
+				let userID = await appStorage.getItem("userID");
+				let token = await appStorage.getItem("token");
+				let key = await appStorage.getItem("key");
 
 				let data = parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes);
 
@@ -615,11 +615,11 @@ function addTransactionListRowEvent(transaction, div) {
 }
 
 function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transactionID) {
-	buttonDelete.addEventListener("click", () => {
+	buttonDelete.addEventListener("click", async () => {
 		previousPopup.hide();
 		
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let popup = new Popup(300, "auto", "Delete Transaction", `<span>Are you sure you want to remove this transaction?</span>`, { page:"dashboard" });
 		popup.show();
@@ -786,9 +786,9 @@ function addTransactionButtonEvent(button) {
 			});
 	
 			popup.on("confirm", async () => {
-				let userID = localStorage.getItem("userID");
-				let token = localStorage.getItem("token");
-				let key = localStorage.getItem("key");
+				let userID = await appStorage.getItem("userID");
+				let token = await appStorage.getItem("token");
+				let key = await appStorage.getItem("key");
 
 				let data = parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes);
 
@@ -1037,9 +1037,9 @@ function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistDa
 }
 
 function addWatchlistDeleteEvent(div, asset) {
-	div.getElementsByClassName("action-button delete")[0].addEventListener("click", () => {
-		let userID = localStorage.getItem("userID");
-		let token = localStorage.getItem("token");
+	div.getElementsByClassName("action-button delete")[0].addEventListener("click", async () => {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
 
 		let popup = new Popup(300, "auto", "Delete Asset", `<span>Are you sure you want to remove ${asset.assetSymbol.toUpperCase()} from your watchlist?</span>`, { page:"dashboard" });
 		popup.show();
@@ -1179,9 +1179,9 @@ function getWatchlistIDBySymbol(watchlist, symbol, type) {
 function fetchWatchlist() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let watchlist = await readWatchlist(token, userID);
 
@@ -1211,9 +1211,9 @@ function fetchWatchlist() {
 function fetchBudget() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let budget = await readBudget(token, userID);
 
@@ -1251,9 +1251,9 @@ function fetchBudget() {
 function fetchTransaction() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let transaction = await readTransaction(token, userID);
 
@@ -1283,9 +1283,9 @@ function fetchTransaction() {
 function setDefaultBudgetData() {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let encrypted = CryptoFN.encryptAES(JSON.stringify(defaultBudgetData), key);
 
@@ -1345,9 +1345,9 @@ async function showBudgetPopup() {
 
 			showLoading(5000, "Updating...");
 
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let budgetData = await fetchBudget();
 
@@ -1463,9 +1463,9 @@ async function showIncomePopup() {
 
 			showLoading(5000, "Updating...");
 
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let income = popupInputIncome.value;
 

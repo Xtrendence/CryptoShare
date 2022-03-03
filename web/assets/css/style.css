@@ -302,6 +302,26 @@ input[type=number] {
 	height:320px;
 	top:calc(50% - 320px / 2);
 }
+#app .login-title-wrapper {
+	top:calc(50% - 60px / 2 - 190px - 20px);
+}
+#app .login-page.create .login-title-wrapper {
+	top:calc(50% - 60px / 2 - 190px - 20px - 30px);
+}
+#app .login-wrapper {
+	height:320px;
+	top:calc(50% - 320px / 2);
+}
+#app .login-page.create .login-wrapper {
+	height:380px;
+	top:calc(50% - 380px / 2);
+}
+#app .login-page .toggle-wrapper {
+	bottom:calc(50% - 40px / 2 - 190px - 20px);
+}
+#app .login-page.create .toggle-wrapper {
+	bottom:calc(50% - 40px / 2 - 190px - 20px - 30px);
+}
 .login-page.login .login-container {
 	display:block;
 }

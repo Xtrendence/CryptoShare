@@ -1,9 +1,9 @@
-function attemptLogin() {
-	let userID = localStorage.getItem("userID");
-	let token = localStorage.getItem("token");
+async function attemptLogin() {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
 
 	if(!empty(userID) && !empty(token)) {
-		verifyToken(userID, token).then(result => {
+		verifyToken(userID, token).then(async result => {
 			setTimeout(() => {
 				divLoading.classList.add("hidden");
 			}, 1000);
@@ -15,7 +15,7 @@ function attemptLogin() {
 				
 				errorNotification(result.error);
 			} else {
-				let key = localStorage.getItem("key");
+				let key = await appStorage.getItem("key");
 
 				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 				if(!empty(result.settings)) {
@@ -63,26 +63,28 @@ function finishLogout() {
 	});
 }
 
-function setAccountInfo(info, updateKey) {
-	localStorage.setItem("userID", info.userID);
-	localStorage.setItem("username", info.username);
-	localStorage.setItem("token", info.token);
+async function setAccountInfo(info, updateKey) {
+	await appStorage.setItem("userID", info.userID);
+	await appStorage.setItem("username", info.username);
+	await appStorage.setItem("token", info.token);
 
 	if(updateKey) {
-		localStorage.setItem("key", info.key);
+		await appStorage.setItem("key", info.key);
 	}
 
-	if(empty(localStorage.getItem("keyAPI"))) {
-		localStorage.setItem("keyAPI", "-");
+	let keyAPI = await appStorage.getItem("keyAPI");
+
+	if(empty(keyAPI)) {
+		await appStorage.setItem("keyAPI", "-");
 	}
 }
 
-function removeAccountInfo() {
-	localStorage.removeItem("userID");
-	localStorage.removeItem("username");
-	localStorage.removeItem("token");
-	localStorage.removeItem("key");
-	localStorage.removeItem("keyAPI");
+async function removeAccountInfo() {
+	await appStorage.removeItem("userID");
+	await appStorage.removeItem("username");
+	await appStorage.removeItem("token");
+	await appStorage.removeItem("key");
+	await appStorage.removeItem("keyAPI");
 }
 
 function clearLogin() {

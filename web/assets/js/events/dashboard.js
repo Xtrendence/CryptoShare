@@ -57,9 +57,9 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 		inputSymbol.focus();
 
 		popup.on("confirm", async () => {
-			let userID = localStorage.getItem("userID");
-			let token = localStorage.getItem("token");
-			let key = localStorage.getItem("key");
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+			let key = await appStorage.getItem("key");
 
 			let currency = getCurrency();
 			let symbol = inputSymbol.value;

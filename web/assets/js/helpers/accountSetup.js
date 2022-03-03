@@ -116,9 +116,9 @@ async function accountSetup() {
 					let key = CryptoFN.generateAESKey();
 					let encrypted = CryptoFN.encryptAES(key, inputCreatePassword.value);
 
-					createAccount(username, inputCreatePassword.value, encrypted).then(result => {
+					createAccount(username, inputCreatePassword.value, encrypted).then(async result => {
 						if(result.data.createUser === "Done") {
-							localStorage.setItem("key", key);
+							await appStorage.setItem("key", key);
 							
 							popup.hide();
 
