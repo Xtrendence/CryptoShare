@@ -92,8 +92,8 @@ class Popup {
 			buttonClose.click();
 		});
 
-		document.body.appendChild(this.overlay);
-		document.body.appendChild(this.element);
+		divAppContent.appendChild(this.overlay);
+		divAppContent.appendChild(this.element);
 
 		this.updateHeight();
 	}

@@ -26,7 +26,7 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 		}
 
 		checkBackdrop();
-		let currency = getCurrency();
+		let currency = await getCurrency();
 		populateMarketListCrypto(cryptoPage, currency);
 		populateMarketListStocks(stocksPage, currency);
 	}
@@ -75,7 +75,7 @@ async function populateMarketListStocks(page, currency) {
 			return;
 		}
 
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let filteredWatchlist = filterWatchlistByType(watchlistData);
 
@@ -394,7 +394,7 @@ async function showMarketSearchResult(popup, inputSearch, symbol, currency, type
 	} else {
 		showLoading(5000, "Loading...");
 
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let resultPrice = await fetchStockPrice(currency, [symbol], true);
 

@@ -1,16 +1,27 @@
 const appPlatform = document.documentElement.id;
 
+let electron = null;
+let ipcRenderer = null;
+
+if(appPlatform === "app") {
+	electron = require("electron");
+	ipcRenderer = electron.ipcRenderer;
+}
+
 const appStorage = {
 	setItem(key, value) {
 		return new Promise(async (resolve, reject) => {
 			try {
 				if(appPlatform === "web") {
 					localStorage.setItem(key, value);
+					resolve();
 				} else {
-					await Neutralino.storage.setData(key, value);
+					ipcRenderer.invoke("setItem", { key:key, value:value }).then((response) => {
+						resolve(response);
+					}).catch(error => {
+						reject(error);
+					});
 				}
-
-				resolve();
 			} catch(error) {
 				reject(error);
 			}
@@ -24,8 +35,11 @@ const appStorage = {
 					let data = localStorage.getItem(key) || "";
 					resolve(data);
 				} else {
-					let data = await Neutralino.storage.getData(key) || "";
-					resolve(data);
+					ipcRenderer.invoke("getItem", { key:key }).then((response) => {
+						resolve(response);
+					}).catch(error => {
+						reject(error);
+					});
 				}
 			} catch(error) {
 				reject(error);
@@ -38,11 +52,14 @@ const appStorage = {
 			try {
 				if(appPlatform === "web") {
 					localStorage.removeItem(key);
+					resolve();
 				} else {
-					await Neutralino.storage.setData(key, null);
+					ipcRenderer.invoke("removeItem", { key:key }).then((response) => {
+						resolve(response);
+					}).catch(error => {
+						reject(error);
+					});
 				}
-
-				resolve();
 			} catch(error) {
 				reject(error);
 			}

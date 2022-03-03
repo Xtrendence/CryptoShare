@@ -235,7 +235,7 @@ let botFunctions = {
 			let token = await appStorage.getItem("token");
 			let key = await appStorage.getItem("key");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 			let symbol = details.asset;
 
 			let amount = details.amount;
@@ -327,7 +327,7 @@ let botFunctions = {
 			let token = await appStorage.getItem("token");
 			let key = await appStorage.getItem("key");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 			let symbol = details.asset;
 
 			let amount = details.amount;
@@ -418,7 +418,7 @@ let botFunctions = {
 			let token = await appStorage.getItem("token");
 			let key = await appStorage.getItem("key");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 			let symbol = details.asset;
 
 			let watchlist = await fetchWatchlist() || {};
@@ -528,7 +528,7 @@ let botFunctions = {
 
 			let income = details.income;
 			
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let budgetData = await fetchBudget();
 
@@ -583,7 +583,7 @@ let botFunctions = {
 				usedPercentage = 100;
 			}
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let price = parseFloat(details.price);
 
@@ -598,7 +598,7 @@ let botFunctions = {
 	}
 };
 
-function processIntent(entities, intent) {
+async function processIntent(entities, intent) {
 	try {
 		clearChatOptions();
 
@@ -615,7 +615,8 @@ function processIntent(entities, intent) {
 				processActivity(entities, intent, details);
 				return;
 			case "holding":
-				if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+				let choices = await getSettingsChoices();
+				if(choices.transactionsAffectHoldings === "disabled") {
 					processHolding(entities, intent, details);
 					return;
 				} else {
@@ -639,9 +640,10 @@ function processIntent(entities, intent) {
 	}
 }
 
-function processOther(entities, intent, details) {
+async function processOther(entities, intent, details) {
 	if(intent.utterance.match("(help)")) {
-		let currencySymbol = currencySymbols[getCurrency()];
+		let currency = await getCurrency();
+		let currencySymbol = currencySymbols[currency];
 
 		requireClarification("What are you trying to do?", {
 			"Check Affordability": async () => {

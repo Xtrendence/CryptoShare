@@ -61,7 +61,7 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 			let token = await appStorage.getItem("token");
 			let key = await appStorage.getItem("key");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 			let symbol = inputSymbol.value;
 
 			if(!empty(symbol)) {

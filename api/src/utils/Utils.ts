@@ -189,7 +189,7 @@ export default class Utils {
 
 	static async login(username: string, password: string) {
 		return new Promise(async (resolve, reject) => {
-			this.db?.db?.get("SELECT * FROM User WHERE username = ?", [username], async (error, row) => {
+			this.db?.db?.get("SELECT * FROM User WHERE username = ? COLLATE NOCASE", [username], async (error, row) => {
 				if(error) {
 					console.log(error);
 					reject();

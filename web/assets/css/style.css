@@ -106,9 +106,87 @@ input[type=number] {
 	-moz-appearance:textfield;
 }
 
+.titlebar {
+	transition:none;
+	position:absolute;
+	width:100%;
+	height:36px;
+	top:0;
+	left:0;
+	box-shadow:var(--shadow-smooth);
+	background:var(--main-second);
+	-webkit-app-region:drag;
+	z-index:900;
+}
+#web .titlebar {
+	display:none;
+}
+.window-buttons {
+	transition:none;
+	font-size:0;
+	height:100%;
+	position:absolute;
+	top:0;
+	left:0;
+	z-index:902;
+	width:220px;
+}
+.window-buttons button {
+	display:inline-block;
+	width:18px;
+	height:18px;
+	margin:9px 0 0 9px;
+	padding:0;
+	border-radius:50%;
+	cursor:default;
+	vertical-align:top;
+	-webkit-app-region:no-drag;
+	position:relative;
+}
+.window-buttons button:hover svg {
+	opacity:1;
+}
+.window-buttons button.close-button {
+	background:var(--colorful-gradient);
+}
+.window-buttons button.minimize-button {
+	background:var(--orange-gradient);
+}
+.window-buttons button.maximize-button {
+	background:var(--blue-gradient);
+}
+.window-buttons button svg {
+	fill:rgb(255,255,255);
+	width:70%;
+	height:70%;
+	position:absolute;
+	top:2px;
+	left:15%;
+	opacity:0;
+	transition:opacity 0.25s;
+}
+.window-buttons button.maximize-button svg {
+	width:60%;
+	height:60%;
+	top:3.2px;
+	left:calc((100% - 60%) / 2);
+}
+
+.app-content {
+	position:absolute;
+	top:36px;
+	left:0;
+	height:calc(100% - 36px);
+	width:100%;
+}
+#web .app-content {
+	top:0;
+	height:100%;
+}
+
 .noscript-wrapper {
 	position:absolute;
-	z-index:999;
+	z-index:890;
 	top:0;
 	left:0;
 	width:100%;
@@ -148,7 +226,7 @@ input[type=number] {
 	left:0;
 	width:100%;
 	height:100%;
-	z-index:999;
+	z-index:850;
 	background:rgb(20,20,20);
 }
 .loading-overlay {

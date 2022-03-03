@@ -145,8 +145,8 @@ function setPage(page) {
 	}
 }
 
-function checkBackdrop() {
-	let choices = getSettingsChoices();
+async function checkBackdrop() {
+	let choices = await getSettingsChoices();
 
 	if("assetIconBackdrop" in choices && choices.assetIconBackdrop === "enabled") {
 		divMarketListCrypto.classList.add("backdrop");
@@ -159,8 +159,8 @@ function checkBackdrop() {
 	}
 }
 
-function checkHoldingsOnDashboard() {
-	let choices = getSettingsChoices();
+async function checkHoldingsOnDashboard() {
+	let choices = await getSettingsChoices();
 
 	if("holdingsOnDashboard" in choices && choices.holdingsOnDashboard === "enabled") {
 		divPageDashboard.classList.add("show-holdings");
@@ -239,14 +239,21 @@ function showAssetMatches(referenceNode, list, marginBottom) {
 	}
 }
 
-function getCurrency() {
-	let currency = getSettingsChoices()?.currency;
+async function getCurrency() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let currency = await getSettingsChoices()?.currency;
 
-	if(empty(currency)) {
-		return defaultChoices.currency;
-	}
+			if(empty(currency)) {
+				resolve(defaultChoices.currency);
+				return;
+			}
 
-	return currency;
+			resolve(currency);
+		} catch(error) {
+			resolve(defaultChoices.currency);
+		}
+	});
 }
 
 function addTooltips() {

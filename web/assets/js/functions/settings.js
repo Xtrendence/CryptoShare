@@ -100,11 +100,12 @@ function addSettingsChoiceEvents() {
 	for(let i = 0; i < buttons.length; i++) {
 		let button = buttons[i];
 
-		button.addEventListener("click", () => {
+		button.addEventListener("click", async () => {
 			let key = button.parentElement.parentElement.getAttribute("data-key");
 			let value = button.getAttribute("data-value");
 			setChoice(key, value);
-			setSettingsChoices(getSettingsChoices());
+			let choices = await getSettingsChoices();
+			setSettingsChoices(choices);
 			syncSettings(true);
 		});
 	}
@@ -147,25 +148,39 @@ async function fetchSettings() {
 }
 
 async function getSettings() {
-	let settings = {};
+	return new Promise(async (resolve, reject) => {
+		try {
+			let settings = {};
 
-	let theme = await appStorage.getItem("theme");
-	let sounds = await appStorage.getItem("sounds");
+			let theme = await appStorage.getItem("theme");
+			let sounds = await appStorage.getItem("sounds");
 
-	settings["theme"] = empty(theme) ? defaultSettings.theme : theme;
-	settings["sounds"] = empty(sounds) ? defaultSettings.sounds : sounds;
+			settings["theme"] = empty(theme) ? defaultSettings.theme : theme;
+			settings["sounds"] = empty(sounds) ? defaultSettings.sounds : sounds;
 
-	return settings;
+			resolve(settings);
+		} catch(error) {
+			console.log(error);
+			resolve(defaultSettings);
+		}
+	});
 }
 
 async function getSettingsChoices() {
-	let choicesJSON = await appStorage.getItem("choices");
+	return new Promise(async (resolve, reject) => {
+		try {
+			let choicesJSON = await appStorage.getItem("choices");
 
-	if(empty(choicesJSON) || !validJSON(choicesJSON)) {
-		return defaultChoices;
-	} else {
-		return JSON.parse(choicesJSON);
-	}
+			if(empty(choicesJSON) || !validJSON(choicesJSON)) {
+				resolve(defaultChoices);
+			} else {
+				resolve(JSON.parse(choicesJSON));
+			}
+		} catch(error) {
+			console.log(error);
+			resolve(defaultChoices);
+		}
+	});
 }
 
 function setSettingsChoices(choices) {
@@ -211,8 +226,8 @@ async function setSettings(settings) {
 		await appStorage.setItem(key, value);
 	});
 
-	applicationSettings = getSettings();
-	applicationChoices = getSettingsChoices();
+	applicationSettings = await getSettings();
+	applicationChoices = await getSettingsChoices();
 
 	setSettingsChoices(applicationChoices);
 }
@@ -245,7 +260,10 @@ async function syncSettings(update) {
 	let userID = await appStorage.getItem("userID");
 	let key = await appStorage.getItem("key");
 
-	let settings = { ...getSettings(), choices:JSON.stringify(getSettingsChoices()) };
+	let currentSettings = await getSettings();
+	let currentChoices = await getSettingsChoices();
+
+	let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
 
 	let current = await fetchSettings();
 

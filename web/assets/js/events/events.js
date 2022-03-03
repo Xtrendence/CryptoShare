@@ -1,3 +1,21 @@
+buttonWindowClose.addEventListener("click", () => {
+	if(!empty(ipcRenderer)) {
+		ipcRenderer.send("set-window-state", "closed");
+	}
+});
+
+buttonWindowMinimize.addEventListener("click", () => {
+	if(!empty(ipcRenderer)) {
+		ipcRenderer.send("set-window-state", "minimized");
+	}
+});
+
+buttonWindowMaximize.addEventListener("click", () => {
+	if(!empty(ipcRenderer)) {
+		ipcRenderer.send("set-window-state", "maximized");
+	}
+});
+
 document.addEventListener("click", (event) => {
 	let audible = audibleElement(event.target);
 	if(applicationSettings.sounds === "enabled" && audioPlayable && audible.audible) {

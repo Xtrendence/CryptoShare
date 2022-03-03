@@ -6,6 +6,7 @@ async function attemptLogin() {
 		verifyToken(userID, token).then(async result => {
 			setTimeout(() => {
 				divLoading.classList.add("hidden");
+				divTitlebar.removeAttribute("style");
 			}, 1000);
 
 			if("error" in result) {
@@ -42,6 +43,7 @@ async function attemptLogin() {
 	} else {
 		setTimeout(() => {
 			divLoading.classList.add("hidden");
+			divTitlebar.removeAttribute("style");
 		}, 1000);
 	}
 }

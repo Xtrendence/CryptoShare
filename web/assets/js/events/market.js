@@ -2,7 +2,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 	try {
 		showLoading(2000, "Fetching Global Crypto Market Data...");
 
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let data = await cryptoAPI.getGlobal();
 
@@ -67,7 +67,7 @@ buttonMarketSearch.addEventListener("click", () => {
 		inputSearch.focus();
 
 		popup.on("confirm", async () => {
-			let currency = getCurrency();
+			let currency = await getCurrency();
 			let symbol = inputSearch.value;
 
 			if(!empty(symbol)) {

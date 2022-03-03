@@ -138,7 +138,7 @@ async function populateDashboardWatchlist(recreate) {
 				return;
 			}
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let filteredWatchlist = filterWatchlistByType(watchlistData);
 
@@ -181,10 +181,10 @@ async function populateDashboardWatchlist(recreate) {
 	}
 }
 
-function generatePieChart(budgetData) {
+async function generatePieChart(budgetData) {
 	let canvas = document.getElementById("pie-chart-canvas");
 
-	let currency = getCurrency();
+	let currency = await getCurrency();
 
 	let mainContrast = cssValue(document.documentElement, "--main-contrast");
 
@@ -250,7 +250,7 @@ function generatePieChart(budgetData) {
 	});
 }
 
-function generateBudgetStats(budgetData, transactionData, recreate) {
+async function generateBudgetStats(budgetData, transactionData, recreate) {
 	let spanIncome = document.getElementById("span-income");
 	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
 	let divStats = divDashboardBudgetList.getElementsByClassName("foreground");
@@ -260,7 +260,7 @@ function generateBudgetStats(budgetData, transactionData, recreate) {
 		divStats[i].style.width = "0%";
 	}
 
-	let currency = getCurrency();
+	let currency = await getCurrency();
 
 	let buttonMonth = document.getElementById("button-budget-month");
 	let buttonYear = document.getElementById("button-budget-year");
@@ -477,9 +477,9 @@ async function listTransactions() {
 			return;
 		}
 		
-		let choices = getSettingsChoices();
+		let choices = await getSettingsChoices();
 
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		divSideMenuContainer.innerHTML = "";
 
@@ -923,8 +923,8 @@ function addTransactionCategoryEvent(previousPopup, input) {
 	});
 }
 
-function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
-	let currency = getCurrency();
+async function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
+	let currency = await getCurrency();
 
 	let rows = [];
 
@@ -1064,12 +1064,12 @@ function addWatchlistDeleteEvent(div, asset) {
 	});
 }
 
-function addWatchlistRowEvent(div, asset) {
+async function addWatchlistRowEvent(div, asset) {
 	div.addEventListener("click", async (event) => {
 		if(!event.target.classList.contains("delete")) {
 			showLoading(5000, "Loading...");
 			
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			if(asset.assetType === "crypto") {
 				let data = await cryptoAPI.getMarketByID(currency, asset.assetID);

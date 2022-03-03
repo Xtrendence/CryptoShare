@@ -11,7 +11,7 @@ export function userExists({ username }: any) {
 			let settings = await Utils.getAdminSettings();
 
 			if(settings.userRegistration === "enabled") {
-				db.db?.get("SELECT * FROM User WHERE username = ?", [username], (error, row) => {
+				db.db?.get("SELECT * FROM User WHERE username = ? COLLATE NOCASE", [username], (error, row) => {
 					if(error) {
 						console.log(error);
 						reject();

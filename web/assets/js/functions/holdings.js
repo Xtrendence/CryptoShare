@@ -15,11 +15,13 @@ async function populateHoldingsList(recreate, callback = null) {
 			let token = await appStorage.getItem("token");
 			let key = await appStorage.getItem("key");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let holdingsData = {};
+
+			let choices = await getSettingsChoices();
 			
-			if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+			if(choices.transactionsAffectHoldings === "disabled") {
 				let holdings = await readHolding(token, userID);
 
 				if(empty(holdings?.data?.readHolding)) {
@@ -574,7 +576,7 @@ async function fetchHoldingsCryptoHistoricalData(ids = null) {
 			let userID = await appStorage.getItem("userID");
 			let token = await appStorage.getItem("token");
 
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let prices = {};
 			let parsedData = await parseActivityAsHoldings();
@@ -616,7 +618,7 @@ async function fetchHoldingsCryptoHistoricalData(ids = null) {
 function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 	return new Promise(async (resolve, reject) => {
 		try {
-			let currency = getCurrency();
+			let currency = await getCurrency();
 
 			let prices = {};
 			let parsedData = await parseActivityAsHoldings();
@@ -855,7 +857,7 @@ function parseActivityAsDatedValue(days, prices, activities) {
 			// If the current day's data isn't found in the "dates" object, then the current prices are fetched, and the data is added.
 			let today = formatDateHyphenated(new Date());
 			if(!(today in dates)) {
-				let currency = getCurrency();
+				let currency = await getCurrency();
 
 				// Get yesterday's holdings.
 				let keys = Object.keys(dates);
@@ -917,8 +919,8 @@ function parseActivityAsDatedValue(days, prices, activities) {
 	});
 }
 
-function showHoldingsPerformanceChart(dates, args = {}) {
-	let currency = getCurrency();
+async function showHoldingsPerformanceChart(dates, args = {}) {
+	let currency = await getCurrency();
 
 	let popup = new Popup("full", "full", ("symbol" in args ? `${args.symbol.toUpperCase()} Performance` : `Portfolio Performance`), `<div class="chart-wrapper"></div>`, { cancelText:"Dismiss", confirmText:"-", page:"holdings" });
 
@@ -938,7 +940,7 @@ function showHoldingsPerformanceChart(dates, args = {}) {
 
 	let parsed = parseHoldingsDateData(dates);
 
-	generateChart(divChart, ("symbol" in args ? `${args.symbol.toUpperCase()} Value` : `Portfolio Value`), parsed.labels, parsed.tooltips, getCurrency(), parsed.values, colors);
+	generateChart(divChart, ("symbol" in args ? `${args.symbol.toUpperCase()} Value` : `Portfolio Value`), parsed.labels, parsed.tooltips, currency, parsed.values, colors);
 
 	let stats = getHoldingsPerformanceData(currency, parsed.values);
 

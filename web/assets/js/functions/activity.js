@@ -15,7 +15,7 @@ async function populateActivityList(recreate) {
 
 			inputActivitySearch.classList.add("active");
 
-			let rows = createActivityListRows(activityData);
+			let rows = await createActivityListRows(activityData);
 
 			if(divActivityList.getElementsByClassName("loading-icon").length > 0 || divActivityList.childElementCount !== rows.length) {
 				divActivityList.innerHTML = "";
@@ -152,46 +152,53 @@ function filterActivityList(query) {
 	}
 }
 
-function createActivityListRows(activityData) {
-	let choices = getSettingsChoices();
+async function createActivityListRows(activityData) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let choices = await getSettingsChoices();
 
-	let transactionIDs = Object.keys(activityData).reverse();
+			let transactionIDs = Object.keys(activityData).reverse();
 
-	let rows = [];
+			let rows = [];
 
-	transactionIDs.map(txID => {
-		let activity = activityData[txID];
+			transactionIDs.map(txID => {
+				let activity = activityData[txID];
 
-		let div = document.createElement("div");
-		div.id = "activity-list-" + txID;
-		div.setAttribute("class", "activity-list-row noselect audible-pop");
-		div.setAttribute("data-id", activity.activityAssetID);
+				let div = document.createElement("div");
+				div.id = "activity-list-" + txID;
+				div.setAttribute("class", "activity-list-row noselect audible-pop");
+				div.setAttribute("data-id", activity.activityAssetID);
 
-		let date = choices?.dateFormat === "dd-mm-yyyy" ? formatDateHyphenatedHuman(new Date(Date.parse(activity.activityDate))) : formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
+				let date = choices?.dateFormat === "dd-mm-yyyy" ? formatDateHyphenatedHuman(new Date(Date.parse(activity.activityDate))) : formatDateHyphenated(new Date(Date.parse(activity.activityDate)));
 
-		div.innerHTML = `
-			<div class="info-wrapper audible-pop">
-				<div class="asset-container audible-pop">
-					<span class="date">${date}</span>
-					<span class="symbol">${activity.activityAssetSymbol.toUpperCase()}</span>
-					<span class="type ${activity.activityType}">${capitalizeFirstLetter(activity.activityType)}</span>
-				</div>
-				<div class="info-container">
-					${ !empty(activity.activityNotes) && activity.activityNotes !== "-" &&
-						`<span class="notes">${activity.activityNotes}</span>`
-					}
-					<span class="amount">Amount: ${separateThousands(activity.activityAssetAmount)}</span>
-					<span class="hidden">${activity.activityAssetType}</span>
-				</div>
-			</div>
-		`;
+				div.innerHTML = `
+					<div class="info-wrapper audible-pop">
+						<div class="asset-container audible-pop">
+							<span class="date">${date}</span>
+							<span class="symbol">${activity.activityAssetSymbol.toUpperCase()}</span>
+							<span class="type ${activity.activityType}">${capitalizeFirstLetter(activity.activityType)}</span>
+						</div>
+						<div class="info-container">
+							${ !empty(activity.activityNotes) && activity.activityNotes !== "-" &&
+								`<span class="notes">${activity.activityNotes}</span>`
+							}
+							<span class="amount">Amount: ${separateThousands(activity.activityAssetAmount)}</span>
+							<span class="hidden">${activity.activityAssetType}</span>
+						</div>
+					</div>
+				`;
 
-		addActivityListRowEvent(div, activity);
+				addActivityListRowEvent(div, activity);
 
-		rows.push(div);
+				rows.push(div);
+			});
+
+			resolve(rows);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
 	});
-
-	return rows;
 }
 
 function addActivityListRowEvent(div, activity) {
@@ -385,7 +392,9 @@ async function getActivityPopupAssetID(type, symbol) {
 			} else {
 				symbol = symbol.toUpperCase();
 
-				let result = await fetchStockPrice(getCurrency(), [symbol], true);
+				let currency = await getCurrency();
+
+				let result = await fetchStockPrice(currency, [symbol], true);
 
 				if("error" in result) {
 					errorNotification(result.error);
@@ -579,7 +588,7 @@ function showActivityStakingPopup() {
 	let popupSpanOutput = document.getElementById("popup-span-output");
 
 	popup.on("confirm", async () => {
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let symbol = popupInputSymbol.value;
 		let amount = popupInputAmount.value;
@@ -658,7 +667,7 @@ function showActivityMiningPopup() {
 	let popupSpanOutput = document.getElementById("popup-span-output");
 
 	popup.on("confirm", async () => {
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let symbol = popupInputSymbol.value;
 		let equipmentCost = popupInputEquipmentCost.value;
@@ -732,7 +741,7 @@ function showActivityDividendPopup() {
 	let popupSpanOutput = document.getElementById("popup-span-output");
 
 	popup.on("confirm", async () => {
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let amount = popupInputAmount.value;
 		let dividend = popupInputDividend.value;
@@ -774,7 +783,7 @@ function showActivityMortgagePopup() {
 	let popupSpanOutput = document.getElementById("popup-span-output");
 
 	popup.on("confirm", async () => {
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let price = popupInputPrice.value;
 		let deposit = popupInputDeposit.value;
@@ -809,7 +818,7 @@ function showActivityTaxPopup() {
 	let popupSpanOutput = document.getElementById("popup-span-output");
 
 	popup.on("confirm", async () => {
-		let currency = getCurrency();
+		let currency = await getCurrency();
 
 		let income = popupInputIncome.value;
 

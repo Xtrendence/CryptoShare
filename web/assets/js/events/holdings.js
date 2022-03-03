@@ -8,7 +8,8 @@ divHoldingsCardValue.addEventListener("click", () => {
 });
 
 buttonHoldingsPerformance.addEventListener("click", async () => {
-	if(getSettingsChoices().transactionsAffectHoldings === "enabled") {
+	let choices = await getSettingsChoices();
+	if(choices.transactionsAffectHoldings === "enabled") {
 		try {
 			let activityData = await fetchActivity();
 			if(empty(activityData)) {
@@ -57,9 +58,10 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 	}
 });
 
-buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
+buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 	try {
-		if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+		let choices = await getSettingsChoices();
+		if(choices.transactionsAffectHoldings === "disabled") {
 			let html = `
 				<span class="popup-input-span">Coin Symbol</span>
 				<input class="uppercase" id="popup-input-symbol-crypto" type="text" placeholder="Coin Symbol..." spellcheck="false" autocomplete="off">
@@ -165,9 +167,10 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", () => {
 	}
 });
 
-buttonHoldingsAddStockAsset.addEventListener("click", () => {
+buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 	try {
-		if(getSettingsChoices().transactionsAffectHoldings === "disabled") {
+		let choices = await getSettingsChoices();
+		if(choices.transactionsAffectHoldings === "disabled") {
 			let html = `
 				<span class="popup-input-span">Stock Symbol</span>
 				<input class="uppercase" id="popup-input-symbol-stock" type="text" placeholder="Stock Symbol..." spellcheck="false" autocomplete="off">
@@ -184,7 +187,7 @@ buttonHoldingsAddStockAsset.addEventListener("click", () => {
 			inputSymbol.focus();
 
 			popup.on("confirm", async () => {
-				let currency = getCurrency();
+				let currency = await getCurrency();
 
 				let symbol = inputSymbol.value;
 				let amount = inputAmount.value;

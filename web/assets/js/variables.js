@@ -21,8 +21,13 @@ let firstFetch = {
 	settings: true
 };
 
-let applicationSettings = getSettings();
-let applicationChoices = getSettingsChoices();
+let applicationSettings = {};
+let applicationChoices = {};
+
+(async () => {
+	applicationSettings = await getSettings();
+	applicationChoices = await getSettingsChoices();
+})();
 
 let audioPlayable = false;
 
