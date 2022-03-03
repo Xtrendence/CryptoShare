@@ -146,6 +146,12 @@ export default class Utils {
 			dispatch(changeSetting({ key:"transactionsAffectHoldings", value:transactionsAffectHoldings }));
 		}
 
+		let currency = await AsyncStorage.getItem("currency");
+		if(!this.empty(currency)) {
+			settings.currency = currency;
+			dispatch(changeSetting({ key:"currency", value:currency }));
+		}
+
 		let assetIconBackdrop = await AsyncStorage.getItem("assetIconBackdrop");
 		if(!this.empty(assetIconBackdrop)) {
 			settings.assetIconBackdrop = assetIconBackdrop;

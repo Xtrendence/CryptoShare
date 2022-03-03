@@ -148,13 +148,13 @@ export default function Settings({ navigation }: any) {
 									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Currency</Text>
 								</View>
 								<View style={styles.sectionBottom}>
-									<ChoiceButton setting="USD" active={settings.currency} text="USD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"usd" }))}/>
-									<ChoiceButton setting="GBP" active={settings.currency} text="GBP" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"gbp" }))}/>
-									<ChoiceButton setting="EUR" active={settings.currency} text="EUR" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"eur" }))}/>
-									<ChoiceButton setting="CHF" active={settings.currency} text="CHF" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"chf" }))}/>
-									<ChoiceButton setting="AUD" active={settings.currency} text="AUD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"aud" }))}/>
-									<ChoiceButton setting="JPY" active={settings.currency} text="JPY" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"jpy" }))}/>
-									<ChoiceButton setting="CAD" active={settings.currency} text="CAD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"cad" }))}/>
+									<ChoiceButton setting="usd" active={settings.currency} text="USD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"usd" }))}/>
+									<ChoiceButton setting="gbp" active={settings.currency} text="GBP" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"gbp" }))}/>
+									<ChoiceButton setting="eur" active={settings.currency} text="EUR" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"eur" }))}/>
+									<ChoiceButton setting="chf" active={settings.currency} text="CHF" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"chf" }))}/>
+									<ChoiceButton setting="aud" active={settings.currency} text="AUD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"aud" }))}/>
+									<ChoiceButton setting="jpy" active={settings.currency} text="JPY" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"jpy" }))}/>
+									<ChoiceButton setting="cad" active={settings.currency} text="CAD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"cad" }))}/>
 								</View>
 							</View>
 						}
