@@ -129,7 +129,7 @@ export default function ChatBot({ navigation }: any) {
 					<FlatList
 						ref={chatRef}
 						contentContainerStyle={{ 
-							paddingTop: 70,
+							paddingTop: Object.keys(chatOptions).length === 0 ? 70 : 130,
 							paddingBottom: 60,
 							flexGrow: 1,
 							justifyContent: "flex-end"
