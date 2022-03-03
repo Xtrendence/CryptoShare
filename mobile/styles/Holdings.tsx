@@ -100,7 +100,7 @@ export default createStyle<any>({
 	listText: {
 		fontSize: 18,
 		fontWeight: "bold",
-		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 10,
+		lineHeight: windowHeight - barHeight - 40 - 20 - 70 - 130 - 30,
 		color: Colors.Dark.mainContrast
 	},
 	listTextLight: {

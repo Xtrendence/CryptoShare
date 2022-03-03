@@ -462,7 +462,7 @@ export default createStyle<any>({
 		alignItems: "center"
 	},
 	listTextWrapper: {
-		height: windowHeight - barHeight - 40 - 20 - 70 - 110 - 10,
+		height: windowHeight - barHeight - 40 - 20 - 70 - 110 - 20,
 		alignItems: "center",
 		justifyContent: "center",
 		width: screenWidth - 40 - 80

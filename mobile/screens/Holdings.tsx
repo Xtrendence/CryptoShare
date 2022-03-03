@@ -728,7 +728,7 @@ export default function Holdings({ navigation }: any) {
 				let holdings = await requests.readHolding(token, userID);
 
 				if(Utils.empty(holdings?.data?.readHolding)) {
-					setHoldingsHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text></View>);
+					setHoldingsHeader(<Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text>);
 					setHoldingsRows({});
 					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
@@ -746,7 +746,7 @@ export default function Holdings({ navigation }: any) {
 				holdingsData = parsedData?.holdingsData;
 
 				if(Utils.empty(holdingsData)) {
-					setHoldingsHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text></View>);
+					setHoldingsHeader(<Text style={[styles.listText, styles[`listText${theme}`]]}>No Holdings Found</Text>);
 					setHoldingsRows({});
 					setHoldingsTotalValue(Utils.currencySymbols[settings.currency] + "0");
 					return;
