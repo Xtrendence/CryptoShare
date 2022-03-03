@@ -97,7 +97,6 @@ export default function TransactionPopup({ popupRef, changeContent, theme, setDa
 					<TextInput 
 						defaultValue={popupRef.current.transaction.notes.toString()}
 						spellCheck={false}
-						keyboardType="decimal-pad"
 						autoCorrect={false}
 						placeholder="Notes..." 
 						selectionColor={Colors[theme].mainContrast} 
