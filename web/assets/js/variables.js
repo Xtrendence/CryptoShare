@@ -29,6 +29,8 @@ let applicationChoices = {};
 	applicationChoices = await getSettingsChoices();
 })();
 
+let clickTargets = [];
+
 let audioPlayable = false;
 
 let tippyInstances = {

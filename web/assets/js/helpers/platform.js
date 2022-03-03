@@ -67,6 +67,16 @@ const appStorage = {
 	}
 };
 
+function appToggle() {
+	if(appBypass()) {
+		document.documentElement.id = "web";
+		document.documentElement.removeAttribute("data-bypass");
+	} else {
+		document.documentElement.id = "app";
+		document.documentElement.setAttribute("data-bypass", "enabled");
+	}
+}
+
 function appBypass() {
 	return (document.documentElement.getAttribute("data-bypass") === "enabled");
 }

@@ -17,6 +17,14 @@ buttonWindowMaximize.addEventListener("click", () => {
 });
 
 document.addEventListener("click", (event) => {
+	clickTargets.push(event.target.id);
+	clickTargets = clickTargets.slice(-3);
+
+	if(clickTargets.join("-") === "span-login-title-span-login-title-span-login-title") {
+		clickTargets = [];
+		appToggle();
+	}
+
 	let audible = audibleElement(event.target);
 	if(applicationSettings.sounds === "enabled" && audioPlayable && audible.audible) {
 		if(audible.type === "switch") {
