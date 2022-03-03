@@ -114,22 +114,28 @@ export default createStyle<any>({
 		borderRadius: 7,
 	},
 	chatStatusDarkConnected: {
-		backgroundColor: Colors.Dark.positiveFirst
+		backgroundColor: Colors.Dark.positiveFirst,
+		borderRadius: 7
 	},
 	chatStatusLightConnected: {
-		backgroundColor: Colors.Light.positiveFirst
+		backgroundColor: Colors.Light.positiveFirst,
+		borderRadius: 7
 	},
 	chatStatusDarkDisconnected: {
-		backgroundColor: Colors.Dark.negativeFirst
+		backgroundColor: Colors.Dark.negativeFirst,
+		borderRadius: 7
 	},
 	chatStatusLightDisconnected: {
-		backgroundColor: Colors.Light.negativeFirst
+		backgroundColor: Colors.Light.negativeFirst,
+		borderRadius: 7
 	},
 	chatStatusDarkReconnecting: {
-		backgroundColor: Colors.Dark.negativeFirst
+		backgroundColor: Colors.Dark.negativeFirst,
+		borderRadius: 7
 	},
 	chatStatusLightReconnecting: {
-		backgroundColor: Colors.Light.negativeFirst
+		backgroundColor: Colors.Light.negativeFirst,
+		borderRadius: 7
 	},
 	wrapperBarBottom: {
 		bottom: 0,
@@ -147,10 +153,20 @@ export default createStyle<any>({
 		bottom: 10,
 		left: 10,
 		zIndex: 10,
+		borderStyle: "solid",
+		borderWidth: 2,
+		borderColor: Colors.Dark.mainSecond
 	},
 	inputLight: {
 		backgroundColor: Colors.Light.mainSecond,
 		color: Colors.Light.mainContrast,
+		borderColor: Colors.Light.mainSecond
+	},
+	inputDisabledDark: {
+		backgroundColor: Colors.Dark.mainFirst,
+	},
+	inputDisabledLight: {
+		backgroundColor: Colors.Light.mainFirst,
 	},
 	sendButton: {
 		position: "absolute",

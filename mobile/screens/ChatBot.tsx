@@ -36,6 +36,7 @@ export default function ChatBot({ navigation }: any) {
 	const [header, setHeader] = useState<any>(null);
 	
 	const [messageRows, setMessageRows] = useState<any>({});
+	const [chatOptions, setChatOptions] = useState<any>({});
 	const [updateMessages, setUpdatedMessages] = useState<any>(new Date());
 	const messageRef: any = useRef({});
 
@@ -143,6 +144,7 @@ export default function ChatBot({ navigation }: any) {
 					/>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarBottom]}>
 						<TextInput
+							editable={(Object.keys(chatOptions).length === 0)}
 							onSubmitEditing={() => sendMessage(input)}
 							ref={inputRef}
 							value={input}
@@ -152,7 +154,7 @@ export default function ChatBot({ navigation }: any) {
 							placeholder="Say Something..." 
 							selectionColor={Colors[theme].mainContrast} 
 							placeholderTextColor={Colors[theme].mainContrastDarker} 
-							style={[styles.input, styles[`input${theme}`]]} 
+							style={[styles.input, styles[`input${theme}`], (Object.keys(chatOptions).length > 0) ? styles[`inputDisabled${theme}`] : null]} 
 							onChangeText={(value) => setInput(value)}
 						/>
 						<TouchableOpacity onPress={() => sendMessage(input)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.sendButton]}>
