@@ -40,6 +40,7 @@ let divChatStatus = document.getElementById("chat-status");
 let divChatOptions = document.getElementById("chat-options");
 
 let buttonChatMenu = document.getElementById("button-chat-menu");
+let buttonChatHelp = document.getElementById("button-chat-help");
 let buttonMessageSend = document.getElementById("button-message-send");
 
 let inputMessage = document.getElementById("input-message");

@@ -40,6 +40,10 @@ buttonChatMenu.addEventListener("click", () => {
 	});
 });
 
+buttonChatHelp.addEventListener("click", () => {
+	sendMessage("Help.");
+});
+
 inputMessage.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		buttonMessageSend.click();

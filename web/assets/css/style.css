@@ -1169,6 +1169,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	right:10px;
 	height:40px;
 }
+.page.chatbot .chat-top .action-button.first {
+	right:64px;
+}
 .page.chatbot .chat-top .action-button svg {
 	width:24px;
 	height:24px;

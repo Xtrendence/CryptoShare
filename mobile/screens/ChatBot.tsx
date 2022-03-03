@@ -118,6 +118,13 @@ export default function ChatBot({ navigation }: any) {
 							<Text style={[styles.chatName, styles[`chatName${theme}`]]}>Plutus</Text>
 							<View style={[styles.chatStatus, styles[`chatStatus${theme + status}`]]}></View>
 						</View>
+						<TouchableOpacity onPress={() => sendMessage("Help.")} style={[styles.button, styles.iconButton, styles[`iconButton`], { width:44, position:"absolute", top:10, right:60, zIndex:10 }]}>
+							<Icon
+								name="question" 
+								size={24} 
+								color={Colors[theme].accentContrast}
+							/>
+						</TouchableOpacity>
 						<TouchableOpacity onPress={() => showMenu()} style={[styles.button, styles.iconButton, styles[`iconButton`], { width:44, position:"absolute", top:10, right:4, zIndex:10 }]}>
 							<Icon
 								name="ellipsis-h" 
@@ -221,7 +228,7 @@ export default function ChatBot({ navigation }: any) {
 						<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Chat Actions</Text>
 					</View>
 					<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-						<TouchableOpacity onPress={() => deleteChat()} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:0 }]}>
+						<TouchableOpacity onPress={() => deleteChat(true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton, styles.sectionButton, { marginBottom:0 }]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Clear Messages</Text>
 						</TouchableOpacity>
 					</View>
@@ -235,8 +242,33 @@ export default function ChatBot({ navigation }: any) {
 		showPopup(content);
 	}
 
-	async function deleteChat() {
+	async function deleteChat(confirmation: boolean) {
+		Keyboard.dismiss();
 		hidePopup();
+
+		if(confirmation) {
+			let content = () => {
+				return (
+					<View style={[styles.popupContent, { paddingTop:20, paddingBottom:20 }]}>
+						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Are you sure?</Text>
+						</View>
+						<View style={styles.popupButtonWrapper}>
+							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => deleteChat(false)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+								<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				);
+			};
+
+			showPopup(content);
+
+			return;
+		}
 
 		let userID = await AsyncStorage.getItem("userID");
 		let token = await AsyncStorage.getItem("token");
