@@ -110,6 +110,13 @@ export default function ChatBot({ navigation }: any) {
 			<SafeAreaView style={styles.area}>
 				<KeyboardAvoidingView style={[styles.wrapper, styles[`wrapper${theme}`], keyboardVisible ? { height:wrapperHeight - keyboardHeight + barHeight } : null]}>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarTop]}>
+						<View style={styles.wrapperBarTopLeft}>
+							<View style={[styles.chatIcon, styles[`chatIcon${theme}`]]}>
+								<Text style={[styles.chatIconText, styles[`chatIconText${theme}`]]}>P</Text>
+							</View>
+							<Text style={[styles.chatName, styles[`chatName${theme}`]]}>Plutus</Text>
+							<View style={[styles.chatStatus, styles[`chatStatus${theme + status}`]]}></View>
+						</View>
 						<TouchableOpacity onPress={() => showMenu()} style={[styles.button, styles.iconButton, styles[`iconButton`], { width:44, position:"absolute", top:10, right:4, zIndex:10 }]}>
 							<Icon
 								name="ellipsis-h" 
@@ -980,7 +987,7 @@ export default function ChatBot({ navigation }: any) {
 
 			let choices = Object.keys(options);
 
-			
+			// TODO: Add functionality.
 
 			scrollChatToBottom();
 		} catch(error) {
@@ -989,10 +996,12 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// TODO: Add functionality.
 	function dismissChatOptions() {
 		
 	}
 
+	// TODO: Add functionality.
 	function clearChatOptions() {
 		
 	}

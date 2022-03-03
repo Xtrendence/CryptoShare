@@ -71,6 +71,66 @@ export default createStyle<any>({
 		top: 0,
 		borderBottomWidth: 2
 	},
+	wrapperBarTopLeft: {
+		position: "absolute",
+		top: 10,
+		left: 10,
+		zIndex: 10,
+		flexDirection: "row",
+		alignItems: "center"
+	},
+	chatIcon: {
+		backgroundColor: Colors.Dark.ChatBot.accentThird,
+		borderRadius: 20,
+		width: 40,
+		height: 40,
+		alignItems: "center",
+		justifyContent: "center",
+		marginRight: 10
+	},
+	chatIconLight: {
+		backgroundColor: Colors.Light.ChatBot.accentThird
+	},
+	chatIconText: {
+		color: Colors.Dark.accentContrast,
+		fontWeight: "bold",
+		fontSize: 18
+	},
+	chatIconTextLight: {
+		color: Colors.Light.accentContrast
+	},
+	chatName: {
+		color: Colors.Dark.mainContrast,
+		fontSize: 18,
+		fontWeight: "bold"
+	},
+	chatNameLight: {
+		color: Colors.Light.mainContrast
+	},
+	chatStatus: {
+		marginLeft: 10,
+		width: 14,
+		height: 14,
+		borderRadius: 7,
+	},
+	chatStatusDarkConnected: {
+		backgroundColor: Colors.Dark.positiveFirst
+	},
+	chatStatusLightConnected: {
+		backgroundColor: Colors.Light.positiveFirst
+	},
+	chatStatusDarkDisconnected: {
+		backgroundColor: Colors.Dark.negativeFirst
+	},
+	chatStatusLightDisconnected: {
+		backgroundColor: Colors.Light.negativeFirst
+	},
+	chatStatusDarkReconnecting: {
+		backgroundColor: Colors.Dark.negativeFirst
+	},
+	chatStatusLightReconnecting: {
+		backgroundColor: Colors.Light.negativeFirst
+	},
 	wrapperBarBottom: {
 		bottom: 0,
 		borderTopWidth: 2
