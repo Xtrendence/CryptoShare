@@ -1,5 +1,5 @@
 @media screen and (max-height:783px) {
-	.page.dashboard .page-container.half.bottom-right {
+	.page.dashboard.show-holdings .page-container.half.bottom-right {
 		height:calc(100% - 300px - 170px);
 	}
 }

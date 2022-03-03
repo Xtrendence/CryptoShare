@@ -79,7 +79,7 @@ export default class API {
 				this.appServer = app.listen(this.portAPI, () => {
 					listening.api = true;
 
-					console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://localhost:${this.portAPI}/graphql`);
+					console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portAPI}/graphql`);
 				});
 
 				app.get("/", (request, response) => {
@@ -170,7 +170,7 @@ export default class API {
 				this.httpServer.listen(this.portBot, () => {
 					listening.bot = true;
 
-					console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://localhost:${this.portBot}`);
+					console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portBot}`);
 				});
 
 				let check = setInterval(() => {
@@ -182,7 +182,7 @@ export default class API {
 
 				console.log(Utils.console.reset, `Started Server (${new Date().toTimeString().split(" ")[0]})`);
 
-				console.log(Utils.console.reset, Utils.console.orange, `Web Interface:`, Utils.console.blue, Utils.console.underline, `http://localhost:${this.portAPI}`, Utils.console.reset);
+				console.log(Utils.console.reset, Utils.console.orange, `Web Interface:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portAPI}`, Utils.console.reset);
 			} catch(error) {
 				console.log(Utils.console.reset, Utils.console.red, error);
 				reject(error);

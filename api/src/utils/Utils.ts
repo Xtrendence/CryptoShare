@@ -18,6 +18,36 @@ export default class Utils {
 		userRegistration: "enabled"
 	};
 
+	static getIP() {
+		try {
+			const { networkInterfaces } = require("os");
+
+			let interfaces: any = networkInterfaces();
+			let ips: any = {};
+
+			for(let networkInterface of Object.keys(interfaces)) {
+				for(let net of interfaces[networkInterface]) {
+					if(net.family === "IPv4" && !net.internal && !networkInterface.toLowerCase().match("(vethernet|vmware|vm|area)")) {
+						if(!ips[networkInterface]) {
+							ips[networkInterface] = [];
+						}
+						ips[networkInterface].push(net.address);
+					}
+				}
+			}
+
+			let ip = ips[Object.keys(ips)[0]][0];
+
+			if(Utils.empty(ip)) {
+				ip = "localhost";
+			}
+
+			return ip;
+		} catch(error) {
+			return "localhost";
+		}
+	}
+
 	static async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
 			if(!this.verifyTokenTime(token)) {
