@@ -104,7 +104,6 @@ function clearActivePage() {
 	}
 }
 
-// TODO: Fetch data when switching between pages.
 function setPage(page) {
 	page = empty(page) ? defaultChoices.defaultPage.toLowerCase() : page.toLowerCase().replace(" ", "");
 

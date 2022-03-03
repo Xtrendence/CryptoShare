@@ -137,6 +137,28 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.negativeFirst,
 		borderRadius: 7
 	},
+	scrollViewOptions: {
+		width: screenWidth - 40,
+		height: 54,
+		position: "absolute",
+		bottom: 60,
+		left: 0,
+		zIndex: 10,
+	},
+	optionsWrapper: {
+		flexDirection: "row",
+		minWidth: screenWidth - 40,
+		backgroundColor: Colors.Dark.mainThird
+	},
+	optionsWrapperLight: {
+		backgroundColor: Colors.Light.mainThird
+	},
+	optionButton: {
+		width: "auto",
+		height: 34,
+		marginTop: 10,
+		marginLeft: 10,
+	},
 	wrapperBarBottom: {
 		bottom: 0,
 		borderTopWidth: 2

@@ -101,9 +101,56 @@ function showLogin() {
 	divPageApp.classList.add("hidden");
 }
 
-// TODO: Add functionality.
 function clearApp() {
+	// Clear Popups.
+	let popupOverlays = document.getElementsByClassName("popup-overlay");
+	let popupWrappers = document.getElementsByClassName("popup-wrapper");
 
+	for(let i = 0; i < popupOverlays; i++) {
+		popupOverlays[i].remove();
+	}
+
+	for(let i = 0; i < popupWrappers; i++) {
+		popupWrappers[i].remove();
+	}
+
+	// Clear Chat Bot.
+	divChatList.removeAttribute("data-checksum");
+	divChatList.innerHTML = "";
+	inputMessage.value = "";
+
+	// Clear Dashboard.
+	divDashboardBudgetList.removeAttribute("data-month");
+	divDashboardBudgetList.removeAttribute("data-year");
+
+	let currentDate = new Date();
+	let currentMonth = currentDate.getMonth();
+	let currentYear = currentDate.getFullYear();
+
+	if(document.getElementById("button-budget-month")) {
+		document.getElementById("button-budget-month").textContent = monthNames[currentMonth];
+	}
+
+	if(document.getElementById("button-budget-year")) {
+		document.getElementById("button-budget-year").textContent = currentYear;
+	}
+
+	divDashboardBudgetList.innerHTML = "";
+	divDashboardHoldingsList.innerHTML = "";
+	divDashboardWatchlistList.innerHTML = "";
+
+	// Clear Market.
+	buttonMarketPrevious.setAttribute("data-page", "1");
+	buttonMarketCrypto.click();
+
+	// Clear Holdings.
+	spanHoldingsUsername.textContent = "-";
+	spanHoldingsValue.textContent = "-";
+	divHoldingsList.innerHTML = "";
+
+	// Clear Activity.
+	inputActivitySearch.value = "";
+	divActivityList.innerHTML = "";
 }
 
 function showApp() {

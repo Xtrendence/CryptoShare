@@ -91,14 +91,14 @@ export default function ChatBot({ navigation }: any) {
 			}
 		});
 		
-		// let refresh = setInterval(() => {
-		// 	if(navigation.isFocused()) {
-		// 		populateChatList(false);
-		// 	}
-		// }, 15000);
+		let refresh = setInterval(() => {
+			if(navigation.isFocused()) {
+				populateChatList(false);
+			}
+		}, 15000);
 
 		return () => {
-			// clearInterval(refresh);
+			clearInterval(refresh);
 		};
 	}, []);
 
@@ -142,6 +142,21 @@ export default function ChatBot({ navigation }: any) {
 						ListHeaderComponentStyle={styles.header}
 						inverted={true}
 					/>
+					{ Object.keys(chatOptions).length > 0 &&
+						<ScrollView style={styles.scrollViewOptions} contentContainerStyle={styles.scrollViewOptionsContent} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} horizontal={true}>
+							<View style={[styles.optionsWrapper, styles[`optionsWrapper${theme}`]]}>
+								{
+									Object.keys(chatOptions).map((option: any) => {
+										return (
+											<TouchableOpacity onPress={() => chatOptions[option]()} key={option} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.optionButton, { backgroundColor:Colors[theme].ChatBot.accentThird }]}>
+												<Text style={[styles.actionText, styles[`actionText${theme}`]]}>{option}</Text>
+											</TouchableOpacity>
+										);
+									})
+								}
+							</View>
+						</ScrollView>
+					}
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarBottom]}>
 						<TextInput
 							editable={(Object.keys(chatOptions).length === 0)}
@@ -987,9 +1002,7 @@ export default function ChatBot({ navigation }: any) {
 				clearChatOptions();
 			}
 
-			let choices = Object.keys(options);
-
-			// TODO: Add functionality.
+			setChatOptions(options);
 
 			scrollChatToBottom();
 		} catch(error) {
@@ -998,18 +1011,22 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
-	// TODO: Add functionality.
 	function dismissChatOptions() {
-		
+		if("Nevermind" in chatOptions) {
+			chatOptions["Nevermind"]();
+		}
 	}
 
-	// TODO: Add functionality.
 	function clearChatOptions() {
-		
+		setChatOptions({});
 	}
 
 	function scrollChatToBottom() {
-		Utils.wait(250).then(() => chatRef.current.scrollToOffset({ animated:true, offset:0 }));
+		Utils.wait(250).then(() => {
+			chatRef.current.scrollToOffset({ animated:true, offset:0 });
+		}).catch(error => { 
+			console.log(error) 
+		});
 	}
 
 	function attachSocketEvents(socket: any) {
