@@ -347,10 +347,10 @@ export default function Dashboard({ navigation }: any) {
 		}
 
 		if(!Utils.empty(query) && Object.keys(filteredRows).length > 0) {
-			return Object.keys(filteredRows).reverse();
+			return Object.keys(filteredRows);
 		}
 		
-		return Object.keys(activityRows).reverse();
+		return Object.keys(activityRows);
 	}
 
 	function searchTransactions(query: string) {
