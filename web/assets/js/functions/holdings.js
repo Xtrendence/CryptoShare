@@ -198,19 +198,29 @@ function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketC
 	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
 
 	for(let holding in holdingsCryptoData) {
-		let value = holdingsCryptoData[holding].holdingAssetAmount * marketCryptoData[holding].current_price;
+		try {
+			let value = holdingsCryptoData[holding].holdingAssetAmount * marketCryptoData[holding].current_price;
 
-		if(value > 0) {
-			array.push([holding, value]);
+			if(value > 0) {
+				array.push([holding, value]);
+			}
+		} catch(error) {
+			console.log(error);
+			continue;
 		}
 	}
 	
 	for(let holding in holdingsStocksData) {
-		let symbol = holdingsStocksData[holding].holdingAssetSymbol.toUpperCase();
-		let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
+		try {
+			let symbol = holdingsStocksData[holding].holdingAssetSymbol.toUpperCase();
+			let value = holdingsStocksData[holding].holdingAssetAmount * marketStocksData[symbol].priceData.price;
 
-		if(value > 0) {
-			array.push([holding, value]);
+			if(value > 0) {
+				array.push([holding, value]);
+			}
+		} catch(error) {
+			console.log(error);
+			continue;
 		}
 	}
 

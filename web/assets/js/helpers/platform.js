@@ -75,6 +75,12 @@ function appToggle() {
 		document.documentElement.id = "app";
 		document.documentElement.setAttribute("data-bypass", "enabled");
 	}
+	
+	divBackground.style.height = "0";
+
+	setTimeout(() => {
+		divBackground.style.height = "100%";
+	}, 50);
 }
 
 function appBypass() {

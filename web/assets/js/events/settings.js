@@ -319,3 +319,137 @@ buttonSettingsReset.addEventListener("click", () => {
 		resetSettings();
 	});
 });
+
+buttonSettingsDataWatchlist.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+
+	let popup = new Popup(400, "auto", "Manage Watchlist Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
+
+	let dataList = document.getElementById("popup-data-list");
+
+	let watchlist = await fetchWatchlist() || {};
+
+	Object.keys(watchlist).map(index => {
+		let row = document.createElement("div");
+		row.innerHTML = `<span>${watchlist[index]?.assetID} - ${watchlist[index]?.assetSymbol.toUpperCase()}</span>`;
+		row.addEventListener("click", () => {
+			popup.hide();
+
+			popup = new Popup(300, "auto", "Delete Watchlist Item", `<span>Are you sure you want to delete this item?</span>`, { page:"settings" });
+			popup.show();
+			popup.updateHeight();
+
+			popup.on("confirm", async () => {
+				try {
+					showLoading(2000, "Deleting...");
+					await deleteWatchlist(token, userID, watchlist[index].watchlistID);
+					hideLoading();
+					popup.hide();
+				} catch(error) {
+					errorNotification("Something went wrong...");
+					console.log(error);
+				}
+			});
+		});
+
+		dataList.appendChild(row);
+	});
+
+	popup.updateHeight();
+});
+
+buttonSettingsDataHolding.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+	let key = await appStorage.getItem("key");
+
+	let popup = new Popup(400, "auto", "Manage Holding Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
+
+	let dataList = document.getElementById("popup-data-list");
+
+	let holdingsData = {};
+
+	let holdings = await readHolding(token, userID);
+
+	let encrypted = holdings?.data?.readHolding;
+
+	Object.keys(encrypted).map(index => {
+		let decrypted = decryptObjectValues(key, encrypted[index]);
+		decrypted.holdingID = encrypted[index].holdingID;
+		holdingsData[decrypted.holdingAssetID] = decrypted;
+	});
+
+	Object.keys(holdingsData).map(id => {
+		let row = document.createElement("div");
+		row.innerHTML = `<span>${id} - ${holdingsData[id]?.holdingAssetSymbol.toUpperCase()}</span>`;
+		row.addEventListener("click", () => {
+			popup.hide();
+
+			popup = new Popup(300, "auto", "Delete Holding Item", `<span>Are you sure you want to delete this item?</span>`, { page:"settings" });
+			popup.show();
+			popup.updateHeight();
+
+			popup.on("confirm", async () => {
+				try {
+					showLoading(2000, "Deleting...");
+					await deleteHolding(token, userID, holdingsData[id].holdingID);
+					hideLoading();
+					popup.hide();
+				} catch(error) {
+					errorNotification("Something went wrong...");
+					console.log(error);
+				}
+			});
+		});
+
+		dataList.appendChild(row);
+	});
+
+	popup.updateHeight();
+});
+
+buttonSettingsDataActivity.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+
+	let popup = new Popup(400, "auto", "Manage Activity Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
+
+	let dataList = document.getElementById("popup-data-list");
+
+	let activities = await fetchActivity() || {};
+
+	Object.keys(activities).map(id => {
+		let row = document.createElement("div");
+		row.innerHTML = `<span>${activities[id]?.activityAssetID} - ${activities[id]?.activityAssetSymbol.toUpperCase()}</span>`;
+		row.addEventListener("click", () => {
+			popup.hide();
+
+			popup = new Popup(300, "auto", "Delete Activity Item", `<span>Are you sure you want to delete this item?</span>`, { page:"settings" });
+			popup.show();
+			popup.updateHeight();
+
+			popup.on("confirm", async () => {
+				try {
+					showLoading(2000, "Deleting...");
+					await deleteActivity(token, userID, activities[id].activityID);
+					hideLoading();
+					popup.hide();
+				} catch(error) {
+					errorNotification("Something went wrong...");
+					console.log(error);
+				}
+			});
+		});
+
+		dataList.appendChild(row);
+	});
+
+	popup.updateHeight();
+});

@@ -259,6 +259,7 @@ async function getCurrency() {
 function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
 	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
+	tippy(buttonChatHelp, { content:"Help", placement:"bottom" });
 	tippy(buttonChatMenu, { content:"Chat Actions", placement:"bottom" });
 	tippy(buttonDashboardBudgetEdit, { content:"Edit Budget", placement:"bottom" });
 	tippy(buttonDashboardWatchlistAdd, { content:"Add Asset", placement:"bottom" });

@@ -154,7 +154,7 @@ async function populateDashboardWatchlist(recreate) {
 				filteredWatchlist.stocks = {};
 			}
 
-			let rows = createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData);
+			let rows = await createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData);
 
 			if(divDashboardWatchlistList.getElementsByClassName("loading-icon").length > 0 || divDashboardWatchlistList.childElementCount !== rows.length) {
 				divDashboardWatchlistList.innerHTML = "";
@@ -924,116 +924,123 @@ function addTransactionCategoryEvent(previousPopup, input) {
 }
 
 async function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
-	let currency = await getCurrency();
-
-	let rows = [];
-
-	let ids = Object.keys(watchlistData);
-
-	marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
-
-	for(let i = 0; i < ids.length; i++) {
+	return new Promise(async (resolve, reject) => {
 		try {
-			let id = ids[i];
-			
-			let asset = watchlistData[id];
+			let currency = await getCurrency();
 
-			if(asset.assetType === "crypto") {
-				if(empty(marketCryptoData)) {
-					continue;
+			let rows = [];
+
+			let ids = Object.keys(watchlistData);
+
+			marketCryptoData = sortMarketDataByCoinID(marketCryptoData);
+
+			for(let i = 0; i < ids.length; i++) {
+				try {
+					let id = ids[i];
+					
+					let asset = watchlistData[id];
+
+					if(asset.assetType === "crypto") {
+						if(empty(marketCryptoData)) {
+							continue;
+						}
+
+						let coin = marketCryptoData[asset.assetID];
+
+						let coinID = coin.id;
+						let price = coin.current_price;
+						let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
+						let name = coin.name;
+						let symbol = coin.symbol;
+						let marketCap = coin.market_cap;
+						let volume = coin.total_volume;
+						let rank = coin.market_cap_rank || "-";
+
+						let div = document.createElement("div");
+						div.id = "watchlist-list-crypto-" + coinID;
+						div.setAttribute("class", "watchlist-list-row crypto noselect audible-pop");
+
+						div.innerHTML = `
+							<div class="info-wrapper audible-pop">
+								<span class="name">${name}</span>
+								<div class="rank-container audible-pop">
+									<span class="rank">#${rank}</span>
+									<span class="symbol">${symbol.toUpperCase()}</span>
+								</div>
+								<div class="info-container">
+									<div class="top audible-pop">
+										<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+										<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
+									</div>
+									<div class="bottom audible-pop">
+										<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+										<span class="price-change">24h Change: ${priceChangeDay}%</span>
+									</div>
+								</div>
+								<button class="action-button delete">
+									<svg class="delete" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="delete" d="M704 1376v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm-544-992h448l-48-117q-7-9-17-11h-317q-10 2-17 11zm928 32v64q0 14-9 23t-23 9h-96v948q0 83-47 143.5t-113 60.5h-832q-66 0-113-58.5t-47-141.5v-952h-96q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h309l70-167q15-37 54-63t79-26h320q40 0 79 26t54 63l70 167h309q14 0 23 9t9 23z"/></svg>
+								</button>
+							</div>
+						`;
+
+						addWatchlistDeleteEvent(div, asset);
+						addWatchlistRowEvent(div, asset);
+
+						rows.push(div);
+					} else {
+						let symbol = asset.assetSymbol.toUpperCase();
+
+						let stock = marketStocksData[symbol].priceData;
+
+						let shortName = stock.shortName;
+						let price = stock.price;
+						let marketCap = stock.marketCap;
+						let volume = stock.volume;
+						let priceChangeDay = formatPercentage(stock.change);
+
+						let div = document.createElement("div");
+						div.id = "watchlist-list-stock-" + symbol;
+						div.setAttribute("class", "watchlist-list-row stock noselect audible-pop");
+
+						div.innerHTML = `
+							<div class="info-wrapper audible-pop">
+								<span class="name">${shortName}</span>
+								<div class="rank-container audible-pop">
+									<span class="rank">-</span>
+									<span class="symbol">${symbol.toUpperCase()}</span>
+								</div>
+								<div class="info-container">
+									<div class="top audible-pop">
+										<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
+										<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
+									</div>
+									<div class="bottom audible-pop">
+										<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
+										<span class="price-change">24h Change: ${priceChangeDay}%</span>
+									</div>
+								</div>
+								<button class="action-button delete">
+									<svg class="delete" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="delete" d="M704 1376v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm-544-992h448l-48-117q-7-9-17-11h-317q-10 2-17 11zm928 32v64q0 14-9 23t-23 9h-96v948q0 83-47 143.5t-113 60.5h-832q-66 0-113-58.5t-47-141.5v-952h-96q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h309l70-167q15-37 54-63t79-26h320q40 0 79 26t54 63l70 167h309q14 0 23 9t9 23z"/></svg>
+								</button>
+							</div>
+						`;
+
+						addWatchlistDeleteEvent(div, asset);
+						addWatchlistRowEvent(div, asset);
+
+						rows.push(div);
+					}
+				} catch(error) {
+					console.log(error);
 				}
-
-				let coin = marketCryptoData[asset.assetID];
-
-				let coinID = coin.id;
-				let price = coin.current_price;
-				let priceChangeDay = formatPercentage(coin.market_cap_change_percentage_24h);
-				let name = coin.name;
-				let symbol = coin.symbol;
-				let marketCap = coin.market_cap;
-				let volume = coin.total_volume;
-				let rank = coin.market_cap_rank || "-";
-
-				let div = document.createElement("div");
-				div.id = "watchlist-list-crypto-" + coinID;
-				div.setAttribute("class", "watchlist-list-row crypto noselect audible-pop");
-
-				div.innerHTML = `
-					<div class="info-wrapper audible-pop">
-						<span class="name">${name}</span>
-						<div class="rank-container audible-pop">
-							<span class="rank">#${rank}</span>
-							<span class="symbol">${symbol.toUpperCase()}</span>
-						</div>
-						<div class="info-container">
-							<div class="top audible-pop">
-								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
-								<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
-							</div>
-							<div class="bottom audible-pop">
-								<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
-								<span class="price-change">24h Change: ${priceChangeDay}%</span>
-							</div>
-						</div>
-						<button class="action-button delete">
-							<svg class="delete" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="delete" d="M704 1376v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm-544-992h448l-48-117q-7-9-17-11h-317q-10 2-17 11zm928 32v64q0 14-9 23t-23 9h-96v948q0 83-47 143.5t-113 60.5h-832q-66 0-113-58.5t-47-141.5v-952h-96q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h309l70-167q15-37 54-63t79-26h320q40 0 79 26t54 63l70 167h309q14 0 23 9t9 23z"/></svg>
-						</button>
-					</div>
-				`;
-
-				addWatchlistDeleteEvent(div, asset);
-				addWatchlistRowEvent(div, asset);
-
-				rows.push(div);
-			} else {
-				let symbol = asset.assetSymbol.toUpperCase();
-
-				let stock = marketStocksData[symbol].priceData;
-
-				let shortName = stock.shortName;
-				let price = stock.price;
-				let marketCap = stock.marketCap;
-				let volume = stock.volume;
-				let priceChangeDay = formatPercentage(stock.change);
-
-				let div = document.createElement("div");
-				div.id = "watchlist-list-stock-" + symbol;
-				div.setAttribute("class", "watchlist-list-row stock noselect audible-pop");
-
-				div.innerHTML = `
-					<div class="info-wrapper audible-pop">
-						<span class="name">${shortName}</span>
-						<div class="rank-container audible-pop">
-							<span class="rank">-</span>
-							<span class="symbol">${symbol.toUpperCase()}</span>
-						</div>
-						<div class="info-container">
-							<div class="top audible-pop">
-								<span class="price">Price: ${currencySymbols[currency] + separateThousands(price)}</span>
-								<span class="market-cap">Market Cap: ${currencySymbols[currency] + abbreviateNumber(marketCap, 2)}</span>
-							</div>
-							<div class="bottom audible-pop">
-								<span class="volume">Volume: ${currencySymbols[currency] + abbreviateNumber(volume, 2)}</span>
-								<span class="price-change">24h Change: ${priceChangeDay}%</span>
-							</div>
-						</div>
-						<button class="action-button delete">
-							<svg class="delete" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="delete" d="M704 1376v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm256 0v-704q0-14-9-23t-23-9h-64q-14 0-23 9t-9 23v704q0 14 9 23t23 9h64q14 0 23-9t9-23zm-544-992h448l-48-117q-7-9-17-11h-317q-10 2-17 11zm928 32v64q0 14-9 23t-23 9h-96v948q0 83-47 143.5t-113 60.5h-832q-66 0-113-58.5t-47-141.5v-952h-96q-14 0-23-9t-9-23v-64q0-14 9-23t23-9h309l70-167q15-37 54-63t79-26h320q40 0 79 26t54 63l70 167h309q14 0 23 9t9 23z"/></svg>
-						</button>
-					</div>
-				`;
-
-				addWatchlistDeleteEvent(div, asset);
-				addWatchlistRowEvent(div, asset);
-
-				rows.push(div);
 			}
+
+			resolve(rows);
 		} catch(error) {
 			console.log(error);
+			reject(error);
 		}
-	}
-
-	return rows;
+	});
 }
 
 function addWatchlistDeleteEvent(div, asset) {

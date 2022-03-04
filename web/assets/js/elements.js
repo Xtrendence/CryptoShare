@@ -115,3 +115,6 @@ let buttonSettingsStockAPIKey = document.getElementById("button-settings-stock-a
 let buttonSettingsStockAPIType = document.getElementById("button-settings-stock-api-type");
 let buttonSettingsQRCode = document.getElementById("button-settings-qr-code");
 let buttonSettingsReset = document.getElementById("button-settings-reset");
+let buttonSettingsDataWatchlist = document.getElementById("button-settings-data-watchlist");
+let buttonSettingsDataHolding = document.getElementById("button-settings-data-holding");
+let buttonSettingsDataActivity = document.getElementById("button-settings-data-activity");
