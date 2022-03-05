@@ -97,7 +97,7 @@ export async function deleteTransactionAll({ token, userID }: any) {
 		let valid = await Utils.verifyToken(userID, token);
 
 		if(valid) {
-			db.runQuery("DELETE FROM Transaction WHERE userID = ?", [userID]);
+			db.runQuery("DELETE FROM [Transaction] WHERE userID = ?", [userID]);
 			return "Done";
 		} else {
 			return "Unauthorized";

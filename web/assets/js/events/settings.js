@@ -320,6 +320,203 @@ buttonSettingsReset.addEventListener("click", () => {
 	});
 });
 
+buttonSettingsResetChatBot.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Chat Bot", `<span>Are you sure you want to reset your chat bot data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteMessageAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsResetBudget.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Budget", `<span>Are you sure you want to reset your budget data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			await setDefaultBudgetData();
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsResetTransactions.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Transactions", `<span>Are you sure you want to reset your transaction data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteTransactionAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsResetWatchlist.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Watchlist", `<span>Are you sure you want to reset your watchlist data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteWatchlistAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsResetHoldings.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Holdings", `<span>Are you sure you want to reset your holdings data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteHoldingAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsResetActivities.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Activities", `<span>Are you sure you want to reset your activities data?</span>`, { page:"settings" });
+	popup.show();
+
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteActivityAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
+});
+
+buttonSettingsImportSettings.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportChatBot.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportBudget.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportTransactions.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportWatchlist.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportHoldings.addEventListener("click", () => {
+
+});
+
+buttonSettingsImportActivities.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportSettings.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportChatBot.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportBudget.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportTransactions.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportWatchlist.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportHoldings.addEventListener("click", () => {
+
+});
+
+buttonSettingsExportActivities.addEventListener("click", () => {
+
+});
+
 buttonSettingsDataWatchlist.addEventListener("click", async () => {
 	let watchlist = await fetchWatchlist() || {};
 
