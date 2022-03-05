@@ -243,16 +243,30 @@ function setSettingsPage(page) {
 }
 
 async function resetSettings() {
-	showLoading(4000, "Resetting Settings...");
-	
-	await appStorage.removeItem("theme");
-	await appStorage.removeItem("background");
-	await appStorage.removeItem("sounds");
-	await appStorage.removeItem("choices");
+	try {
+		let token = await appStorage.getItem("token");
+		let userID = await appStorage.getItem("userID");
 
-	setTimeout(() => {
-		window.location.reload();
-	}, 3500);
+		showLoading(4000, "Resetting Settings...");
+		
+		await appStorage.removeItem("theme");
+		await appStorage.removeItem("background");
+		await appStorage.removeItem("sounds");
+		await appStorage.removeItem("choices");
+
+		await updateSetting(token, userID, "");
+
+		setTimeout(() => {
+			window.location.reload();
+		}, 3500);
+	} catch(error) {
+		console.log(error);
+		errorNotification("Something went wrong...");
+		
+		setTimeout(() => {
+			window.location.reload();
+		}, 3500);
+	}
 }
 
 async function syncSettings(update) {
