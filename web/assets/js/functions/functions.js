@@ -1,3 +1,34 @@
+function createLink(url, filename) {
+	let link = document.createElement("a");
+
+	link.style = "display:none";
+	link.href = url;
+	link.download = filename;
+
+	return link;
+}
+
+function download(data, filename, type) {
+	if(typeof data === "string") {
+		data = [data];
+	}
+
+	let blob = new Blob(data, { type:type });
+
+	let url = window.URL.createObjectURL(blob);
+	let link = createLink(url, filename);
+
+	document.body.appendChild(link);
+
+	link.click();
+
+	document.body.removeChild(link);
+
+	setTimeout(function() {
+		window.URL.revokeObjectURL(url);
+	}, 1000);
+}
+
 function updatePasswordFields() {
 	let wrappers = document.getElementsByClassName("input-password-wrapper");
 	for(let i = 0; i < wrappers.length; i++) {

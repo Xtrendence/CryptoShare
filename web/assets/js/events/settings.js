@@ -465,10 +465,6 @@ buttonSettingsImportSettings.addEventListener("click", () => {
 
 });
 
-buttonSettingsImportChatBot.addEventListener("click", () => {
-
-});
-
 buttonSettingsImportBudget.addEventListener("click", () => {
 
 });
@@ -489,32 +485,129 @@ buttonSettingsImportActivities.addEventListener("click", () => {
 
 });
 
-buttonSettingsExportSettings.addEventListener("click", () => {
+buttonSettingsExportSettings.addEventListener("click", async () => {
+	let currentSettings = await getSettings();
+	let currentChoices = await getSettingsChoices();
 
+	let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
+	let json = JSON.stringify(settings, undefined, 4);
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(json, `${date}-CryptoShare-Settings.json`, "text/plain");
 });
 
-buttonSettingsExportChatBot.addEventListener("click", () => {
+buttonSettingsExportBudget.addEventListener("click", async () => {
+	let budget = await fetchBudget() || {};
 
+	if(empty(budget)) {
+		errorNotification("No data found.");
+		return;
+	}
+
+	let json = JSON.stringify(budget, undefined, 4);
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(json, `${date}-CryptoShare-Budget.json`, "text/plain");
 });
 
-buttonSettingsExportBudget.addEventListener("click", () => {
+buttonSettingsExportTransactions.addEventListener("click", async () => {
+	let transactions = await fetchTransaction() || {};
 
+	if(empty(transactions)) {
+		errorNotification("No data found.");
+		return;
+	}
+
+	let csv = "transactionID,transactionType,transactionDate,transactionCategory,transactionAmount,transactionNotes\n";
+
+	let keys = Object.keys(transactions);
+	keys.map(key => {
+		let transaction = transactions[key];
+		csv += `${transaction.transactionID},${transaction.transactionType},${transaction.transactionDate},${transaction.transactionCategory},${transaction.transactionAmount},${transaction.transactionNotes}\n`;
+	});
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(csv, `${date}-CryptoShare-Transactions.csv`, "text/plain");
 });
 
-buttonSettingsExportTransactions.addEventListener("click", () => {
+buttonSettingsExportWatchlist.addEventListener("click", async () => {
+	let watchlist = await fetchWatchlist() || {};
 
+	if(empty(watchlist)) {
+		errorNotification("No data found.");
+		return;
+	}
+
+	let csv = "watchlistID,assetID,assetSymbol,assetType\n";
+
+	let keys = Object.keys(watchlist);
+	keys.map(key => {
+		let asset = watchlist[key];
+		csv += `${asset.watchlistID},${asset.assetID},${asset.assetSymbol},${asset.assetType}\n`;
+	});
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(csv, `${date}-CryptoShare-Watchlist.csv`, "text/plain");
 });
 
-buttonSettingsExportWatchlist.addEventListener("click", () => {
+buttonSettingsExportHoldings.addEventListener("click", async () => {
+	let userID = await appStorage.getItem("userID");
+	let token = await appStorage.getItem("token");
+	let key = await appStorage.getItem("key");
 
+	let holdingsData = {};
+
+	let holdings = await readHolding(token, userID);
+
+	let encrypted = holdings?.data?.readHolding;
+
+	Object.keys(encrypted).map(index => {
+		let decrypted = decryptObjectValues(key, encrypted[index]);
+		decrypted.holdingID = encrypted[index].holdingID;
+		holdingsData[decrypted.holdingAssetID] = decrypted;
+	});
+
+	if(empty(holdingsData)) {
+		errorNotification("No data found.");
+		return;
+	}
+
+	let csv = "holdingID,holdingAssetID,holdingAssetSymbol,holdingAssetAmount,holdingAssetType\n";
+
+	let keys = Object.keys(holdingsData);
+	keys.map(key => {
+		let holding = holdingsData[key];
+		csv += `${holding.holdingID},${holding.holdingAssetID},${holding.holdingAssetSymbol},${holding.holdingAssetAmount},${holding.holdingAssetType}\n`;
+	});
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(csv, `${date}-CryptoShare-Holdings.csv`, "text/plain");
 });
 
-buttonSettingsExportHoldings.addEventListener("click", () => {
+buttonSettingsExportActivities.addEventListener("click", async () => {
+	let activities = await fetchActivity() || {};
 
-});
+	if(empty(activities)) {
+		errorNotification("No data found.");
+		return;
+	}
 
-buttonSettingsExportActivities.addEventListener("click", () => {
+	let csv = "activityID,activityTransactionID,activityAssetID,activityAssetSymbol,activityAssetType,activityDate,activityType,activityAssetAmount,activityFee,activityNotes,activityExchange,activityPair,activityPrice,activityFrom,activityTo\n";
 
+	let keys = Object.keys(activities);
+	keys.map(key => {
+		let activity = activities[key];
+		csv += `${activity.activityID},${activity.activityTransactionID},${activity.activityAssetID},${activity.activityAssetSymbol},${activity.activityAssetType},${activity.activityDate},${activity.activityType},${activity.activityAssetAmount},${activity.activityFee},${activity.activityNotes},${activity.activityExchange},${activity.activityPair},${activity.activityPrice},${activity.activityFrom},${activity.activityTo}\n`;
+	});
+
+	let date = formatDateHyphenatedHuman(new Date());
+
+	download(csv, `${date}-CryptoShare-Activities.csv`, "text/plain");
 });
 
 buttonSettingsDataWatchlist.addEventListener("click", async () => {
