@@ -321,6 +321,13 @@ buttonSettingsReset.addEventListener("click", () => {
 });
 
 buttonSettingsDataWatchlist.addEventListener("click", async () => {
+	let watchlist = await fetchWatchlist() || {};
+
+	if(empty(watchlist)) {
+		errorNotification("No watchlist items found.");
+		return;
+	}
+
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
 
@@ -329,8 +336,6 @@ buttonSettingsDataWatchlist.addEventListener("click", async () => {
 	popup.updateHeight();
 
 	let dataList = document.getElementById("popup-data-list");
-
-	let watchlist = await fetchWatchlist() || {};
 
 	Object.keys(watchlist).map(index => {
 		let row = document.createElement("div");
@@ -366,12 +371,6 @@ buttonSettingsDataHolding.addEventListener("click", async () => {
 	let token = await appStorage.getItem("token");
 	let key = await appStorage.getItem("key");
 
-	let popup = new Popup(400, "auto", "Manage Holding Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
-	popup.show();
-	popup.updateHeight();
-
-	let dataList = document.getElementById("popup-data-list");
-
 	let holdingsData = {};
 
 	let holdings = await readHolding(token, userID);
@@ -383,6 +382,17 @@ buttonSettingsDataHolding.addEventListener("click", async () => {
 		decrypted.holdingID = encrypted[index].holdingID;
 		holdingsData[decrypted.holdingAssetID] = decrypted;
 	});
+
+	if(empty(holdingsData)) {
+		errorNotification("No holdings found.");
+		return;
+	}
+
+	let popup = new Popup(400, "auto", "Manage Holding Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
+	popup.show();
+	popup.updateHeight();
+
+	let dataList = document.getElementById("popup-data-list");
 
 	Object.keys(holdingsData).map(id => {
 		let row = document.createElement("div");
@@ -414,20 +424,73 @@ buttonSettingsDataHolding.addEventListener("click", async () => {
 });
 
 buttonSettingsDataActivity.addEventListener("click", async () => {
+	let activities = await fetchActivity() || {};
+
+	if(empty(activities)) {
+		errorNotification("No activities found.");
+		return;
+	}
+	
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
 
-	let popup = new Popup(400, "auto", "Manage Activity Data", `<span>Use this to remove data that is causing issues.</span><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
+	let popup = new Popup(450, "auto", "Manage Activity Data", `<span class="margin-bottom">Use this to remove data that is causing issues.</span><input id="popup-input-search" placeholder="Search..." spellcheck="false"><div id="popup-data-list" class="popup-data-list noselect"></div>`, { page:"settings", confirmText:"-" });
 	popup.show();
 	popup.updateHeight();
 
-	let dataList = document.getElementById("popup-data-list");
+	let popupInputSearch = document.getElementById("popup-input-search");
 
-	let activities = await fetchActivity() || {};
+	popupInputSearch.addEventListener("keydown", () => {
+		filterPopupList(popupInputSearch.value);
+	});
+
+	popupInputSearch.addEventListener("keyup", () => {
+		filterPopupList(popupInputSearch.value);
+	});
+
+	let dataList = document.getElementById("popup-data-list");
+	
+	function filterPopupList(query) {
+		let spans = dataList.getElementsByTagName("span");
+
+		dataList.classList.remove("hidden");
+
+		if(empty(query)) {
+			for(let i = 0; i < spans.length; i++) {
+				spans[i].parentElement.classList.remove("hidden");
+			}
+
+			popup.updateHeight();
+
+			return;
+		}
+
+		query = query.toLowerCase();
+
+		let match = false;
+
+		for(let i = 0; i < spans.length; i++) {
+			let span = spans[i];
+			let content = span.textContent.toLowerCase();
+			
+			if(content.includes(query)) {
+				span.parentElement.classList.remove("hidden");
+				match = true;
+			} else {
+				span.parentElement.classList.add("hidden");
+			}
+		}
+
+		if(!match) {
+			dataList.classList.add("hidden");
+		}
+
+		popup.updateHeight();
+	}
 
 	Object.keys(activities).map(id => {
 		let row = document.createElement("div");
-		row.innerHTML = `<span>${activities[id]?.activityAssetID} - ${activities[id]?.activityAssetSymbol.toUpperCase()}</span>`;
+		row.innerHTML = `<span>${activities[id]?.activityAssetID} - ${activities[id]?.activityAssetSymbol.toUpperCase()} - ${activities[id]?.activityDate}</span>`;
 		row.addEventListener("click", () => {
 			popup.hide();
 
