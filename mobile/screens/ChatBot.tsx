@@ -321,7 +321,7 @@ export default function ChatBot({ navigation }: any) {
 			scrollChatToBottom();
 		} catch(error) {
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM14");
 		}
 	}
 
@@ -364,7 +364,7 @@ export default function ChatBot({ navigation }: any) {
 					socket.emit("message", { userID:userID, token:token, message:message });
 				}, 500);
 			} catch(error) {
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM15");
 				console.log(error);
 			}
 		} else {
@@ -603,7 +603,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Food.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM16");
 							console.log(error);
 						}
 					},
@@ -613,7 +613,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Housing.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM17");
 							console.log(error);
 						}
 					},
@@ -623,7 +623,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Transport.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM18");
 							console.log(error);
 						}
 					},
@@ -633,7 +633,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Entertainment.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM19");
 							console.log(error);
 						}
 					},
@@ -643,7 +643,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Insurance.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM20");
 							console.log(error);
 						}
 					},
@@ -653,7 +653,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Savings.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM21");
 							console.log(error);
 						}
 					},
@@ -663,7 +663,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Other.");
 							processTransaction(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM22");
 							console.log(error);
 						}
 					},
@@ -742,7 +742,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Food.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM23");
 							console.log(error);
 						}
 					},
@@ -752,7 +752,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Housing.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM24");
 							console.log(error);
 						}
 					},
@@ -762,7 +762,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Transport.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM25");
 							console.log(error);
 						}
 					},
@@ -772,7 +772,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Entertainment.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM26");
 							console.log(error);
 						}
 					},
@@ -782,7 +782,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Insurance.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM27");
 							console.log(error);
 						}
 					},
@@ -792,7 +792,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Savings.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM28");
 							console.log(error);
 						}
 					},
@@ -802,7 +802,7 @@ export default function ChatBot({ navigation }: any) {
 							await addMessage("user", "Other.");
 							processAfford(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM29");
 							console.log(error);
 						}
 					},
@@ -828,7 +828,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "crypto";
 							processActivity(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM30");
 							console.log(error);
 						}
 					},
@@ -838,7 +838,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "stock";
 							processActivity(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM31");
 							console.log(error);
 						}
 					}
@@ -932,7 +932,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "crypto";
 							processHolding(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM32");
 							console.log(error);
 						}
 					},
@@ -942,7 +942,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "stock";
 							processHolding(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM33");
 							console.log(error);
 						}
 					}
@@ -984,7 +984,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "crypto";
 							processWatchlist(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM34");
 							console.log(error);
 						}
 					},
@@ -994,7 +994,7 @@ export default function ChatBot({ navigation }: any) {
 							details.type = "stock";
 							processWatchlist(entities, intent, details);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM35");
 							console.log(error);
 						}
 					}
@@ -1036,7 +1036,7 @@ export default function ChatBot({ navigation }: any) {
 
 			scrollChatToBottom();
 		} catch(error) {
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM36");
 			console.log(error);
 		}
 	}
@@ -1097,7 +1097,7 @@ export default function ChatBot({ navigation }: any) {
 							intent.category = "activity";
 							processIntent(entities, intent);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM37");
 							console.log(error);
 						}
 					},
@@ -1107,7 +1107,7 @@ export default function ChatBot({ navigation }: any) {
 							intent.category = "transaction";
 							processIntent(entities, intent);
 						} catch(error) {
-							Utils.notify(theme, "Something went wrong...");
+							Utils.notify(theme, "Something went wrong... - EM38");
 							console.log(error);
 						}
 					}

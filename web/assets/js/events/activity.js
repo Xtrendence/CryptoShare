@@ -189,6 +189,6 @@ buttonActivityAdd.addEventListener("click", () => {
 		});
 	} catch(error) {
 		console.log(error);
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW1");
 	}
 });

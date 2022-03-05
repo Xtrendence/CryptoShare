@@ -255,7 +255,7 @@ export default function Settings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM68", 5000);
 		}
 	}
 
@@ -305,7 +305,7 @@ export default function Settings({ navigation }: any) {
 				} catch(error) {
 					setLoading(false);
 					console.log(error);
-					Utils.notify(theme, "Something went wrong...");
+					Utils.notify(theme, "Something went wrong... - EM69");
 				}
 			}
 		}
@@ -416,7 +416,7 @@ export default function Settings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM70", 5000);
 		}
 	}
 

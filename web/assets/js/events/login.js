@@ -57,7 +57,7 @@ buttonLoginAccount.addEventListener("click", () => {
 			errorNotification(error);
 		});
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW6");
 		console.log(error);
 	}
 });

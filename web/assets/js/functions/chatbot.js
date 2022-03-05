@@ -37,7 +37,7 @@ async function populateChatList(recreate) {
 			scrollChatToBottom();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW22");
 		}
 	}
 }
@@ -79,7 +79,7 @@ async function sendMessage(message) {
 				socket.emit("message", { userID:userID, token:token, message:message });
 			}, 500);
 		} catch(error) {
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW23");
 			console.log(error);
 		}
 	} else {
@@ -704,7 +704,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Food.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW24");
 						console.log(error);
 					}
 				},
@@ -714,7 +714,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Housing.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW25");
 						console.log(error);
 					}
 				},
@@ -724,7 +724,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Transport.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW26");
 						console.log(error);
 					}
 				},
@@ -734,7 +734,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Entertainment.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW27");
 						console.log(error);
 					}
 				},
@@ -744,7 +744,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Insurance.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW28");
 						console.log(error);
 					}
 				},
@@ -754,7 +754,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Savings.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW29");
 						console.log(error);
 					}
 				},
@@ -764,7 +764,7 @@ function processTransaction(entities, intent, details) {
 						await addMessage("user", "Other.");
 						processTransaction(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW30");
 						console.log(error);
 					}
 				},
@@ -843,7 +843,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Food.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW31");
 						console.log(error);
 					}
 				},
@@ -853,7 +853,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Housing.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW32");
 						console.log(error);
 					}
 				},
@@ -863,7 +863,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Transport.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW33");
 						console.log(error);
 					}
 				},
@@ -873,7 +873,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Entertainment.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW34");
 						console.log(error);
 					}
 				},
@@ -883,7 +883,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Insurance.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW35");
 						console.log(error);
 					}
 				},
@@ -893,7 +893,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Savings.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW36");
 						console.log(error);
 					}
 				},
@@ -903,7 +903,7 @@ function processAfford(entities, intent, details) {
 						await addMessage("user", "Other.");
 						processAfford(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW37");
 						console.log(error);
 					}
 				},
@@ -929,7 +929,7 @@ function processActivity(entities, intent, details) {
 						details.type = "crypto";
 						processActivity(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW38");
 						console.log(error);
 					}
 				},
@@ -939,7 +939,7 @@ function processActivity(entities, intent, details) {
 						details.type = "stock";
 						processActivity(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW39");
 						console.log(error);
 					}
 				}
@@ -1033,7 +1033,7 @@ function processHolding(entities, intent, details) {
 						details.type = "crypto";
 						processHolding(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW40");
 						console.log(error);
 					}
 				},
@@ -1043,7 +1043,7 @@ function processHolding(entities, intent, details) {
 						details.type = "stock";
 						processHolding(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW41");
 						console.log(error);
 					}
 				}
@@ -1085,7 +1085,7 @@ function processWatchlist(entities, intent, details) {
 						details.type = "crypto";
 						processWatchlist(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW42");
 						console.log(error);
 					}
 				},
@@ -1095,7 +1095,7 @@ function processWatchlist(entities, intent, details) {
 						details.type = "stock";
 						processWatchlist(entities, intent, details);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW43");
 						console.log(error);
 					}
 				}
@@ -1154,7 +1154,7 @@ async function requireClarification(message, options) {
 
 		scrollChatToBottom();
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW44");
 		console.log(error);
 	}
 }
@@ -1230,7 +1230,7 @@ function attachSocketEvents(socket) {
 						intent.category = "activity";
 						processIntent(entities, intent);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW45");
 						console.log(error);
 					}
 				},
@@ -1240,7 +1240,7 @@ function attachSocketEvents(socket) {
 						intent.category = "transaction";
 						processIntent(entities, intent);
 					} catch(error) {
-						errorNotification("Something went wrong...");
+						errorNotification("Something went wrong... - EW46");
 						console.log(error);
 					}
 				}

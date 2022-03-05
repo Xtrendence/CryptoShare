@@ -119,7 +119,7 @@ async function populateDashboardBudget(recreate) {
 			checkHoldingsOnDashboard();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW47");
 		}
 	}
 }
@@ -176,7 +176,7 @@ async function populateDashboardWatchlist(recreate) {
 			}
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW48");
 		}
 	}
 }
@@ -523,7 +523,7 @@ async function listTransactions() {
 		});
 	} catch(error) {
 		console.log(error);
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW49");
 	}
 }
 
@@ -610,7 +610,7 @@ function addTransactionListRowEvent(transaction, div) {
 		});
 	} catch(error) {
 		console.log(error);
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW50");
 	}
 }
 
@@ -813,7 +813,7 @@ function addTransactionButtonEvent(button) {
 			});
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW51");
 		}
 	});
 }
@@ -1392,7 +1392,7 @@ async function showBudgetPopup() {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW52");
 		}
 	});
 }
@@ -1499,7 +1499,7 @@ async function showIncomePopup() {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW53");
 		}
 	});
 }

@@ -260,7 +260,7 @@ export default function Login({ navigation }: any) {
 
 			login(parts[0], parts[1], parts[2]);
 		} catch(error) {
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM60");
 			console.log(error);
 		}
 	}
@@ -394,13 +394,13 @@ export default function Login({ navigation }: any) {
 
 					Utils.notify(theme, "Account created.");
 				} else {
-					Utils.notify(theme, "Something went wrong...");
+					Utils.notify(theme, "Something went wrong... - EM61");
 				}
 			}).catch(error => {
 				Utils.notify(theme, error.toString());
 			});
 		} catch(error) {
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM62");
 		}
 	}
 }

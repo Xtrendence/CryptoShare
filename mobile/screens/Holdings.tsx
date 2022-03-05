@@ -306,7 +306,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM51");
 		}
 	}
 
@@ -328,7 +328,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM52");
 		}
 	}
 
@@ -365,7 +365,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM53");
 		}
 	}
 
@@ -459,7 +459,7 @@ export default function Holdings({ navigation }: any) {
 			hidePopup();
 		} catch(error) {
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM54");
 		}
 	}
 
@@ -549,7 +549,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM55");
 		}
 	}
 
@@ -576,7 +576,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM56");
 		}
 	}
 	function showModal(dates: any, args: any) {
@@ -610,7 +610,7 @@ export default function Holdings({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM57");
 		}
 	}
 
@@ -794,7 +794,7 @@ export default function Holdings({ navigation }: any) {
 			setHoldingsTotalValue(`${Utils.currencySymbols[currency] + Utils.separateThousands(totalValue)}`);
 		} catch(error) {
 			if(error !== "Timeout.") {
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM58");
 				console.log(error);
 			}
 		}
@@ -1357,7 +1357,7 @@ export default function Holdings({ navigation }: any) {
 				resolve(dates);
 			} catch(error) {
 				console.log(error);
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM59");
 				reject(error);
 			}
 		});

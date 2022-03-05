@@ -270,7 +270,7 @@ async function resetSettings() {
 		}, 3500);
 	} catch(error) {
 		console.log(error);
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW58");
 		
 		setTimeout(() => {
 			window.location.reload();

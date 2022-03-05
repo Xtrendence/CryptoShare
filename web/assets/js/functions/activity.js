@@ -321,7 +321,7 @@ function addActivityListRowEvent(div, activity) {
 			});
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW19");
 		}
 	});
 }
@@ -494,7 +494,7 @@ function validateActivityData(values) {
 		return values;
 	} catch(error) {
 		console.log(error);
-		return { error:"Something went wrong..." };
+		return { error:"Something went wrong... - EW20" };
 	}
 }
 
@@ -527,7 +527,7 @@ function parseActivityPopupData(elements) {
 		return validateActivityData(values);
 	} catch(error) {
 		console.log(error);
-		return { error:"Something went wrong..." };
+		return { error:"Something went wrong... - EW21" };
 	}
 }
 

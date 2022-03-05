@@ -419,7 +419,7 @@ function addHoldingListChartRowEvent(div, id, symbol, type) {
 			showHoldingsPerformanceChart(dates, { symbol:symbol });
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW54");
 		}
 	});
 }
@@ -471,7 +471,7 @@ function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymb
 				}
 			});
 		} catch(error) {
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW55");
 			console.log(error);
 		}
 	});
@@ -923,7 +923,7 @@ function parseActivityAsDatedValue(days, prices, activities) {
 			resolve(dates);
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW56");
 			reject(error);
 		}
 	});

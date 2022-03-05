@@ -79,7 +79,7 @@ buttonMarketSearch.addEventListener("click", () => {
 			}
 		});
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW7");
 		console.log(error);
 	}
 });

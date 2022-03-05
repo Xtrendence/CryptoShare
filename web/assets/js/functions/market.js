@@ -115,7 +115,7 @@ async function populateMarketListStocks(page, currency) {
 		}
 	} catch(error) {
 		console.log(error);
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW57");
 	}
 }
 

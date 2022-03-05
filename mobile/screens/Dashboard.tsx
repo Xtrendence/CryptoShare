@@ -324,7 +324,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM39", 5000);
 		}
 	}
 
@@ -413,7 +413,7 @@ export default function Dashboard({ navigation }: any) {
 			generateBudgetStats(theme, budgetData, transactionData, backgroundColors);
 		} catch(error) {
 			if(error !== "Timeout.") {
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM40");
 				console.log(error);
 			}
 		}
@@ -456,7 +456,7 @@ export default function Dashboard({ navigation }: any) {
 			setWatchlistRows(rows);
 		} catch(error) {
 			if(error !== "Timeout.") {
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM41");
 				console.log(error);
 			}
 		}
@@ -489,7 +489,7 @@ export default function Dashboard({ navigation }: any) {
 			setLoading(false);
 		} catch(error) {
 			console.log(error);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM42", 5000);
 		}
 	}
 
@@ -689,7 +689,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM43");
 		}
 	}
 
@@ -743,7 +743,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM44");
 		}
 	}
 
@@ -788,7 +788,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM45");
 		}
 	}
 
@@ -844,7 +844,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM46");
 		}
 	}
 
@@ -1113,7 +1113,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM47");
 		}
 	}
 
@@ -1183,7 +1183,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM48", 5000);
 		}
 	}
 
@@ -1219,7 +1219,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM49", 5000);
 		}
 	}
 
@@ -1255,7 +1255,7 @@ export default function Dashboard({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM50", 5000);
 		}
 	}
 }

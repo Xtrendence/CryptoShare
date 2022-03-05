@@ -212,7 +212,7 @@ export default function Market({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM63");
 		}
 	}
 
@@ -274,7 +274,7 @@ export default function Market({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM64");
 		}
 	}
 
@@ -434,7 +434,7 @@ export default function Market({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM65", 5000);
 		}
 	}
 
@@ -498,7 +498,7 @@ export default function Market({ navigation }: any) {
 			setMarketRowsCrypto(rows);
 		} catch(error) {
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM66");
 		}
 	}
 
@@ -541,7 +541,7 @@ export default function Market({ navigation }: any) {
 			setMarketRowsStocks(rows);
 		} catch(error) {
 			if(error !== "Timeout.") {
-				Utils.notify(theme, "Something went wrong...");
+				Utils.notify(theme, "Something went wrong... - EM67");
 				console.log(error);
 			}
 		}

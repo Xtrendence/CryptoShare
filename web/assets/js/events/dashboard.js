@@ -172,7 +172,7 @@ buttonDashboardWatchlistAdd.addEventListener("click", () => {
 			}
 		});
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW2");
 		console.log(error);
 	}
 });

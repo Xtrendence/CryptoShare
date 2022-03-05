@@ -214,7 +214,7 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM1", 5000);
 		}
 	}
 
@@ -255,7 +255,7 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EM2", 5000);
 		}
 	}
 }

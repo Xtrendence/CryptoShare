@@ -150,7 +150,7 @@ buttonSettingsDeleteAccount.addEventListener("click", () => {
 			} catch(error) {
 				hideLoading();
 				console.log(error);
-				errorNotification("Something went wrong...");
+				errorNotification("Something went wrong... - EW8");
 			}
 		});
 	});
@@ -268,7 +268,7 @@ buttonSettingsQRCode.addEventListener("click", () => {
 
 			qrCode.append(document.getElementById("popup-canvas-wrapper"));
 		} catch(error) {
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW9");
 			console.log(error);
 		}
 	});
@@ -299,7 +299,7 @@ buttonSettingsResetBudget.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW10");
 			popup.hide();
 		}
 	});
@@ -323,7 +323,7 @@ buttonSettingsResetTransactions.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW11");
 			popup.hide();
 		}
 	});
@@ -347,7 +347,7 @@ buttonSettingsResetWatchlist.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW12");
 			popup.hide();
 		}
 	});
@@ -371,7 +371,7 @@ buttonSettingsResetHoldings.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW13");
 			popup.hide();
 		}
 	});
@@ -395,7 +395,7 @@ buttonSettingsResetActivities.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW14");
 			popup.hide();
 		}
 	});
@@ -419,7 +419,7 @@ buttonSettingsResetChatBot.addEventListener("click", () => {
 			hideLoading();
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW15");
 			popup.hide();
 		}
 	});
@@ -838,7 +838,7 @@ buttonSettingsDataWatchlist.addEventListener("click", async () => {
 					hideLoading();
 					popup.hide();
 				} catch(error) {
-					errorNotification("Something went wrong...");
+					errorNotification("Something went wrong... - EW16");
 					console.log(error);
 				}
 			});
@@ -895,7 +895,7 @@ buttonSettingsDataHolding.addEventListener("click", async () => {
 					hideLoading();
 					popup.hide();
 				} catch(error) {
-					errorNotification("Something went wrong...");
+					errorNotification("Something went wrong... - EW17");
 					console.log(error);
 				}
 			});
@@ -989,7 +989,7 @@ buttonSettingsDataActivity.addEventListener("click", async () => {
 					hideLoading();
 					popup.hide();
 				} catch(error) {
-					errorNotification("Something went wrong...");
+					errorNotification("Something went wrong... - EW18");
 					console.log(error);
 				}
 			});

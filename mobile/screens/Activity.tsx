@@ -283,7 +283,7 @@ export default function Activity({ navigation }: any) {
 			setPopupType("activity");
 		} catch(error) {
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM3");
 		}
 	}
 
@@ -306,7 +306,7 @@ export default function Activity({ navigation }: any) {
 			hidePopup();
 		} catch(error) {
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM4");
 		}
 	}
 
@@ -401,7 +401,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM5");
 		}
 	}
 
@@ -468,7 +468,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM6");
 		}
 	}
 
@@ -490,7 +490,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM7");
 		}
 	}
 
@@ -690,7 +690,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM8");
 		}
 	}
 
@@ -821,7 +821,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM9");
 		}
 	}
 
@@ -894,7 +894,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM10");
 		}
 	}
 
@@ -998,7 +998,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM11");
 		}
 	}
 
@@ -1061,7 +1061,7 @@ export default function Activity({ navigation }: any) {
 		} catch(error) {
 			setLoading(false);
 			console.log(error);
-			Utils.notify(theme, "Something went wrong...");
+			Utils.notify(theme, "Something went wrong... - EM12");
 		}
 	}
 
@@ -1415,6 +1415,6 @@ export function validateActivityData(values: any) {
 		return values;
 	} catch(error) {
 		console.log(error);
-		return { error:"Something went wrong..." };
+		return { error:"Something went wrong... - EM13" };
 	}
 }

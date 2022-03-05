@@ -51,7 +51,7 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 			showHoldingsPerformanceChart(dates, undefined);
 		} catch(error) {
 			console.log(error);
-			errorNotification("Something went wrong...");
+			errorNotification("Something went wrong... - EW3");
 		}
 	} else {
 		errorNotification("Transactions must be set to affect holdings (this can be done in the settings).");
@@ -162,7 +162,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 			errorNotification("You cannot modify your holdings this way while transactions are affecting them. Add an activity/transaction instead.");
 		}
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW4");
 		console.log(error);
 	}
 });
@@ -247,7 +247,7 @@ buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 			errorNotification("You cannot modify your holdings this way while transactions are affecting them. Add an activity/transaction instead.");
 		}
 	} catch(error) {
-		errorNotification("Something went wrong...");
+		errorNotification("Something went wrong... - EW5");
 		console.log(error);
 	}
 });

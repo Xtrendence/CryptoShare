@@ -37,7 +37,7 @@ async function fetchStockPrice(currency, symbols, showError) {
 
 		return { error:"No data found." };
 	} catch(error) {
-		return { error:"Something went wrong..." };
+		return { error:"Something went wrong... - EW59" };
 	}
 }
 
@@ -72,7 +72,7 @@ async function fetchStockHistorical(currency, assetSymbol, showError) {
 
 		return { error:"No data found." };
 	} catch(error) {
-		return { error:"Something went wrong..." };
+		return { error:"Something went wrong... - EW60" };
 	}
 }
 
