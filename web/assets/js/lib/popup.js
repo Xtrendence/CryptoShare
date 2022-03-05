@@ -161,6 +161,14 @@ class Popup {
 	}
 
 	setSize(width, height) {
+		if(window.innerWidth <= width) {
+			width = "full";
+		}
+
+		if(window.innerHeight <= height) {
+			height = "full";
+		}
+
 		if(width === "full") {
 			this.width = "calc(100% - 40px)";
 			this.element.style.width = this.width;

@@ -88,7 +88,7 @@ async function populateMarketListStocks(page, currency) {
 			filteredWatchlist.stocks = {};
 		}
 
-		let rows = createWatchlistListRows({}, marketStocksData, watchlistData);
+		let rows = await createWatchlistListRows({}, marketStocksData, watchlistData);
 
 		if(empty(rows)) {
 			divMarketListStocks.innerHTML = `<span class="list-text noselect">No Assets In Watchlist</span>`;

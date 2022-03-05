@@ -193,6 +193,105 @@
 	.page.holdings .page-container.half.top-left .holdings-card:first-of-type {
 		display:none;
 	}
+	.market-list-row .icon-wrapper, .holdings-list-row .icon-wrapper {
+		margin:10px;
+		border-radius:var(--border-radius);
+		display:block;
+	}
+	.watchlist-list-row .name, .watchlist-list-row .rank, .watchlist-list-row .symbol, .market-list-row .name, .market-list-row .rank, .market-list-row .symbol, .holdings-list-row .name, .holdings-list-row .rank, .holdings-list-row .symbol {
+		top:27px;
+	}
+	.watchlist-list-row .rank-container, .market-list-row .rank-container, .holdings-list-row .rank-container {
+		top:50px;
+	}
+	.watchlist-list-row .info-container, .market-list-row .info-container, .holdings-list-row .info-container {
+		padding:0;
+		width:100%;
+	}
+	.watchlist-list-row .info-wrapper, .watchlist-list-row .info-container, .market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container {
+		width:100%;
+		background:var(--main-second);
+		padding-top:5px;
+	}
+	.watchlist-list-row .top, .market-list-row .top, .holdings-list-row .top {
+		display:inline-block;
+		margin-bottom:20px;
+	}
+	.watchlist-list-row .bottom, .market-list-row .bottom, .holdings-list-row .bottom {
+		display:inline-block;
+		margin-top:10px;
+	}
+	.watchlist-list-row .bottom span:last-of-type, .market-list-row .bottom span:last-of-type, .holdings-list-row .bottom span:last-of-type {
+		margin-right:10px;
+	}
+	.dashboard-list.holdings .info-container, .dashboard-list.watchlist .info-container {
+		margin-top:5px;
+	}
+	.market-list .watchlist-list-row .info-wrapper {
+		width:100%;
+	}
+	.market-list .watchlist-list-row .info-container {
+		padding-top:5px;
+		margin-right:0;
+	}
+	.market-list .watchlist-list-row .info-wrapper .name {
+		top:14px;
+		left:14px;
+	}
+	.market-list {
+		top:140px;
+		height:calc(100% - 40px - 100px);
+	}
+	.page.market .page-type-wrapper {
+		top:80px;
+		width:180px;
+		left:calc(50% - 180px / 2);
+	}
+	.activity-list-row .info-wrapper {
+		width:100%;
+	}
+	.activity-list-row .asset-container {
+		top:auto;
+		left:auto;
+		bottom:auto;
+		position:relative;
+		display:block;
+		margin:20px 0 0 20px;
+	}
+	.activity-list-row .info-wrapper {
+		text-align:left;
+	}
+	.activity-list-row .info-container {
+		width:100%;
+		text-align:left;
+		padding-left:20px;
+	}
+	.page.chatbot .page-container.full.chatbot {
+		width:calc(100% - 40px);
+		left:20px;
+	}
+	.activity-list {
+		height:calc(100% - 114px);
+	}
+	.page.activity .page-container-toolbar {
+		height:114px;
+	}
+	.page.activity .page-container-toolbar .page-actions-wrapper {
+		text-align:left;
+		top:auto;
+		bottom:10px;
+	}
+}
+
+@media screen and (max-width:490px) {
+	.page.dashboard .page-container.half.left {
+		left:20px;
+		width:calc(100% - 40px);
+	}
+	.page.dashboard .page-container.half.bottom-right.dashboard {
+		left:20px;
+		width:calc(100% - 40px);
+	}
 }
 
 /* Min Width */
