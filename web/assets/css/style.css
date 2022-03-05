@@ -2038,6 +2038,9 @@ html.navbar-compact .page-container.holdings.half.right {
 	margin:20px auto 0 auto;
 	width:calc(100% - 40px);
 }
+.page-container.holdings.half.bottom-left .action-button.small {
+	display:none;
+}
 
 .page.activity .page-container-toolbar {
 	width:100%;

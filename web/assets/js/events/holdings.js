@@ -251,3 +251,15 @@ buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 		console.log(error);
 	}
 });
+
+buttonHoldingsPerformanceSmall.addEventListener("click", () => {
+	buttonHoldingsPerformance.click();
+});
+
+buttonHoldingsAddCryptoAssetSmall.addEventListener("click", () => {
+	buttonHoldingsAddCryptoAsset.click();
+});
+
+buttonHoldingsAddStockAssetSmall.addEventListener("click", () => {
+	buttonHoldingsAddStockAsset.click();
+});

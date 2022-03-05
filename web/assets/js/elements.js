@@ -84,6 +84,9 @@ let spanHoldingsValue = document.getElementById("span-holdings-value");
 let buttonHoldingsPerformance = document.getElementById("button-holdings-performance");
 let buttonHoldingsAddCryptoAsset = document.getElementById("button-holdings-add-crypto-asset");
 let buttonHoldingsAddStockAsset = document.getElementById("button-holdings-add-stock-asset");
+let buttonHoldingsPerformanceSmall = document.getElementById("button-holdings-performance-small");
+let buttonHoldingsAddCryptoAssetSmall = document.getElementById("button-holdings-add-crypto-asset-small");
+let buttonHoldingsAddStockAssetSmall = document.getElementById("button-holdings-add-stock-asset-small");
 
 let divPageHoldings = document.getElementById("holdings-page");
 let divHoldingsList = document.getElementById("holdings-list");
