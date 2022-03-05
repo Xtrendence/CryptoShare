@@ -28,7 +28,7 @@ buttonLoginAccount.addEventListener("click", () => {
 			}
 		}
 
-		login(inputLoginUsername.value, inputLoginPassword.value).then(result => {
+		login(inputLoginUsername.value, inputLoginPassword.value).then(async result => {
 			if("error" in result) {
 				errorNotification(result.error.replaceAll("!", ""));
 			} else {
@@ -45,7 +45,7 @@ buttonLoginAccount.addEventListener("click", () => {
 
 				let choices = JSON.parse(settings?.choices);
 
-				setSettings(settings);
+				await setSettings(settings);
 				setAccountInfo(result, true);
 				
 				showApp();

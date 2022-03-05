@@ -127,13 +127,7 @@ async function accountSetup() {
 							inputLoginUsername.value = username;
 							inputLoginPassword.value = inputCreatePassword.value;
 
-							Notify.success({
-								title: "Account Created",
-								description: "You can now log in.",
-								duration: 5000,
-								background: "var(--accent-second)",
-								color: "var(--accent-contrast)"
-							});
+							successNotification("Account Created", "You can now log in.");
 						} else {
 							errorNotification(result.data.createUser);
 						}

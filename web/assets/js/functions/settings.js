@@ -216,20 +216,29 @@ function processChoice(key, value) {
 	}
 }
 
-async function setSettings(settings) {
-	if(empty(settings)) {
-		settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
-	}
+function setSettings(settings) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			if(empty(settings)) {
+				settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
+			}
 
-	Object.keys(settings).map(async key => {
-		let value = settings[key];
-		await appStorage.setItem(key, value);
+			Object.keys(settings).map(async key => {
+				let value = settings[key];
+				await appStorage.setItem(key, value);
+			});
+
+			applicationSettings = await getSettings();
+			applicationChoices = await getSettingsChoices();
+
+			setSettingsChoices(applicationChoices);
+
+			resolve();
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
 	});
-
-	applicationSettings = await getSettings();
-	applicationChoices = await getSettingsChoices();
-
-	setSettingsChoices(applicationChoices);
 }
 
 function setSettingsPage(page) {
@@ -269,45 +278,60 @@ async function resetSettings() {
 	}
 }
 
-async function syncSettings(update) {
-	let token = await appStorage.getItem("token");
-	let userID = await appStorage.getItem("userID");
-	let key = await appStorage.getItem("key");
+function syncSettings(update) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let token = await appStorage.getItem("token");
+			let userID = await appStorage.getItem("userID");
+			let key = await appStorage.getItem("key");
 
-	let currentSettings = await getSettings();
-	let currentChoices = await getSettingsChoices();
+			let currentSettings = await getSettings();
+			let currentChoices = await getSettingsChoices();
 
-	let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
+			let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
 
-	let current = await fetchSettings();
+			let current = await fetchSettings();
 
-	if(validJSON(current)) {
-		current = JSON.parse(current);
+			if(validJSON(current)) {
+				current = JSON.parse(current);
 
-		Object.keys(current).map(settingKey => {
-			if(settingKey in settings) {
-				current[settingKey] = settings[settingKey];
+				Object.keys(current).map(settingKey => {
+					if(settingKey in settings) {
+						current[settingKey] = settings[settingKey];
+					}
+				});
+			} else {
+				current = settings;
 			}
-		});
-	} else {
-		current = settings;
-	}
 
-	setSettings(current);
+			await setSettings(current);
 
-	let encrypted = CryptoFN.encryptAES(JSON.stringify(current), key);
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(current), key);
 
-	if(update) {
-		updateSetting(token, userID, encrypted).then(result => {
-			if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
-				errorNotification("Couldn't update / sync setting.");
-				console.log(result);
+			if(update) {
+				updateSetting(token, userID, encrypted).then(result => {
+					if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
+						errorNotification("Couldn't update / sync setting.");
+						console.log(result);
+						reject(error);
+						return;
+					}
+
+					resolve();
+				}).catch(error => {
+					errorNotification(error);
+					console.log(error);
+					reject(error);
+				});
+			} else {
+				resolve();
 			}
-		}).catch(error => {
-			errorNotification(error);
+		} catch(error) {
+			errorNotification("Couldn't update settings.");
 			console.log(error);
-		});
-	}
+			reject(error);
+		}
+	});
 }
 
 async function adminCheck() {

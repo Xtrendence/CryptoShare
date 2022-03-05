@@ -48,7 +48,7 @@ async function attemptLogin() {
 
 				let choices = JSON.parse(settings?.choices);
 				
-				setSettings(settings);
+				await setSettings(settings);
 
 				setAccountInfo(result, false);
 				
@@ -76,13 +76,7 @@ function finishLogout() {
 
 	showLogin();
 
-	Notify.success({
-		title: "Logged Out",
-		description: "You've been logged out of your account.",
-		duration: 5000,
-		background: "var(--accent-second)",
-		color: "var(--accent-contrast)"
-	});
+	successNotification("Logged Out", "You've been logged out of your account.");
 }
 
 async function setAccountInfo(info, updateKey) {

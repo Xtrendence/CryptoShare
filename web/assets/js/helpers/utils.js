@@ -150,6 +150,26 @@ function formatHour(date) {
 	return hours + ":" + minutes;
 }
 
+function formatHourHyphenated(date) {
+	let hours = ("00" + date.getHours()).slice(-2);
+	let minutes = ("00" + date.getMinutes()).slice(-2);
+	return hours + "-" + minutes;
+}
+
+function formatSeconds(date) {
+	let hours = ("00" + date.getHours()).slice(-2);
+	let minutes = ("00" + date.getMinutes()).slice(-2);
+	let seconds = ("00" + date.getSeconds()).slice(-2);
+	return hours + ":" + minutes + ":" + seconds;
+}
+
+function formatSecondsHyphenated(date) {
+	let hours = ("00" + date.getHours()).slice(-2);
+	let minutes = ("00" + date.getMinutes()).slice(-2);
+	let seconds = ("00" + date.getSeconds()).slice(-2);
+	return hours + "-" + minutes + "-" + seconds;
+}
+
 function formatDateSQL(date) {
 	return date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0];
 }

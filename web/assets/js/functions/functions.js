@@ -8,6 +8,36 @@ function createLink(url, filename) {
 	return link;
 }
 
+function upload() {
+	return new Promise((resolve, reject) => {
+		try {
+			let input = document.createElement("input");
+			input.type = "file";
+			input.classList.add("hidden");
+
+			input.addEventListener("change", async () => {
+				if(input.files.length !== 1) {
+					errorNotification("No file chosen.");
+					resolve(null);
+					return;
+				}
+
+				let file = input.files[0];
+				let content = await file.text();
+
+				resolve(content);
+			});
+
+			document.body.appendChild(input);
+
+			input.click();
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
 function download(data, filename, type) {
 	if(typeof data === "string") {
 		data = [data];
@@ -376,6 +406,16 @@ function errorNotification(description) {
 			color: "var(--accent-contrast)"
 		});
 	}
+}
+
+function successNotification(title, description) {
+	Notify.success({
+		title: title,
+		description: description,
+		duration: 5000,
+		background: "var(--accent-second)",
+		color: "var(--accent-contrast)"
+	});
 }
 
 function addPattern() {

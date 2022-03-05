@@ -97,13 +97,7 @@ buttonSettingsPassword.addEventListener("click", () => {
 					errorNotification(result.error);
 				} else {
 					if("username" in result) {
-						Notify.success({
-							title: "Password Changed",
-							description: "Your password has been changed.",
-							duration: 5000,
-							background: "var(--accent-second)",
-							color: "var(--accent-contrast)"
-						});
+						successNotification("Password Changed", "Your password has been changed.");
 
 						logoutEverywhere(userID, token).then(result => {
 							if("error" in result) {
@@ -151,13 +145,7 @@ buttonSettingsDeleteAccount.addEventListener("click", () => {
 					hideLoading();
 					finishLogout();
 
-					Notify.success({
-						title: "Account Deleted",
-						description: `Your account has been deleted.`,
-						duration: 5000,
-						background: "var(--accent-second)",
-						color: "var(--accent-contrast)"
-					});
+					successNotification("Account Deleted", `Your account has been deleted.`);
 				}, 2500);
 			} catch(error) {
 				hideLoading();
@@ -183,13 +171,7 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 
 		await performAdminAction(token, userID, username, action);
 
-		Notify.success({
-			title: "Setting Changed",
-			description: `User registration is now ${type}.`,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		successNotification("Setting Changed", `User registration is now ${type}.`);
 
 		getAdminSettings();
 	} catch(error) {
@@ -211,23 +193,11 @@ buttonSettingsStockAPIKey.addEventListener("click", async () => {
 		if(!empty(inputStockAPIKey.value)) {
 			await appStorage.setItem("keyAPI", inputStockAPIKey.value);
 
-			Notify.success({
-				title: "Stock API Key Set",
-				description: "API key has been set.",
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			successNotification("Stock API Key Set", "API key has been set.");
 		} else {
 			await appStorage.removeItem("keyAPI");
 
-			Notify.success({
-				title: "Stock API Key Removed",
-				description: "API key has been removed.",
-				duration: 5000,
-				background: "var(--accent-second)",
-				color: "var(--accent-contrast)"
-			});
+			successNotification("Stock API Key Removed", "API key has been removed.");
 		}
 
 		popup.hide();
@@ -249,13 +219,7 @@ buttonSettingsStockAPIType.addEventListener("click", async () => {
 
 		await performAdminAction(token, userID, username, action);
 
-		Notify.success({
-			title: "Setting Changed",
-			description: `Now using ${type} stock API.`,
-			duration: 5000,
-			background: "var(--accent-second)",
-			color: "var(--accent-contrast)"
-		});
+		successNotification("Setting Changed", `Now using ${type} stock API.`);
 
 		getAdminSettings();
 	} catch(error) {
@@ -317,30 +281,6 @@ buttonSettingsReset.addEventListener("click", () => {
 	popup.on("confirm", () => {
 		popup.hide();
 		resetSettings();
-	});
-});
-
-buttonSettingsResetChatBot.addEventListener("click", () => {
-	let popup = new Popup(300, "auto", "Reset Chat Bot", `<span>Are you sure you want to reset your chat bot data?</span>`, { page:"settings" });
-	popup.show();
-
-	popup.on("confirm", async () => {
-		try {
-			popup.hide();
-
-			showLoading(2000, "Resetting...");
-
-			let userID = await appStorage.getItem("userID");
-			let token = await appStorage.getItem("token");
-
-			await deleteMessageAll(token, userID);
-
-			hideLoading();
-		} catch(error) {
-			console.log(error);
-			errorNotification("Something went wrong...");
-			popup.hide();
-		}
 	});
 });
 
@@ -461,28 +401,282 @@ buttonSettingsResetActivities.addEventListener("click", () => {
 	});
 });
 
-buttonSettingsImportSettings.addEventListener("click", () => {
+buttonSettingsResetChatBot.addEventListener("click", () => {
+	let popup = new Popup(300, "auto", "Reset Chat Bot", `<span>Are you sure you want to reset your chat bot data?</span>`, { page:"settings" });
+	popup.show();
 
+	popup.on("confirm", async () => {
+		try {
+			popup.hide();
+
+			showLoading(2000, "Resetting...");
+
+			let userID = await appStorage.getItem("userID");
+			let token = await appStorage.getItem("token");
+
+			await deleteMessageAll(token, userID);
+
+			hideLoading();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Something went wrong...");
+			popup.hide();
+		}
+	});
 });
 
-buttonSettingsImportBudget.addEventListener("click", () => {
+buttonSettingsImportSettings.addEventListener("click", async () => {
+	try {
+		let json = await upload();
+		
+		if(!validJSON(json)) {
+			errorNotification("Invalid JSON.");
+			return;
+		}
 
+		showLoading(4000, "Importing...");
+
+		let data = JSON.parse(json);
+
+		await setSettings(data);
+		await syncSettings(true);
+
+		successNotification("Settings Data Imported", "Your settings have been imported.");
+
+		setTimeout(() => {
+			window.location.reload();
+		}, 2000);
+	} catch(error) {
+		console.log(error);
+	}
 });
 
-buttonSettingsImportTransactions.addEventListener("click", () => {
+buttonSettingsImportBudget.addEventListener("click", async () => {
+	try {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let key = await appStorage.getItem("key");
 
+		let json = await upload();
+
+		if(!validJSON(json)) {
+			errorNotification("Invalid JSON.");
+			return;
+		}
+
+		let budgetData = JSON.parse(json);
+
+		showLoading(4000, "Importing...");
+
+		let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+		await updateBudget(token, userID, encrypted);
+
+		hideLoading();
+
+		successNotification("Budget Data Imported", "Your budget data has been imported.");
+	} catch(error) {
+		console.log(error);
+	}
 });
 
-buttonSettingsImportWatchlist.addEventListener("click", () => {
+buttonSettingsImportTransactions.addEventListener("click", async () => {
+	try {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let key = await appStorage.getItem("key");
 
+		let data = await upload();
+
+		let headers = "transactionID,transactionType,transactionDate,transactionCategory,transactionAmount,transactionNotes";
+
+		let lines = data.split("\n");
+
+		if(lines[0] !== headers) {
+			errorNotification("Invalid headers.");
+			return;
+		}
+
+		let transactions = await fetchTransaction() || {};
+
+		lines.shift();
+
+		lines.map(async line => {
+			if(!empty(line)) {
+				let parts = line.split(",");
+
+				try {
+					let encrypted = encryptObjectValues(key, {
+						transactionType: parts[1],
+						transactionDate: parts[2],
+						transactionCategory: parts[3],
+						transactionAmount: parts[4],
+						transactionNotes: parts[5],
+					});
+
+					if(parts[0] in transactions) {
+						await updateTransaction(token, userID, parts[0], encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+					} else {
+						await createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+					}
+				} catch(error) {
+					console.log(error);
+				}
+			}
+		});
+	} catch(error) {
+		console.log(error);
+	}
 });
 
-buttonSettingsImportHoldings.addEventListener("click", () => {
+buttonSettingsImportWatchlist.addEventListener("click", async () => {
+	try {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let key = await appStorage.getItem("key");
+		
+		let data = await upload();
 
+		let headers = "watchlistID,assetID,assetSymbol,assetType";
+
+		let lines = data.split("\n");
+
+		if(lines[0] !== headers) {
+			errorNotification("Invalid headers.");
+			return;
+		}
+
+		let watchlist = await fetchWatchlist() || {};
+
+		lines.shift();
+
+		lines.map(async line => {
+			if(!empty(line)) {
+				let parts = line.split(",");
+
+				try {
+					if(!watchlistExists(watchlist, parts[1])) {
+						let encrypted = encryptObjectValues(key, {
+							assetID: parts[1],
+							assetSymbol: parts[2],
+							assetType: parts[3]
+						});
+
+						await createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
+					}
+				} catch(error) {
+					console.log(error);
+				}
+			}
+		});
+	} catch(error) {
+		console.log(error);
+	}
 });
 
-buttonSettingsImportActivities.addEventListener("click", () => {
+buttonSettingsImportHoldings.addEventListener("click", async () => {
+	try {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let key = await appStorage.getItem("key");
 
+		let data = await upload();
+
+		let headers = "holdingID,holdingAssetID,holdingAssetSymbol,holdingAssetAmount,holdingAssetType";
+
+		let lines = data.split("\n");
+
+		if(lines[0] !== headers) {
+			errorNotification("Invalid headers.");
+			return;
+		}
+
+		lines.shift();
+
+		lines.map(async line => {
+			if(!empty(line)) {
+				let parts = line.split(",");
+
+				try {
+					let exists = await assetHoldingExists(parts[1]);
+
+					let encrypted = encryptObjectValues(key, {
+						holdingAssetID: parts[1],
+						holdingAssetSymbol: parts[2],
+						holdingAssetAmount: parts[3],
+						holdingAssetType: parts[4]
+					});
+
+					if(!exists.exists) {
+						await createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					} else {
+						await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+					}
+				} catch(error) {
+					console.log(error);
+				}
+			}
+		});
+	} catch(error) {
+		console.log(error);
+	}
+});
+
+buttonSettingsImportActivities.addEventListener("click", async () => {
+	try {
+		let userID = await appStorage.getItem("userID");
+		let token = await appStorage.getItem("token");
+		let key = await appStorage.getItem("key");
+
+		let data = await upload();
+
+		let headers = "activityID,activityTransactionID,activityAssetID,activityAssetSymbol,activityAssetType,activityDate,activityType,activityAssetAmount,activityFee,activityNotes,activityExchange,activityPair,activityPrice,activityFrom,activityTo";
+
+		let lines = data.split("\n");
+
+		if(lines[0] !== headers) {
+			errorNotification("Invalid headers.");
+			return;
+		}
+
+		let activities = await fetchActivity() || {};
+
+		lines.shift();
+
+		lines.map(async line => {
+			if(!empty(line)) {
+				let parts = line.split(",");
+
+				try {
+					let encrypted = encryptObjectValues(key, {
+						activityAssetID: parts[2],
+						activityAssetSymbol: parts[3],
+						activityAssetType: parts[4],
+						activityDate: parts[5],
+						activityType: parts[6],
+						activityAssetAmount: parts[7],
+						activityFee: parts[8],
+						activityNotes: parts[9],
+						activityExchange: parts[10],
+						activityPair: parts[11],
+						activityPrice: parts[12],
+						activityFrom: parts[13],
+						activityTo: parts[14]
+					});
+
+					if(parts[1] in activities) {
+						await updateActivity(token, userID, parts[1], encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+					} else {
+						await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+					}
+				} catch(error) {
+					console.log(error);
+				}
+			}
+		});
+	} catch(error) {
+		console.log(error);
+	}
 });
 
 buttonSettingsExportSettings.addEventListener("click", async () => {
@@ -492,7 +686,7 @@ buttonSettingsExportSettings.addEventListener("click", async () => {
 	let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
 	let json = JSON.stringify(settings, undefined, 4);
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(json, `${date}-CryptoShare-Settings.json`, "text/plain");
 });
@@ -507,7 +701,7 @@ buttonSettingsExportBudget.addEventListener("click", async () => {
 
 	let json = JSON.stringify(budget, undefined, 4);
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(json, `${date}-CryptoShare-Budget.json`, "text/plain");
 });
@@ -528,7 +722,7 @@ buttonSettingsExportTransactions.addEventListener("click", async () => {
 		csv += `${transaction.transactionID},${transaction.transactionType},${transaction.transactionDate},${transaction.transactionCategory},${transaction.transactionAmount},${transaction.transactionNotes}\n`;
 	});
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(csv, `${date}-CryptoShare-Transactions.csv`, "text/plain");
 });
@@ -549,7 +743,7 @@ buttonSettingsExportWatchlist.addEventListener("click", async () => {
 		csv += `${asset.watchlistID},${asset.assetID},${asset.assetSymbol},${asset.assetType}\n`;
 	});
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(csv, `${date}-CryptoShare-Watchlist.csv`, "text/plain");
 });
@@ -584,7 +778,7 @@ buttonSettingsExportHoldings.addEventListener("click", async () => {
 		csv += `${holding.holdingID},${holding.holdingAssetID},${holding.holdingAssetSymbol},${holding.holdingAssetAmount},${holding.holdingAssetType}\n`;
 	});
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(csv, `${date}-CryptoShare-Holdings.csv`, "text/plain");
 });
@@ -605,7 +799,7 @@ buttonSettingsExportActivities.addEventListener("click", async () => {
 		csv += `${activity.activityID},${activity.activityTransactionID},${activity.activityAssetID},${activity.activityAssetSymbol},${activity.activityAssetType},${activity.activityDate},${activity.activityType},${activity.activityAssetAmount},${activity.activityFee},${activity.activityNotes},${activity.activityExchange},${activity.activityPair},${activity.activityPrice},${activity.activityFrom},${activity.activityTo}\n`;
 	});
 
-	let date = formatDateHyphenatedHuman(new Date());
+	let date = formatDateHyphenatedHuman(new Date()) + "-" + formatSecondsHyphenated(new Date());
 
 	download(csv, `${date}-CryptoShare-Activities.csv`, "text/plain");
 });
