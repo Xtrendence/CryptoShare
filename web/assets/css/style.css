@@ -53,6 +53,10 @@ span.negative {
 	color:var(--negative-first) !important;
 }
 
+span.break-word {
+	word-break:break-all;
+}
+
 button.negative {
 	background:var(--negative-first);
 }

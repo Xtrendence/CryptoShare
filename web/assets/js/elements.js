@@ -105,6 +105,9 @@ let buttonActivityAdd = document.getElementById("button-activity-add");
 
 let divSettingsNavbar = document.getElementById("settings-navbar");
 let divPageSettings = document.getElementById("settings-page");
+let divSettingsDonate = document.getElementById("settings-section-donate");
+
+let buttonsDonate = divSettingsDonate.getElementsByClassName("action-button");
 
 let settingsToggleTheme = document.getElementById("settings-toggle-theme");
 let settingsToggleSounds = document.getElementById("settings-toggle-sounds");

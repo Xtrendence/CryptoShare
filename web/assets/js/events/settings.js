@@ -1000,3 +1000,9 @@ buttonSettingsDataActivity.addEventListener("click", async () => {
 
 	popup.updateHeight();
 });
+
+for(let i = 0; i < buttonsDonate.length; i++) {
+	buttonsDonate[i].addEventListener("click", () => {
+		showDonationAddress(buttonsDonate[i].textContent);
+	});
+}

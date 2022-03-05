@@ -374,3 +374,40 @@ async function getAdminSettings() {
 		console.log(error);
 	}
 }
+
+function showDonationAddress(symbol) {
+	let addresses = {
+		ADA: "addr1qyh9ejp2z7drzy8vzpyfeuvzuej5t5tnmjyfpfjn0vt722zqupdg44rqfw9fd8jruaez30fg9fxl34vdnncc33zqwhlqn37lz4",
+		XMR: "49wDQf83p5tHibw9ay6fBvcv48GJynyjVE2V8EX8Vrtt89rPyECRm5zbBqng3udqrYHTjsZStSpnMCa8JRw7cfyGJwMPxDM",
+		ETH: "0x40E1452025d7bFFDfa05d64C2d20Fb87c2b9C0be",
+		BCH: "qrvyd467djuxtw5knjt3d50mqzspcf6phydmyl8ka0",
+		BTC: "bc1qdy5544m2pwpyr6rhzcqwmerczw7e2ytjjc2wvj",
+		LTC: "ltc1qq0ptdjsuvhw6gz9m4huwmhq40gpyljwn5hncxz",
+		NANO: "nano_3ed4ip7cjkzkrzh9crgcdipwkp3h49cudxxz4t8x7pkb8rad7bckqfhzyadg",
+		DOT: "12nGqTQsgEHwkAuHGNXpvzcfgtQkTeo3WCZgwrXLsiqs3KyA"
+	};
+
+	let style = { 
+		width: 310,
+		height: 310,
+		data: addresses[symbol],
+		margin: 0,
+		qrOptions: {
+			typeNumber: 0,
+			mode: "Byte",
+			errorCorrectionLevel: "Q"
+		},
+		backgroundOptions: {
+			color: "rgba(0,0,0,0)"
+		}
+	};
+
+	let popup = new Popup(420, "auto", "Address QR Code", `<span class="margin-bottom">If you'd like to donate, then please feel free to do so, it'd be much appreciated. However, I don't want you to feel obliged to do so, and there are no perks for it. If you decide to donate, please contact me afterwards so I can actually thank you, and I'd love to hear about any ideas you may have for CryptoShare. If they're within the scope of the project, I'll probably implement them.</span><div class="popup-canvas-wrapper" style="background:rgb(255,255,255);" id="popup-canvas-wrapper"></div><span class="break-word" style="margin-top:20px;">${addresses[symbol]}</span>`, { page:"settings", confirmText:"-", cancelText:"Dismiss" });
+	popup.show();
+
+	let qrCode = new QRCodeStyling(style);
+	
+	qrCode.append(document.getElementById("popup-canvas-wrapper"));
+	
+	popup.updateHeight();
+}
