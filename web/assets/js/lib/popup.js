@@ -149,7 +149,7 @@ class Popup {
 			let top = this.element.getElementsByClassName("top")[0];
 			let content = this.element.getElementsByClassName("content")[0];
 
-			let height = top.scrollHeight + content.scrollHeight + 80;
+			let height = top.scrollHeight + content.scrollHeight + 40;
 
 			if(height > window.innerHeight - 80) {
 				height = window.innerHeight - 80;
