@@ -1,0 +1,10 @@
+@font-face {
+	font-family:Arkhip;
+	src:url("../fonts/Arkhip.ttf");
+}
+
+html {
+	--border-radius:10px;
+	--blur:blur(2px);
+	--font-family:Tahoma, Verdana, Arial, Helvetica, sans-serif;
+}

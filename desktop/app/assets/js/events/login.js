@@ -20,8 +20,8 @@ buttonLoginAccount.addEventListener("click", async () => {
 
 			try {
 				let url = new URL(urlAPI);
-				urlBot = `${url.protocol}//${url.hostname}:${parseFloat(url.port) + 1}`;
-
+				urlBot = `${url.protocol}//${url.hostname}:${url.port + 1}`;
+				
 				await appStorage.setItem("api", url.toString());
 			} catch(error) {
 				console.log(error);

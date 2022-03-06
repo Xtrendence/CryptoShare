@@ -1,0 +1,323 @@
+/* Max Height */
+@media screen and (max-height:783px) {
+	.page.dashboard.show-holdings .page-container.half.bottom-right {
+		height:calc(100% - 300px - 170px);
+	}
+}
+
+@media screen and (max-height:600px) {
+	.popup-wrapper .bottom .chart-wrapper {
+		max-width:80%;
+	}
+}
+
+/* Max Width */
+@media screen and (max-width:1300px) {
+	.market-list-row .name, .market-list-row .symbol {
+		max-width:110px;
+	}
+}
+
+@media screen and (max-width:960px) and (min-width:780px) {
+	.navbar-wrapper {
+		left:20px;
+		width:135px;
+		height:100%;
+		overflow:hidden auto;
+	}
+	.navbar {
+		position:absolute;
+		height:514px;
+		max-height:calc(100% - 40px);
+		margin:0;
+		left:0;
+		padding:10px 0 10px 0;
+		top:calc(50% - 534px / 2);
+	}
+	.page.chatbot .page-container.full.chatbot {
+		top:77.5px;
+		left:auto;
+		right:calc(50% - 476px / 2 - 77.5px);
+	}
+	.page.dashboard .page-container.half.top-right.dashboard {
+		display:none;
+	}
+	.page.dashboard .page-container.half.bottom-right.dashboard {
+		right:calc(50% - 450px / 2 - 77.5px);
+		height:calc(100% - 465px - 20px);
+	}
+	.page.dashboard .page-container.half.left {
+		top:20px;
+		right:calc(50% - 450px / 2 - 77.5px);
+		left:auto;
+		height:calc(100% - 345px - 20px);
+	}
+	.page.market .page-container.full.market {
+		width:calc(100% - 175px - 20px);
+		height:calc(100% - 40px);
+		left:auto;
+		bottom:auto;
+		right:20px;
+		top:20px;
+	}
+	.page.market .page-type-wrapper {
+		position:absolute;
+		left:140px;
+	}
+	.page.holdings .page-container.half.top-left {
+		bottom:20px;
+		left:175px;
+		top:auto;
+		height:200px;
+	}
+	.page.holdings .page-container.half.bottom-left {
+		bottom:20px;
+		right:20px;
+		left:auto;
+		top:auto;
+		width:265px;
+	}
+	.page.holdings .holdings-card {
+		padding:10px 20px 10px 20px;
+	}
+	.page.holdings .page-container.half.right {
+		width:calc(100% - 175px - 20px);
+		height:calc(100% - 40px - 20px - 200px);
+		top:20px;
+	}
+	.page.activity .page-container.full {
+		height:calc(100% - 40px);
+		width:calc(100% - 175px - 20px);
+		left:auto;
+		bottom:auto;
+		top:20px;
+		right:20px;
+	}
+	.page.settings .page-container.full {
+		bottom:auto;
+		top:20px;
+		right:20px;
+		left:auto;
+		width:calc(100% - 175px - 20px);
+		height:calc(100% - 40px);
+	}
+}
+
+@media screen and (max-width:780px) {
+	.navbar-wrapper {
+		bottom:20px;
+		top:auto;
+		height:auto;
+	}
+	.navbar .item {
+		width:74px;
+	}
+	.navbar .item span {
+		display:none;
+	}
+	.page.chatbot .page-container.full {
+		top:20px;
+	}
+	.page.dashboard .page-container.half.top-right.dashboard {
+		display:none;
+	}
+	.page.dashboard .page-container.half.bottom-right.dashboard {
+		height:280px;
+		bottom:135px;
+		left:calc(50% - 450px / 2);
+		top:auto;
+	}
+	.page.dashboard .page-container.half.left {
+		top:20px;
+		left:calc(50% - 450px / 2);
+		height:calc(100% - 435px - 20px);
+	}
+	.page.market .page-container.full {
+		top:20px;
+	}
+	.page.market .page-type-wrapper {
+		position:absolute;
+		left:130px;
+	}
+	.page.holdings .page-container.half.top-left {
+		left:calc(50% - 580px / 2);
+		top:20px;
+		height:auto;
+		width:auto;
+		padding:0 10px 20px 10px;
+	}
+	.page.holdings .page-container.half.top-left .holdings-card {
+		display:inline-block;
+		width:auto;
+		margin:20px 10px 0 10px;
+		padding:10px 20px 10px 20px;
+	}
+	.page.holdings .page-container.half.bottom-left {
+		bottom:135px;
+		right:calc(50% - 430px / 2);
+		left:auto;
+		top:auto;
+		width:410px;
+		padding:0 10px 20px 10px;
+		display:flex;
+		align-items:center;
+	}
+	.page-container.holdings.half.bottom-left .action-button {
+		display:none;
+	}
+	.page-container.holdings.half.bottom-left .action-button.small {
+		display:inline-block;
+		width:auto;
+	}
+	.page.holdings .page-container.half.right {
+		width:calc(100% - 40px);
+		height:calc(100% - 40px - 20px - 200px - 125px);
+		top:150px;
+	}
+	.page.activity .page-container.full {
+		top:20px;
+	}
+	.page.settings .page-container.full {
+		top:20px;
+	}
+}
+
+@media screen and (max-width:620px) {
+	.navbar .item {
+		width:50px;
+		height:50px;
+	}
+	.page.holdings .page-container.half.top-left {
+		left:calc(50% - 300px / 2);
+	}
+	.page.holdings .page-container.half.top-left .holdings-card:first-of-type {
+		display:none;
+	}
+	.market-list-row .icon-wrapper, .holdings-list-row .icon-wrapper {
+		margin:10px;
+		border-radius:var(--border-radius);
+		display:block;
+	}
+	.watchlist-list-row .name, .watchlist-list-row .rank, .watchlist-list-row .symbol, .market-list-row .name, .market-list-row .rank, .market-list-row .symbol, .holdings-list-row .name, .holdings-list-row .rank, .holdings-list-row .symbol {
+		top:27px;
+	}
+	.watchlist-list-row .rank-container, .market-list-row .rank-container, .holdings-list-row .rank-container {
+		top:50px;
+	}
+	.watchlist-list-row .info-container, .market-list-row .info-container, .holdings-list-row .info-container {
+		padding:0;
+		width:100%;
+	}
+	.watchlist-list-row .info-wrapper, .watchlist-list-row .info-container, .market-list-row .info-wrapper, .market-list-row .info-container, .holdings-list-row .info-wrapper, .holdings-list-row .info-container {
+		width:100%;
+		background:var(--main-second);
+		padding-top:5px;
+	}
+	.watchlist-list-row .top, .market-list-row .top, .holdings-list-row .top {
+		display:inline-block;
+		margin-bottom:20px;
+	}
+	.watchlist-list-row .bottom, .market-list-row .bottom, .holdings-list-row .bottom {
+		display:inline-block;
+		margin-top:10px;
+	}
+	.watchlist-list-row .bottom span:last-of-type, .market-list-row .bottom span:last-of-type, .holdings-list-row .bottom span:last-of-type {
+		margin-right:10px;
+	}
+	.dashboard-list.holdings .info-container, .dashboard-list.watchlist .info-container {
+		margin-top:5px;
+	}
+	.market-list .watchlist-list-row .info-wrapper {
+		width:100%;
+	}
+	.market-list .watchlist-list-row .info-container {
+		padding-top:5px;
+		margin-right:0;
+	}
+	.market-list .watchlist-list-row .info-wrapper .name {
+		top:14px;
+		left:14px;
+	}
+	.market-list {
+		top:140px;
+		height:calc(100% - 40px - 100px);
+	}
+	.page.market .page-type-wrapper {
+		top:80px;
+		width:180px;
+		left:calc(50% - 180px / 2);
+	}
+	.activity-list-row .info-wrapper {
+		width:100%;
+	}
+	.activity-list-row .asset-container {
+		top:auto;
+		left:auto;
+		bottom:auto;
+		position:relative;
+		display:block;
+		margin:20px 0 0 20px;
+	}
+	.activity-list-row .info-wrapper {
+		text-align:left;
+	}
+	.activity-list-row .info-container {
+		width:100%;
+		text-align:left;
+		padding-left:20px;
+	}
+	.page.chatbot .page-container.full.chatbot {
+		width:calc(100% - 40px);
+		left:20px;
+	}
+	.activity-list {
+		height:calc(100% - 114px);
+	}
+	.page.activity .page-container-toolbar {
+		height:114px;
+	}
+	.page.activity .page-container-toolbar .page-actions-wrapper {
+		text-align:left;
+		top:auto;
+		bottom:10px;
+	}
+}
+
+@media screen and (max-width:490px) {
+	.page.dashboard .page-container.half.left {
+		left:20px;
+		width:calc(100% - 40px);
+	}
+	.page.dashboard .page-container.half.bottom-right.dashboard {
+		left:20px;
+		width:calc(100% - 40px);
+	}
+}
+
+/* Min Width */
+@media screen and (min-width:1260px) {
+	.page-container.full {
+		width:1220px;
+		left:calc(50% - 1220px / 2);
+	}
+}
+
+@media screen and (min-width:1160px) {
+	.page-container.holdings.half.top-left {
+		left:calc(50% - 300px - 180px - 30px - 50px);
+	}
+	.page-container.holdings.half.bottom-left {
+		left:calc(50% - 300px - 180px - 30px - 50px);
+	}
+	.page-container.holdings.half.right {
+		width:800px;
+		left:calc(50% - 800px / 2 + 180px - 20px);
+	}
+}
+
+@media screen and (min-width:1000px) {
+	.page-container.full.activity {
+		width:960px;
+		left:calc(50% - 960px / 2);
+	}
+}

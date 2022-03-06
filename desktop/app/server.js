@@ -14,8 +14,9 @@ const ElectronStore = require("electron-store");
 const store = new ElectronStore();
 
 app.requestSingleInstanceLock();
-app.disableHardwareAcceleration();
 app.name = "CryptoShare";
+
+process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 app.on("ready", function() {
 	const debugMode = false;
@@ -88,6 +89,10 @@ app.on("ready", function() {
 
 	ipcMain.handle("getItem", (event, args) => {
 		return store.get(args.key);
+	});
+
+	ipcMain.handle("getAll", (event, args) => {
+		return { ...store.store };
 	});
 
 	ipcMain.handle("setItem", (event, args) => {

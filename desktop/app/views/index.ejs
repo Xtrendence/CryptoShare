@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en" id="app">
+	<head>
+		<script src="./assets/js/helpers/platform.js"></script>
+		<script src="./assets/js/lib/jquery.js"></script>
+		<script src="./assets/js/lib/crypto-js.js"></script>
+		<script src="./assets/js/lib/chart.js"></script>
+		<script src="./assets/js/lib/socket.js"></script>
+		<script src="./assets/js/lib/popper.min.js"></script>
+		<script src="./assets/js/lib/tippy.min.js"></script>
+		<script src="./assets/js/lib/flatpickr.js"></script>
+		<script src="./assets/js/lib/qr-code-styling.js"></script>
+		<script src="./assets/js/lib/forge.js"></script>
+		<script src="./assets/js/lib/sha256.js"></script>
+		<script src="./assets/js/lib/CryptoFN.js"></script>
+		<script src="./assets/js/lib/notifier.js"></script>
+		<script src="./assets/js/lib/popup.js"></script>
+		<script src="./assets/js/helpers/utils.js"></script>
+		<script src="./assets/js/svgs.js"></script>
+		<script src="./assets/js/helpers/defaultFood.js"></script>
+		<link rel="stylesheet" href="./assets/css/global.css">
+		<link rel="stylesheet" href="./assets/css/light.css">
+		<link rel="stylesheet" href="./assets/css/dark.css">
+		<link rel="stylesheet" href="./assets/css/style.css">
+		<link rel="stylesheet" href="./assets/css/resize.css">
+		<link rel="stylesheet" href="./assets/css/flatpickr.css">
+		<link class="favicon" rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicon/dark/apple-touch-icon.png">
+		<link class="favicon" rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicon/dark/favicon-32x32.png">
+		<link class="favicon" rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicon/dark/favicon-16x16.png">
+		<link class="favicon" rel="manifest" href="./assets/img/favicon/dark/site.webmanifest">
+		<link class="favicon" rel="mask-icon" href="./assets/img/favicon/dark/safari-pinned-tab.svg" color="#5bbad5">
+		<link class="favicon" rel="shortcut icon" href="./assets/img/favicon/dark/favicon.ico">
+		<meta class="browser-theme" name="theme-color" content="#000000">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+		<meta charset="utf-8">
+		<title>CryptoShare</title>
+	</head>
+	<body>
+		<div class="titlebar" id="titlebar" style="background:rgb(20,20,20); box-shadow:none;">
+			<div class="window-buttons">
+				<button id="button-window-close" class="close-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg></button>
+				<button id="button-window-minimize" class="minimize-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></button>
+				<button id="button-window-maximize" class="maximize-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M212.686 315.314L120 408l32.922 31.029c15.12 15.12 4.412 40.971-16.97 40.971h-112C10.697 480 0 469.255 0 456V344c0-21.382 25.803-32.09 40.922-16.971L72 360l92.686-92.686c6.248-6.248 16.379-6.248 22.627 0l25.373 25.373c6.249 6.248 6.249 16.378 0 22.627zm22.628-118.628L328 104l-32.922-31.029C279.958 57.851 290.666 32 312.048 32h112C437.303 32 448 42.745 448 56v112c0 21.382-25.803 32.09-40.922 16.971L376 152l-92.686 92.686c-6.248 6.248-16.379 6.248-22.627 0l-25.373-25.373c-6.249-6.248-6.249-16.378 0-22.627z"/></svg></button>
+			</div>
+		</div>
+		<div class="app-content" id="app-content">
+			<div id="background"></div>
+			<div class="loading-overlay active noselect" id="loading-overlay"><div class="loading-icon"><div></div><div></div></div></div>
+			<div class="login-page login" id="login-page">
+				<div class="login-title-wrapper noselect">
+					<span id="span-login-title">CryptoShare</span>
+				</div>
+				<!-- TODO: Remove preset values -->
+				<div class="login-wrapper">
+					<input class="app-only" id="input-login-api" placeholder="API URL..." value="http://192.168.1.100:3190/graphql" type="text" spellcheck="false">
+					<div class="login-container">
+						<input id="input-login-username" placeholder="Username..." value="Admin" type="text" spellcheck="false">
+						<div class="input-password-wrapper">
+							<input id="input-login-password" placeholder="Password..." value="admin" type="password" spellcheck="false">
+						</div>
+						<button class="action" id="button-new-account">Need An Account?</button>
+						<button class="action" id="button-login-account">Login</button>
+					</div>
+					<div class="create-container">
+						<input id="input-create-username" placeholder="Username..." value="Admin" type="text" spellcheck="false">
+						<div class="input-password-wrapper">
+							<input id="input-create-password" placeholder="Password..." value="admin" type="password" spellcheck="false">
+						</div>
+						<div class="input-password-wrapper">
+							<input id="input-create-repeat-password" placeholder="Confirm Password..." value="admin" type="password" spellcheck="false">
+						</div>
+						<button class="action" id="button-existing-account">Got An Account?</button>
+						<button class="action" id="button-create-account">Create Account</button>
+					</div>
+				</div>
+				<div class="toggle-wrapper theme" id="login-toggle-theme">
+					<div class="toggle-container">
+						<svg class="moon-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1390 1303q-54 9-110 9-182 0-337-90t-245-245-90-337q0-192 104-357-201 60-328.5 229t-127.5 384q0 130 51 248.5t136.5 204 204 136.5 248.5 51q144 0 273.5-61.5t220.5-171.5zm203-85q-94 203-283.5 324.5t-413.5 121.5q-156 0-298-61t-245-164-164-245-61-298q0-153 57.5-292.5t156-241.5 235.5-164.5 290-68.5q44-2 61 39 18 41-15 72-86 78-131.5 181.5t-45.5 218.5q0 148 73 273t198 198 273 73q118 0 228-51 41-18 72 13 14 14 17.5 34t-4.5 38z"/></svg>
+						<svg class="sun-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1472 896q0-117-45.5-223.5t-123-184-184-123-223.5-45.5-223.5 45.5-184 123-123 184-45.5 223.5 45.5 223.5 123 184 184 123 223.5 45.5 223.5-45.5 184-123 123-184 45.5-223.5zm276 277q-4 15-20 20l-292 96v306q0 16-13 26-15 10-29 4l-292-94-180 248q-10 13-26 13t-26-13l-180-248-292 94q-14 6-29-4-13-10-13-26v-306l-292-96q-16-5-20-20-5-17 4-29l180-248-180-248q-9-13-4-29 4-15 20-20l292-96v-306q0-16 13-26 15-10 29-4l292 94 180-248q9-12 26-12t26 12l180 248 292-94q14-6 29 4 13 10 13 26v306l292 96q16 5 20 20 5 16-4 29l-180 248 180 248q9 12 4 29z"/></svg>
+					</div>
+				</div>
+			</div>
+			<div class="app-page hidden" id="app-page">
+				<div class="navbar-wrapper" id="navbar-wrapper">
+					<div class="navbar noselect" id="navbar">
+						<div class="item" id="navbar-chatbot">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M640 896q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm384 0q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm384 0q0-53-37.5-90.5t-90.5-37.5-90.5 37.5-37.5 90.5 37.5 90.5 90.5 37.5 90.5-37.5 37.5-90.5zm384 0q0 174-120 321.5t-326 233-450 85.5q-110 0-211-18-173 173-435 229-52 10-86 13-12 1-22-6t-13-18q-4-15 20-37 5-5 23.5-21.5t25.5-23.5 23.5-25.5 24-31.5 20.5-37 20-48 14.5-57.5 12.5-72.5q-146-90-229.5-216.5t-83.5-269.5q0-174 120-321.5t326-233 450-85.5 450 85.5 326 233 120 321.5z"/></svg>
+								<span>Chat Bot</span>
+							</div>
+						</div>
+						<div class="item" id="navbar-dashboard">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M832 1024v384q0 52-38 90t-90 38h-512q-52 0-90-38t-38-90v-384q0-52 38-90t90-38h512q52 0 90 38t38 90zm0-768v384q0 52-38 90t-90 38h-512q-52 0-90-38t-38-90v-384q0-52 38-90t90-38h512q52 0 90 38t38 90zm896 768v384q0 52-38 90t-90 38h-512q-52 0-90-38t-38-90v-384q0-52 38-90t90-38h512q52 0 90 38t38 90zm0-768v384q0 52-38 90t-90 38h-512q-52 0-90-38t-38-90v-384q0-52 38-90t90-38h512q52 0 90 38t38 90z"/></svg>
+								<span>Dashboard</span>
+							</div>
+						</div>
+						<div class="item active" id="navbar-market">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg width="2048" height="1792" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M960 0l960 384v128h-128q0 26-20.5 45t-48.5 19h-1526q-28 0-48.5-19t-20.5-45h-128v-128zm-704 640h256v768h128v-768h256v768h128v-768h256v768h128v-768h256v768h59q28 0 48.5 19t20.5 45v64h-1664v-64q0-26 20.5-45t48.5-19h59v-768zm1595 960q28 0 48.5 19t20.5 45v128h-1920v-128q0-26 20.5-45t48.5-19h1782z"/></svg>
+								<span>Market</span>
+							</div>
+						</div>
+						<div class="item" id="navbar-holdings">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M461.2 128H80c-8.84 0-16-7.16-16-16s7.16-16 16-16h384c8.84 0 16-7.16 16-16 0-26.51-21.49-48-48-48H64C28.65 32 0 60.65 0 96v320c0 35.35 28.65 64 64 64h397.2c28.02 0 50.8-21.53 50.8-48V176c0-26.47-22.78-48-50.8-48zM416 336c-17.67 0-32-14.33-32-32s14.33-32 32-32 32 14.33 32 32-14.33 32-32 32z"/></svg>
+								<span>Holdings</span>
+							</div>
+						</div>
+						<div class="item" id="navbar-activity">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1792 1184v192q0 13-9.5 22.5t-22.5 9.5h-1376v192q0 13-9.5 22.5t-22.5 9.5q-12 0-24-10l-319-320q-9-9-9-22 0-14 9-23l320-320q9-9 23-9 13 0 22.5 9.5t9.5 22.5v192h1376q13 0 22.5 9.5t9.5 22.5zm0-544q0 14-9 23l-320 320q-9 9-23 9-13 0-22.5-9.5t-9.5-22.5v-192h-1376q-13 0-22.5-9.5t-9.5-22.5v-192q0-13 9.5-22.5t22.5-9.5h1376v-192q0-14 9-23t23-9q12 0 24 10l319 319q9 9 9 23z"/></svg>
+								<span>Activity</span>
+							</div>
+						</div>
+						<div class="item" id="navbar-settings">
+							<div class="background"></div>
+							<div class="content audible-pop">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1152 896q0-106-75-181t-181-75-181 75-75 181 75 181 181 75 181-75 75-181zm512-109v222q0 12-8 23t-20 13l-185 28q-19 54-39 91 35 50 107 138 10 12 10 25t-9 23q-27 37-99 108t-94 71q-12 0-26-9l-138-108q-44 23-91 38-16 136-29 186-7 28-36 28h-222q-14 0-24.5-8.5t-11.5-21.5l-28-184q-49-16-90-37l-141 107q-10 9-25 9-14 0-25-11-126-114-165-168-7-10-7-23 0-12 8-23 15-21 51-66.5t54-70.5q-27-50-41-99l-183-27q-13-2-21-12.5t-8-23.5v-222q0-12 8-23t19-13l186-28q14-46 39-92-40-57-107-138-10-12-10-24 0-10 9-23 26-36 98.5-107.5t94.5-71.5q13 0 26 10l138 107q44-23 91-38 16-136 29-186 7-28 36-28h222q14 0 24.5 8.5t11.5 21.5l28 184q49 16 90 37l142-107q9-9 24-9 13 0 25 10 129 119 165 170 7 8 7 22 0 12-8 23-15 21-51 66.5t-54 70.5q26 50 41 98l183 28q13 2 21 12.5t8 23.5z"/></svg>
+								<span>Settings</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="side-menu-overlay hidden" id="side-menu-overlay"></div>
+				<button class="side-menu-close hidden" id="button-side-menu-close">
+					<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/></svg>
+				</button>
+				<div class="side-menu-wrapper hidden" id="side-menu-wrapper">
+					<div class="side-menu-top" id="side-menu-top"></div>
+					<div class="side-menu-container" id="side-menu-container">
+						<div class="loading-icon"><div></div><div></div></div>
+					</div>
+					<div class="side-menu-bottom" id="side-menu-bottom"></div>
+				</div>
+				<div class="page chatbot hidden" id="chatbot-page">
+					<div class="page-container full chatbot">
+						<div class="chat-top noselect">
+							<div class="icon-wrapper">
+								<span>P</span>
+							</div>
+							<div class="name-wrapper">
+								<span>Plutus</span>
+								<div class="chat-status" id="chat-status"></div>
+							</div>
+							<button class="action-button first" id="button-chat-help">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1088 1256v240q0 16-12 28t-28 12h-240q-16 0-28-12t-12-28v-240q0-16 12-28t28-12h240q16 0 28 12t12 28zm316-600q0 54-15.5 101t-35 76.5-55 59.5-57.5 43.5-61 35.5q-41 23-68.5 65t-27.5 67q0 17-12 32.5t-28 15.5h-240q-15 0-25.5-18.5t-10.5-37.5v-45q0-83 65-156.5t143-108.5q59-27 84-56t25-76q0-42-46.5-74t-107.5-32q-65 0-108 29-35 25-107 115-13 16-31 16-12 0-25-8l-164-125q-13-10-15.5-25t5.5-28q160-266 464-266 80 0 161 31t146 83 106 127.5 41 158.5z"/></svg>
+							</button>
+							<button class="action-button second" id="button-chat-menu">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M576 736v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z"/></svg>
+							</button>
+						</div>
+						<div class="chat-list noselect" id="chat-list">
+							<div class="loading-icon"><div></div><div></div></div>
+						</div>
+						<div class="chat-options-wrapper noselect hidden" id="chat-options"></div>
+						<div class="chat-bottom">
+							<input id="input-message" placeholder="Say Something..." type="text" spellcheck="true" autocomplete="off">
+							<button class="action-button" id="button-message-send">Send</button>
+						</div>
+					</div>
+				</div>
+				<div class="page dashboard hidden" id="dashboard-page">
+					<div class="page-container half left dashboard">
+						<div class="page-container-toolbar noselect">
+							<span class="title">Monthly Budget</span>
+							<button class="action-button first" id="button-dashboard-budget-transactions">Transactions</button>
+							<button class="action-button" id="button-dashboard-budget-edit">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M491 1536l91-91-235-235-91 91v107h128v128h107zm523-928q0-22-22-22-10 0-17 7l-542 542q-7 7-7 17 0 22 22 22 10 0 17-7l542-542q7-7 7-17zm-54-192l416 416-832 832h-416v-416zm683 96q0 53-37 90l-166 166-416-416 166-165q36-38 90-38 53 0 91 38l235 234q37 39 37 91z"/></svg>
+							</button>
+						</div>
+						<div class="dashboard-list budget" id="dashboard-budget-list"></div>
+					</div>
+					<div class="page-container half top-right dashboard">
+						<div class="page-container-toolbar noselect">
+							<span class="title">Holdings</span>
+							<span class="title right" id="span-dashboard-holdings">-</span>
+						</div>
+						<div class="dashboard-list holdings" id="dashboard-holdings-list">
+							<div class="loading-icon"><div></div><div></div></div>
+						</div>
+					</div>
+					<div class="page-container half bottom-right dashboard">
+						<div class="page-container-toolbar noselect">
+							<span class="title">Watchlist</span>
+							<button class="action-button" id="button-dashboard-watchlist-add">
+								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z"/></svg>
+							</button>
+						</div>
+						<div class="dashboard-list watchlist" id="dashboard-watchlist-list"></div>
+					</div>
+				</div>
+				<div class="page market" id="market-page">
+					<div class="page-container full market">
+						<div class="page-container-toolbar">
+							<div class="page-actions-wrapper">
+								<button class="action-button" id="button-market-info">
+									<svg width="2048" height="1792" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M2048 1536v128h-2048v-1536h128v1408h1920zm-128-1248v435q0 21-19.5 29.5t-35.5-7.5l-121-121-633 633q-10 10-23 10t-23-10l-233-233-416 416-192-192 585-585q10-10 23-10t23 10l233 233 464-464-121-121q-16-16-7.5-35.5t29.5-19.5h435q14 0 23 9t9 23z"/></svg>
+								</button>
+								<button class="action-button" id="button-market-search">
+									<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1216 832q0-185-131.5-316.5t-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5 316.5-131.5 131.5-316.5zm512 832q0 52-38 90t-90 38q-54 0-90-38l-343-342q-179 124-399 124-143 0-273.5-55.5t-225-150-150-225-55.5-273.5 55.5-273.5 150-225 225-150 273.5-55.5 273.5 55.5 225 150 150 225 55.5 273.5q0 220-124 399l343 343q37 37 37 90z"/></svg>
+								</button>
+							</div>
+							<div class="page-type-wrapper">
+								<button class="choice-button active" id="button-market-crypto">Crypto</button>
+								<button class="choice-button" id="button-market-stocks">Stocks</button>
+							</div>
+							<div class="page-navigation-wrapper" id="market-page-navigation-wrapper">
+								<button class="action-button" id="button-market-previous">
+									<svg class="left" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/></svg>
+								</button>
+								<span class="noselect" id="span-market-page">Page 1</span>
+								<button class="action-button" id="button-market-next">
+									<svg class="right" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
+								</button>
+							</div>
+							<div class="market-list" id="market-list-crypto" data-page="1">
+								<div class="loading-icon"><div></div><div></div></div>
+							</div>
+							<div class="market-list hidden" id="market-list-stocks" data-page="1">
+								<div class="loading-icon"><div></div><div></div></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="page holdings hidden" id="holdings-page">
+					<div class="page-container half top-left holdings">
+						<div class="holdings-card username noselect audible-pop" id="holdings-card-username">
+							<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1536 1399q0 109-62.5 187t-150.5 78h-854q-88 0-150.5-78t-62.5-187q0-85 8.5-160.5t31.5-152 58.5-131 94-89 134.5-34.5q131 128 313 128t313-128q76 0 134.5 34.5t94 89 58.5 131 31.5 152 8.5 160.5zm-256-887q0 159-112.5 271.5t-271.5 112.5-271.5-112.5-112.5-271.5 112.5-271.5 271.5-112.5 271.5 112.5 112.5 271.5z"/></svg>
+							<span class="inline" id="span-holdings-username">-</span>
+						</div>
+						<div class="holdings-card value noselect audible-pop" id="holdings-card-value">
+							<svg width="2048" height="1792" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M832 1152h384v-96h-128v-448h-114l-148 137 77 80q42-37 55-57h2v288h-128v96zm512-256q0 70-21 142t-59.5 134-101.5 101-138 39-138-39-101.5-101-59.5-134-21-142 21-142 59.5-134 101.5-101 138-39 138 39 101.5 101 59.5 134 21 142zm512 256v-512q-106 0-181-75t-75-181h-1152q0 106-75 181t-181 75v512q106 0 181 75t75 181h1152q0-106 75-181t181-75zm128-832v1152q0 26-19 45t-45 19h-1792q-26 0-45-19t-19-45v-1152q0-26 19-45t45-19h1792q26 0 45 19t19 45z"/></svg>
+							<span class="inline" id="span-holdings-value">-</span>
+						</div>
+					</div>
+					<div class="page-container half bottom-left holdings">
+						<button class="action-button" id="button-holdings-performance">Portfolio Performance</button>
+						<button class="action-button" id="button-holdings-add-crypto-asset">Add Crypto Asset</button>
+						<button class="action-button" id="button-holdings-add-stock-asset">Add Stock Asset</button>
+						<button class="action-button small" id="button-holdings-performance-small">Performance</button>
+						<button class="action-button small" id="button-holdings-add-crypto-asset-small">Add Crypto</button>
+						<button class="action-button small" id="button-holdings-add-stock-asset-small">Add Stock</button>
+					</div>
+					<div class="page-container half right holdings">
+						<div class="holdings-list" id="holdings-list">
+							<div class="loading-icon"><div></div><div></div></div>
+						</div>
+					</div>
+				</div>
+				<div class="page activity hidden" id="activity-page">
+					<div class="page-container full activity">
+						<div class="activity-list" id="activity-list">
+							<div class="loading-icon"><div></div><div></div></div>
+						</div>
+						<div class="page-container-toolbar">
+							<input type="text" placeholder="Search..." id="input-activity-search" spellcheck="false">
+							<button class="action-button search" id="button-activity-search">Search</button>
+							<div class="page-actions-wrapper">
+								<button class="action-button" id="button-activity-help">
+									<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1088 1256v240q0 16-12 28t-28 12h-240q-16 0-28-12t-12-28v-240q0-16 12-28t28-12h240q16 0 28 12t12 28zm316-600q0 54-15.5 101t-35 76.5-55 59.5-57.5 43.5-61 35.5q-41 23-68.5 65t-27.5 67q0 17-12 32.5t-28 15.5h-240q-15 0-25.5-18.5t-10.5-37.5v-45q0-83 65-156.5t143-108.5q59-27 84-56t25-76q0-42-46.5-74t-107.5-32q-65 0-108 29-35 25-107 115-13 16-31 16-12 0-25-8l-164-125q-13-10-15.5-25t5.5-28q160-266 464-266 80 0 161 31t146 83 106 127.5 41 158.5z"/></svg>
+								</button>
+								<button class="action-button" id="button-activity-tools">Tools</button>
+								<button class="action-button" id="button-activity-add">Add Activity</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="page settings hidden" id="settings-page">
+					<div class="page-container full settings">
+						<div class="settings-navbar noselect" id="settings-navbar">
+							<div class="item appearance active" id="settings-navbar-appearance">
+								<span>Appearance</span>
+							</div>
+							<div class="item behavior" id="settings-navbar-behavior">
+								<span>Behavior</span>
+							</div>
+							<div class="item account" id="settings-navbar-account">
+								<span>Account</span>
+							</div>
+							<div class="item data" id="settings-navbar-data">
+								<span>Data</span>
+							</div>
+							<div class="item other" id="settings-navbar-other">
+								<span>Other</span>
+							</div>
+						</div>
+						<div class="settings-page appearance" id="settings-page-appearance">
+							<div class="settings-section noselect">
+								<span class="title">Theme</span>
+								<div class="content">
+									<div class="toggle-wrapper theme" id="settings-toggle-theme">
+										<div class="toggle-container">
+											<svg class="moon-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1390 1303q-54 9-110 9-182 0-337-90t-245-245-90-337q0-192 104-357-201 60-328.5 229t-127.5 384q0 130 51 248.5t136.5 204 204 136.5 248.5 51q144 0 273.5-61.5t220.5-171.5zm203-85q-94 203-283.5 324.5t-413.5 121.5q-156 0-298-61t-245-164-164-245-61-298q0-153 57.5-292.5t156-241.5 235.5-164.5 290-68.5q44-2 61 39 18 41-15 72-86 78-131.5 181.5t-45.5 218.5q0 148 73 273t198 198 273 73q118 0 228-51 41-18 72 13 14 14 17.5 34t-4.5 38z"/></svg>
+											<svg class="sun-icon" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path class="audible-switch" d="M1472 896q0-117-45.5-223.5t-123-184-184-123-223.5-45.5-223.5 45.5-184 123-123 184-45.5 223.5 45.5 223.5 123 184 184 123 223.5 45.5 223.5-45.5 184-123 123-184 45.5-223.5zm276 277q-4 15-20 20l-292 96v306q0 16-13 26-15 10-29 4l-292-94-180 248q-10 13-26 13t-26-13l-180-248-292 94q-14 6-29-4-13-10-13-26v-306l-292-96q-16-5-20-20-5-17 4-29l180-248-180-248q-9-13-4-29 4-15 20-20l292-96v-306q0-16 13-26 15-10 29-4l292 94 180-248q9-12 26-12t26 12l180 248 292-94q14-6 29 4 13 10 13 26v306l292 96q16 5 20 20 5 16-4 29l-180 248 180 248q9 12 4 29z"/></svg>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="assetIconBackdrop">
+								<span class="title">Asset Icon Backdrop</span>
+								<div class="content">
+									<button class="choice-button" data-value="disabled">Disabled</button>
+									<button class="choice-button" data-value="enabled">Enabled</button>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="navbarStyle">
+								<span class="title">Navigation Bar Style</span>
+								<div class="content">
+									<button class="choice-button" data-value="normal">Normal</button>
+									<button class="choice-button" data-value="compact">Compact</button>
+								</div>
+							</div>
+						</div>
+						<div class="settings-page behavior hidden" id="settings-page-behavior">
+							<div class="settings-section noselect" data-key="defaultPage">
+								<span class="title">Default Page</span>
+								<div class="content block">
+									<button class="choice-button" data-value="Chat Bot">Chat Bot</button>
+									<button class="choice-button" data-value="Dashboard">Dashboard</button>
+									<button class="choice-button" data-value="Market">Market</button>
+									<button class="choice-button" data-value="Holdings">Holdings</button>
+									<button class="choice-button" data-value="Activity">Activity</button>
+									<button class="choice-button" data-value="Settings">Settings</button>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="defaultSettingsPage">
+								<span class="title">Default Settings Page</span>
+								<div class="content block">
+									<button class="choice-button" data-value="appearance">Appearance</button>
+									<button class="choice-button" data-value="behavior">Behavior</button>
+									<button class="choice-button" data-value="account">Account</button>
+									<button class="choice-button" data-value="data">Data</button>
+									<button class="choice-button" data-value="other">Other</button>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="transactionsAffectHoldings">
+								<span class="title">Transactions Affect Holdings</span>
+								<div class="content">
+									<button class="choice-button" data-value="disabled">Disabled</button>
+									<button class="choice-button" data-value="enabled">Enabled</button>
+								</div>
+							</div>
+							<div class="settings-section noselect">
+								<span class="title">Sound Effects</span>
+								<div class="content">
+									<div class="toggle-wrapper sounds" id="settings-toggle-sounds">
+										<div class="toggle-container"></div>
+									</div>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="dateFormat">
+								<span class="title">Date Format</span>
+								<div class="content block">
+									<button class="choice-button" data-value="yyyy-mm-dd">YYYY-MM-DD</button>
+									<button class="choice-button" data-value="dd-mm-yyyy">DD-MM-YYYY</button>
+								</div>
+							</div>
+							<div class="settings-section noselect" data-key="holdingsOnDashboard">
+								<span class="title">Holdings On Dashboard</span>
+								<div class="content">
+									<button class="choice-button" data-value="disabled">Disabled</button>
+									<button class="choice-button" data-value="enabled">Enabled</button>
+								</div>
+							</div>
+						</div>
+						<div class="settings-page account hidden" id="settings-page-account">
+							<div class="settings-section noselect">
+								<span class="title">Account</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-logout">Logout</button>
+									<button class="action-button" id="button-settings-logout-everywhere">Logout Everywhere</button>
+									<button class="action-button" id="button-settings-password">Change Password</button>
+									<button class="action-button hidden" id="button-settings-user-registration">-</button>
+									<button class="action-button negative" id="button-settings-delete-account">Delete Account</button>
+								</div>
+							</div>
+							<div class="settings-section noselect">
+								<span class="title">Stock API</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-stock-api-key">Set Key</button>
+									<button class="action-button hidden" id="button-settings-stock-api-type">-</button>
+								</div>
+							</div>
+							<div class="settings-section noselect">
+								<span class="title">QR Code Login</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-qr-code">Generate Code</button>
+								</div>
+							</div>
+						</div>
+						<div class="settings-page data hidden" id="settings-page-data">
+							<div class="settings-section negative noselect">
+								<span class="title">Reset Data</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-reset">Settings</button>
+									<button class="action-button" id="button-settings-reset-budget">Budget</button>
+									<button class="action-button" id="button-settings-reset-transactions">Transactions</button>
+									<button class="action-button" id="button-settings-reset-watchlist">Watchlist</button>
+									<button class="action-button" id="button-settings-reset-holdings">Holdings</button>
+									<button class="action-button" id="button-settings-reset-activities">Activities</button>
+									<button class="action-button" id="button-settings-reset-chatbot">Chat Bot</button>
+								</div>
+							</div>
+							<div class="settings-section positive noselect">
+								<span class="title">Import Data</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-import-settings">Settings</button>
+									<button class="action-button" id="button-settings-import-budget">Budget</button>
+									<button class="action-button" id="button-settings-import-transactions">Transactions</button>
+									<button class="action-button" id="button-settings-import-watchlist">Watchlist</button>
+									<button class="action-button" id="button-settings-import-holdings">Holdings</button>
+									<button class="action-button" id="button-settings-import-activities">Activities</button>
+								</div>
+							</div>
+							<div class="settings-section neutral noselect">
+								<span class="title">Export Data</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-export-settings">Settings</button>
+									<button class="action-button" id="button-settings-export-budget">Budget</button>
+									<button class="action-button" id="button-settings-export-transactions">Transactions</button>
+									<button class="action-button" id="button-settings-export-watchlist">Watchlist</button>
+									<button class="action-button" id="button-settings-export-holdings">Holdings</button>
+									<button class="action-button" id="button-settings-export-activities">Activities</button>
+								</div>
+							</div>
+							<div class="settings-section noselect">
+								<span class="title">Manage Data</span>
+								<div class="content block">
+									<button class="action-button" id="button-settings-data-watchlist">Watchlist</button>
+									<button class="action-button" id="button-settings-data-holding">Holdings</button>
+									<button class="action-button" id="button-settings-data-activity">Activities</button>
+								</div>
+							</div>
+						</div>
+						<div class="settings-page other hidden" id="settings-page-other">
+							<div class="settings-section noselect" data-key="currency">
+								<span class="title">Currency</span>
+								<div class="content block">
+									<button class="choice-button" data-value="usd">USD</button>
+									<button class="choice-button" data-value="gbp">GBP</button>
+									<button class="choice-button" data-value="eur">EUR</button>
+									<button class="choice-button" data-value="chf">CHF</button>
+									<button class="choice-button" data-value="aud">AUD</button>
+									<button class="choice-button" data-value="jpy">JPY</button>
+									<button class="choice-button" data-value="cad">CAD</button>
+								</div>
+							</div>
+							<div class="settings-section noselect" id="settings-section-donate">
+								<span class="title">Donate</span>
+								<div class="content block">
+									<button class="action-button">ADA</button>
+									<button class="action-button">XMR</button>
+									<button class="action-button">ETH</button>
+									<button class="action-button">BCH</button>
+									<button class="action-button">BTC</button>
+									<button class="action-button">LTC</button>
+									<button class="action-button">NANO</button>
+									<button class="action-button">DOT</button>
+								</div>
+							</div>
+							<div class="settings-section noselect app-only">
+								<span class="title">API</span>
+								<div class="content">
+									<button class="action-button" id="button-settings-api-url">Set URL</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="dom-cache"></div>
+			<div class="hidden" id="audio-files">
+				<audio src="./assets/mp3/pop.mp3" id="audio-pop"></audio>
+				<audio src="./assets/mp3/switch.mp3" id="audio-switch"></audio>
+			</div>
+			<noscript>
+				<div class="noscript-wrapper noselect">
+					<span>JavaScript is required for CryptoShare to function.</span>
+				</div>
+			</noscript>
+		</div>
+		<!-- DOM-Dependent JS Imports -->
+		<script src="./assets/js/config/defaultSettings.js"></script>
+		<script src="./assets/js/elements.js"></script>
+		<script src="./assets/js/requests.js"></script>
+		<!-- Functions -->
+		<script src="./assets/js/functions/functions.js"></script>
+		<script src="./assets/js/functions/account.js"></script>
+		<script src="./assets/js/functions/chatbot.js"></script>
+		<script src="./assets/js/functions/dashboard.js"></script>
+		<script src="./assets/js/functions/market.js"></script>
+		<script src="./assets/js/functions/holdings.js"></script>
+		<script src="./assets/js/functions/activity.js"></script>
+		<script src="./assets/js/functions/settings.js"></script>
+		<script src="./assets/js/functions/crypto.js"></script>
+		<script src="./assets/js/functions/stocks.js"></script>
+		<script src="./assets/js/functions/tools.js"></script>
+		<!-- Events -->
+		<script src="./assets/js/events/events.js"></script>
+		<script src="./assets/js/events/login.js"></script>
+		<script src="./assets/js/events/chatbot.js"></script>
+		<script src="./assets/js/events/dashboard.js"></script>
+		<script src="./assets/js/events/market.js"></script>
+		<script src="./assets/js/events/holdings.js"></script>
+		<script src="./assets/js/events/activity.js"></script>
+		<script src="./assets/js/events/settings.js"></script>
+		<!-- Other -->
+		<script src="./assets/js/variables.js"></script>
+		<script src="./assets/js/helpers/accountSetup.js"></script>
+		<script src="./assets/js/main.js"></script>
+	</body>
+</html>

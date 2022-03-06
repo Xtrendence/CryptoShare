@@ -8,7 +8,10 @@
 		"start": "electron app/server.js",
 		"dev": "nodemon --exec electron app/server.js",
 		"pack": "build --dir",
-		"dist": "sudo electron-builder -mwl"
+		"dist": "sudo electron-builder -mwl",
+		"dist-macos": "sudo electron-builder -m --x64 --arm64",
+		"dist-windows": "electron-builder -w",
+		"dist-linux": "sudo electron-builder -l"
 	},
 	"repository": {
 		"type": "git",
@@ -45,6 +48,9 @@
 		"ejs": "^3.1.6",
 		"electron-localshortcut": "^3.2.1",
 		"electron-store": "^8.0.1",
-		"express": "^4.17.3"
+		"express": "^4.17.3",
+		"jquery": "^3.6.0",
+		"nodemon": "^2.0.15",
+		"sha256": "^0.2.0"
 	}
 }

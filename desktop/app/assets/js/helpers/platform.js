@@ -1,9 +1,11 @@
 const appPlatform = document.documentElement.id;
 
+let sha256 = null;
 let electron = null;
 let ipcRenderer = null;
 
 if(appPlatform === "app") {
+	sha256 = require("sha256");
 	window.$ = window.jQuery = require("jquery");
 	electron = require("electron");
 	ipcRenderer = electron.ipcRenderer;

@@ -1,0 +1,74 @@
+html.dark {
+	--shadow-smooth:0 1px 1px rgba(0,0,0,0.1), 0 2px 2px rgba(0,0,0,0.075), 0 4px 4px rgba(0,0,0,0.075), 0 2px 8px rgba(0,0,0,0.15);
+	
+	--main-first:rgb(20,20,20);
+	--main-first-transparent:rgba(20,20,20,0.6);
+	--main-second:rgb(40,40,40);
+	--main-second-transparent:rgba(40,40,40,0.3);
+	--main-third:rgb(50,50,50);
+	--main-fourth:rgb(60,60,60);
+	--main-fifth:rgb(75,75,75);
+
+	--main-contrast:rgb(255,255,255);
+	--main-contrast-dark:rgb(230,230,230);
+	--main-contrast-darker:rgb(200,200,200);
+	
+	--accent-contrast:rgb(255,255,255);
+
+	--accent-first:#8a60aa;
+	--accent-second:#824f8a;
+	--accent-third:#5f46a7;
+
+	--negative-first:rgb(190,40,50);
+	--negative-second:rgb(150,30,30);
+
+	--positive-first:rgb(50,140,80);
+	--positive-second:rgb(35,120,60);
+
+	--neutral-first:rgb(60,120,190);
+	--neutral-second:rgb(100, 140, 200);
+
+	--colorful-gradient:linear-gradient(300deg, #8a2387, #e94057, #f27121);
+	--orange-gradient:linear-gradient(0deg ,#f57552, #f8c74a);
+	--green-gradient:linear-gradient(20deg, #67b26f, #4ca2cd);
+	--calm-gradient:linear-gradient(20deg, #5f2c82, #49a09d);
+	--blue-gradient:linear-gradient(to right, #4facfe 0%, #00bdc7 100%);
+	--purple-gradient:linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	--greener-gradient:linear-gradient(to right, #11998e, #38ef7d);
+	--cosmic-gradient:linear-gradient(330deg, #ff00cc, #333399);
+	--playful-gradient:linear-gradient(340deg, #fc00ff, #27bcbe);
+	--atlas-gradient:linear-gradient(300deg, #feac5e, #c779d0, #4bc0c8);
+	--pale-gradient:linear-gradient(260deg, #2c74d8 15%, #7989d4 100%);
+	--ocean-gradient:linear-gradient(110deg, #04bde4 15%, #0253b9 100%);
+}
+
+html.dark .page.chatbot, html.dark .popup-wrapper.chatbot {
+	--accent-first:#8a2387;
+	--accent-second:#c2374a;
+	--accent-third:#cc8932;
+}
+html.dark .page.dashboard, html.dark .popup-wrapper.dashboard {
+	--accent-first:#4facfe;
+	--accent-second:#00bdc7;
+	--accent-third:#6499c7;
+}
+html.dark .page.market, html.dark .popup-wrapper.market {
+	--accent-first:#c779d0;
+	--accent-second:#feac5e;
+	--accent-third:#4bc0c8;
+}
+html.dark .page.holdings, html.dark .popup-wrapper.holdings {
+	--accent-first:#11998e;
+	--accent-second:#4db675;
+	--accent-third:#296941;
+}
+html.dark .page.activity, html.dark .popup-wrapper.activity {
+	--accent-first:#667eea;
+	--accent-second:#764ba2;
+	--accent-third:#735e88;
+}
+html.dark .page.settings, html.dark .popup-wrapper.settings {
+	--accent-first:#d67054;
+	--accent-second:#cf995a;
+	--accent-third:#e7bc4f;
+}
