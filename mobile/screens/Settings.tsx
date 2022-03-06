@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import Clipboard from "@react-native-clipboard/clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import CollapsibleView from "@eliav2/react-native-collapsible-view";
 import { useDispatch, useSelector } from "react-redux";
 import ChoiceButton from "../components/ChoiceButton";
 import { changeSetting } from "../store/reducers/settings";
@@ -179,6 +181,45 @@ export default function Settings({ navigation }: any) {
 									<ChoiceButton setting="dd-mm-yyyy" active={settings.dateFormat} text="DD-MM-YYYY" theme={theme} onPress={() => dispatch(changeSetting({ key:"dateFormat", value:"dd-mm-yyyy" }))}/>
 								</View>
 							</View>
+						}
+						{ Utils.filterSettings(search).includes("donate") &&
+							<CollapsibleView 
+								title={<Text style={[styles.collapsibleTitle, styles[`collapsibleTitle${theme}`]]}>Donate</Text>}
+								style={[styles.collapsible, styles[`collapsible${theme}`]]}
+								arrowStyling={{
+									size: 24,
+									thickness: 4,
+									color: Colors[theme].Settings.accentFirst,
+									rounded: true,
+								}}
+							>
+								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
+									<TouchableOpacity onPress={() => copyAddress("ADA")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>ADA</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("XMR")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>XMR</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("ETH")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>ETH</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("BCH")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>BCH</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("BTC")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>BTC</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("LTC")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>LTC</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("NANO")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>NANO</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => copyAddress("DOT")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>DOT</Text>
+									</TouchableOpacity>
+								</View>
+							</CollapsibleView>
 						}
 					</ScrollView>
 				</SafeAreaView>
@@ -369,6 +410,23 @@ export default function Settings({ navigation }: any) {
 		};
 
 		showPopup(content);
+	}
+
+	function copyAddress(symbol: string) {
+		let addresses: any = {
+			ADA: "addr1qyh9ejp2z7drzy8vzpyfeuvzuej5t5tnmjyfpfjn0vt722zqupdg44rqfw9fd8jruaez30fg9fxl34vdnncc33zqwhlqn37lz4",
+			XMR: "49wDQf83p5tHibw9ay6fBvcv48GJynyjVE2V8EX8Vrtt89rPyECRm5zbBqng3udqrYHTjsZStSpnMCa8JRw7cfyGJwMPxDM",
+			ETH: "0x40E1452025d7bFFDfa05d64C2d20Fb87c2b9C0be",
+			BCH: "qrvyd467djuxtw5knjt3d50mqzspcf6phydmyl8ka0",
+			BTC: "bc1qdy5544m2pwpyr6rhzcqwmerczw7e2ytjjc2wvj",
+			LTC: "ltc1qq0ptdjsuvhw6gz9m4huwmhq40gpyljwn5hncxz",
+			NANO: "nano_3ed4ip7cjkzkrzh9crgcdipwkp3h49cudxxz4t8x7pkb8rad7bckqfhzyadg",
+			DOT: "12nGqTQsgEHwkAuHGNXpvzcfgtQkTeo3WCZgwrXLsiqs3KyA"
+		};
+
+		Clipboard.setString(addresses[symbol]);
+
+		ToastAndroid.show("Copied " + symbol + " address to clipboard.", 5000);
 	}
 
 	async function changePassword() {

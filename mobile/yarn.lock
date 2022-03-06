@@ -1602,6 +1602,13 @@
   dependencies:
     regenerator-runtime "^0.13.4"
 
+"@babel/runtime@^7.13.10":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
+  integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/runtime@^7.15.4", "@babel/runtime@^7.8.4":
   version "7.15.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
@@ -1693,6 +1700,15 @@
   integrity sha512-XQsZgjm2EcVUiZQf11UBJQfmZeEmOW8DpI1gsFeln6w0ae0ii4dMQEQ0kjl6DspdWX1aGY1/loyXnP0JS06e/A==
   dependencies:
     "@types/hammerjs" "^2.0.36"
+
+"@eliav2/react-native-collapsible-view@^1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@eliav2/react-native-collapsible-view/-/react-native-collapsible-view-1.4.0.tgz#f9ec5ea53f73d34a8634a6e23b361abc027405b2"
+  integrity sha512-iN1/mwN+Tugi3ct+30IK2GM+qNWepgJXV8EbbnOTuuDLYD/fIqMfezH0J5X+SA1L1aaJDKMbi1Qyi2TVYNNN0g==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    react-native-collapsible "^1.5.3"
+    react-native-svg "^12.1.0"
 
 "@eslint/eslintrc@^0.4.3":
   version "0.4.3"
@@ -9055,6 +9071,11 @@ react-native-codegen@^0.0.7:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-collapsible@^1.5.3:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/react-native-collapsible/-/react-native-collapsible-1.6.0.tgz#ca261ffff16914f872059bb0972e3a78c4b37f9c"
+  integrity sha512-beZjdgbT9Y/Pg591Xy5XkKG20HffJiVad4n9bfcUF/f783A+tvOVXnqvbS58Lkaym93mi4jcDPMuW9Vc1t6rqg==
+
 react-native-crypto-js@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-crypto-js/-/react-native-crypto-js-1.0.0.tgz#e677e022e147f41b35614416c92d655f87e2450a"
@@ -9275,7 +9296,7 @@ react-native-svg-animations@^0.2.6:
     color "^3.1.2"
     svg-path-properties "^1.0.3"
 
-react-native-svg@^12.1.1:
+react-native-svg@^12.1.0, react-native-svg@^12.1.1:
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/react-native-svg/-/react-native-svg-12.1.1.tgz#5f292410b8bcc07bbc52b2da7ceb22caf5bcaaee"
   integrity sha512-NIAJ8jCnXGCqGWXkkJ1GTzO4a3Md5at5sagYV8Vh4MXYnL4z5Rh428Wahjhh+LIjx40EE5xM5YtwyJBqOIba2Q==

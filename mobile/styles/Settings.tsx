@@ -261,4 +261,37 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.mainFirstTransparent,
 		color: Colors.Light.mainContrast,
 	},
+	collapsible: {
+		paddingTop: 20,
+		paddingBottom: 20,
+		marginTop: 10,
+		marginBottom: 0,
+		borderWidth: 0,
+		borderRadius: GlobalStyle.borderRadius,
+		backgroundColor: Colors.Dark.mainFirst,
+		shadowColor: GlobalStyle.shadowColor,
+		shadowOffset: GlobalStyle.shadowOffset,
+		shadowOpacity: GlobalStyle.shadowOpacity,
+		shadowRadius: GlobalStyle.shadowRadius,
+		elevation: GlobalStyle.shadowElevation,
+	},
+	collapsibleLight: {
+		backgroundColor: Colors.Light.mainFirst
+	},
+	collapsibleContainer: {
+		paddingTop: 10,
+		paddingLeft: 10,
+		paddingRight: 10,
+		alignItems: "center",
+		justifyContent: "center"
+	},
+	collapsibleTitle: {
+		paddingLeft: 6,
+		fontSize: 18,
+		fontWeight: "bold",
+		color: Colors.Dark.mainContrast
+	},
+	collapsibleTitleLight: {
+		color: Colors.Light.mainContrast
+	}
 });

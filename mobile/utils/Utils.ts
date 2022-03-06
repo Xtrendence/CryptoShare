@@ -190,6 +190,7 @@ export default class Utils {
 			currency: ["currency", "fiat", "money", "cash", "region"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 			dateFormat: ["date", "format", "time", "activity", "transaction"],
+			donate: ["donate", "support", "money", "cash", "dev"]
 		};
 
 		if(!this.empty(query)) {
