@@ -24,6 +24,9 @@ export const Colors: any = {
 		positiveFirst: "rgb(50,140,80)",
 		positiveSecond: "rgb(35,120,60)",
 
+		neutralFirst: "rgb(60,120,190)",
+		neutralSecond: "rgb(100,140,200)",
+
 		colorfulGradient: ["#8a2387", "#e94057", "#f27121"],
 		orangeGradient: ["#f57552", "#f8c74a"],
 		greenGradient: ["#67b26f", "#4ca2cd"],
@@ -92,6 +95,9 @@ export const Colors: any = {
 
 		positiveFirst: "rgb(50,140,80)",
 		positiveSecond: "rgb(35,120,60)",
+
+		neutralFirst: "rgb(60,120,190)",
+		neutralSecond: "rgb(100,140,200)",
 
 		colorfulGradient: ["#8a2387", "#e94057", "#f27121"],
 		orangeGradient: ["#f57552", "#f8c74a"],

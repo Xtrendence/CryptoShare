@@ -293,5 +293,23 @@ export default createStyle<any>({
 	},
 	collapsibleTitleLight: {
 		color: Colors.Light.mainContrast
-	}
+	},
+	negativeDark: {
+		backgroundColor: Colors.Dark.negativeFirst
+	},
+	negativeLight: {
+		backgroundColor: Colors.Light.negativeFirst
+	},
+	positiveDark: {
+		backgroundColor: Colors.Dark.positiveFirst
+	},
+	positiveLight: {
+		backgroundColor: Colors.Light.positiveFirst
+	},
+	neutralDark: {
+		backgroundColor: Colors.Dark.neutralFirst,
+	},
+	neutralLight: {
+		backgroundColor: Colors.Light.neutralFirst,
+	},
 });

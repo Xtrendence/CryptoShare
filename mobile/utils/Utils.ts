@@ -334,6 +334,13 @@ export default class Utils {
 		}
 	}
 
+	static formatSecondsHyphenated(date: Date) {
+		let hours = ("00" + date.getHours()).slice(-2);
+		let minutes = ("00" + date.getMinutes()).slice(-2);
+		let seconds = ("00" + date.getSeconds()).slice(-2);
+		return hours + "-" + minutes + "-" + seconds;
+	}
+
 	static formatHour(date: Date) {
 		let hours = ("00" + date.getHours()).slice(-2);
 		let minutes = ("00" + date.getMinutes()).slice(-2);

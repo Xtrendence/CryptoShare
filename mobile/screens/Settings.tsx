@@ -8,6 +8,7 @@ import Toggle from "react-native-toggle-element";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import CollapsibleView from "@eliav2/react-native-collapsible-view";
 import { useDispatch, useSelector } from "react-redux";
+import * as RNFS from "react-native-fs";
 import ChoiceButton from "../components/ChoiceButton";
 import { changeSetting } from "../store/reducers/settings";
 import { switchTheme } from "../store/reducers/theme";
@@ -18,7 +19,8 @@ import Utils from "../utils/Utils";
 import Loading from "../components/Loading";
 import CryptoFN from "../utils/CryptoFN";
 import { windowHeight, windowWidth } from "../styles/NavigationBar";
-import { setDefaultBudgetData } from "./Dashboard";
+import { fetchBudget, fetchTransaction, fetchWatchlist, setDefaultBudgetData } from "./Dashboard";
+import { fetchActivity } from "./Activity";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -196,25 +198,25 @@ export default function Settings({ navigation }: any) {
 								}}
 							>
 								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
-									<TouchableOpacity onPress={() => resetData("settings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("settings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("budget", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("budget", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("transactions", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("transactions", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("watchlist", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("watchlist", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("holdings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("holdings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("activities", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("activities", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => resetData("chatbot", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => resetData("chatbot", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`negative${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Chat Bot</Text>
 									</TouchableOpacity>
 								</View>
@@ -232,22 +234,22 @@ export default function Settings({ navigation }: any) {
 								}}
 							>
 								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
-									<TouchableOpacity onPress={() => importData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => importData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => importData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => importData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => importData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => importData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => importData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`positive${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
 									</TouchableOpacity>
 								</View>
@@ -265,22 +267,22 @@ export default function Settings({ navigation }: any) {
 								}}
 							>
 								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
-									<TouchableOpacity onPress={() => exportData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => exportData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => exportData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => exportData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => exportData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
 									</TouchableOpacity>
-									<TouchableOpacity onPress={() => exportData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+									<TouchableOpacity onPress={() => exportData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles[`neutral${theme}`]]}>
 										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
 									</TouchableOpacity>
 								</View>
@@ -433,19 +435,151 @@ export default function Settings({ navigation }: any) {
 	}
 
 	async function exportData(type: string) {
-		switch(type) {
-			case "settings":
-				break;
-			case "budget":
-				break;
-			case "transactions":
-				break;
-			case "watchlist":
-				break;
-			case "holdings":
-				break;
-			case "activities":
-				break;
+		try {
+			setLoading(true);
+
+			let date = Utils.formatDateHyphenatedHuman(new Date()) + "-" + Utils.formatSecondsHyphenated(new Date());
+			let filename = "out.txt";
+			let data = "";
+
+			switch(type) {
+				case "settings":
+					filename = `${date}-CryptoShare-Mobile-Settings.json`;
+
+					let currentSettings = await Utils.getSettings(dispatch);
+					data = JSON.stringify(currentSettings, undefined, 4);
+
+					break;
+				case "budget":
+					filename = `${date}-CryptoShare-Budget.json`;
+
+					let budget = await fetchBudget() || {};
+
+					if(Utils.empty(budget)) {
+						Utils.notify(theme, "No data found.");
+						return;
+					}
+
+					data = JSON.stringify(budget, undefined, 4);
+
+					break;
+				case "transactions":
+					filename = `${date}-CryptoShare-Transactions.csv`;
+
+					let transactions: any = await fetchTransaction() || {};
+
+					if(Utils.empty(transactions)) {
+						Utils.notify(theme, "No data found.");
+						return;
+					}
+
+					let csvTransactions = "transactionID,transactionType,transactionDate,transactionCategory,transactionAmount,transactionNotes\n";
+
+					let keysTransactions = Object.keys(transactions);
+					keysTransactions.map(key => {
+						let transaction = transactions[key];
+						csvTransactions += `${transaction.transactionID},${transaction.transactionType},${transaction.transactionDate},${transaction.transactionCategory},${transaction.transactionAmount},${transaction.transactionNotes}\n`;
+					});
+
+					data = csvTransactions;
+
+					break;
+				case "watchlist":
+					filename = `${date}-CryptoShare-Watchlist.csv`;
+
+					let watchlist: any = await fetchWatchlist() || {};
+
+					if(Utils.empty(watchlist)) {
+						Utils.notify(theme, "No data found.");
+						return;
+					}
+
+					let csvWatchlist = "watchlistID,assetID,assetSymbol,assetType\n";
+
+					let keysWatchlist = Object.keys(watchlist);
+					keysWatchlist.map(key => {
+						let asset = watchlist[key];
+						csvWatchlist += `${asset.watchlistID},${asset.assetID},${asset.assetSymbol},${asset.assetType}\n`;
+					});
+
+					data = csvWatchlist;
+
+					break;
+				case "holdings":
+					filename = `${date}-CryptoShare-Holdings.csv`;
+
+					let userID = await AsyncStorage.getItem("userID");
+					let token = await AsyncStorage.getItem("token");
+					let key = await AsyncStorage.getItem("key") || "";
+					let api = await AsyncStorage.getItem("api");
+
+					let requests = new Requests(api);
+
+					let holdingsData: any = {};
+
+					let holdings = await requests.readHolding(token, userID);
+
+					let encrypted = holdings?.data?.readHolding;
+
+					Object.keys(encrypted).map(index => {
+						let decrypted = Utils.decryptObjectValues(key, encrypted[index]);
+						decrypted.holdingID = encrypted[index].holdingID;
+						holdingsData[decrypted.holdingAssetID] = decrypted;
+					});
+
+					if(Utils.empty(holdingsData)) {
+						Utils.notify(theme, "No data found.");
+						return;
+					}
+
+					let csvHoldings = "holdingID,holdingAssetID,holdingAssetSymbol,holdingAssetAmount,holdingAssetType\n";
+
+					let keysHoldings = Object.keys(holdingsData);
+					keysHoldings.map(key => {
+						let holding = holdingsData[key];
+						csvHoldings += `${holding.holdingID},${holding.holdingAssetID},${holding.holdingAssetSymbol},${holding.holdingAssetAmount},${holding.holdingAssetType}\n`;
+					});
+
+					data = csvHoldings;
+
+					break;
+				case "activities":
+					filename = `${date}-CryptoShare-Activities.csv`;
+
+					let activities: any = await fetchActivity() || {};
+
+					if(Utils.empty(activities)) {
+						Utils.notify(theme, "No data found.");
+						return;
+					}
+
+					let csvActivities = "activityID,activityTransactionID,activityAssetID,activityAssetSymbol,activityAssetType,activityDate,activityType,activityAssetAmount,activityFee,activityNotes,activityExchange,activityPair,activityPrice,activityFrom,activityTo\n";
+
+					let keysActivities = Object.keys(activities);
+					keysActivities.map(key => {
+						let activity = activities[key];
+						csvActivities += `${activity.activityID},${activity.activityTransactionID},${activity.activityAssetID},${activity.activityAssetSymbol},${activity.activityAssetType},${activity.activityDate},${activity.activityType},${activity.activityAssetAmount},${activity.activityFee},${activity.activityNotes},${activity.activityExchange},${activity.activityPair},${activity.activityPrice},${activity.activityFrom},${activity.activityTo}\n`;
+					});
+
+					data = csvActivities;
+
+					break;
+			}
+
+			let path = RNFS.DownloadDirectoryPath + "/" + filename;
+
+			RNFS.writeFile(path, data, "utf8").then((success) => {
+				ToastAndroid.showWithGravity("Data exported to: " + path, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+			}).catch((error) => {
+				ToastAndroid.showWithGravity("Couldn't export data...", ToastAndroid.LONG, ToastAndroid.BOTTOM);
+				console.log(error);
+			});
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
 		}
 	}
 
