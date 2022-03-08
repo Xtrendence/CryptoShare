@@ -50,7 +50,7 @@ export default function Dashboard({ navigation }: any) {
 			transactionID: "",
 			amount: "",
 			type: "",
-			category: "",
+			category: "Food",
 			date: "",
 			notes: "",
 			showDatePicker: false,
@@ -468,6 +468,8 @@ export default function Dashboard({ navigation }: any) {
 
 			if(Utils.empty(transactions)) {
 				setTransactionHeader(<View style={styles.listTextWrapper}><Text style={[styles.listText, styles[`listText${theme}`]]}>No Transactions Found</Text></View>);
+				setTransactionRows({});
+				setFilteredRows({});
 				setLoading(false);
 				return;
 			}
@@ -484,7 +486,9 @@ export default function Dashboard({ navigation }: any) {
 				rows[i] = transaction;
 			}
 
+			setTransactionHeader(null);
 			setTransactionRows(rows);
+			searchTransactions(query);
 
 			setLoading(false);
 		} catch(error) {
@@ -524,7 +528,7 @@ export default function Dashboard({ navigation }: any) {
 			transactionID: "",
 			transactionAmount: "",
 			transactionType: "spent",
-			transactionCategory: "",
+			transactionCategory: "Food",
 			transactionDate: "",
 			transactionNotes: "",
 			showDatePicker: false,
