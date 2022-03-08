@@ -170,7 +170,7 @@ class Popup {
 		}
 
 		if(width === "full") {
-			this.width = "calc(100% - 80px)";
+			this.width = "calc(100% - 40px)";
 			this.element.style.width = this.width;
 			this.element.style.left = "20px";
 			this.element.classList.add("full-width");
@@ -184,7 +184,7 @@ class Popup {
 		if(height === "full") {
 			this.height = "calc(100% - 80px)";
 			this.element.style.height = this.height;
-			this.element.style.top = "20px";
+			this.element.style.top = "40px";
 			this.element.classList.add("full-height");
 		} else {
 			this.height = height;
