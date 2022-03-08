@@ -40,43 +40,131 @@ Click on the collapsible items in the list below to view the corresponding donat
 
 <details>
 	<summary><b>ADA</b></summary>
-	<img src="https://i.imgur.com/LpWl8jW.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/LpWl8jW.png" width="256" height="256"/><br>
 	addr1qyh9ejp2z7drzy8vzpyfeuvzuej5t5tnmjyfpfjn0vt722zqupdg44rqfw9fd8jruaez30fg9fxl34vdnncc33zqwhlqn37lz4
 </details>
 <details>
 	<summary><b>XMR</b></summary>
-	<img src="https://i.imgur.com/L4E4OH4.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/L4E4OH4.png" width="256" height="256"/><br>
 	49wDQf83p5tHibw9ay6fBvcv48GJynyjVE2V8EX8Vrtt89rPyECRm5zbBqng3udqrYHTjsZStSpnMCa8JRw7cfyGJwMPxDM
 </details>
 <details>
 	<summary><b>ETH</b></summary>
-	<img src="https://i.imgur.com/n0rC596.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/n0rC596.png" width="256" height="256"/><br>
 	0x40E1452025d7bFFDfa05d64C2d20Fb87c2b9C0be
 </details>
 <details>
 	<summary><b>BCH</b></summary>
-	<img src="https://i.imgur.com/4uDMrQw.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/4uDMrQw.png" width="256" height="256"/><br>
 	qrvyd467djuxtw5knjt3d50mqzspcf6phydmyl8ka0
 </details>
 <details>
 	<summary><b>BTC</b></summary>
-	<img src="https://i.imgur.com/tdtCSUv.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/tdtCSUv.png" width="256" height="256"/><br>
 	bc1qdy5544m2pwpyr6rhzcqwmerczw7e2ytjjc2wvj
 </details>
 <details>
 	<summary><b>LTC</b></summary>
-	<img src="https://i.imgur.com/vRwQ5Dx.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/vRwQ5Dx.png" width="256" height="256"/><br>
 	ltc1qq0ptdjsuvhw6gz9m4huwmhq40gpyljwn5hncxz
 </details>
 <details>
 	<summary><b>DOT</b></summary>
-	<img src="https://i.imgur.com/rXkoLsf.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/rXkoLsf.png" width="256" height="256"/><br>
 	12nGqTQsgEHwkAuHGNXpvzcfgtQkTeo3WCZgwrXLsiqs3KyA
 </details>
 <details>
 	<summary><b>NANO</b></summary>
-	<img src="https://i.imgur.com/GxVHByT.png" width="256" height="256"><br>
+	<img src="https://i.imgur.com/GxVHByT.png" width="256" height="256"/><br>
 	nano_3ed4ip7cjkzkrzh9crgcdipwkp3h49cudxxz4t8x7pkb8rad7bckqfhzyadg
+</details>
+
+### Screenshots
+
+#### Web App & Desktop App
+
+<details>
+	<summary><b>Login</b></summary>
+	<img src="https://i.imgur.com/OmCBgz9.png"/><br>
+</details>
+<details>
+	<summary><b>Chat Bot</b></summary>
+	<img src="https://i.imgur.com/tkT1rCJ.png"/><br>
+</details>
+<details>
+	<summary><b>Dashboard</b></summary>
+	<img src="https://i.imgur.com/AIAOr6K.png"/><br>
+</details>
+<details>
+	<summary><b>Transactions</b></summary>
+	<img src="https://i.imgur.com/wXKS0g9.png"/><br>
+</details>
+<details>
+	<summary><b>Market</b></summary>
+	<img src="https://i.imgur.com/DM9ihKJ.png"/><br>
+</details>
+<details>
+	<summary><b>Market Chart</b></summary>
+	<img src="https://i.imgur.com/APBYjro.png"/><br>
+</details>
+<details>
+	<summary><b>Holdings</b></summary>
+	<img src="https://i.imgur.com/ZGvxWMU.png"/><br>
+</details>
+<details>
+	<summary><b>Holding Chart</b></summary>
+	<img src="https://i.imgur.com/VubM5Mc.png"/><br>
+</details>
+<details>
+	<summary><b>Activity</b></summary>
+	<img src="https://i.imgur.com/RdNFOoq.png"/><br>
+</details>
+<details>
+	<summary><b>Settings</b></summary>
+	<img src="https://i.imgur.com/3eArPTa.png"/><br>
+</details>
+
+#### Mobile App
+
+<details>
+	<summary><b>Login</b></summary>
+	<img src="https://i.imgur.com/VsmUHvj.png"/><br>
+</details>
+<details>
+	<summary><b>Chat Bot</b></summary>
+	<img src="https://i.imgur.com/7hhnueb.png"/><br>
+</details>
+<details>
+	<summary><b>Dashboard</b></summary>
+	<img src="https://i.imgur.com/WtDViL6.png"/><br>
+</details>
+<details>
+	<summary><b>Transactions</b></summary>
+	<img src="https://i.imgur.com/MM2zLn6.png"/><br>
+</details>
+<details>
+	<summary><b>Market</b></summary>
+	<img src="https://i.imgur.com/F5SVcx1.png"/><br>
+</details>
+<details>
+	<summary><b>Market Chart</b></summary>
+	<img src="https://i.imgur.com/z6xJM31.png"/><br>
+</details>
+<details>
+	<summary><b>Holdings</b></summary>
+	<img src="https://i.imgur.com/1M1G0vq.png"/><br>
+</details>
+<details>
+	<summary><b>Holding Chart</b></summary>
+	<img src="https://i.imgur.com/E907TxX.png"/><br>
+</details>
+<details>
+	<summary><b>Activity</b></summary>
+	<img src="https://i.imgur.com/TErbjgk.png"/><br>
+</details>
+<details>
+	<summary><b>Settings</b></summary>
+	<img src="https://i.imgur.com/Bu6ip3s.png"/><br>
 </details>
 
 ### Attributions
