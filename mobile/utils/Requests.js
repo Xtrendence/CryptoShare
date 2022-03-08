@@ -421,6 +421,62 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
+	deleteActivityAll(token, userID) {
+		let query = {
+			query: `mutation deleteActivityAll($token: String!, $userID: Int!) {
+				deleteActivityAll(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	deleteTransactionAll(token, userID) {
+		let query = {
+			query: `mutation deleteTransactionAll($token: String!, $userID: Int!) {
+				deleteTransactionAll(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	deleteHoldingAll(token, userID) {
+		let query = {
+			query: `mutation deleteHoldingAll($token: String!, $userID: Int!) {
+				deleteHoldingAll(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
+	deleteWatchlistAll(token, userID) {
+		let query = {
+			query: `mutation deleteWatchlistAll($token: String!, $userID: Int!) {
+				deleteWatchlistAll(token: $token, userID: $userID)
+			}`,
+			variables: {
+				token: token,
+				userID: parseInt(userID)
+			}
+		};
+
+		return request("POST", this.urlAPI, query, null);
+	}
+
 	deleteUser(token, userID) {
 		let query = {
 			query: `mutation deleteUser($token: String!, $userID: Int!) {

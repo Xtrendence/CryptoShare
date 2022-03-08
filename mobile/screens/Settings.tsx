@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
+import { ImageBackground, Keyboard, Linking, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
@@ -17,6 +17,8 @@ import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
 import Loading from "../components/Loading";
 import CryptoFN from "../utils/CryptoFN";
+import { windowHeight, windowWidth } from "../styles/NavigationBar";
+import { setDefaultBudgetData } from "./Dashboard";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -182,6 +184,108 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
+						{ Utils.filterSettings(search).includes("reset") &&
+							<CollapsibleView 
+								title={<Text style={[styles.collapsibleTitle, styles[`collapsibleTitle${theme}`]]}>Reset Data</Text>}
+								style={[styles.collapsible, styles[`collapsible${theme}`]]}
+								arrowStyling={{
+									size: 24,
+									thickness: 4,
+									color: Colors[theme].Settings.accentFirst,
+									rounded: true,
+								}}
+							>
+								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
+									<TouchableOpacity onPress={() => resetData("settings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("budget", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("transactions", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("watchlist", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("holdings", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("activities", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => resetData("chatbot", true)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Chat Bot</Text>
+									</TouchableOpacity>
+								</View>
+							</CollapsibleView>
+						}
+						{ Utils.filterSettings(search).includes("import") &&
+							<CollapsibleView 
+								title={<Text style={[styles.collapsibleTitle, styles[`collapsibleTitle${theme}`]]}>Import Data</Text>}
+								style={[styles.collapsible, styles[`collapsible${theme}`]]}
+								arrowStyling={{
+									size: 24,
+									thickness: 4,
+									color: Colors[theme].Settings.accentFirst,
+									rounded: true,
+								}}
+							>
+								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
+									<TouchableOpacity onPress={() => importData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => importData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => importData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => importData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => importData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => importData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
+									</TouchableOpacity>
+								</View>
+							</CollapsibleView>
+						}
+						{ Utils.filterSettings(search).includes("export") &&
+							<CollapsibleView 
+								title={<Text style={[styles.collapsibleTitle, styles[`collapsibleTitle${theme}`]]}>Export Data</Text>}
+								style={[styles.collapsible, styles[`collapsible${theme}`]]}
+								arrowStyling={{
+									size: 24,
+									thickness: 4,
+									color: Colors[theme].Settings.accentFirst,
+									rounded: true,
+								}}
+							>
+								<View style={[styles.sectionBottom, styles.collapsibleContainer]}>
+									<TouchableOpacity onPress={() => exportData("settings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Settings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => exportData("budget")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Budget</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => exportData("transactions")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Transactions</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => exportData("watchlist")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Watchlist</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => exportData("holdings")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Holdings</Text>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={() => exportData("activities")} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Activities</Text>
+									</TouchableOpacity>
+								</View>
+							</CollapsibleView>
+						}
 						{ Utils.filterSettings(search).includes("donate") &&
 							<CollapsibleView 
 								title={<Text style={[styles.collapsibleTitle, styles[`collapsibleTitle${theme}`]]}>Donate</Text>}
@@ -221,6 +325,24 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</CollapsibleView>
 						}
+						{ Utils.filterSettings(search).includes("contact") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Contact</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]} onPress={() => openURL("https://github.com/Xtrendence/CryptoShare")}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>GitHub</Text>
+									</TouchableOpacity>
+									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]} onPress={() => openURL("mailto:xtrendence@gmail.com")}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Email</Text>
+									</TouchableOpacity>
+									<TouchableOpacity style={[styles.button, styles.actionButton, styles[`actionButton${theme}`]]} onPress={() => openURL("https://www.xtrendence.dev")}>
+										<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Website</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
+						}
 					</ScrollView>
 				</SafeAreaView>
 			</ScrollView>
@@ -235,6 +357,97 @@ export default function Settings({ navigation }: any) {
 			<Loading active={loading} theme={theme} opaque={true}/>
 		</ImageBackground>
 	);
+
+	function openURL(url: string) {
+		Linking.openURL(url).catch(error => {
+			console.log(error);
+			ToastAndroid.show("Couldn't open URL.", 5000);
+		});
+	}
+
+	async function resetData(type: string, showConfirmation: boolean) {
+		if(showConfirmation) {
+			showConfirmationPopup("resetData", { type:type });
+			return;
+		}
+
+		try {
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			switch(type) {
+				case "settings":
+					dispatch(switchTheme("Dark"));
+					Utils.setSettings(dispatch, Utils.defaultSettings);
+					break;
+				case "budget":
+					await setDefaultBudgetData();
+					break;
+				case "transactions":
+					await requests.deleteTransactionAll(token, userID);
+					break;
+				case "watchlist":
+					await requests.deleteWatchlistAll(token, userID);
+					break;
+				case "holdings":
+					await requests.deleteHoldingAll(token, userID);
+					break;
+				case "activities":
+					await requests.deleteActivityAll(token, userID);
+					break;
+				case "chatbot":
+					await requests.deleteMessageAll(token, userID);
+					break;
+			}
+
+			ToastAndroid.show(`${Utils.capitalizeFirstLetter(type)} data deleted.`, 5000);
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
+		}
+	}
+
+	async function importData(type: string) {
+		switch(type) {
+			case "settings":
+				break;
+			case "budget":
+				break;
+			case "transactions":
+				break;
+			case "watchlist":
+				break;
+			case "holdings":
+				break;
+			case "activities":
+				break;
+		}
+	}
+
+	async function exportData(type: string) {
+		switch(type) {
+			case "settings":
+				break;
+			case "budget":
+				break;
+			case "transactions":
+				break;
+			case "watchlist":
+				break;
+			case "holdings":
+				break;
+			case "activities":
+				break;
+		}
+	}
 
 	function showPopup(content: any) {
 		Keyboard.dismiss();
@@ -262,7 +475,7 @@ export default function Settings({ navigation }: any) {
 						<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => processAction(action)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
+						<TouchableOpacity onPress={() => processAction(action, args)} style={[styles.button, styles.actionButton, styles[`actionButton${theme}`], styles.popupButton]}>
 							<Text style={[styles.actionText, styles[`actionText${theme}`]]}>Confirm</Text>
 						</TouchableOpacity>
 					</View>
@@ -273,7 +486,7 @@ export default function Settings({ navigation }: any) {
 		setPopupContent(content);
 	}
 
-	async function processAction(action: string) {
+	async function processAction(action: string, args: any) {
 		try {
 			hidePopup();
 
@@ -290,6 +503,8 @@ export default function Settings({ navigation }: any) {
 					await requests.logoutEverywhere(userID, token);
 					finishLogout();
 					break;
+				case "resetData":
+					resetData(args?.type, false);
 			}
 
 			setLoading(false);

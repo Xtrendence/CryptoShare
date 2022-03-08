@@ -190,7 +190,11 @@ export default class Utils {
 			currency: ["currency", "fiat", "money", "cash", "region"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 			dateFormat: ["date", "format", "time", "activity", "transaction"],
-			donate: ["donate", "support", "money", "cash", "dev"]
+			reset: ["reset", "data", "delete", "user"],
+			import: ["import", "data", "csv", "upload", "user", "json"],
+			export: ["export", "data", "csv", "download", "user", "json"],
+			donate: ["donate", "support", "money", "cash", "dev"],
+			contact: ["contact", "developer", "github", "email", "message", "support", "help"]
 		};
 
 		if(!this.empty(query)) {
