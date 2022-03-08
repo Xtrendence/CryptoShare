@@ -26,15 +26,14 @@ export default function Login({ navigation }: any) {
 	const [loading, setLoading] = useState<boolean>(true);
 	const [action, setAction] = useState<string>("login");
 
-	// TODO: Remove preset values.
-	const [url, setURL] = useState<any>("http://192.168.1.100:3190/graphql");
+	const [url, setURL] = useState<any>("");
 
-	const [loginUsername, setLoginUsername] = useState<string>("Admin");
-	const [loginPassword, setLoginPassword] = useState<string>("admin");
+	const [loginUsername, setLoginUsername] = useState<string>("");
+	const [loginPassword, setLoginPassword] = useState<string>("");
 
-	const [createUsername, setCreateUsername] = useState<string>("Admin");
-	const [createPassword, setCreatePassword] = useState<string>("admin");
-	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("admin");
+	const [createUsername, setCreateUsername] = useState<string>("");
+	const [createPassword, setCreatePassword] = useState<string>("");
+	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("");
 
 	const [showCamera, setShowCamera] = useState<boolean>(false);
 
