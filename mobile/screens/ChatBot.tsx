@@ -209,15 +209,19 @@ export default function ChatBot({ navigation }: any) {
 	}
 
 	function keyboardDidHide(event: any) {
-		inputRef?.current?.blur();
-		setKeyboardVisible(false);
-		scrollChatToBottom();
+		if(navigation.isFocused()) {
+			inputRef?.current?.blur();
+			setKeyboardVisible(false);
+			scrollChatToBottom();
+		}
 	}
 
 	function keyboardDidShow(event: any) {
-		setKeyboardHeight(event.endCoordinates.height);
-		setKeyboardVisible(true);
-		scrollChatToBottom();
+		if(navigation.isFocused()) {
+			setKeyboardHeight(event.endCoordinates.height);
+			setKeyboardVisible(true);
+			scrollChatToBottom();
+		}
 	}
 
 	function showMenu() {

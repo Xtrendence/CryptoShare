@@ -6,6 +6,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import DocumentPicker from "react-native-document-picker";
 import CollapsibleView from "@eliav2/react-native-collapsible-view";
 import { useDispatch, useSelector } from "react-redux";
 import * as RNFS from "react-native-fs";
@@ -19,8 +20,9 @@ import Utils from "../utils/Utils";
 import Loading from "../components/Loading";
 import CryptoFN from "../utils/CryptoFN";
 import { windowHeight, windowWidth } from "../styles/NavigationBar";
-import { fetchBudget, fetchTransaction, fetchWatchlist, setDefaultBudgetData } from "./Dashboard";
+import { fetchBudget, fetchTransaction, fetchWatchlist, setDefaultBudgetData, watchlistExists } from "./Dashboard";
 import { fetchActivity } from "./Activity";
+import { assetHoldingExists } from "./Holdings";
 
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
@@ -367,6 +369,27 @@ export default function Settings({ navigation }: any) {
 		});
 	}
 
+	function pickFile() {
+		return new Promise((resolve, reject) => {
+			try {
+				DocumentPicker.pick({ type:["text/csv", "text/comma-separated-values", "text/plain", "application/json"], copyTo:"cachesDirectory" }).then(result => {
+					let uri = result[0].fileCopyUri || "";
+					RNFS.readFile(uri, "ascii").then(data => {
+						resolve({ data:data });
+					}).catch(error => {
+						console.log(error);
+						resolve({ error:error.toString() });
+					});
+				}).catch(error => {
+					resolve({ error:"Couldn't open the file picker, or no file was selected..." });
+				});
+			} catch(error) {
+				console.log(error);
+				reject({ error:error });
+			}
+		});
+	}
+
 	async function resetData(type: string, showConfirmation: boolean) {
 		if(showConfirmation) {
 			showConfirmationPopup("resetData", { type:type });
@@ -418,19 +441,227 @@ export default function Settings({ navigation }: any) {
 	}
 
 	async function importData(type: string) {
-		switch(type) {
-			case "settings":
-				break;
-			case "budget":
-				break;
-			case "transactions":
-				break;
-			case "watchlist":
-				break;
-			case "holdings":
-				break;
-			case "activities":
-				break;
+		try {
+			let file: any = await pickFile() || {};
+
+			if("error" in file) {
+				if(!(file.error.toLowerCase().match("(selected|canceled)"))) {
+					ToastAndroid.show(file.error, 5000);
+				}
+
+				return;
+			}
+
+			if(Utils.empty(file) || !("data" in file) || Utils.empty(file.data)) {
+				ToastAndroid.show("No data provided.", 5000);
+				return;
+			}
+
+			let data = file.data;
+
+			setLoading(true);
+
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
+
+			let requests = new Requests(api);
+
+			switch(type) {
+				case "settings":
+					if(!Utils.validJSON(data)) {
+						ToastAndroid.show("Invalid JSON.", 5000);
+						return;
+					}
+					
+					let parsed = JSON.parse(data);
+
+					Utils.setSettings(dispatch, parsed);
+					dispatch(switchTheme(parsed.theme));
+
+					break;
+				case "budget":
+					if(!Utils.validJSON(data)) {
+						ToastAndroid.show("Invalid JSON.", 5000);
+						return;
+					}
+
+					let budgetData = JSON.parse(data);
+
+					let encrypted = CryptoFN.encryptAES(JSON.stringify(budgetData), key);
+
+					await requests.updateBudget(token, userID, encrypted);
+
+					break;
+				case "transactions":
+					let headersTransactions = "transactionID,transactionType,transactionDate,transactionCategory,transactionAmount,transactionNotes";
+
+					let linesTransactions = data.split("\n");
+
+					if(linesTransactions[0] !== headersTransactions) {
+						ToastAndroid.show("Invalid headers.", 5000);
+						return;
+					}
+
+					let transactions: any = await fetchTransaction() || {};
+
+					linesTransactions.shift();
+
+					linesTransactions.map(async (line: any) => {
+						if(!Utils.empty(line)) {
+							let parts = line.split(",");
+
+							try {
+								let encrypted = Utils.encryptObjectValues(key, {
+									transactionType: parts[1],
+									transactionDate: parts[2],
+									transactionCategory: parts[3],
+									transactionAmount: parts[4],
+									transactionNotes: parts[5],
+								});
+
+								if(parts[0] in transactions) {
+									await requests.updateTransaction(token, userID, parts[0], encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+								} else {
+									await requests.createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
+								}
+							} catch(error) {
+								console.log(error);
+							}
+						}
+					});
+
+					break;
+				case "watchlist":
+					let headersWatchlist = "watchlistID,assetID,assetSymbol,assetType";
+
+					let linesWatchlist = data.split("\n");
+
+					if(linesWatchlist[0] !== headersWatchlist) {
+						ToastAndroid.show("Invalid headers.", 5000);
+						return;
+					}
+
+					let watchlist = await fetchWatchlist() || {};
+
+					linesWatchlist.shift();
+
+					linesWatchlist.map(async (line: any) => {
+						if(!Utils.empty(line)) {
+							let parts = line.split(",");
+
+							try {
+								if(!watchlistExists(watchlist, parts[1])) {
+									let encrypted = Utils.encryptObjectValues(key, {
+										assetID: parts[1],
+										assetSymbol: parts[2],
+										assetType: parts[3]
+									});
+
+									await requests.createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
+								}
+							} catch(error) {
+								console.log(error);
+							}
+						}
+					});
+
+					break;
+				case "holdings":
+					let headersHoldings = "holdingID,holdingAssetID,holdingAssetSymbol,holdingAssetAmount,holdingAssetType";
+
+					let linesHoldings = data.split("\n");
+
+					if(linesHoldings[0] !== headersHoldings) {
+						ToastAndroid.show("Invalid headers.", 5000);
+						return;
+					}
+
+					linesHoldings.shift();
+
+					linesHoldings.map(async (line: any) => {
+						if(!Utils.empty(line)) {
+							let parts = line.split(",");
+
+							try {
+								let exists: any = await assetHoldingExists(parts[1]);
+
+								let encrypted = Utils.encryptObjectValues(key, {
+									holdingAssetID: parts[1],
+									holdingAssetSymbol: parts[2],
+									holdingAssetAmount: parts[3],
+									holdingAssetType: parts[4]
+								});
+
+								if(!exists.exists) {
+									await requests.createHolding(token, userID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+								} else {
+									await requests.updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
+								}
+							} catch(error) {
+								console.log(error);
+							}
+						}
+					});
+
+					break;
+				case "activities":
+					let headersActivities = "activityID,activityTransactionID,activityAssetID,activityAssetSymbol,activityAssetType,activityDate,activityType,activityAssetAmount,activityFee,activityNotes,activityExchange,activityPair,activityPrice,activityFrom,activityTo";
+
+					let linesActivities = data.split("\n");
+
+					if(linesActivities[0] !== headersActivities) {
+						ToastAndroid.show("Invalid headers.", 5000);
+						return;
+					}
+
+					let activities: any = await fetchActivity() || {};
+
+					linesActivities.shift();
+
+					linesActivities.map(async (line: any) => {
+						if(!Utils.empty(line)) {
+							let parts = line.split(",");
+
+							try {
+								let encrypted = Utils.encryptObjectValues(key, {
+									activityAssetID: parts[2],
+									activityAssetSymbol: parts[3],
+									activityAssetType: parts[4],
+									activityDate: parts[5],
+									activityType: parts[6],
+									activityAssetAmount: parts[7],
+									activityFee: parts[8],
+									activityNotes: parts[9],
+									activityExchange: parts[10],
+									activityPair: parts[11],
+									activityPrice: parts[12],
+									activityFrom: parts[13],
+									activityTo: parts[14]
+								});
+
+								if(parts[1] in activities) {
+									await requests.updateActivity(token, userID, parts[1], encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+								} else {
+									await requests.createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
+								}
+							} catch(error) {
+								console.log(error);
+							}
+						}
+					});
+
+					break;
+			}
+
+			ToastAndroid.show(`${Utils.capitalizeFirstLetter(type)} data imported.`, 5000);
+
+			setLoading(false);
+		} catch(error) {
+			console.log(error);
+			setLoading(false);
+			ToastAndroid.show("Something went wrong...", 5000);
 		}
 	}
 
@@ -447,6 +678,7 @@ export default function Settings({ navigation }: any) {
 					filename = `${date}-CryptoShare-Mobile-Settings.json`;
 
 					let currentSettings = await Utils.getSettings(dispatch);
+					currentSettings.theme = theme;
 					data = JSON.stringify(currentSettings, undefined, 4);
 
 					break;
