@@ -644,10 +644,16 @@ function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 
 			if(!empty(ids)) {
 				assetIDs = ids;
+			} else {
+				resolve({});
+				return;
 			}
 
 			if(!empty(symbols)) {
 				assetSymbols = symbols;
+			} else {
+				resolve({});
+				return;
 			}
 
 			let cancelled = false;

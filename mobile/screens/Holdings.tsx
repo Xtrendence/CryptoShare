@@ -1023,10 +1023,16 @@ export default function Holdings({ navigation }: any) {
 
 				if(!Utils.empty(ids)) {
 					assetIDs = ids;
+				} else {
+					resolve({});
+					return;
 				}
 
 				if(!Utils.empty(symbols)) {
 					assetSymbols = symbols;
+				} else {
+					resolve({});
+					return;
 				}
 
 				let cancelled = false;
