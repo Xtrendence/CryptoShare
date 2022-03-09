@@ -2,6 +2,8 @@
 
 ![Thumbnail](./docs/Showcase/Thumbnail.jpg)
 
+![Screenshot](https://i.imgur.com/PyWvAun.png)
+
 ### Disclaimer
 
 This is a piece of university coursework as part of my final year project.
