@@ -1,4 +1,4 @@
-html, body, input, textarea {
+html, body, button, input, textarea {
 	font-family:var(--font-family);
 }
 
