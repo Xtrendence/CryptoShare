@@ -1,3 +1,7 @@
+html.light.alternate-background {
+	--main-first-transparent:rgba(255,255,255,0.85);
+}
+
 html, body, button, input, textarea {
 	font-family:var(--font-family);
 }
@@ -223,6 +227,9 @@ input[type=number] {
 	background-attachment:fixed;
 	z-index:1;
 }
+html.alternate-background #background {
+	transform:rotate(0deg);
+}
 
 .loading-screen {
 	position:absolute;
@@ -364,6 +371,9 @@ input[type=number] {
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
+.alternate-background .login-title-wrapper {
+	background:var(--main-first-transparent);
+}
 .login-page.create .login-title-wrapper {
 	top:calc(50% - 60px / 2 - 160px - 20px - 30px);
 }
@@ -387,6 +397,9 @@ input[type=number] {
 	backdrop-filter:blur(8px);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
+}
+.alternate-background .login-wrapper {
+	background:var(--main-first-transparent);
 }
 .login-page.create .login-wrapper {
 	height:320px;
@@ -503,6 +516,9 @@ input[type=number] {
 }
 html.light .toggle-container {
 	background:var(--main-second);
+}
+html.dark.alternate-background .toggle-container {
+	background:var(--main-first-transparent);
 }
 .toggle-wrapper.active .toggle-container {
 	left:50%;
@@ -885,6 +901,9 @@ html.light .popup-wrapper .bottom .popup-input-span {
 	text-align:center;
 	box-shadow:var(--shadow-smooth);
 }
+.alternate-background .navbar {
+	background:var(--main-first-transparent);
+}
 .navbar .item {
 	position:relative;
 	cursor:pointer;
@@ -1032,6 +1051,9 @@ html.navbar-compact .navbar .item span {
 	border-radius:var(--border-radius);
 	box-shadow:var(--shadow-smooth);
 	overflow:hidden auto;
+}
+.alternate-background .page-container {
+	background:var(--main-first-transparent);
 }
 .page-container.full {
 	width:calc(100% - 40px);
@@ -1331,6 +1353,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	border-width:2px 0 0 0;
 	background:var(--main-third);
 }
+.alternate-background .page.chatbot .chat-bottom {
+	background:var(--main-second);
+}
 .page.chatbot .chat-bottom input {
 	height:36px;
 	padding:0 10px 0 10px;
@@ -1387,6 +1412,9 @@ html.navbar-compact .page-container.full, html.navbar-compact .page-container.ha
 	display:inline-block;
 	padding:10px;
 	text-align:left;
+}
+.alternate-background .page.chatbot .chat-list .chat-bubble-wrapper .chat-bubble {
+	background:var(--main-third);
 }
 .page.chatbot .chat-list .chat-bubble-wrapper.user .chat-bubble {
 	background:var(--accent-second);
@@ -1475,6 +1503,9 @@ html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right
 	border-width:0 0 2px 0;
 	border-color:var(--main-third);
 	background:var(--main-second);
+}
+.alternate-background .page.dashboard .page-container-toolbar {
+	background:var(--main-first-transparent);
 }
 .page.dashboard .page-container-toolbar .title {
 	font-size:16px;
@@ -1572,6 +1603,9 @@ html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right
 	margin:20px auto 20px auto;
 	display:block;
 	background:var(--main-first);
+}
+.alternate-background .dashboard-list.budget .chart-wrapper, .alternate-background .dashboard-list.budget .stats-wrapper, .alternate-background .dashboard-list.budget .income-wrapper  {
+	background:var(--main-first-transparent);
 }
 .dashboard-list.budget .chart-wrapper canvas {
 	margin:0 auto 0 auto;
@@ -1718,6 +1752,9 @@ html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right
 	background:var(--main-third);
 	color:var(--main-contrast);
 }
+.alternate-background .page.market .page-navigation-wrapper span {
+	background:var(--main-first-transparent);
+}
 .page.market .page-type-wrapper .choice-button:first-of-type {
 	margin-left:0;
 }
@@ -1769,6 +1806,9 @@ html.navbar-compact .page.dashboard.show-holdings .page-container.half.top-right
 	border-radius:var(--border-radius);
 	margin:0 auto 20px auto;
 	cursor:pointer;
+}
+.alternate-background .watchlist-list-row, .alternate-background .market-list-row, .alternate-background .holdings-list-row, .alternate-background .activity-list-row {
+	background:var(--main-first-transparent);
 }
 .watchlist-list-row, .holdings-list-row:first-of-type, .activity-list-row:first-of-type {
 	margin-top:20px;
@@ -2066,6 +2106,9 @@ html.navbar-compact .page-container.holdings.half.right {
 	border-color:var(--main-fourth);
 	background:var(--main-third);
 }
+.alternate-background .page.activity .page-container-toolbar {
+	background:var(--main-second);
+}
 html.light .page.activity .page-container-toolbar {
 	border-color:var(--main-fifth);
 }
@@ -2216,6 +2259,9 @@ html.light .page.activity .page-container-toolbar {
 	padding:10px;
 	border-radius:var(--border-radius);
 	background:var(--main-fourth);
+}
+html.dark.alternate-background .settings-section .title {
+	background:var(--main-first-transparent);
 }
 .settings-section .content {
 	max-width:240px;

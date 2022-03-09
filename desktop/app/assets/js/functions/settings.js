@@ -5,6 +5,9 @@ async function setTheme(theme) {
 	let favicons = document.getElementsByClassName("favicon");
 	let browserTheme = document.getElementsByClassName("browser-theme")[0];
 
+	let choices = await getSettingsChoices();
+	let alternate = choices?.alternateBackground === "enabled" ? true : false;
+
 	if(theme === "light") {
 		browserTheme.setAttribute("content", "#ffffff");
 
@@ -21,7 +24,7 @@ async function setTheme(theme) {
 		document.documentElement.classList.add("light");
 		document.documentElement.classList.remove("dark");
 
-		setBackground(applicationSettings.theme);
+		setBackground(applicationSettings.theme, alternate);
 	} else {
 		browserTheme.setAttribute("content", "#000000");
 
@@ -38,12 +41,18 @@ async function setTheme(theme) {
 		document.documentElement.classList.remove("light");
 		document.documentElement.classList.add("dark");
 
-		setBackground(applicationSettings.theme);
+		setBackground(applicationSettings.theme, alternate);
 	}
 }
 
-function setBackground(theme) {
-	divBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
+function setBackground(theme, alternate) {
+	if(alternate) {
+		document.documentElement.classList.add("alternate-background");
+		divBackground.style.backgroundImage = `url("./assets/img/BG-Alt.jpg")`;
+	} else {
+		document.documentElement.classList.remove("alternate-background");
+		divBackground.style.backgroundImage = theme === "light" ? `url("./assets/img/BG-White.png")` : `url("./assets/img/BG-Black.png")`;
+	}
 }
 
 async function setSounds(sounds) {
@@ -205,7 +214,7 @@ function setSettingsChoices(choices) {
 	}
 }
 
-function processChoice(key, value) {
+async function processChoice(key, value) {
 	switch(key) {
 		case "navbarStyle":
 			if(value === "compact") {
@@ -213,6 +222,18 @@ function processChoice(key, value) {
 			} else {
 				document.documentElement.classList.remove("navbar-compact");
 			}
+			
+			break;
+		case "alternateBackground":
+			let settings = await getSettings();
+
+			if(value === "enabled") {
+				setBackground(settings.theme, true);
+			} else {
+				setBackground(settings.theme, false);
+			}
+
+			break;
 	}
 }
 
@@ -259,7 +280,6 @@ async function resetSettings() {
 		showLoading(4000, "Resetting Settings...");
 		
 		await appStorage.removeItem("theme");
-		await appStorage.removeItem("background");
 		await appStorage.removeItem("sounds");
 		await appStorage.removeItem("choices");
 
