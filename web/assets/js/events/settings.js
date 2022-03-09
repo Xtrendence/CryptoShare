@@ -447,6 +447,7 @@ buttonSettingsImportSettings.addEventListener("click", async () => {
 			window.location.reload();
 		}, 2000);
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });
@@ -476,6 +477,7 @@ buttonSettingsImportBudget.addEventListener("click", async () => {
 
 		successNotification("Budget Data Imported", "Your budget data has been imported.");
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });
@@ -520,11 +522,13 @@ buttonSettingsImportTransactions.addEventListener("click", async () => {
 						await createTransaction(token, userID, encrypted.transactionType, encrypted.transactionDate, encrypted.transactionCategory, encrypted.transactionAmount, encrypted.transactionNotes);
 					}
 				} catch(error) {
+					errorNotification("Import failed. Make sure the format of the data is valid.");
 					console.log(error);
 				}
 			}
 		});
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });
@@ -565,11 +569,13 @@ buttonSettingsImportWatchlist.addEventListener("click", async () => {
 						await createWatchlist(token, userID, encrypted.assetID, encrypted.assetSymbol, encrypted.assetType);
 					}
 				} catch(error) {
+					errorNotification("Import failed. Make sure the format of the data is valid.");
 					console.log(error);
 				}
 			}
 		});
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });
@@ -613,11 +619,13 @@ buttonSettingsImportHoldings.addEventListener("click", async () => {
 						await updateHolding(token, userID, exists.holdingID, encrypted.holdingAssetID, encrypted.holdingAssetSymbol, encrypted.holdingAssetAmount, encrypted.holdingAssetType);
 					}
 				} catch(error) {
+					errorNotification("Import failed. Make sure the format of the data is valid.");
 					console.log(error);
 				}
 			}
 		});
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });
@@ -670,11 +678,13 @@ buttonSettingsImportActivities.addEventListener("click", async () => {
 						await createActivity(token, userID, encrypted.activityAssetID, encrypted.activityAssetSymbol, encrypted.activityAssetType, encrypted.activityDate, encrypted.activityType, encrypted.activityAssetAmount, encrypted.activityFee, encrypted.activityNotes, encrypted.activityExchange, encrypted.activityPair, encrypted.activityPrice, encrypted.activityFrom, encrypted.activityTo);
 					}
 				} catch(error) {
+					errorNotification("Import failed. Make sure the format of the data is valid.");
 					console.log(error);
 				}
 			}
 		});
 	} catch(error) {
+		errorNotification("Import failed. Make sure the format of the data is valid.");
 		console.log(error);
 	}
 });

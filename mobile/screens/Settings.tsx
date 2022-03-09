@@ -454,7 +454,7 @@ export default function Settings({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EMRD", 5000);
 		}
 	}
 
@@ -679,7 +679,7 @@ export default function Settings({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EMID", 5000);
 		}
 	}
 
@@ -829,7 +829,7 @@ export default function Settings({ navigation }: any) {
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
-			ToastAndroid.show("Something went wrong...", 5000);
+			ToastAndroid.show("Something went wrong... - EMED", 5000);
 		}
 	}
 
