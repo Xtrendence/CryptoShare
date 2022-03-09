@@ -62,7 +62,7 @@ async function attemptLogin() {
 				
 				await setSettings(settings);
 
-				setAccountInfo(result, false);
+				await setAccountInfo(result, false);
 				
 				showApp();
 
@@ -91,20 +91,30 @@ function finishLogout() {
 	successNotification("Logged Out", "You've been logged out of your account.");
 }
 
-async function setAccountInfo(info, updateKey) {
-	await appStorage.setItem("userID", info.userID);
-	await appStorage.setItem("username", info.username);
-	await appStorage.setItem("token", info.token);
+function setAccountInfo(info, updateKey) {
+	return new Promise(async (resolve, reject) => {
+		try {
+			await appStorage.setItem("userID", info.userID);
+			await appStorage.setItem("username", info.username);
+			await appStorage.setItem("token", info.token);
 
-	if(updateKey) {
-		await appStorage.setItem("key", info.key);
-	}
+			if(updateKey) {
+				await appStorage.setItem("key", info.key);
+			}
 
-	let keyAPI = await appStorage.getItem("keyAPI");
+			let keyAPI = await appStorage.getItem("keyAPI");
 
-	if(empty(keyAPI)) {
-		await appStorage.setItem("keyAPI", "-");
-	}
+			if(empty(keyAPI)) {
+				await appStorage.setItem("keyAPI", "-");
+			}
+
+			resolve(null);
+		} catch(error) {
+			errorNotification("Couldn't save account info.");
+			console.log(error);
+			reject(error);
+		}
+	});
 }
 
 async function removeAccountInfo() {

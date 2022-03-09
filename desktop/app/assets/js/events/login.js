@@ -51,7 +51,7 @@ buttonLoginAccount.addEventListener("click", async () => {
 				let choices = JSON.parse(settings?.choices);
 
 				await setSettings(settings);
-				setAccountInfo(result, true);
+				await setAccountInfo(result, true);
 				
 				showApp();
 

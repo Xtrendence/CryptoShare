@@ -342,6 +342,15 @@ input[type=number] {
 	fill:var(--main-contrast);
 }
 
+.login-page {
+	height:100%;
+	width:100%;
+	z-index:2;
+	top:0;
+	left:0;
+	position:absolute;
+	background-size:cover;
+}
 .login-title-wrapper {
 	z-index:2;
 	position:absolute;
@@ -351,7 +360,7 @@ input[type=number] {
 	width:300px;
 	text-align:center;
 	background:var(--main-second-transparent);
-	backdrop-filter:var(--blur);
+	backdrop-filter:blur(8px);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
@@ -367,7 +376,6 @@ input[type=number] {
 	font-size:34px;
 	font-family:"Arkhip";
 }
-
 .login-wrapper {
 	z-index:2;
 	position:absolute;
@@ -376,7 +384,7 @@ input[type=number] {
 	left:calc(50% - 300px / 2);
 	top:calc(50% - 260px / 2);
 	background:var(--main-second-transparent);
-	backdrop-filter:var(--blur);
+	backdrop-filter:blur(8px);
 	box-shadow:var(--shadow-smooth);
 	border-radius:var(--border-radius);
 }
