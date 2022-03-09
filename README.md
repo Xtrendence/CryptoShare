@@ -186,6 +186,7 @@ Click on the collapsible items in the list below to view the corresponding donat
 | Fingerprint Icon | [SVG Repo Website](https://www.svgrepo.com/svg/5105/fingerprint)                |
 | Font Awesome     | [Website](https://fontawesome.com/)                                             |
 | Forge            | [GitHub](https://github.com/digitalbazaar/forge)                                |
+| Inter            | [Website](https://rsms.me/inter/)                                               |
 | JQuery           | [Website](https://jquery.com)                                                   |
 | Popper           | [Website](https://popper.js.org/)                                               |
 | Pop Sound        | [FreeSound Website](https://freesound.org/people/InspectorJ/sounds/411639/)     |
