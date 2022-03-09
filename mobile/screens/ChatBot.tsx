@@ -27,6 +27,8 @@ export default function ChatBot({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+
 	const [botURL, setBotURL] = useState<string>("");
 	const [socket, setSocket] = useState<any>(null);
 	const [chatConnected, setChatConnected] = useState<boolean>(false);
@@ -107,9 +109,9 @@ export default function ChatBot({ navigation }: any) {
 	}, [updateMessages]);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<KeyboardAvoidingView style={[styles.wrapper, styles[`wrapper${theme}`], keyboardVisible ? { height:wrapperHeight - keyboardHeight + barHeight } : null]}>
+				<KeyboardAvoidingView style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`], keyboardVisible ? { height:wrapperHeight - keyboardHeight + barHeight } : null]}>
 					<View style={[styles.wrapperBar, styles[`wrapperBar${theme}`], styles.wrapperBarTop]}>
 						<View style={styles.wrapperBarTopLeft}>
 							<View style={[styles.chatIcon, styles[`chatIcon${theme}`]]}>
@@ -136,7 +138,7 @@ export default function ChatBot({ navigation }: any) {
 					<FlatList
 						ref={chatRef}
 						contentContainerStyle={{ 
-							paddingTop: Object.keys(chatOptions).length === 0 ? 70 : 130,
+							paddingTop: Object.keys(chatOptions).length === 0 ? 80 : 135,
 							paddingBottom: 60,
 							flexGrow: 1,
 							justifyContent: "flex-end"
@@ -151,7 +153,7 @@ export default function ChatBot({ navigation }: any) {
 					/>
 					{ Object.keys(chatOptions).length > 0 &&
 						<ScrollView style={styles.scrollViewOptions} contentContainerStyle={styles.scrollViewOptionsContent} showsHorizontalScrollIndicator={true} showsVerticalScrollIndicator={false} horizontal={true}>
-							<View style={[styles.optionsWrapper, styles[`optionsWrapper${theme}`]]}>
+							<View style={[styles.optionsWrapper, styles[`optionsWrapper${theme}`], styles[`optionsWrapper${theme + alternateBackground}`]]}>
 								{
 									Object.keys(chatOptions).map((option: any) => {
 										return (

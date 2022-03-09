@@ -36,6 +36,16 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.mainSecond,
 		borderColor: Colors.Light.accentFirst
 	},
+	barDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	barLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
+	},
 	foreground: {
 		width: "100%",
 		height: "100%",

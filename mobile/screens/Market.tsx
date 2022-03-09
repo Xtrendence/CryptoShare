@@ -24,6 +24,8 @@ export default function Market({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [popup, setPopup] = useState<boolean>(false);
@@ -100,9 +102,9 @@ export default function Market({ navigation }: any) {
 	}, [type]);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
+				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`], styles[`areaSearchWrapper${theme + alternateBackground}`]]}>
 					<TextInput
 						spellCheck={false}
 						placeholder="Symbol..." 
@@ -134,7 +136,7 @@ export default function Market({ navigation }: any) {
 						data={Object.keys(marketRowsCrypto)}
 						renderItem={renderItemCrypto}
 						keyExtractor={item => marketRowsCrypto[item].coinID}
-						style={[styles.wrapper, styles[`wrapper${theme}`]]}
+						style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`]]}
 					/>
 				}
 				{ type === "stocks" &&
@@ -143,12 +145,12 @@ export default function Market({ navigation }: any) {
 						data={Object.keys(marketRowsStocks)}
 						renderItem={renderItemStock}
 						keyExtractor={item => marketRowsStocks[item].symbol}
-						style={[styles.wrapper, styles[`wrapper${theme}`]]}
+						style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`]]}
 						ListHeaderComponent={marketHeader}
 						ListHeaderComponentStyle={styles.header}
 					/>
 				}
-				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
+				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], styles[`areaActionsWrapper${theme + alternateBackground}`]]}>
 					<TouchableOpacity onPress={() => showGlobal()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="chart-line" 

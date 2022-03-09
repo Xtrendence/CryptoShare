@@ -24,6 +24,8 @@ export default function Activity({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+
 	const [query, setQuery] = useState<string>("");
 
 	const [loading, setLoading] = useState<boolean>(false);
@@ -120,9 +122,9 @@ export default function Activity({ navigation }: any) {
 	}, [query]);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`]]}>
+				<View style={[styles.areaSearchWrapper, styles[`areaSearchWrapper${theme}`], styles[`areaSearchWrapper${theme + alternateBackground}`]]}>
 					<TextInput 
 						spellCheck={false}
 						placeholder="Search..." 
@@ -142,11 +144,11 @@ export default function Activity({ navigation }: any) {
 					data={getRows(filteredRows, activityRows, query)}
 					renderItem={renderItem}
 					keyExtractor={item => activityRows[item].activityTransactionID}
-					style={[styles.wrapper, styles[`wrapper${theme}`]]}
+					style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`]]}
 					ListHeaderComponent={activityHeader}
 					ListHeaderComponentStyle={styles.header}
 				/>
-				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
+				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], styles[`areaActionsWrapper${theme + alternateBackground}`]]}>
 					<TouchableOpacity onPress={() => showHelpPopup()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="question" 

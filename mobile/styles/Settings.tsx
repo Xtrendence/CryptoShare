@@ -41,6 +41,16 @@ export default createStyle<any>({
 		backgroundColor: Colors.Light.mainThird,
 		color: Colors.Light.mainContrast
 	},
+	searchDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	searchLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
+	},
 	wrapper: {
 		position: "absolute",
 		top: statusBarHeight + 80 + 10,
@@ -57,6 +67,16 @@ export default createStyle<any>({
 	},
 	wrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
+	},
+	wrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	wrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
 	},
 	wrapperContent: {
 		paddingBottom: 10

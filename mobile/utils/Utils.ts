@@ -12,6 +12,7 @@ export default class Utils {
 		defaultPage: "Dashboard",
 		currency: "usd",
 		transactionsAffectHoldings: "disabled",
+		alternateBackground: "disabled",
 		assetIconBackdrop: "disabled",
 		dateFormat: "yyyy-mm-dd"
 	}
@@ -42,7 +43,11 @@ export default class Utils {
 
 	static monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-	static getBackground(theme: string) {
+	static getBackground(theme: string, alternateBackground: string) {
+		if(alternateBackground === "enabled") {
+			return require("../assets/img/BG-Alt.png");
+		}
+
 		let background = require("../assets/img/BG-Black.png");
 		if(theme === "Light") {
 			background = require("../assets/img/BG-White.png");
@@ -152,6 +157,12 @@ export default class Utils {
 			dispatch(changeSetting({ key:"currency", value:currency }));
 		}
 
+		let alternateBackground = await AsyncStorage.getItem("alternateBackground");
+		if(!this.empty(alternateBackground)) {
+			settings.alternateBackground = alternateBackground;
+			dispatch(changeSetting({ key:"alternateBackground", value:alternateBackground }));
+		}
+
 		let assetIconBackdrop = await AsyncStorage.getItem("assetIconBackdrop");
 		if(!this.empty(assetIconBackdrop)) {
 			settings.assetIconBackdrop = assetIconBackdrop;
@@ -188,6 +199,7 @@ export default class Utils {
 			defaultPage: ["page", "default", "login", "area", "section", "load"],
 			transactionsAffectHoldings: ["transactions", "affect", "holdings", "activity", "record", "base"],
 			currency: ["currency", "fiat", "money", "cash", "region"],
+			alternateBackground: ["background", "appearance", "theme", "color", "wallpaper"],
 			assetIconBackdrop: ["backdrop", "icon", "asset", "market", "crypto", "stock"],
 			dateFormat: ["date", "format", "time", "activity", "transaction"],
 			reset: ["reset", "data", "delete", "user"],

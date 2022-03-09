@@ -50,6 +50,16 @@ export default createStyle<any>({
 	wrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	wrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	wrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
+	},
 	wrapperContent: {
 		paddingBottom: 20
 	},
@@ -152,6 +162,16 @@ export default createStyle<any>({
 	},
 	optionsWrapperLight: {
 		backgroundColor: Colors.Light.mainThird
+	},
+	optionsWrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	optionsWrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
 	},
 	optionButton: {
 		width: "auto",

@@ -21,6 +21,9 @@ import LinearGradient from "react-native-linear-gradient";
 export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
+
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
 
 	const [bottomModal, setBottomModal] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);
@@ -58,7 +61,7 @@ export default function Login({ navigation }: any) {
 		});
 
 		AsyncStorage.getItem("theme").then(savedTheme => {
-			dispatch(switchTheme(savedTheme));
+			dispatch(switchTheme({ theme:savedTheme, alternateBackground:settings?.alternateBackground }));
 
 			Utils.wait(250).then(() => {
 				attemptLogin();
@@ -75,7 +78,7 @@ export default function Login({ navigation }: any) {
 	}, []);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
 					{ !showCamera &&
@@ -184,7 +187,7 @@ export default function Login({ navigation }: any) {
 								<View style={[styles.toggleContainer, styles[`toggleContainer${theme}`]]}>
 									<Toggle
 										value={theme === "Dark" ? false : true}
-										onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
+										onPress={() => dispatch(switchTheme({ theme:theme === "Dark" ? "Light" : "Dark", alternateBackground:settings?.alternateBackground }))}
 										thumbActiveComponent={
 											<Icon name="sun" size={20} color={Colors[theme].accentFirst} style={{ padding:12, paddingLeft:13 }}/>
 										}

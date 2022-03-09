@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
 import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
+import store from "../store";
 
 export const themeSlice = createSlice({
 	name: "theme",
@@ -9,10 +10,15 @@ export const themeSlice = createSlice({
 	},
 	reducers: {
 		switchTheme: (state, data) => {
-			if(data.payload === "Light") {
+			if(data.payload.theme === "Light") {
 				state.theme = "Light";
 				AsyncStorage.setItem("theme", "Light");
-				TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content");
+
+				if(data.payload.alternateBackground === "enabled") {
+					TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
+				} else {
+					TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content");
+				}
 			} else {
 				state.theme = "Dark";
 				AsyncStorage.setItem("theme", "Dark");

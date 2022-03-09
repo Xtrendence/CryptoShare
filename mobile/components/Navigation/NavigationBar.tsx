@@ -9,6 +9,9 @@ import PatternIcon from "../Icons/PatternIcon";
 
 export default function BottomBar({ screen, navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
+
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
 	
 	const [left, setLeft] = React.useState("0%");
 	const [gradient, setGradient] = React.useState(Colors.getGradient(theme, getActive()));
@@ -22,7 +25,7 @@ export default function BottomBar({ screen, navigation }: any) {
 	}, [left]);
 
 	return (
-		<View style={[styles.bar, styles[`bar${theme}`]]}>
+		<View style={[styles.bar, styles[`bar${theme}`], styles[`bar${theme + alternateBackground}`]]}>
 			<View style={styles.background}>
 				<LinearGradient
 					style={[styles.backdrop, styles[`backdrop${theme}`], { left:left }]}

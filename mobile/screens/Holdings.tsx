@@ -25,6 +25,8 @@ export default function Holdings({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+
 	const [loading, setLoading] = useState<boolean>(false);
 	const [loadingText, setLoadingText] = useState<string>("");
 
@@ -86,9 +88,9 @@ export default function Holdings({ navigation }: any) {
 	}, []);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<SafeAreaView style={styles.area}>
-				<View style={[styles.areaCardWrapper, styles[`areaCardWrapper${theme}`]]}>
+				<View style={[styles.areaCardWrapper, styles[`areaCardWrapper${theme}`], styles[`areaCardWrapper${theme + alternateBackground}`]]}>
 					<TouchableOpacity onPress={() => showPortfolioChart()}>
 						<LinearGradient
 							style={styles.areaCard}
@@ -105,11 +107,11 @@ export default function Holdings({ navigation }: any) {
 					data={Object.keys(holdingsRows)}
 					renderItem={renderItem}
 					keyExtractor={item => holdingsRows[item].assetID}
-					style={[styles.wrapper, styles[`wrapper${theme}`]]}
+					style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`]]}
 					ListHeaderComponent={holdingsHeader}
 					ListHeaderComponentStyle={styles.header}
 				/>
-				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`]]}>
+				<View style={[styles.areaActionsWrapper, styles[`areaActionsWrapper${theme}`], styles[`areaActionsWrapper${theme + alternateBackground}`]]}>
 					<TouchableOpacity onPress={() => showPortfolioChart()} style={[styles.button, styles.iconButton, styles[`iconButton`]]}>
 						<Icon
 							name="chart-area" 

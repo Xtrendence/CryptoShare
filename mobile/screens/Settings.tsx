@@ -29,6 +29,8 @@ export default function Settings({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
+	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+
 	const [loading, setLoading] = useState<boolean>(false);
 
 	const [popup, setPopup] = useState<boolean>(false);
@@ -56,18 +58,18 @@ export default function Settings({ navigation }: any) {
 	}, []);
 
 	return (
-		<ImageBackground source={Utils.getBackground(theme)} resizeMethod="scale" resizeMode="cover">
+		<ImageBackground source={Utils.getBackground(theme, settings?.alternateBackground)} resizeMethod="scale" resizeMode="cover">
 			<ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false} showsVerticalScrollIndicator={false} nestedScrollEnabled={true}>
 				<SafeAreaView style={styles.area}>
 					<TextInput 
 						placeholder="Search..." 
 						selectionColor={Colors[theme].mainContrast} 
 						placeholderTextColor={Colors[theme].mainContrastDarker} 
-						style={[styles.search, styles[`search${theme}`]]} 
+						style={[styles.search, styles[`search${theme}`], styles[`search${theme + alternateBackground}`]]} 
 						onChangeText={(value) => setSearch(value)}
 						value={search}
 					/>
-					<ScrollView style={[styles.wrapper, styles[`wrapper${theme}`]]} contentContainerStyle={styles.wrapperContent}>
+					<ScrollView style={[styles.wrapper, styles[`wrapper${theme}`], styles[`wrapper${theme + alternateBackground}`]]} contentContainerStyle={styles.wrapperContent}>
 						{ Utils.filterSettings(search).includes("appearance") &&
 							<View style={[styles.section, styles[`section${theme}`], styles.inline]}>
 								<View style={styles.sectionLeft}>
@@ -77,7 +79,7 @@ export default function Settings({ navigation }: any) {
 									<Toggle
 										style={styles.inlineRight}
 										value={theme === "Dark" ? false : true}
-										onPress={() => dispatch(switchTheme(theme === "Dark" ? "Light" : "Dark"))}
+										onPress={() => dispatch(switchTheme({ theme:theme === "Dark" ? "Light" : "Dark", alternateBackground:settings?.alternateBackground }))}
 										thumbActiveComponent={
 											<Icon name="sun" size={20} color={Colors[theme].Settings.accentFirst} style={{ padding:12, paddingLeft:13 }}/>
 										}
@@ -163,6 +165,22 @@ export default function Settings({ navigation }: any) {
 									<ChoiceButton setting="aud" active={settings.currency} text="AUD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"aud" }))}/>
 									<ChoiceButton setting="jpy" active={settings.currency} text="JPY" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"jpy" }))}/>
 									<ChoiceButton setting="cad" active={settings.currency} text="CAD" theme={theme} onPress={() => dispatch(changeSetting({ key:"currency", value:"cad" }))}/>
+								</View>
+							</View>
+						}
+						{ Utils.filterSettings(search).includes("alternateBackground") &&
+							<View style={[styles.section, styles[`section${theme}`]]}>
+								<View style={styles.sectionTop}>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Alternate Background</Text>
+								</View>
+								<View style={styles.sectionBottom}>
+									<ChoiceButton setting="disabled" active={settings.alternateBackground} text="Disabled" theme={theme} onPress={() => {
+										dispatch(changeSetting({ key:"alternateBackground", value:"disabled" }));
+										dispatch(switchTheme({ theme:theme, alternateBackground:"disabled" }));
+									}}/>
+									<ChoiceButton setting="enabled" active={settings.alternateBackground} text="Enabled" theme={theme} onPress={() => { 
+										dispatch(changeSetting({ key:"alternateBackground", value:"enabled" }));dispatch(switchTheme({ theme:theme, alternateBackground:"enabled" }));
+									}}/>
 								</View>
 							</View>
 						}
@@ -407,7 +425,7 @@ export default function Settings({ navigation }: any) {
 
 			switch(type) {
 				case "settings":
-					dispatch(switchTheme("Dark"));
+					dispatch(switchTheme({ theme:"Dark", alternateBackground:settings?.alternateBackground }));
 					Utils.setSettings(dispatch, Utils.defaultSettings);
 					break;
 				case "budget":
@@ -478,7 +496,7 @@ export default function Settings({ navigation }: any) {
 					let parsed = JSON.parse(data);
 
 					Utils.setSettings(dispatch, parsed);
-					dispatch(switchTheme(parsed.theme));
+					dispatch(switchTheme({ theme:parsed.theme, alternateBackground:settings?.alternateBackground }));
 
 					break;
 				case "budget":

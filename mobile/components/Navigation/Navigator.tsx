@@ -25,6 +25,7 @@ const screenOptions = {
 
 export default function Navigator() {
 	const { theme } = useSelector((state: any) => state.theme);
+	const { settings } = useSelector((state: any) => state.settings);
 	
 	const navigationRef = React.useRef<any>();
 	const routeNameRef = React.useRef<any>();
@@ -51,7 +52,12 @@ export default function Navigator() {
 
 	async function checkState() {
 		TransparentStatusAndNavigationBar.init();
-		theme === "Light" ? TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content") : TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
+
+		if(settings.alternateBackground === "enabled") {
+			TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
+		} else {
+			theme === "Light" ? TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content") : TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
+		}
 
 		let currentRouteName: string = navigationRef.current.getCurrentRoute().name;
 		setActive(currentRouteName);

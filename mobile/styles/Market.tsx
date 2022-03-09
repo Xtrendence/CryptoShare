@@ -39,6 +39,16 @@ export default createStyle<any>({
 	areaSearchWrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	areaSearchWrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	areaSearchWrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
+	},
 	inputSearch: {
 		fontSize: 16,
 		paddingLeft: 14,
@@ -92,6 +102,16 @@ export default createStyle<any>({
 	wrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
 	},
+	wrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	wrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
+	},
 	wrapperContent: {
 		paddingBottom: 20
 	},
@@ -114,6 +134,16 @@ export default createStyle<any>({
 	},
 	areaActionsWrapperLight: {
 		backgroundColor: Colors.Light.mainThird,
+	},
+	areaActionsWrapperDarkAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Dark.mainFirstTransparent,
+	},
+	areaActionsWrapperLightAlternate: {
+		elevation: 0,
+		shadowOpacity: 0,
+		backgroundColor: Colors.Light.mainFirstTransparent,
 	},
 	header: {
 		alignItems: "center",
