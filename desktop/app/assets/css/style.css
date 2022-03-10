@@ -939,7 +939,6 @@ html.light .navbar .item .pattern {
 	fill:var(--main-second);
 }
 .navbar .item.active .pattern, #desktop .navbar .item:hover .pattern {
-	opacity:0.125;
 	fill:var(--accent-contrast);
 }
 html.light .navbar .item.active .pattern, html.light #desktop .navbar .item:hover .pattern {
