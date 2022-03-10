@@ -71,6 +71,11 @@ async function attemptLogin() {
 			}
 		}).catch(error => {
 			errorNotification(error);
+
+			setTimeout(() => {
+				divLoading.classList.add("hidden");
+				divTitlebar.removeAttribute("style");
+			}, 1000);
 		});
 	} else {
 		setTimeout(() => {

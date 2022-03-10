@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Dimensions, FlatList, ImageBackground, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Dimensions, FlatList, ImageBackground, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -189,7 +189,7 @@ export default function ChatBot({ navigation }: any) {
 			</SafeAreaView>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
-					<TouchableOpacity onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
+					<TouchableWithoutFeedback onPress={() => hidePopup()} style={styles.popupBackground}></TouchableWithoutFeedback>
 					<View style={styles.popupForeground}>
 						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], { padding:0 }]}>{popupContent}</View>
 					</View>
