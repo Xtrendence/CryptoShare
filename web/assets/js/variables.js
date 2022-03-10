@@ -27,6 +27,10 @@ let applicationChoices = {};
 (async () => {
 	applicationSettings = await getSettings();
 	applicationChoices = await getSettingsChoices();
+
+	setTheme(applicationSettings.theme);
+	setSounds(applicationSettings.sounds);
+	setSettingsChoices(applicationChoices);
 })();
 
 let clickTargets = [];
