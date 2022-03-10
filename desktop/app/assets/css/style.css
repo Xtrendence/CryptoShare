@@ -2160,6 +2160,9 @@ html.light .page.activity .page-container-toolbar {
 	border-width:3px;
 	border-color:var(--accent-first);
 }
+.alternate-background .page-container.settings {
+	border-width:0;
+}
 .settings-navbar {
 	position:absolute;
 	top:0;
