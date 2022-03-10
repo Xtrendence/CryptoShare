@@ -5,7 +5,7 @@ async function attemptLogin() {
 		if(!empty(urlAPI)) {
 			try {
 				let url = new URL(urlAPI);
-				urlBot = `${url.protocol}//${url.hostname}:${parseFloat(url.port) + 1}`;
+				urlBot = url.toString().replace("graphql", "");
 			} catch(error) {
 				console.log(error);
 				

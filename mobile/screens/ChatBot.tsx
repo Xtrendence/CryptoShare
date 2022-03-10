@@ -68,10 +68,7 @@ export default function ChatBot({ navigation }: any) {
 	useEffect(() => {
 		AsyncStorage.getItem("api").then((api) => {
 			api = api || "";
-			let protocol = api.split("://")[0];
-			let hostname = api.split(":")[1].replace(protocol + "://", "");
-			let port = parseInt(api.split(":")[2]) + 1;
-			let urlBot = `${protocol}:${hostname}:${port}`;
+			let urlBot = api.toString().replace("graphql", "");
 
 			let botSocket = io(urlBot);
 			attachSocketEvents(botSocket);

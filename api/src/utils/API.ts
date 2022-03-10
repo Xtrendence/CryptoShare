@@ -16,14 +16,11 @@ import addStockAPIRoutes from "./StockAPI";
 
 export default class API {
 	portAPI: number | undefined;
-	portBot: number | undefined;
 	appServer: http.Server | null;
-	httpServer: http.Server | null;
 	ioServer: Server | null;
 
 	constructor() {
 		this.appServer = null;
-		this.httpServer = null;
 		this.ioServer = null;
 	}
 
@@ -35,7 +32,6 @@ export default class API {
 				const app = express();
 
 				this.portAPI = 3190;
-				this.portBot = 3191;
 
 				const webFolder = path.join(__dirname, "../../../web");
 				const indexFile = path.join(webFolder, "index.html");
@@ -47,18 +43,6 @@ export default class API {
 				const db = new DB();
 				await db.initialize();
 				Utils.db = db;
-
-				this.httpServer = http.createServer();
-
-				this.ioServer = new Server(this.httpServer, {
-					cors: {
-						origin: "*",
-						methods: ["GET", "POST", "PUT", "DELETE"]
-					},
-					maxHttpBufferSize: 8192 * 1024
-				});
-
-				await addEvents(this.ioServer);
 
 				console.log(Utils.console.magenta, `-----------------------------\n`, `Starting Server... (${new Date().toTimeString().split(" ")[0]})`, Utils.console.reset);
 
@@ -79,7 +63,11 @@ export default class API {
 				this.appServer = app.listen(this.portAPI, () => {
 					listening.api = true;
 
+					listening.bot = true;
+
 					console.log(Utils.console.reset, Utils.console.orange, `GraphQL API:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portAPI}/graphql`);
+
+					console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portAPI}`);
 				});
 
 				app.get("/", (request, response) => {
@@ -167,11 +155,15 @@ export default class API {
 
 				addStockAPIRoutes(app);
 
-				this.httpServer.listen(this.portBot, () => {
-					listening.bot = true;
-
-					console.log(Utils.console.reset, Utils.console.orange, `Bot Server:`, Utils.console.blue, Utils.console.underline, `http://${Utils.getIP()}:${this.portBot}`);
+				this.ioServer = new Server(this.appServer, {
+					cors: {
+						origin: "*",
+						methods: ["GET", "POST", "PUT", "DELETE"]
+					},
+					maxHttpBufferSize: 8192 * 1024
 				});
+
+				await addEvents(this.ioServer);
 
 				let check = setInterval(() => {
 					if(listening.api && listening.bot) {
@@ -194,7 +186,6 @@ export default class API {
 		return new Promise(async (resolve, reject) => {
 			try {
 				this.appServer?.close();
-				this.httpServer?.close();
 				this.ioServer?.close();
 
 				await Utils.wait(1000);

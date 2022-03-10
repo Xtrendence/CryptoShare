@@ -19,8 +19,12 @@ buttonLoginAccount.addEventListener("click", async () => {
 			urlAPI = inputLoginAPI.value;
 
 			try {
+				if(!urlAPI.includes("http://") && !urlAPI.includes("https://")) {
+					urlAPI = `http://${urlAPI}`;
+				}
+
 				let url = new URL(urlAPI);
-				urlBot = `${url.protocol}//${url.hostname}:${url.port + 1}`;
+				urlBot = url.toString().replace("graphql", "");
 				
 				await appStorage.setItem("api", url.toString());
 			} catch(error) {

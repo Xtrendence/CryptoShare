@@ -12,6 +12,10 @@ function getPort() {
 	return parseInt(port);
 }
 
+function getPath() {
+	return window.location.pathname;
+}
+
 function getProtocol() {
 	return window.location.protocol;
 }

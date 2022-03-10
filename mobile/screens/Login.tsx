@@ -344,7 +344,13 @@ export default function Login({ navigation }: any) {
 		setTimeout(() => setLoading(false), 8000);
 
 		if(!Utils.empty(url)) {
-			let requests = new Requests(url);
+			let urlAPI = url;
+
+			if(!urlAPI.includes("http://") && !urlAPI.includes("https://")) {
+				urlAPI = `http://${urlAPI}`;
+			}
+			
+			let requests = new Requests(urlAPI);
 
 			requests.login(username, password).then(async (response: any) => {
 				setTimeout(() => setLoading(false), 750);

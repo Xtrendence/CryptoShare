@@ -83,36 +83,11 @@ async function accountSetup() {
 
 					break;
 				case 3:
-					popup.setSize(400, "auto");
-					popup.setHTML(`<span>Would you like to enable sound effects that play when you interact with the application?</span><div class="toggle-wrapper" id="popup-toggle-sounds"><div class="toggle-container"></div></div>`);
-
-					let toggleSounds = document.getElementById("popup-toggle-sounds");
-
-					if(applicationSettings.sounds === "enabled") {
-						toggleSounds.classList.add("active");
-					}
-
-					toggleSounds.addEventListener("click", () => {
-						if(toggleSounds.classList.contains("active")) {
-							toggleSounds.classList.remove("active");
-							setTimeout(() => {
-								setSounds("disabled");
-							}, 50);
-						} else {
-							toggleSounds.classList.add("active");
-							setSounds("enabled");
-						}
-					});
-
-					count++;
-
-					break;
-				case 4:
 					popup.setOptions({ confirmText:"Finish" });
 					popup.setHTML(`<span>If you aren't hosting CryptoShare yourself, please be aware that whoever is hosting it can modify the code to steal your financial data, so make sure you trust them.</span>`);
 					count++;
 					break;
-				case 5:
+				case 4:
 					let key = CryptoFN.generateAESKey();
 					let encrypted = CryptoFN.encryptAES(key, inputCreatePassword.value);
 
