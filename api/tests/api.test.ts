@@ -29,7 +29,7 @@ describe("API Testing", () => {
 		});
 
 		test("Ensure the bot server is running.", (done) => {
-			socket = io(`http://localhost:${api.portBot}`);
+			socket = io(`http://localhost:${api.portAPI}`);
 
 			socket.io.on("open", () => {
 				done();
