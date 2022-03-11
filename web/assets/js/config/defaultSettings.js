@@ -12,7 +12,8 @@ let defaultChoices = {
 	"dateFormat": "yyyy-mm-dd",
 	"navbarStyle": "normal",
 	"transactionsAffectHoldings": "enabled",
-	"holdingsOnDashboard": "disabled"
+	"holdingsOnDashboard": "disabled",
+	"settingsSync": "enabled"
 };
 
 let defaultBudgetData = {

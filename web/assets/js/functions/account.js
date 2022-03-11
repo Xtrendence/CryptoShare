@@ -51,10 +51,19 @@ async function attemptLogin() {
 				let key = await appStorage.getItem("key");
 
 				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
-				if(!empty(result.settings)) {
-					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, key);
-					if(validJSON(decryptedSettings)) {
-						settings = JSON.parse(decryptedSettings);
+
+				let currentChoices = await getSettingsChoices();
+
+				if(currentChoices?.settingsSync === "disabled") {
+					settingsDataSync = "disabled";
+					let json = await fetchSettings();
+					settings = JSON.parse(json);
+				} else {
+					if(!empty(result.settings)) {
+						let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, key);
+						if(validJSON(decryptedSettings)) {
+							settings = JSON.parse(decryptedSettings);
+						}
 					}
 				}
 
@@ -70,6 +79,7 @@ async function attemptLogin() {
 				setSettingsPage(choices?.defaultSettingsPage);
 			}
 		}).catch(error => {
+			console.log(error);
 			errorNotification(error);
 
 			setTimeout(() => {

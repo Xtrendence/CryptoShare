@@ -22,10 +22,10 @@ buttonLoginAccount.addEventListener("click", async () => {
 				if(!urlAPI.includes("http://") && !urlAPI.includes("https://")) {
 					urlAPI = `http://${urlAPI}`;
 				}
-
+				
 				let url = new URL(urlAPI);
 				urlBot = url.toString().replace("graphql", "");
-				
+
 				await appStorage.setItem("api", url.toString());
 			} catch(error) {
 				console.log(error);
@@ -47,10 +47,19 @@ buttonLoginAccount.addEventListener("click", async () => {
 				let firstLogin = await appStorage.getItem("firstLogin");
 
 				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
-				if(!empty(result.settings)) {
-					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
-					if(validJSON(decryptedSettings)) {
-						settings = JSON.parse(decryptedSettings);
+
+				let currentChoices = await getSettingsChoices();
+
+				if(currentChoices?.settingsSync === "disabled") {
+					settingsDataSync = "disabled";
+					let json = await fetchSettings();
+					settings = JSON.parse(json);
+				} else {
+					if(!empty(result.settings)) {
+						let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
+						if(validJSON(decryptedSettings)) {
+							settings = JSON.parse(decryptedSettings);
+						}
 					}
 				}
 
@@ -75,6 +84,7 @@ buttonLoginAccount.addEventListener("click", async () => {
 				setSettingsPage(choices?.defaultSettingsPage);
 			}
 		}).catch(error => {
+			console.log(error);
 			errorNotification(error);
 		});
 	} catch(error) {

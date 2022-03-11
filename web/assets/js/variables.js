@@ -21,6 +21,8 @@ let firstFetch = {
 	settings: true
 };
 
+let settingsDataSync = "enabled";
+
 let applicationSettings = {};
 let applicationChoices = {};
 

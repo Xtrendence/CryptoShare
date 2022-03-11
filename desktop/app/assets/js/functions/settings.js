@@ -130,7 +130,7 @@ function addSettingsChoiceEvents() {
 		button.addEventListener("click", async () => {
 			let key = button.parentElement.parentElement.getAttribute("data-key");
 			let value = button.getAttribute("data-value");
-			setChoice(key, value);
+			await setChoice(key, value);
 			let choices = await getSettingsChoices();
 			setSettingsChoices(choices);
 			syncSettings(true);
@@ -139,20 +139,30 @@ function addSettingsChoiceEvents() {
 }
 
 async function setChoice(key, value) {
-	let choicesJSON = await appStorage.getItem("choices");
-	let choices = defaultChoices;
+	return new Promise(async (resolve, reject) => {
+		try {
+			let choicesJSON = await appStorage.getItem("choices");
+			let choices = defaultChoices;
 
-	if(!empty(choicesJSON) && validJSON(choicesJSON)) {
-		let parsed = JSON.parse(choicesJSON);
+			if(!empty(choicesJSON) && validJSON(choicesJSON)) {
+				let parsed = JSON.parse(choicesJSON);
 
-		Object.keys(parsed).map(choice => {
-			choices[choice] = parsed[choice];
-		});
-	}
-	
-	choices[key] = value;
+				Object.keys(parsed).map(choice => {
+					choices[choice] = parsed[choice];
+				});
+			}
+			
+			choices[key] = value;
 
-	await appStorage.setItem("choices", JSON.stringify(choices));
+			await appStorage.setItem("choices", JSON.stringify(choices));
+
+			resolve();
+		} catch(error) {
+			console.log(error);
+			errorNotification("Couldn't update choice...");
+			reject(error);
+		}
+	});
 }
 
 async function fetchSettings() {
@@ -160,7 +170,15 @@ async function fetchSettings() {
 	let token = await appStorage.getItem("token");
 	let key = await appStorage.getItem("key");
 
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
+		if(settingsDataSync === "disabled") {
+			let currentSettings = await getSettings();
+			let currentChoices = await getSettingsChoices();
+			let settings = JSON.stringify({ ...currentSettings, choices:JSON.stringify(currentChoices) });
+			resolve(settings);
+			return;
+		}
+
 		readSetting(token, userID).then(result => {
 			if(!("errors" in result)) {
 				let current = CryptoFN.decryptAES(result.data.readSetting.userSettings, key);
@@ -234,6 +252,9 @@ function setSettingsChoices(choices) {
 
 async function processChoice(key, value) {
 	switch(key) {
+		case "settingsSync":
+			settingsDataSync = value;
+			break;
 		case "navbarStyle":
 			if(value === "compact") {
 				document.documentElement.classList.add("navbar-compact");
@@ -269,6 +290,9 @@ function setSettings(settings) {
 
 			applicationSettings = await getSettings();
 			applicationChoices = await getSettingsChoices();
+
+			setTheme(applicationSettings.theme);
+			setSounds(applicationSettings.sounds);
 
 			setSettingsChoices(applicationChoices);
 
@@ -319,12 +343,20 @@ async function resetSettings() {
 function syncSettings(update) {
 	return new Promise(async (resolve, reject) => {
 		try {
+			if(settingsDataSync === "disabled") {
+				update = false;
+			}
+
 			let token = await appStorage.getItem("token");
 			let userID = await appStorage.getItem("userID");
 			let key = await appStorage.getItem("key");
 
 			let currentSettings = await getSettings();
 			let currentChoices = await getSettingsChoices();
+
+			if(settingsDataSync !== "disabled") {
+				currentChoices.settingsSync = "enabled";
+			}
 
 			let settings = { ...currentSettings, choices:JSON.stringify(currentChoices) };
 
@@ -344,9 +376,15 @@ function syncSettings(update) {
 
 			await setSettings(current);
 
-			let encrypted = CryptoFN.encryptAES(JSON.stringify(current), key);
-
 			if(update) {
+				console.log("Updating Settings...");
+
+				let choices = JSON.parse(current.choices);
+				delete choices.settingsSync;
+				current.choices = JSON.stringify(choices);
+
+				let encrypted = CryptoFN.encryptAES(JSON.stringify(current), key);
+
 				updateSetting(token, userID, encrypted).then(result => {
 					if(!("data" in result) && !("updateSetting" in result.data) && result.data.updateSetting !== "Done") {
 						errorNotification("Couldn't update / sync setting.");
@@ -378,10 +416,12 @@ async function adminCheck() {
 	if(!empty(username) && username.toLowerCase() === "admin") {
 		buttonSettingsUserRegistration.classList.remove("hidden");
 		buttonSettingsStockAPIType.classList.remove("hidden");
+		buttonSettingsStockAPIType.parentElement.classList.add("block");
 		getAdminSettings();
 	} else {
 		buttonSettingsUserRegistration.classList.add("hidden");
 		buttonSettingsStockAPIType.classList.add("hidden");
+		buttonSettingsStockAPIType.parentElement.classList.remove("block");
 	}
 }
 
