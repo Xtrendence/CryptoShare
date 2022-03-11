@@ -28,8 +28,8 @@ let applicationChoices = {};
 	applicationSettings = await getSettings();
 	applicationChoices = await getSettingsChoices();
 
-	setTheme(applicationSettings.theme);
-	setSounds(applicationSettings.sounds);
+	await setTheme(applicationSettings.theme);
+	await setSounds(applicationSettings.sounds);
 	setSettingsChoices(applicationChoices);
 })();
 

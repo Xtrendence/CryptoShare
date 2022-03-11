@@ -64,15 +64,15 @@ async function accountSetup() {
 							images[i].classList.add("active");
 						}
 
-						images[i].addEventListener("click", () => {
+						images[i].addEventListener("click", async () => {
 							for(let j = 0; j < images.length; j++) {
 								images[j].classList.remove("active");
 							}
 
 							if(images[i].id === "popup-clickable-light") {
-								setTheme("light");
+								await setTheme("light");
 							} else {
-								setTheme("dark");
+								await setTheme("dark");
 							}
 
 							images[i].classList.add("active");

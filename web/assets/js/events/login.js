@@ -80,10 +80,10 @@ buttonCreateAccount.addEventListener("click", () => {
 	accountSetup();
 });
 
-loginToggleTheme.addEventListener("click", () => {
+loginToggleTheme.addEventListener("click", async () => {
 	if(loginToggleTheme.classList.contains("active")) {
-		setTheme("dark");
+		await setTheme("dark");
 	} else {
-		setTheme("light");
+		await setTheme("light");
 	}
 });

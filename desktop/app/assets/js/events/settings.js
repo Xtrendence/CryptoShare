@@ -1,23 +1,23 @@
-settingsToggleTheme.addEventListener("click", () => {
+settingsToggleTheme.addEventListener("click", async () => {
 	if(settingsToggleTheme.classList.contains("active")) {
-		setTheme("dark");
+		await setTheme("dark");
 	} else {
-		setTheme("light");
+		await setTheme("light");
 	}
 
 	syncSettings(true);
 });
 
-settingsToggleSounds.addEventListener("click", () => {
+settingsToggleSounds.addEventListener("click", async () => {
 	if(settingsToggleSounds.classList.contains("active")) {
-		setTimeout(() => {
-			setSounds("disabled");
+		setTimeout(async () => {
+			await setSounds("disabled");
+			syncSettings(true);
 		}, 50);
 	} else {
-		setSounds("enabled");
+		await setSounds("enabled");
+		syncSettings(true);
 	}
-
-	syncSettings(true);
 });
 
 buttonSettingsLogout.addEventListener("click", async () => {
