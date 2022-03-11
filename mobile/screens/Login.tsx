@@ -400,6 +400,8 @@ export default function Login({ navigation }: any) {
 					setLoginUsername(username);
 					setLoginPassword(password);
 
+					login(url, username, password);
+
 					Utils.notify(theme, "Account created.");
 				} else {
 					Utils.notify(theme, "Something went wrong... - EM61");

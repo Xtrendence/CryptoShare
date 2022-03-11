@@ -44,6 +44,8 @@ buttonLoginAccount.addEventListener("click", async () => {
 				let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
 				result.key = decrypted;
 
+				let firstLogin = await appStorage.getItem("firstLogin");
+
 				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
 				if(!empty(result.settings)) {
 					let decryptedSettings = CryptoFN.decryptAES(result.settings.userSettings, decrypted);
@@ -52,10 +54,20 @@ buttonLoginAccount.addEventListener("click", async () => {
 					}
 				}
 
+				if(firstLogin === "true") {
+					let currentTheme = await appStorage.getItem("theme");
+					settings.theme = currentTheme;
+				}
+
 				let choices = JSON.parse(settings?.choices);
 
 				await setSettings(settings);
 				await setAccountInfo(result, true);
+				
+				if(firstLogin === "true") {
+					await syncSettings(true);
+					await appStorage.removeItem("firstLogin");
+				}
 				
 				showApp();
 

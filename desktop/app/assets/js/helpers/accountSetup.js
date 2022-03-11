@@ -85,6 +85,8 @@ async function accountSetup() {
 				case 3:
 					popup.setOptions({ confirmText:"Finish" });
 					popup.setHTML(`<span>If you aren't hosting CryptoShare yourself, please be aware that whoever is hosting it can modify the code to steal your financial data, so make sure you trust them.</span>`);
+					popup.setSize(460, "auto");
+					popup.updateHeight();
 					count++;
 					break;
 				case 4:
@@ -94,6 +96,7 @@ async function accountSetup() {
 					createAccount(username, inputCreatePassword.value, encrypted).then(async result => {
 						if(result.data.createUser === "Done") {
 							await appStorage.setItem("key", key);
+							await appStorage.setItem("firstLogin", "true");
 							
 							popup.hide();
 
@@ -102,7 +105,9 @@ async function accountSetup() {
 							inputLoginUsername.value = username;
 							inputLoginPassword.value = inputCreatePassword.value;
 
-							successNotification("Account Created", "You can now log in.");
+							buttonLoginAccount.click();
+
+							successNotification("Account Created", "You will now be logged in...");
 						} else {
 							errorNotification(result.data.createUser);
 						}
