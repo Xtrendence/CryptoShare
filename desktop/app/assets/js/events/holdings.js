@@ -9,7 +9,7 @@ divHoldingsCardValue.addEventListener("click", () => {
 
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	let choices = await getSettingsChoices();
-	if(choices.transactionsAffectHoldings === "enabled") {
+	if(choices.activitiesAffectHoldings === "enabled") {
 		try {
 			let activityData = await fetchActivity();
 			if(empty(activityData)) {
@@ -54,14 +54,14 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 			errorNotification("Something went wrong... - EW3");
 		}
 	} else {
-		errorNotification("Transactions must be set to affect holdings (this can be done in the settings).");
+		errorNotification("Activities must be set to affect holdings (this can be done in the settings).");
 	}
 });
 
 buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 	try {
 		let choices = await getSettingsChoices();
-		if(choices.transactionsAffectHoldings === "disabled") {
+		if(choices.activitiesAffectHoldings === "disabled") {
 			let html = `
 				<span class="popup-input-span">Coin Symbol</span>
 				<input class="uppercase" id="popup-input-symbol-crypto" type="text" placeholder="Coin Symbol..." spellcheck="false" autocomplete="off">
@@ -159,7 +159,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 				}
 			});
 		} else {
-			errorNotification("You cannot modify your holdings this way while transactions are affecting them. Add an activity/transaction instead.");
+			errorNotification("You cannot modify your holdings this way while activities are affecting them. Add an activity instead.");
 		}
 	} catch(error) {
 		errorNotification("Something went wrong... - EW4");
@@ -170,7 +170,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 	try {
 		let choices = await getSettingsChoices();
-		if(choices.transactionsAffectHoldings === "disabled") {
+		if(choices.activitiesAffectHoldings === "disabled") {
 			let html = `
 				<span class="popup-input-span">Stock Symbol</span>
 				<input class="uppercase" id="popup-input-symbol-stock" type="text" placeholder="Stock Symbol..." spellcheck="false" autocomplete="off">
@@ -244,7 +244,7 @@ buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 				}
 			});
 		} else {
-			errorNotification("You cannot modify your holdings this way while transactions are affecting them. Add an activity/transaction instead.");
+			errorNotification("You cannot modify your holdings this way while activities are affecting them. Add an activity instead.");
 		}
 	} catch(error) {
 		errorNotification("Something went wrong... - EW5");

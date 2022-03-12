@@ -613,11 +613,11 @@ async function processIntent(entities, intent) {
 				return;
 			case "holding":
 				let choices = await getSettingsChoices();
-				if(choices.transactionsAffectHoldings === "disabled") {
+				if(choices.activitiesAffectHoldings === "disabled") {
 					processHolding(entities, intent, details);
 					return;
 				} else {
-					addMessage("bot", "Please set transactions to not affect holdings in the settings page first.");
+					addMessage("bot", "Please set activities to not affect holdings in the settings page first.");
 					return;
 				}
 			case "watchlist":

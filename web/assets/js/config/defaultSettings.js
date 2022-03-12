@@ -11,7 +11,7 @@ let defaultChoices = {
 	"assetIconBackdrop": "disabled",
 	"dateFormat": "yyyy-mm-dd",
 	"navbarStyle": "normal",
-	"transactionsAffectHoldings": "enabled",
+	"activitiesAffectHoldings": "enabled",
 	"holdingsOnDashboard": "disabled",
 	"settingsSync": "enabled"
 };

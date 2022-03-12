@@ -141,14 +141,14 @@ export default function Settings({ navigation }: any) {
 								</View>
 							</View>
 						}
-						{ Utils.filterSettings(search).includes("transactionsAffectHoldings") &&
+						{ Utils.filterSettings(search).includes("activitiesAffectHoldings") &&
 							<View style={[styles.section, styles[`section${theme}`]]}>
 								<View style={styles.sectionTop}>
-									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Transactions Affect Holdings</Text>
+									<Text style={[styles.title, styles[`title${theme}`], styles.titleTop]}>Activities Affect Holdings</Text>
 								</View>
 								<View style={styles.sectionBottom}>
-									<ChoiceButton setting="disabled" active={settings.transactionsAffectHoldings} text="Disabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"transactionsAffectHoldings", value:"disabled" }))}/>
-									<ChoiceButton setting="enabled" active={settings.transactionsAffectHoldings} text="Enabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"transactionsAffectHoldings", value:"enabled" }))}/>
+									<ChoiceButton setting="disabled" active={settings.activitiesAffectHoldings} text="Disabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"activitiesAffectHoldings", value:"disabled" }))}/>
+									<ChoiceButton setting="enabled" active={settings.activitiesAffectHoldings} text="Enabled" theme={theme} onPress={() => dispatch(changeSetting({ key:"activitiesAffectHoldings", value:"enabled" }))}/>
 								</View>
 							</View>
 						}

@@ -21,7 +21,7 @@ async function populateHoldingsList(recreate, callback = null) {
 
 			let choices = await getSettingsChoices();
 			
-			if(choices.transactionsAffectHoldings === "disabled") {
+			if(choices.activitiesAffectHoldings === "disabled") {
 				let holdings = await readHolding(token, userID);
 
 				if(empty(holdings?.data?.readHolding)) {

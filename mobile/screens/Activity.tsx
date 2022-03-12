@@ -507,7 +507,7 @@ export default function Activity({ navigation }: any) {
 							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Help</Text>
 						</View>
 						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
-							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>An activity represents an event where a crypto or stock asset was bought, sold, or transferred. The settings page includes an option where transactions can be set to affect holdings, which means your portfolio would be based on activities you record. For users who simply wish to track their assets without having to record each trade, the aforementioned option can be turned off, and holdings can be added directly through the holdings page.</Text>
+							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>An activity represents an event where a crypto or stock asset was bought, sold, or transferred. The settings page includes an option where activities can be set to affect holdings, which means your portfolio would be based on activities you record. For users who simply wish to track their assets without having to record each trade, the aforementioned option can be turned off, and holdings can be added directly through the holdings page.</Text>
 						</View>
 						<View style={[styles.modalSection, styles[`modalSection${theme}`], { backgroundColor:Colors[theme].mainThird }]}>
 							<Text style={[styles.modalInfo, styles[`modalInfo${theme}`]]}>Adding a plus (+) sign to the "From" or "To" fields of a "Transfer" activity would cause the asset to get added to your holdings, whereas adding a minus (-) would subtract the amount.</Text>

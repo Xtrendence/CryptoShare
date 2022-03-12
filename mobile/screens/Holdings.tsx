@@ -374,8 +374,8 @@ export default function Holdings({ navigation }: any) {
 	function showHoldingPopup(assetType: string, action: string, info: any = {}) {
 		let settings: any = store.getState().settings.settings;
 
-		if(settings.transactionsAffectHoldings === "enabled") {
-			Utils.notify(theme, "Transactions cannot be affecting holdings.");
+		if(settings.activitiesAffectHoldings === "enabled") {
+			Utils.notify(theme, "Activities cannot be affecting holdings.");
 			return;
 		}
 
@@ -506,8 +506,8 @@ export default function Holdings({ navigation }: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
 
-			if(settings.transactionsAffectHoldings !== "enabled") {
-				Utils.notify(theme, "Transactions need to be affecting holdings.", 5000);
+			if(settings.activitiesAffectHoldings !== "enabled") {
+				Utils.notify(theme, "Activities need to be affecting holdings.", 5000);
 				return;
 			}
 
@@ -726,7 +726,7 @@ export default function Holdings({ navigation }: any) {
 
 			let requests = new Requests(api);
 			
-			if(settings.transactionsAffectHoldings === "disabled") {
+			if(settings.activitiesAffectHoldings === "disabled") {
 				let holdings = await requests.readHolding(token, userID);
 
 				if(Utils.empty(holdings?.data?.readHolding)) {

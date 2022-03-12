@@ -11,7 +11,7 @@ export default function Item({ info, showHoldingChart, showHoldingPopup, theme, 
 			<TouchableOpacity
 				onPress={() => {
 					let settings: any = store.getState().settings.settings;
-					if (settings.transactionsAffectHoldings === "enabled") {
+					if (settings.activitiesAffectHoldings === "enabled") {
 						showHoldingChart(info);
 					} else {
 						showHoldingPopup("crypto", "updateHolding", info);
