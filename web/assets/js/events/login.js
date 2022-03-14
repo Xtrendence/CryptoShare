@@ -109,3 +109,15 @@ loginToggleTheme.addEventListener("click", async () => {
 		await setTheme("light");
 	}
 });
+
+inputLoginPassword.addEventListener("keydown", (event) => {
+	if(event.key.toLowerCase() === "enter") {
+		buttonLoginAccount.click();
+	}
+});
+
+inputCreateRepeatPassword.addEventListener("keydown", (event) => {
+	if(event.key.toLowerCase() === "enter") {
+		buttonCreateAccount.click();
+	}
+});
