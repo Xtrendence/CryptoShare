@@ -6,6 +6,7 @@
 	"scripts": {
 		"tsc": "tsc",
 		"test": "jest --verbose --detectOpenHandles ./tests/",
+		"test-recreate": "rm -f -R data && npm run test && rm -f -R data",
 		"start": "npm run ts-node",
 		"nodemon": "nodemon src/index.ts",
 		"ts-node": "ts-node --files src/index.ts",

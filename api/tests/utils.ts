@@ -22,6 +22,14 @@ let utils = {
 		return false;
 	},
 
+	wait(duration: number) {
+		return new Promise((resolve: any) => {
+			setTimeout(() => {
+				resolve();
+			}, duration);
+		});
+	},
+
 	request(method: string, url: string, body: any) {
 		console.log("Request", url);
 
