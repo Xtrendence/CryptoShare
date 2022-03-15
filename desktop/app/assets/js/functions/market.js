@@ -45,7 +45,7 @@ async function populateMarketListCrypto(page, currency) {
 		for(let i = 0; i < rows.length; i++) {
 			if(divMarketListCrypto.childElementCount >= i + 1) {
 				let current = divMarketListCrypto.getElementsByClassName("market-list-row")[i];
-				if(current.innerHTML !== rows[i].innerHTML) {
+				if(current?.innerHTML !== rows[i].innerHTML) {
 					let currentIcon = current.getElementsByClassName("icon")[0];
 					let currentInfo = current.getElementsByClassName("info-wrapper")[0];
 
@@ -102,7 +102,7 @@ async function populateMarketListStocks(page, currency) {
 		for(let i = 0; i < rows.length; i++) {
 			if(divMarketListStocks.childElementCount >= i + 1) {
 				let current = divMarketListStocks.getElementsByClassName("watchlist-list-row")[i];
-				if(current.innerHTML !== rows[i].innerHTML) {
+				if(current?.innerHTML !== rows[i].innerHTML) {
 					let currentInfo = current.getElementsByClassName("info-wrapper")[0];
 
 					if(currentInfo.innerHTML !== rows[i].getElementsByClassName("info-wrapper")[0].innerHTML) {
