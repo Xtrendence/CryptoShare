@@ -19,7 +19,7 @@ app.name = "CryptoShare";
 process.env["ELECTRON_DISABLE_SECURITY_WARNINGS"] = "true";
 
 app.on("ready", function() {
-	const debugMode = true;
+	const debugMode = false;
 
 	const { width, height } = screen.getPrimaryDisplay().workAreaSize;
 
