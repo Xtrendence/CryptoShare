@@ -53,10 +53,10 @@ export default function Navigator() {
 	async function checkState() {
 		TransparentStatusAndNavigationBar.init();
 
-		if(settings.alternateBackground === "enabled") {
-			TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
-		} else {
+		if(settings.alternateBackground === "disabled") {
 			theme === "Light" ? TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content") : TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
+		} else {
+			TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
 		}
 
 		let currentRouteName: string = navigationRef.current.getCurrentRoute().name;

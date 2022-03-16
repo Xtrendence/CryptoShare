@@ -8,7 +8,7 @@ function setTheme(theme) {
 			let browserTheme = document.getElementsByClassName("browser-theme")[0];
 			
 			let choices = await getSettingsChoices();
-			let alternate = choices?.alternateBackground === "enabled" ? true : false;
+			let alternate = choices?.alternateBackground === "disabled" ? false : true;
 
 			if(theme === "light") {
 				browserTheme.setAttribute("content", "#ffffff");
@@ -266,10 +266,10 @@ async function processChoice(key, value) {
 		case "alternateBackground":
 			let settings = await getSettings();
 
-			if(value === "enabled") {
-				setBackground(settings.theme, true);
-			} else {
+			if(value === "disabled") {
 				setBackground(settings.theme, false);
+			} else {
+				setBackground(settings.theme, true);
 			}
 
 			break;

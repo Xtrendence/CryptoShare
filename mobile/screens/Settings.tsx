@@ -29,7 +29,7 @@ export default function Settings({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
-	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+	const alternateBackground = settings?.alternateBackground === "disabled" ? "" : "Alternate";
 
 	const [loading, setLoading] = useState<boolean>(false);
 

@@ -14,10 +14,10 @@ export const themeSlice = createSlice({
 				state.theme = "Light";
 				AsyncStorage.setItem("theme", "Light");
 
-				if(data.payload.alternateBackground === "enabled") {
-					TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
-				} else {
+				if(data.payload.alternateBackground === "disabled") {
 					TransparentStatusAndNavigationBar.setBarsStyle(true, "dark-content");
+				} else {
+					TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
 				}
 			} else {
 				state.theme = "Dark";

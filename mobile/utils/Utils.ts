@@ -12,7 +12,7 @@ export default class Utils {
 		defaultPage: "Dashboard",
 		currency: "usd",
 		activitiesAffectHoldings: "disabled",
-		alternateBackground: "disabled",
+		alternateBackground: "enabled",
 		assetIconBackdrop: "disabled",
 		dateFormat: "yyyy-mm-dd"
 	}
@@ -44,15 +44,17 @@ export default class Utils {
 	static monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 	static getBackground(theme: string, alternateBackground: string) {
-		if(alternateBackground === "enabled") {
-			return require("../assets/img/BG-Alt.png");
+		if(alternateBackground === "disabled") {
+			let background = require("../assets/img/BG-Black.png");
+			
+			if(theme === "Light") {
+				background = require("../assets/img/BG-White.png");
+			}
+
+			return background;
 		}
 
-		let background = require("../assets/img/BG-Black.png");
-		if(theme === "Light") {
-			background = require("../assets/img/BG-White.png");
-		}
-		return background;
+		return require("../assets/img/BG-Alt.png");
 	}
 
 	static async setAccountInfo(info: any, updateKey: boolean) {

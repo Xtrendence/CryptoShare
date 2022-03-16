@@ -23,7 +23,7 @@ export default function Login({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
-	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+	const alternateBackground = settings?.alternateBackground === "disabled" ? "" : "Alternate";
 
 	const [bottomModal, setBottomModal] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);

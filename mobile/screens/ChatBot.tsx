@@ -27,7 +27,7 @@ export default function ChatBot({ navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
-	const alternateBackground = settings?.alternateBackground === "enabled" ? "Alternate" : "";
+	const alternateBackground = settings?.alternateBackground === "disabled" ? "" : "Alternate";
 
 	const [botURL, setBotURL] = useState<string>("");
 	const [socket, setSocket] = useState<any>(null);

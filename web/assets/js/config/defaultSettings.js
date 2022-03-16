@@ -7,7 +7,7 @@ let defaultChoices = {
 	"defaultPage": "Market",
 	"defaultSettingsPage": "behavior",
 	"currency": "usd",
-	"alternateBackground": "disabled",
+	"alternateBackground": "enabled",
 	"assetIconBackdrop": "disabled",
 	"dateFormat": "yyyy-mm-dd",
 	"navbarStyle": "normal",
