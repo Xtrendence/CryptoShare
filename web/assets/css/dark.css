@@ -15,9 +15,9 @@ html.dark {
 	
 	--accent-contrast:rgb(255,255,255);
 
-	--accent-first:#886d9c;
-	--accent-second:#6a546e;
-	--accent-third:#7a65b8;
+	--accent-first:rgb(209,118,95);
+	--accent-second:rgb(130,45,85);
+	--accent-third:rgb(180,110,80);
 
 	--negative-first:rgb(190,40,50);
 	--negative-second:rgb(150,30,30);

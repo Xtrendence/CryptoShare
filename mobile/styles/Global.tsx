@@ -12,9 +12,9 @@ export const Colors: any = {
 		mainContrastDark: "rgb(75,75,75)",
 		mainContrastDarker: "rgb(100,100,100)",
 
-		accentFirst: "#8a60aa",
-		accentSecond: "#824f8a",
-		accentThird: "#5f46a7",
+		accentFirst: "rgb(209,118,95)",
+		accentSecond: "rgb(130,45,85)",
+		accentThird: "rgb(180,110,80)",
 	
 		accentContrast: "rgb(255,255,255)",
 
@@ -84,9 +84,9 @@ export const Colors: any = {
 		mainContrastDark: "rgb(230,230,230)",
 		mainContrastDarker: "rgb(200,200,200)",
 
-		accentFirst: "#8a60aa",
-		accentSecond: "#824f8a",
-		accentThird: "#5f46a7",
+		accentFirst: "rgb(209,118,95)",
+		accentSecond: "rgb(130,45,85)",
+		accentThird: "rgb(180,110,80)",
 	
 		accentContrast: "rgb(255,255,255)",
 
