@@ -75,22 +75,6 @@ describe("API Testing", () => {
 		});
 	});
 
-	describe("Encryption / Decryption Tests", () => {
-		let CryptoFN = require("../src/utils/CryptoFN");
-
-		test("Ensure data can be symmetrically encrypted and decrypted.", () => {
-			let encrypted = CryptoFN.encryptAES("test", "Password");
-			let decryptedWrongCiphertext = CryptoFN.decryptAES("test", "Password");
-			let decryptedWrongPassword = CryptoFN.decryptAES(encrypted, "Wrong");
-			let decrypted = CryptoFN.decryptAES(encrypted, "Password");
-
-			expect(encrypted).not.toEqual("test");
-			expect(decryptedWrongCiphertext).not.toEqual("test");
-			expect(decryptedWrongPassword).not.toEqual("test");
-			expect(decrypted).toEqual("test");
-		});
-	});
-
 	describe("GraphQL API Tests", () => {
 		describe("User", () => {
 			test("Create user.", async () => {

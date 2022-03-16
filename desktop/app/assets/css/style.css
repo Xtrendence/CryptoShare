@@ -1019,6 +1019,9 @@ html.light .navbar .item.active .pattern, html.light #desktop .navbar .item:hove
 	padding:2px;
 	fill:var(--main-contrast);
 }
+html.light .navbar .item svg {
+	fill:var(--main-contrast-dark);
+}
 .navbar .item span {
 	width:100%;
 	overflow:hidden;
