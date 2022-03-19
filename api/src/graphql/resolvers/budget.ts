@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a budget row for a user.
 export async function createBudget({ token, userID, budgetData }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -20,6 +21,7 @@ export async function createBudget({ token, userID, budgetData }: any) {
 	}
 }
 
+// Returns a user's budget data.
 export async function readBudget({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -51,6 +53,7 @@ export async function readBudget({ token, userID }: any) {
 	});
 }
 
+// Updates a user's budget data.
 export async function updateBudget({ token, userID, budgetData }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -67,6 +70,7 @@ export async function updateBudget({ token, userID, budgetData }: any) {
 	}
 }
 
+// Deletes a user's budget data.
 export async function deleteBudget({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

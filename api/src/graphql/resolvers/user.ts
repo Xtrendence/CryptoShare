@@ -5,6 +5,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Checks if a user with a given username exists.
 export function userExists({ username }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -34,6 +35,7 @@ export function userExists({ username }: any) {
 	});
 }
 
+// Creates a user.
 export async function createUser({ username, password, key }: any) {
 	try {
 		let settings = await Utils.getAdminSettings();
@@ -62,6 +64,7 @@ export async function createUser({ username, password, key }: any) {
 	}
 }
 
+// Returns the details of a user.
 export async function readUser({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -93,7 +96,8 @@ export async function readUser({ token, userID }: any) {
 	});
 }
 
-export async function updateUser({ token, userID, password, key }: any) {
+// Updates a user's encryption key.
+export async function updateUser({ token, userID, key }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
 
@@ -109,6 +113,7 @@ export async function updateUser({ token, userID, password, key }: any) {
 	}
 }
 
+// Deletes a user (and all their data).
 export async function deleteUser({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

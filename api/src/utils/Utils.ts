@@ -5,13 +5,16 @@ import path from "path";
 import DB from "./DB";
 
 export default class Utils {
+	// Default: 3190.
+	static portAPI: number = 3190;
+	
+	// Default: 86400 (24 hours).
+	static marketRefetchTime: number = 86400;
+
 	static db: DB | undefined;
 	static dataFolder: string = "./data/";
 	static dbFile: string = path.join(this.dataFolder, "data.db");
 	static adminFile: string = path.join(this.dataFolder, "adminSettings.txt");
-
-	// Default: 86400.
-	static marketRefetchTime: number = 86400;
 
 	static defaultAdminSettings: any = {
 		stockAPIType: "internal",

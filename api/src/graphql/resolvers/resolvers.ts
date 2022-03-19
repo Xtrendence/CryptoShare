@@ -9,6 +9,7 @@ import { createBudget, readBudget, updateBudget, deleteBudget } from "./budget";
 import { readCoin } from "./coin";
 import { readStockHistorical, readStockPrice } from "./stock";
 
+// GraphQL resolvers.
 let resolvers = {
 	userExists, createUser, readUser, updateUser, deleteUser,
 	createActivity, readActivity, updateActivity, deleteActivity, deleteActivityAll,

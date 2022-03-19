@@ -2,7 +2,9 @@ import * as core from "express-serve-static-core";
 import YahooFinance from "yahoo-finance2";
 import Utils from "./Utils";
 
+// Internal stock market API that fetches data from Yahoo Finance directly.
 export default function addStockAPIRoutes(app: core.Express) {
+	// Fetches the stock market data for one or more assets (separated using commas).
 	app.get("/v6/finance/quote", async (request, response) => {
 		try {
 			if(!Utils.empty(request?.query)) {
@@ -29,6 +31,7 @@ export default function addStockAPIRoutes(app: core.Express) {
 		}
 	});
 
+	// Fetches the historical stock market data for an asset.
 	app.get("/v8/finance/chart/*", async (request, response) => {
 		try {
 			if(!Utils.empty(request?.params)) {

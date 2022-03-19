@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 import Utils from "./Utils";
 
+// A class for managing the SQLite database.
 export default class DB {
 	db: sqlite3.Database | undefined;
 	file: string;
@@ -12,6 +13,7 @@ export default class DB {
 		this.setDB();
 	}
 
+	// Creates the relevant tables.
 	async initialize() {
 		await this.createUserTable();
 		await this.createActivityTable();
@@ -27,6 +29,7 @@ export default class DB {
 		await this.createUserLoginView();
 	}
 
+	// Connects to the DB.
 	setDB() {
 		let retry = 0;
 		this.db = new Database(this.file, sqlite3.OPEN_READWRITE, (error) => {
@@ -37,6 +40,7 @@ export default class DB {
 		});
 	}
 
+	// Simplifies the function used to execute an SQL query.
 	runQuery(query: string, args: any) {
 		return this.db?.serialize(() => {
 			return this.db?.run(query, args, (error) => {
@@ -47,6 +51,7 @@ export default class DB {
 		});
 	}
 
+	// Promisifies the "get" method of the SQLite DB library to allow for "await" usage to avoid callback hell.
 	asyncDBGet(sql: string, values: any[]) {
 		return new Promise((resolve, reject) => {
 			this.db?.get(sql, values, (error: any, row: any) => {
@@ -65,6 +70,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "User" table.
 	async createUserTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -84,6 +90,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Activity" table.
 	async createActivityTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -116,6 +123,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Holding" table.
 	async createHoldingTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -138,6 +146,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Coin" table.
 	async createCoinTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -157,6 +166,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Login" table.
 	async createLoginTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -177,6 +187,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Setting" table.
 	async createSettingTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -196,6 +207,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Stock" table.
 	async createStockTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -215,6 +227,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Watchlist" table.
 	async createWatchlistTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -236,6 +249,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Message" table.
 	async createMessageTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -256,6 +270,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Transaction" table.
 	async createTransactionTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -279,6 +294,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "Budget" table.
 	async createBudgetTable() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {
@@ -298,6 +314,7 @@ export default class DB {
 		});
 	}
 
+	// Creates the "UserLogin" view to quickly get the sessions of a user.
 	async createUserLoginView() {
 		return new Promise((resolve, reject) => {
 			this.db?.serialize(() => {

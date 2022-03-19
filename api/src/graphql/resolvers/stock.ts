@@ -2,13 +2,15 @@ import Stock from "../../models/Stock";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";
 
+// The CryptoShare API uses two third-party APIs for stock market data. The first one is the Yahoo Finance API directly, the second is an API that also uses the Yahoo Finance API, but requires an API key to work. This is required because if CryptoShare is used by multiple people, then its API would be making potentially hundreds of requests to the Yahoo Finance API directly, which might result in rate limits for all users. The admin can switch the API to the external one through the web app or desktop app's settings page, at which point each user would require an API key from the external API provider to access stock market functionality.
 let stockAPITypes = {
-	internal: "http://localhost:3190",
+	internal: `http://localhost:${Utils.portAPI}`,
 	external: "https://yfapi.net"
 };
 
 const db = new DB();
 
+// Fetches and returns the historical stock market data for an asset. If the data already exists and isn't older than 24 hours, then the cached data is returned.
 export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -55,6 +57,7 @@ export async function readStockHistorical({ token, userID, keyAPI, assetSymbol }
 	});
 }
 
+// Fetches and returns the stock market data for one or more assets. If the cached data is older than 24 hours, it is refetched.
 export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -118,6 +121,7 @@ export async function readStockPrice({ token, userID, keyAPI, symbols }: any) {
 	});
 }
 
+// Returns cached stock data.
 function getStocks(symbols: any) {
 	return new Promise((resolve, reject) => {
 		try {
@@ -150,6 +154,7 @@ function getStocks(symbols: any) {
 	});
 }
 
+// Determines which stock data requires a refetch.
 function getSymbolsToRefetch(symbols: any) {
 	return new Promise((resolve, reject) => {
 		try {
@@ -180,6 +185,7 @@ function getSymbolsToRefetch(symbols: any) {
 	});
 }
 
+// Fetches the historical data for a stock.
 async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 	let settings = await Utils.getAdminSettings();
 	let stockAPI = settings.stockAPIType === "internal" ? stockAPITypes.internal : stockAPITypes.external;
@@ -197,6 +203,7 @@ async function getHistoricalData(assetSymbol: string, keyAPI: string) {
 	}
 }
 
+// Fetches the stock market data for an asset.
 function getPriceData(symbols: any, keyAPI: string) {
 	return new Promise(async (resolve, reject) => {
 		try {

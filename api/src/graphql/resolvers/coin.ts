@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Fetches and returns the market data of a crypto asset. Only fetches the data from the third-party API if no data exists, or if the existing data is older than the "refetchTime" (24 hours by default).
 export async function readCoin({ token, userID, assetID, assetSymbol, currency }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {

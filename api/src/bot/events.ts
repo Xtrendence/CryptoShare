@@ -3,10 +3,12 @@ import { NlpManager } from "node-nlp";
 import Message from "../models/Message";
 import Utils from "../utils/Utils";
 
-export default async function addEvents(io: Server) {
+// A function used to add the relevant event listeners to the Socket.IO server and any connected sockets.
+export default async function addSocketEvents(io: Server) {
 	const manager = new NlpManager({ languages:["en"], forceNER:true });
 
 	io.on("connection", (socket) => {
+		// The Socket.IO server is responsible for the NLP functionality of the chat bot. The "message" event expects the userID and token, along with the user's message. It then processes the message if the user's credentials are valid, and triggers the client-side "process" event.
 		socket.on("message", async (data) => {
 			try {
 				let valid = await Utils.verifyToken(data.userID, data.token);

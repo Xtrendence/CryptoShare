@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a holding.
 export async function createHolding({ token, userID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -20,6 +21,7 @@ export async function createHolding({ token, userID, holdingAssetID, holdingAsse
 	}
 }
 
+// Returns the holdings of a user.
 export async function readHolding({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -57,6 +59,7 @@ export async function readHolding({ token, userID }: any) {
 	});
 }
 
+// Updates a holding.
 export async function updateHolding({ token, userID, holdingID, holdingAssetID, holdingAssetSymbol, holdingAssetAmount, holdingAssetType }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -73,6 +76,7 @@ export async function updateHolding({ token, userID, holdingID, holdingAssetID, 
 	}
 }
 
+// Deletes a holding.
 export async function deleteHolding({ token, userID, holdingID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -89,6 +93,7 @@ export async function deleteHolding({ token, userID, holdingID }: any) {
 	}
 }
 
+// Deletes all the holdings of a user.
 export async function deleteHoldingAll({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

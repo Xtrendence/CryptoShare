@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates an activity.
 export async function createActivity({ token, userID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -23,6 +24,7 @@ export async function createActivity({ token, userID, activityAssetID, activityA
 	}
 }
 
+// Reads all the activities of a user.
 export async function readActivity({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -60,6 +62,7 @@ export async function readActivity({ token, userID }: any) {
 	});
 }
 
+// Updates an activity using the "activityTransactionID".
 export async function updateActivity({ token, userID, activityTransactionID, activityAssetID, activityAssetSymbol, activityAssetType, activityDate, activityType, activityAssetAmount, activityFee, activityNotes, activityExchange, activityPair, activityPrice, activityFrom, activityTo }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -76,6 +79,7 @@ export async function updateActivity({ token, userID, activityTransactionID, act
 	}
 }
 
+// Deletes an activity.
 export async function deleteActivity({ token, userID, activityID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -92,6 +96,7 @@ export async function deleteActivity({ token, userID, activityID }: any) {
 	}
 }
 
+// Deletes all activities belonging to a user.
 export async function deleteActivityAll({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

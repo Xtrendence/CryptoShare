@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a message.
 export async function createMessage({ token, userID, message }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -20,6 +21,7 @@ export async function createMessage({ token, userID, message }: any) {
 	}
 }
 
+// Returns the messages of a user.
 export async function readMessage({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -57,6 +59,7 @@ export async function readMessage({ token, userID }: any) {
 	});
 }
 
+// Updates a message.
 export async function updateMessage({ token, userID, messageID, message }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -73,6 +76,7 @@ export async function updateMessage({ token, userID, messageID, message }: any) 
 	}
 }
 
+// Deletes a message.
 export async function deleteMessage({ token, userID, messageID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -89,6 +93,7 @@ export async function deleteMessage({ token, userID, messageID }: any) {
 	}
 }
 
+// Deletes all the messages of a user.
 export async function deleteMessageAll({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

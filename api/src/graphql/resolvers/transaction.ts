@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a transaction.
 export async function createTransaction({ token, userID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -23,6 +24,7 @@ export async function createTransaction({ token, userID, transactionType, transa
 	}
 }
 
+// Returns the transactions of a user.
 export async function readTransaction({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -60,6 +62,7 @@ export async function readTransaction({ token, userID }: any) {
 	});
 }
 
+// Updates a transaction.
 export async function updateTransaction({ token, userID, transactionID, transactionType, transactionDate, transactionCategory, transactionAmount, transactionNotes }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -76,6 +79,7 @@ export async function updateTransaction({ token, userID, transactionID, transact
 	}
 }
 
+// Deletes a transaction.
 export async function deleteTransaction({ token, userID, transactionID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -92,6 +96,7 @@ export async function deleteTransaction({ token, userID, transactionID }: any) {
 	}
 }
 
+// Deletes all transactions belonging to a user.
 export async function deleteTransactionAll({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

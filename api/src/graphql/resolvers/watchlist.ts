@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a watchlist row.
 export async function createWatchlist({ token, userID, assetID, assetSymbol, assetType }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -20,6 +21,7 @@ export async function createWatchlist({ token, userID, assetID, assetSymbol, ass
 	}
 }
 
+// Returns a user's watchlist data.
 export async function readWatchlist({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -57,6 +59,7 @@ export async function readWatchlist({ token, userID }: any) {
 	});
 }
 
+// Updates a watchlist row.
 export async function updateWatchlist({ token, userID, watchlistID, assetID, assetSymbol, assetType }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -72,6 +75,7 @@ export async function updateWatchlist({ token, userID, watchlistID, assetID, ass
 	}
 }
 
+// Deletes a watchlist row.
 export async function deleteWatchlist({ token, userID, watchlistID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -88,6 +92,7 @@ export async function deleteWatchlist({ token, userID, watchlistID }: any) {
 	}
 }
 
+// Deletes all watchlist rows belonging to a user.
 export async function deleteWatchlistAll({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

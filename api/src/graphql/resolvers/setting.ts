@@ -4,6 +4,7 @@ import Utils from "../../utils/Utils";
 
 const db = new DB();
 
+// Creates a setting row for a user.
 export async function createSetting({ token, userID, userSettings }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -20,6 +21,7 @@ export async function createSetting({ token, userID, userSettings }: any) {
 	}
 }
 
+// Returns the settings data of a user.
 export async function readSetting({ token, userID }: any) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -51,6 +53,7 @@ export async function readSetting({ token, userID }: any) {
 	});
 }
 
+// Updates the settings data of a user.
 export async function updateSetting({ token, userID, userSettings }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);
@@ -67,6 +70,7 @@ export async function updateSetting({ token, userID, userSettings }: any) {
 	}
 }
 
+// Deletes the settings data of a user.
 export async function deleteSetting({ token, userID }: any) {
 	try {
 		let valid = await Utils.verifyToken(userID, token);

@@ -7,13 +7,14 @@ import { buildSchema } from "graphql";
 import { Server } from "socket.io";
 import { io as client } from "socket.io-client";
 import Message from "../models/Message";
-import addEvents from "../bot/events";
+import addSocketEvents from "../bot/events";
 import resolvers from "../graphql/resolvers/resolvers";
 import DB from "./DB";
 import Utils from "./Utils";
 import express from "express";
 import addStockAPIRoutes from "./StockAPI";
 
+// A class for starting and stopping the GraphQL API and Socket.IO server.
 export default class API {
 	portAPI: number | undefined;
 	appServer: http.Server | null;
@@ -24,6 +25,7 @@ export default class API {
 		this.ioServer = null;
 	}
 
+	// Starts the API and Socket.IO server.
 	async start() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -31,15 +33,18 @@ export default class API {
 
 				const app = express();
 
-				this.portAPI = 3190;
+				this.portAPI = Utils.portAPI;
 
 				const webFolder = path.join(__dirname, "../../../web");
 				const indexFile = path.join(webFolder, "index.html");
 
+				// Ensures the necessary files, such as the database file, admin settings, and the relevant directories exist.
 				Utils.checkFiles();
 
+				// Builds the GraphQL API schema.
 				const schema = buildSchema(Utils.getSchema());
 
+				// Creates the SQLite database if it doesn't exist, otherwise, it simply opens it.
 				const db = new DB();
 				await db.initialize();
 				Utils.db = db;
@@ -51,6 +56,7 @@ export default class API {
 				app.use(express.json());
 				app.use(express.static(webFolder));
 
+				// Set GraphQL API options.
 				app.use("/graphql", graphqlHTTP({ 
 					schema: schema,
 					rootValue: resolvers,
@@ -60,6 +66,7 @@ export default class API {
 					}
 				}));
 
+				// Start the GraphQL API and Socket.IO server.
 				this.appServer = app.listen(this.portAPI, () => {
 					listening.api = true;
 
@@ -163,7 +170,7 @@ export default class API {
 					maxHttpBufferSize: 8192 * 1024
 				});
 
-				await addEvents(this.ioServer);
+				await addSocketEvents(this.ioServer);
 
 				let check = setInterval(() => {
 					if(listening.api && listening.bot) {
@@ -182,6 +189,7 @@ export default class API {
 		});
 	}
 
+	// Stops the API and Socket.IO server.
 	async kill() {
 		return new Promise(async (resolve, reject) => {
 			try {

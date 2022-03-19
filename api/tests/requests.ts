@@ -1,4 +1,6 @@
-let urlAPI = `http://localhost:3190/graphql`;
+import Utils from "../src/utils/Utils";
+
+let urlAPI = `http://localhost:${Utils.portAPI}/graphql`;
 let urlBot = urlAPI.replace("graphql", "");
 
 export const requests = {

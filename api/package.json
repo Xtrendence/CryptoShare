@@ -2,7 +2,7 @@
 	"name": "api",
 	"version": "1.0.0",
 	"description": "CryptoShare GraphQL API.",
-	"main": "./build/server.js",
+	"main": "src/index.ts",
 	"scripts": {
 		"tsc": "tsc",
 		"test": "jest --verbose --detectOpenHandles ./tests/",
