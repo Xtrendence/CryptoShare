@@ -54,7 +54,7 @@ export default class API {
 				app.use("/graphql", graphqlHTTP({ 
 					schema: schema,
 					rootValue: resolvers,
-					graphiql: true,
+					graphiql: false,
 					customFormatErrorFn: (error): any => {
 						return error.message.split("!")[1];
 					}

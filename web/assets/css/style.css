@@ -998,7 +998,7 @@ html.light .navbar .item.active .pattern, html.light #desktop .navbar .item:hove
 #desktop .navbar .item:hover span, .navbar .item.active span {
 	color:var(--accent-contrast);
 }
-#desktop .navbar .item:hover svg, .navbar .item.active svg {
+#desktop .navbar .item:hover svg, .navbar .item.active svg, html.light .navbar .item.active svg {
 	fill:var(--accent-contrast);
 }
 .navbar .item .content {
