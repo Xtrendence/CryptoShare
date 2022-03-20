@@ -7,7 +7,9 @@ import { Colors } from "../styles/Global";
 import { statusBarHeight } from "../styles/NavigationBar";
 import CryptoFN from "./CryptoFN";
 
+// A class with helper functions and commonly used variables and values.
 export default class Utils {
+	// Default user settings (for the mobile app only).
 	static defaultSettings: any = {
 		defaultPage: "Dashboard",
 		currency: "usd",
@@ -17,6 +19,7 @@ export default class Utils {
 		dateFormat: "yyyy-mm-dd"
 	}
 
+	// Default budget data.
 	static defaultBudgetData: any = {
 		categories: {
 			food: 15,
@@ -31,6 +34,7 @@ export default class Utils {
 		savings: 0
 	};
 
+	// Fiat currency symbols.
 	static currencySymbols: any = {
 		usd: "$",
 		gbp: "£",
@@ -41,8 +45,10 @@ export default class Utils {
 		cad: "$"
 	};
 
+	// The names of each month.
 	static monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+	// Returns the path to the appropriate background image given the app theme and whether or not the alternate background is enabled.
 	static getBackground(theme: string, alternateBackground: string) {
 		if(alternateBackground === "disabled") {
 			let background = require("../assets/img/BG-Black.png");
@@ -57,6 +63,7 @@ export default class Utils {
 		return require("../assets/img/BG-Alt.png");
 	}
 
+	// Sets the user's credentials.
 	static async setAccountInfo(info: any, updateKey: boolean) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -80,6 +87,7 @@ export default class Utils {
 		});
 	}
 
+	// Removes the user's credentials.
 	static async removeAccountInfo() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -96,6 +104,7 @@ export default class Utils {
 		});
 	}
 
+	// Handles back button presses. If the last page was the "Login" page, the app is closed.
 	static backHandler(navigation: any) {
 		return useCallback(() => {
 			function onBackPress(): boolean {
@@ -116,6 +125,7 @@ export default class Utils {
 		}, []);
 	}
 
+	// Returns the ticker of the active fiat currency.
 	static getCurrency() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -132,6 +142,7 @@ export default class Utils {
 		});
 	}
 
+	// Sets and returns the user's settings.
 	static async getSettings(dispatch: any) {
 		let settings = this.defaultSettings;
 
@@ -180,6 +191,7 @@ export default class Utils {
 		return settings;
 	}
 
+	// Sets the user's settings.
 	static async setSettings(dispatch: any, settings: any) {
 		if(this.empty(settings)) {
 			settings = this.defaultSettings;
@@ -193,6 +205,7 @@ export default class Utils {
 		});
 	}
 
+	// Filters through the different sections of the "Settings" page.
 	static filterSettings(query: string) {
 		let content: any = {
 			appearance: ["theme", "dark", "light", "mode", "appearance", "looks"],
@@ -231,6 +244,7 @@ export default class Utils {
 		return Object.keys(content);
 	}
 
+	// Encrypts the values of an object.
 	static encryptObjectValues(password: string, object: any) {
 		let encrypted: any = {};
 		let keys = Object.keys(object);
@@ -244,6 +258,7 @@ export default class Utils {
 		return encrypted;
 	}
 
+	// Decrypts the values of an object.
 	static decryptObjectValues(password: string, object: any) {
 		let decrypted: any = {};
 		let keys = Object.keys(object);
@@ -262,6 +277,7 @@ export default class Utils {
 		return decrypted;
 	}
 
+	// Function to simplify showing the user a notification.
 	static notify(theme: string, message: string, duration: number = 4000) {
 		showMessage({
 			message: message,
@@ -275,6 +291,7 @@ export default class Utils {
 		});
 	}
 
+	// Gets the previous non-null value in an object given a starting index.
 	static previousValueInObject(object: any, start: number) {
 		let keys = Object.keys(object);
 
@@ -289,6 +306,7 @@ export default class Utils {
 		}
 	}
 
+	// Gets the next non-null value in an object given a starting index.
 	static nextValueInObject(object: any, start: number) {
 		let keys = Object.keys(object);
 
@@ -303,12 +321,14 @@ export default class Utils {
 		}
 	}
 
+	// Converts HTML tags to avoid them being rendered. Prevents XSS attacks.
 	static stripHTMLCharacters(string: string) {
 		string = Utils.replaceAll("<", "&lt;", string);
 		string = Utils.replaceAll(">", "&gt;", string);
 		return string;
 	}
 
+	// Checks if a variable is empty.
 	static empty(value: any) {
 		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 			return true;
@@ -321,6 +341,7 @@ export default class Utils {
 		return false;
 	}
 
+	// Checks if a string is valid JSON.
 	static validJSON(json: any) {
 		try {
 			let object = JSON.parse(json);
@@ -332,6 +353,7 @@ export default class Utils {
 		return false;
 	}
 
+	// Waits for a set duration.
 	static wait(duration: number) {
 		return new Promise((resolve: any) => {
 			setTimeout(() => {
@@ -340,6 +362,7 @@ export default class Utils {
 		});
 	}
 
+	// Formats percentages to two decimal places, and adds a "+" prefix if the number isn't negative.
 	static formatPercentage(number: number) {
 		if(!this.empty(number)) {
 			return number.toFixed(2).includes("-") ? number.toFixed(2) : "+" + number.toFixed(2);
@@ -348,6 +371,7 @@ export default class Utils {
 		}
 	}
 
+	// Returns the hour in the format "HH-MM-SS".
 	static formatSecondsHyphenated(date: Date) {
 		let hours = ("00" + date.getHours()).slice(-2);
 		let minutes = ("00" + date.getMinutes()).slice(-2);
@@ -355,16 +379,19 @@ export default class Utils {
 		return hours + "-" + minutes + "-" + seconds;
 	}
 
+	// Returns the hour in the format "HH:MM".
 	static formatHour(date: Date) {
 		let hours = ("00" + date.getHours()).slice(-2);
 		let minutes = ("00" + date.getMinutes()).slice(-2);
 		return hours + ":" + minutes;
 	}
 
+	// Returns the date in SQL format.
 	static formatDateSQL(date: Date) {
 		return date.toISOString().split("T")[0] + " " + date.toTimeString().split(" ")[0];
 	}
 
+	// Returns the date in the format "YYYY / MM / DD".
 	static formatDate(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -372,6 +399,7 @@ export default class Utils {
 		return year + " / " + ("0" + month).slice(-2) + " / " + ("0" + day).slice(-2);
 	}
 
+	// Returns the date in the format "DD / MM / YYYY".
 	static formatDateHuman(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -379,6 +407,7 @@ export default class Utils {
 		return ("0" + day).slice(-2) + " / " + ("0" + month).slice(-2) + " / " + year;
 	}
 
+	// Returns the date in the format "YYYY-MM-DD".
 	static formatDateHyphenated(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -386,6 +415,7 @@ export default class Utils {
 		return year + "-" + ("0" + month).slice(-2) + "-" + ("0" + day).slice(-2);
 	}
 
+	// Returns the date in the format "DD-MM-YYYY".
 	static formatDateHyphenatedHuman(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -393,11 +423,13 @@ export default class Utils {
 		return ("0" + day).slice(-2) + "-" + ("0" + month).slice(-2) + "-" + year;
 	}
 
+	// Adds a given number of days to a date.
 	static addDays(date: Date, days: number) {
 		date.setDate(date.getDate() + days);
 		return date;
 	}
 
+	// Returns an array containing the dates of days within a given range in the format "YYYY-MM-DD".
 	static dayRangeArray(from: Date, to: Date) {
 		let dayInSeconds = 86400 * 1000;
 		let fromTime = from.getTime();
@@ -414,6 +446,7 @@ export default class Utils {
 		return days;
 	}
 
+	// Returns the date of a year before a given date.
 	static previousYear(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -421,27 +454,33 @@ export default class Utils {
 		return new Date(Date.parse(year + "-" + month + "-" + day));
 	}
 
+	// Returns the date of a month before a given date.
 	static previousMonth(date: Date) {
 		return new Date(date.getTime() - 2592000 * 1000);
 	}
 
+	// Returns the date of a week before a given date.
 	static previousWeek(date: Date) {
 		return new Date(date.getTime() - (60 * 60 * 24 * 6 * 1000));
 	}
 
+	// Checks if a number is even.
 	static isEven(n: any) {
 		return /^-?\d*[02468]$/.test(n);
 	}
 
+	// Generates a random number within a given range.
 	static randomBetween(min: number, max: number) {
 		return min + Math.floor(Math.random() * (max - min + 1));
 	}
 
+	// Checks if a UNIX timestamp is older than 24 hours.
 	static refetchRequired(time: string) {
 		let refetchTime = 86400;
 		return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
 	}
 
+	// Separates a number by thousands.
 	static separateThousands(number: number) {
 		try {
 			let parts = number.toString().split(".");
@@ -452,6 +491,7 @@ export default class Utils {
 		}
 	}
 
+	// Abbreviates a number.
 	static abbreviateNumber(num: number, digits: number) {
 		let si = [
 			{ value: 1, symbol: "" },
@@ -472,6 +512,7 @@ export default class Utils {
 		return (num / si[i].value).toFixed(digits).replace(rx, "$1") + si[i].symbol;
 	}
 
+	// Sorts chart labels.
 	static sortLabels(currency: string, labels: any) {
 		let floats: any = [];
 		let sorted: any = [];
@@ -503,14 +544,17 @@ export default class Utils {
 		return sorted;
 	}
 
+	// Capitalizes the first letter of a string.
 	static capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
+	// Capitalizes the first letter of every word in a string.
 	static titleCase(string: string) {
 		return string.replace(/(^\w|\s\w)/g, m => m.toUpperCase());
 	}
 
+	// Converts an RGB value to hex.
 	static rgbToHex(rgb: string) {
 		let numbers = rgb.split("(")[1].split(")")[0].split(",");
 		let hexArray = numbers.map((number) => {
@@ -520,6 +564,7 @@ export default class Utils {
 		return "#" + hexArray.join("");
 	}
 
+	// Replaces all occurrences of a string in a given string with another string.
 	static replaceAll(find: string, replace: string, string: string, ignore: boolean = false) {
 		return string.replace(new RegExp(find.replace(/([\/\,\!\\\^\$\{\}\[\]\(\)\.\*\+\?\|\<\>\-\&])/g,"\\$&"),(ignore?"gi":"g")),(typeof(replace)=="string")?replace.replace(/\$/g,"$$$$"):replace);
 	}

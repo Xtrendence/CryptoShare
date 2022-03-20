@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors, GlobalStyle } from "../styles/Global";
 import Utils from "../utils/Utils";
 
+// Component for each activity "FlatList" row.
 export default function Item({ info, showActivityPopup, theme, dateFormat }: any) {
 	let date = dateFormat === "dd-mm-yyyy" ? Utils.formatDateHyphenatedHuman(new Date(Date.parse(info.activityDate))) : Utils.formatDateHyphenated(new Date(Date.parse(info.activityDate)));
 

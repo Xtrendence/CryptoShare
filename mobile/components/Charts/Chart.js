@@ -3,6 +3,7 @@ import { Animated, View } from "react-native";
 import { LineChart } from 'react-native-chart-kit';
 import Svg, { Defs, G, Rect } from "react-native-svg";
 
+// Extends the "LineChart" component from the "react-native-chart-kit" library to allow for gradient colors.
 export default class Chart extends LineChart {
 	render() {
 		const {
@@ -68,33 +69,47 @@ export default class Chart extends LineChart {
 					{this.props.data.legend && this.renderLegend(config.width, legendOffset)}
 					<G x="0" y={legendOffset}>
 						<G>
-							{withHorizontalLines && (withInnerLines ? this.renderHorizontalLines({...config, count: count, paddingTop, paddingRight}) : withOuterLines ? this.renderHorizontalLine({...config, paddingTop, paddingRight}) : null)}
+							{withHorizontalLines && (withInnerLines ? this.renderHorizontalLines({ ...config, count:count, paddingTop, paddingRight }) : withOuterLines ? this.renderHorizontalLine({ ...config, paddingTop, paddingRight }) : null)}
 						</G>
 						<G>
-							{withHorizontalLabels && this.renderHorizontalLabels({ ...config, count: count, data: datas, paddingTop: paddingTop, paddingRight: paddingRight, formatYLabel, decimalPlaces: chartConfig.decimalPlaces})}
+							{withHorizontalLabels && this.renderHorizontalLabels({ ...config, count:count, data:datas, paddingTop:paddingTop, paddingRight:paddingRight, formatYLabel, decimalPlaces:chartConfig.decimalPlaces })}
 						</G>
 						<G>
-							{withVerticalLines && (withInnerLines ? this.renderVerticalLines({ ...config, data: data.datasets[0].data, paddingTop: paddingTop, paddingRight: paddingRight}) : withOuterLines ? this.renderVerticalLine({ ...config, paddingTop: paddingTop, paddingRight: paddingRight}) : null)}
+							{withVerticalLines && (withInnerLines ? this.renderVerticalLines({ ...config, data:data.datasets[0].data, paddingTop:paddingTop, paddingRight:paddingRight}) : withOuterLines ? this.renderVerticalLine({ ...config, paddingTop:paddingTop, paddingRight:paddingRight }) : null)}
 						</G>
 						<G>
-							{withVerticalLabels && this.renderVerticalLabels({ ...config, labels, paddingTop: paddingTop, paddingRight: paddingRight, formatXLabel})}
+							{withVerticalLabels && this.renderVerticalLabels({ ...config, labels, paddingTop:paddingTop, paddingRight:paddingRight, formatXLabel })}
 						</G>
 						<G>
-							{this.renderLine({...config,...chartConfig,paddingRight: paddingRight,paddingTop: paddingTop,data: data.datasets})}
+							{this.renderLine({ ...config, ...chartConfig, paddingRight:paddingRight, paddingTop:paddingTop,data:data.datasets })}
 						</G>
 						<G>
-							{withDots && this.renderDots({ ...config, data: data.datasets, paddingTop: paddingTop, paddingRight: paddingRight, onDataPointClick})}
+							{withDots && this.renderDots({ ...config, data:data.datasets, paddingTop:paddingTop, paddingRight:paddingRight, onDataPointClick })}
 						</G>
 						<G>
-							{withScrollableDot && this.renderScrollableDot({ ...config, ...chartConfig, data: data.datasets, paddingTop: paddingTop, paddingRight: paddingRight, onDataPointClick, scrollableDotHorizontalOffset})}
+							{withScrollableDot && this.renderScrollableDot({ ...config, ...chartConfig, data:data.datasets, paddingTop:paddingTop, paddingRight:paddingRight, onDataPointClick, scrollableDotHorizontalOffset })}
 						</G>
 						<G>
-							{decorator && decorator({ ...config, data: data.datasets, paddingTop, paddingRight})}
+							{decorator && decorator({ ...config, data:data.datasets, paddingTop, paddingRight })}
 						</G>
 					</G>
 				</Svg>
 				{ withScrollableDot && (
-					<ScrollView style={StyleSheet.absoluteFill} contentContainerStyle={{width: width * 2}} showsHorizontalScrollIndicator={false} scrollEventThrottle={16} onScroll={Animated.event([{ nativeEvent:{ contentOffset: {x: scrollableDotHorizontalOffset}}}])} horizontal bounces={false}/>
+					<ScrollView 
+						style={StyleSheet.absoluteFill} 
+						contentContainerStyle={{ width:width * 2 }} 
+						showsHorizontalScrollIndicator={false} 
+						scrollEventThrottle={16} 
+						onScroll={Animated.event([{ 
+							nativeEvent: { 
+								contentOffset: {
+									x: scrollableDotHorizontalOffset
+								}
+							}
+						}])} 
+						horizontal 
+						bounces={false}
+					/>
 				)}
 			</View>
 		);

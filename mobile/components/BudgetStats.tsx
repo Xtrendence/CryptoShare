@@ -5,6 +5,7 @@ import { Colors } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
+// Component used in the "Dashboard" page's "FlatList" to show the budget stats to the user.
 export default function BudgetStats({ theme, currency, stats, backgroundColors, showMonthPopup, showYearPopup, month, year }: any) {
 	return (
 		<View style={[styles.budgetItem, styles[`budgetItem${theme}`]]}>
@@ -39,6 +40,7 @@ export default function BudgetStats({ theme, currency, stats, backgroundColors, 
 		</View>
 	);
 
+	// Function used to calculate the width of the progress bar for a budget category based on what percentage of the budget for the category has been used.
 	function calculateWidth(usedPercentage: number) {
 		let max = screenWidth - 60 - 100 - 20;
 		return (max * usedPercentage) / 100;

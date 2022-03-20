@@ -2,6 +2,7 @@ import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
+// Used to calculate the height of the chat list.
 export let wrapperHeight = screenHeight - statusBarHeight - barHeight - actionBarHeight - 40;
 
 export default createStyle<any>({

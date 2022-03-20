@@ -10,6 +10,7 @@ import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
 import Chart from "./Charts/Chart";
 
+// Component used on the "Market" page for displaying the price chart of a crypto asset or stock.
 export default function MarketPopup({ modal, hideModal, loading, setLoading, theme, settings, chartVerticalLabels, chartData, chartLabels, chartSegments, labelsRef, modalInfo, modalType, modalDescription, page, watchlistData, populateList }: any) {
 	let assetID = modalType === "crypto" ? modalInfo?.id : "stock-" + modalInfo?.id;
 
@@ -193,6 +194,7 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 		</Modal>
 	);
 
+	// Removes an asset from the user's watchlist.
 	async function deleteWatchlist(watchlistID: any) {
 		try {
 			setLoading(true);
@@ -218,6 +220,7 @@ export default function MarketPopup({ modal, hideModal, loading, setLoading, the
 		}
 	}
 
+	// Adds an asset to the user's watchlist.
 	async function createWatchlist(assetID: string, assetSymbol: string, assetType: string) {
 		try {
 			setLoading(true);

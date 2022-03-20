@@ -18,6 +18,7 @@ import Requests from "../utils/Requests";
 import Utils from "../utils/Utils";
 import LinearGradient from "react-native-linear-gradient";
 
+// The "Login" page of the app.
 export default function Login({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -38,8 +39,10 @@ export default function Login({ navigation }: any) {
 	const [createPassword, setCreatePassword] = useState<string>("");
 	const [createRepeatPassword, setCreateRepeatPassword] = useState<string>("");
 
+	// Used to show/hide the camera view used to scan a login QR code.
 	const [showCamera, setShowCamera] = useState<boolean>(false);
 
+	// The "Login" page has a different back event handler than the other pages, as it closes the app no matter what.
 	useCallback(() => {
 		function onBackPress(): boolean {
 			BackHandler.exitApp();
@@ -68,6 +71,7 @@ export default function Login({ navigation }: any) {
 			});
 		});
 
+		// In some cases, the camera can remain open in the background even though the user isn't using it. This would drain the user's battery and also be a privacy concern.
 		navigation.addListener("focus", () => {
 			setShowCamera(false);
 		});
@@ -250,6 +254,7 @@ export default function Login({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Processes the login QR code data.
 	function processCode(code: string) {
 		setShowCamera(false);
 		
@@ -267,6 +272,7 @@ export default function Login({ navigation }: any) {
 		}
 	}
 
+	// Shows the user registration popup.
 	function showBottomModal(url: string, username: string, password: string, repeatPassword: string) {
 		if(password === repeatPassword) {
 			if(!Utils.empty(url)) {
@@ -300,6 +306,7 @@ export default function Login({ navigation }: any) {
 		setBottomModal(false);
 	}
 
+	// Automatically logs the user in if they've already logged in before and their credentials are still correct.
 	async function attemptLogin() {
 		let api = await AsyncStorage.getItem("api");
 		let userID = await AsyncStorage.getItem("userID");
@@ -338,6 +345,7 @@ export default function Login({ navigation }: any) {
 		});
 	}
 
+	// Logs the user in.
 	async function login(url: string, username: string, password: string) {
 		setLoading(true);
 
@@ -384,6 +392,7 @@ export default function Login({ navigation }: any) {
 		}
 	}
 
+	// Creates an account for the user.
 	async function createAccount(url: string, username: string, password: string) {
 		try {
 			let key = await CryptoFN.generateAESKey();

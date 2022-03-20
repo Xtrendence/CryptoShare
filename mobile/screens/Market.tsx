@@ -19,6 +19,7 @@ import Stock from "../utils/Stock";
 import Utils from "../utils/Utils";
 import { createWatchlistListRows, fetchWatchlist, filterWatchlistByType, getWatchlistSymbols } from "./Dashboard";
 
+// The "Market" page of the app.
 export default function Market({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -51,6 +52,7 @@ export default function Market({ navigation }: any) {
 	const [marketRowsStocks, setMarketRowsStocks] = useState<any>({});
 	const [marketHeader, setMarketHeader] = useState<any>(null);
 
+	// Component rendered by the crypto market "FlatList".
 	const renderItemCrypto = ({ item }: any) => {
 		let info = marketRowsCrypto[item];
 
@@ -59,6 +61,7 @@ export default function Market({ navigation }: any) {
 		);
 	}
 
+	// Component rendered by the stock market "FlatList".
 	const renderItemStock = ({ item }: any) => {
 		let info = marketRowsStocks[item];
 
@@ -67,6 +70,7 @@ export default function Market({ navigation }: any) {
 		);
 	}
 	
+	// Used to handle back button events.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
@@ -179,6 +183,7 @@ export default function Market({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Shows a popup with the crypto market's global data.
 	async function showGlobal() {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -230,11 +235,13 @@ export default function Market({ navigation }: any) {
 		setPopupContent(content);
 	}
 
+	// Lets the user choose a matching asset when searching for a crypto asset.
 	function selectMatch(id: string) {
 		hidePopup();
 		searchMarket({ type:"crypto", id:id });
 	}
 
+	// Shows a popup that allows the user to search for a crypto or stock asset.
 	function showSearchPopup() {
 		Keyboard.dismiss();
 		hidePopup();
@@ -260,6 +267,7 @@ export default function Market({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Searches the crypto or stock market for an asset's historical and current market data.
 	async function searchMarket(args: any) {
 		try {
 			hidePopup();
@@ -280,6 +288,7 @@ export default function Market({ navigation }: any) {
 		}
 	}
 
+	// Shows a crypto asset's historical and current market data.
 	async function showCryptoPopup(args: any) {
 		let settings: any = store.getState().settings.settings;
 
@@ -338,6 +347,7 @@ export default function Market({ navigation }: any) {
 		showModal(coinID, symbol, price, info, "crypto");
 	}
 
+	// Shows a stock's historical and current market data.
 	async function showStockPopup(args: any) {
 		let settings: any = store.getState().settings.settings;
 
@@ -550,6 +560,7 @@ export default function Market({ navigation }: any) {
 	}
 }
 
+// Generates chart data for an asset.
 export function parseMarketData(data: any, currentTime: any, currentPrice: any) {
 	let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 	let prices = data.prices;

@@ -22,6 +22,7 @@ import Item from "../components/MessageItem";
 import { Colors } from "../styles/Global";
 import { barHeight } from "../styles/NavigationBar";
 
+// The "Chat Bot" page of the app.
 export default function ChatBot({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -34,7 +35,9 @@ export default function ChatBot({ navigation }: any) {
 	const [chatConnected, setChatConnected] = useState<boolean>(false);
 	const [status, setStatus] = useState<string>("");
 
+	// Currently, a checksum isn't used on the mobile app as "FlatList" components already avoid re-rendering components that haven't changed. However, this has been put in place in case users report issues related to it.
 	const [checksum, setChecksum] = useState<string>("");
+
 	const [header, setHeader] = useState<any>(null);
 	
 	const [messageRows, setMessageRows] = useState<any>({});
@@ -55,6 +58,7 @@ export default function ChatBot({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
+	// Components rendered by the chat "FlatList".
 	const renderItem = ({ item }: any) => {
 		let message = messageRows[item];
 
@@ -63,9 +67,11 @@ export default function ChatBot({ navigation }: any) {
 		);
 	}
 	
+	// Used for when the user uses the back button.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
+		// When the page/component is mounted, the app connects to the bot's Socket.IO server.
 		AsyncStorage.getItem("api").then((api) => {
 			api = api || "";
 			let urlBot = api.toString().replace("graphql", "");
@@ -79,6 +85,7 @@ export default function ChatBot({ navigation }: any) {
 			console.log(error);
 		});
 
+		// Used to adjust the height of components when the keyboard is shown or hidden.
 		keyboardDidHideListener = Keyboard.addListener("keyboardDidHide", keyboardDidHide);
 		keyboardDidShowListener = Keyboard.addListener("keyboardDidShow", keyboardDidShow);
 
@@ -101,6 +108,7 @@ export default function ChatBot({ navigation }: any) {
 		};
 	}, []);
 
+	// Used to manually trigger an update of the message rows.
 	useEffect(() => {
 		setMessageRows(messageRef.current);
 	}, [updateMessages]);
@@ -223,6 +231,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Shows the chat menu popup.
 	function showMenu() {
 		let content = () => {
 			return (
@@ -245,6 +254,7 @@ export default function ChatBot({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Deletes all chat messages.
 	async function deleteChat(confirmation: boolean) {
 		Keyboard.dismiss();
 		hidePopup();
@@ -287,6 +297,7 @@ export default function ChatBot({ navigation }: any) {
 		clearChatOptions();
 	}
 
+	// Fetches the user's messages, and displays them.
 	async function populateChatList(recreate: boolean) {
 		if(recreate) {
 			dismissChatOptions();
@@ -328,6 +339,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Sorts messages by date.
 	function sortMessages(messages: any) {
 		let sorted: any = {};
 		let sortedKeys: any = [];
@@ -349,6 +361,7 @@ export default function ChatBot({ navigation }: any) {
 		return { messages:sorted, keys:sortedKeys };
 	}
 
+	// Sends a message to the Socket.IO server, which then uses NLP to analyze it, and return the results.
 	async function sendMessage(message: string) {
 		if(Utils.empty(message)) {
 			return;
@@ -375,6 +388,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Adds a chat bubble to the chat "FlatList".
 	function listMessage(from: string, message: string) {
 		message = Utils.stripHTMLCharacters(message);
 
@@ -388,6 +402,7 @@ export default function ChatBot({ navigation }: any) {
 		setUpdatedMessages(new Date());
 	}
 
+	// Creates a message and adds it to the "FlatList".
 	async function addMessage(from: string, message: string) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -418,6 +433,7 @@ export default function ChatBot({ navigation }: any) {
 		});
 	}
 
+	// Determines what the user intends to do.
 	function determineIntent(processed: any) {
 		try {
 			let utterance = processed.utterance.toLowerCase();
@@ -470,6 +486,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Processes the user's request based on what their intent is.
 	function processRequest(processedIntent: any) {
 		try {
 			switch(processedIntent.category) {
@@ -498,6 +515,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Processes the user's intent and the content of their message.
 	function processIntent(entities: any, intent: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1024,6 +1042,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Used when the bot requires clarification (for example, asking whether an asset is a crypto or stock).
 	async function requireClarification(message: string, options: any) {
 		try {
 			await addMessage("bot", message);
@@ -1088,6 +1107,7 @@ export default function ChatBot({ navigation }: any) {
 			addMessage("bot", message);
 		});
 
+		// After the CryptoShare API has used NLP to process the user's message, the "process" event on the client side is used to further narrow down the user's intent and request.
 		socket.on("process", (data: any) => {
 			let entities = data.processed.sourceEntities;
 			let intent = determineIntent(data.processed);
@@ -1123,6 +1143,7 @@ export default function ChatBot({ navigation }: any) {
 		});
 	}
 
+	// Fetches, decrypts, and returns the user's messages.
 	function fetchMessage() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1159,6 +1180,7 @@ export default function ChatBot({ navigation }: any) {
 		});
 	}
 
+	// Creates a transaction.
 	async function createTransaction(details: any) {
 		try {
 			let userID = await AsyncStorage.getItem("userID");
@@ -1168,6 +1190,7 @@ export default function ChatBot({ navigation }: any) {
 
 			let requests = new Requests(api);
 
+			// Transaction data is validated before a transaction is created.
 			let data: any = validateTransactionData(details.price, "spent", details.type, details.date, details.item);
 
 			if("error" in data) {
@@ -1185,6 +1208,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Creates an activity.
 	async function createActivity(details: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1219,6 +1243,7 @@ export default function ChatBot({ navigation }: any) {
 				activityTo: ""
 			};
 
+			// Activity data is validated before an activity is created.
 			let data: any = validateActivityData(values);
 
 			if(type === "crypto") {
@@ -1282,6 +1307,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Updates a holding.
 	async function updateHolding(details: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1378,6 +1404,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Adds an asset to the user's watchlist.
 	async function createWatchlist(details: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1471,6 +1498,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Removes an asset from the user's watchlist.
 	async function deleteWatchlist(details: any) {
 		try {
 			let userID = await AsyncStorage.getItem("userID");
@@ -1494,6 +1522,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Updates the user's income data.
 	async function updateIncome(details: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1533,6 +1562,7 @@ export default function ChatBot({ navigation }: any) {
 		}
 	}
 
+	// Determines whether the user can afford an item based on their budget and transactions.
 	async function checkAffordability(details: any) {
 		try {
 			let settings: any = store.getState().settings.settings;

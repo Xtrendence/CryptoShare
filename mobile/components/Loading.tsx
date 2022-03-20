@@ -3,6 +3,7 @@ import { ActivityIndicator, Modal, StyleSheet, Text, View } from "react-native";
 import { Colors } from "../styles/Global";
 import Utils from "../utils/Utils";
 
+// Component used to indicate to the user that the app is loading something. The component covers the whole screen, so the user cannot tap on additional components.
 export default function Loading(props: any) {
 	return (
 		<Modal transparent={true} visible={props.active} style={styles.modal}>

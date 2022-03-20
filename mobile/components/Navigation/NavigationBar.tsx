@@ -7,12 +7,17 @@ import { Colors } from "../../styles/Global";
 import styles from "../../styles/NavigationBar";
 import PatternIcon from "../Icons/PatternIcon";
 
+// The size of the navbar icons.
+let iconSize = 24;
+
+// Bottom navigation bar component.
 export default function BottomBar({ screen, navigation }: any) {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 
 	const alternateBackground = settings?.alternateBackground === "disabled" ? "" : "Alternate";
 	
+	// Used to indicate which page is active.
 	const [left, setLeft] = React.useState("0%");
 	const [gradient, setGradient] = React.useState(Colors.getGradient(theme, getActive()));
 
@@ -20,6 +25,7 @@ export default function BottomBar({ screen, navigation }: any) {
 		checkActive();
 	}, [screen.active]);
 
+	// When the "left" value changes, it means the active page has changed, so the appropriate navbar item needs to be colored.
 	useEffect(() => {
 		setGradient(Colors.getGradient(theme, getActive()));
 	}, [left]);
@@ -107,10 +113,12 @@ export default function BottomBar({ screen, navigation }: any) {
 		</View>
 	);
 
+	// Returns the active page's name. The first space character is removed to handle the "Chat Bot" page.
 	function getActive() {
 		return screen.active.replace(" ", "");
 	}
 
+	// Checks which page is active, and navigates to it while also changing the position of the square behind the active page's icon on the navbar.
 	async function checkActive() {
 		let amount = 100 / 6;
 
@@ -142,9 +150,8 @@ export default function BottomBar({ screen, navigation }: any) {
 		}
 	}
 
+	// Sets the position of the square behind the active page's navbar icon.
 	async function animateLeft(to: number) {
 		setLeft(to + "%");
 	}
 }
-
-let iconSize = 24;

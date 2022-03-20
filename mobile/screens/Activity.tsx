@@ -19,6 +19,7 @@ import Requests, { cryptoAPI } from "../utils/Requests";
 import Stock from "../utils/Stock";
 import Utils from "../utils/Utils";
 
+// The "Activity" page of the app.
 export default function Activity({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -26,6 +27,7 @@ export default function Activity({ navigation }: any) {
 
 	const alternateBackground = settings?.alternateBackground === "disabled" ? "" : "Alternate";
 
+	// Used to search through activities.
 	const [query, setQuery] = useState<string>("");
 
 	const [loading, setLoading] = useState<boolean>(false);
@@ -36,8 +38,11 @@ export default function Activity({ navigation }: any) {
 
 	const [activityRows, setActivityRows] = useState<any>({});
 	const [activityHeader, setActivityHeader] = useState<any>(null);
+
+	// Used instead of "activityRows" when the "query" variable isn't empty to show only certain rows.
 	const [filteredRows, setFilteredRows] = useState<any>({});
 
+	// Used to store popup data.
 	const popupRef = useRef<any>({
 		staking: {
 			symbol: "",
@@ -82,6 +87,7 @@ export default function Activity({ navigation }: any) {
 		}
 	});
 
+	// The components rendered by the activity "FlatList".
 	const renderItem = ({ item }: any) => {
 		let settings: any = store.getState().settings.settings;
 
@@ -92,6 +98,7 @@ export default function Activity({ navigation }: any) {
 		);
 	}
 	
+	// Used to handle what happens when the user uses the back button.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
@@ -115,6 +122,7 @@ export default function Activity({ navigation }: any) {
 		};
 	}, []);
 
+	// When the "query" variable's value is changed, the activities are automatically searched through if there are less than 100 of them.
 	useEffect(() => {
 		if(Object.keys(activityRows).length < 100 || Utils.empty(query)) {
 			searchActivity(query);
@@ -176,6 +184,7 @@ export default function Activity({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Returns either all activities, or a limited number of them based on whether or not the user is searching for any.
 	function getRows(filteredRows: any, activityRows: any, query: any) {
 		if(!Utils.empty(query) && Utils.empty(filteredRows)) {
 			return null;
@@ -188,6 +197,7 @@ export default function Activity({ navigation }: any) {
 		return Object.keys(activityRows).reverse();
 	}
 
+	// Fetches the user's activity data and displays it. 
 	async function populateActivityList() {
 		let activityData = await fetchActivity();
 
@@ -201,6 +211,7 @@ export default function Activity({ navigation }: any) {
 		setActivityRows(activityData);
 	}
 
+	// Searches the user's activity data based on a given query.
 	function searchActivity(query: string) {
 		let settings: any = store.getState().settings.settings;
 
@@ -228,6 +239,7 @@ export default function Activity({ navigation }: any) {
 		setFilteredRows(filtered);
 	}
 
+	// Shows a popup to avoid the user accidentally performing a "destructive" action.
 	function showConfirmationPopup(action: string, args: any) {
 		Keyboard.dismiss();
 		hidePopup();
@@ -253,6 +265,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Shows the popup through which users can create or update activities. 
 	function showActivityPopup(action: string, info: any) {
 		try {
 			popupRef.current.activity = {
@@ -289,6 +302,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Used to perform a desired action passed by a popup component.
 	function processAction(action: string) {
 		try {
 			let data = popupRef.current.activity;
@@ -312,16 +326,19 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Creates an activity once a matching asset is chosen.
 	function selectMatchCreate(id: string) {
 		hidePopup();
 		createActivity({ id:id });
 	}
 
+	// Updates an activity once a matching asset is chosen.
 	function selectMatchUpdate(id: string) {
 		hidePopup();
 		updateActivity({ id:id });
 	}
 
+	// Creates an activity.
 	async function createActivity(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -331,6 +348,7 @@ export default function Activity({ navigation }: any) {
 			let assetSymbol: string;
 			let asset: any;
 			
+			// Activity data is validated before being created.
 			let data = validateActivityData(popupRef.current.activity);
 
 			if(data?.activityAssetType === "crypto") {
@@ -407,6 +425,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Updates an activity.
 	async function updateActivity(args: any) {
 		try {
 			setLoading(true);
@@ -422,6 +441,7 @@ export default function Activity({ navigation }: any) {
 				assetSymbol = asset.symbol;
 			}
 
+			// Activity data is validated before being updated.
 			let data = validateActivityData(popupRef.current.activity);
 
 			if("error" in data) {
@@ -474,6 +494,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Deletes an activity.
 	async function deleteActivity(activityID: number) {
 		try {
 			setLoading(true);
@@ -496,6 +517,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Shows a popup containing helpful information for the user.
 	function showHelpPopup() {
 		setPopupType("help");
 
@@ -529,6 +551,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Shows a popup that offers multiple tools and calculators the user might find useful.
 	function showToolsPopup() {
 		setPopupType("tools");
 
@@ -567,6 +590,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Shows the staking calculator.
 	function showStakingPopup() {
 		setPopupType("tools");
 
@@ -636,16 +660,19 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Used to calculate staking rewards once a matching asset has been chosen.
 	function selectStakingMatch(id: string) {
 		hidePopup();
 		showStakingOutput({ id:id });
 	}
 
+	// Used to calculate mining rewards once a matching asset has been chosen.
 	function selectMiningMatch(id: string) {
 		hidePopup();
 		showMiningOutput({ id:id });
 	}
 
+	// Calculates staking reward.
 	async function showStakingOutput(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -696,6 +723,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Shows the mining calculator.
 	function showMiningPopup() {
 		setPopupType("tools");
 
@@ -777,6 +805,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Calculates mining reward.
 	async function showMiningOutput(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -827,6 +856,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Shows the dividend calculator.
 	function showDividendsPopup() {
 		setPopupType("tools");
 
@@ -882,6 +912,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Calculates dividend rewards.
 	async function showDividendsOutput(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -900,6 +931,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Shows the mortgage calculator. 
 	function showMortgagePopup() {
 		setPopupType("tools");
 
@@ -981,6 +1013,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Calculates mortgage payments.
 	async function showMortgageOutput(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1004,6 +1037,7 @@ export default function Activity({ navigation }: any) {
 		}
 	}
 
+	// Shows the tax calculator.
 	function showTaxPopup() {
 		setPopupType("tools");
 
@@ -1047,6 +1081,7 @@ export default function Activity({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Calculates tax.
 	async function showTaxOutput(args: any) {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -1080,6 +1115,7 @@ export default function Activity({ navigation }: any) {
 		setPopupType(null);
 	}
 
+	// Outputs a component with rendered HTML content.
 	function outputHTML(html: string) {
 		return (
 			<View style={[styles.popupContent, { padding:20 }]}>
@@ -1281,6 +1317,7 @@ function calculateTax(currency: string, income: number) {
 	return output;
 }
 
+// Fetches, decrypts, sorts, and returns the user's activity data.
 export function fetchActivity() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1319,6 +1356,7 @@ export function fetchActivity() {
 	});
 }
 
+// Sorts the user's activity data based on the date of each activity.
 export function sortActivityDataByDate(activityData: any) {
 	let sorted: any = {};
 	let array: any = [];
@@ -1338,6 +1376,7 @@ export function sortActivityDataByDate(activityData: any) {
 	return sorted;
 }
 
+// Separates activities by type (crypto or stock).
 export function filterActivitiesByType(activityData: any) {
 	let activitiesCrypto: any = {};
 	let activitiesStocks: any = {};
@@ -1355,6 +1394,7 @@ export function filterActivitiesByType(activityData: any) {
 	return { crypto:activitiesCrypto, stocks:activitiesStocks };
 }
 
+// Validates activity popup data before creating or updating an activity.
 export function validateActivityData(values: any) {
 	try {
 		values.activityAssetAmount = parseFloat(values.activityAssetAmount);

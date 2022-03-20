@@ -4,6 +4,7 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
+// Component used when the user performs an action that involves an asset that has the same symbol as one or more other assets. Offers a list of assets for the user to choose from.
 export default function MatchList(props: any) {
 	let theme = props.theme;
 

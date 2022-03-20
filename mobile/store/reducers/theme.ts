@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import * as TransparentStatusAndNavigationBar from "react-native-transparent-status-and-navigation-bar";
 import store from "../store";
 
+// Redux "slice" for storing the app's theme.
 export const themeSlice = createSlice({
 	name: "theme",
 	initialState: {

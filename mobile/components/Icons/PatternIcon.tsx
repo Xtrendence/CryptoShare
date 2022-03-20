@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import Svg, { G, Path } from "react-native-svg";
 
+// Background pattern for navigation bar items.
 export default function PatternIcon(props: any) {
 	return (
 		<View style={props.style}>

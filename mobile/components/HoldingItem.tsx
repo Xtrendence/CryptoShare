@@ -5,6 +5,7 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
+// Component used for each row of the "Holding" page's "FlatList".
 export default function Item({ info, showHoldingChart, showHoldingPopup, theme, settings }: any) {
 	if(!("error" in info)) {
 		return (

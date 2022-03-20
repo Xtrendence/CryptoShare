@@ -20,6 +20,7 @@ import Stock from "../utils/Stock";
 import Utils from "../utils/Utils";
 import { fetchActivity, filterActivitiesByType } from "./Activity";
 
+// The "Holdings" page of the app.
 export default function Holdings({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -33,6 +34,7 @@ export default function Holdings({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
+	// Stores the popup data when creating/updating holdings.
 	const popupRef = useRef<any>({
 		holdingID: null,
 		assetID: "",
@@ -55,6 +57,7 @@ export default function Holdings({ navigation }: any) {
 	const [holdingsHeader, setHoldingsHeader] = useState<any>(null);
 	const [holdingsTotalValue, setHoldingsTotalValue] = useState<string>("-");
 
+	// Component rendered by the holdings "FlatList".
 	const renderItem = ({ item }: any) => {
 		let info = holdingsRows[item];
 
@@ -63,6 +66,7 @@ export default function Holdings({ navigation }: any) {
 		);
 	}
 	
+	// Used to handle back button events.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
@@ -215,12 +219,14 @@ export default function Holdings({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Used to choose a matching asset when creating a holding.
 	function selectMatch(id: string) {
 		hidePopup();
 		let data = popupRef.current;
 		createHolding(parseFloat(data.assetAmount), data.assetType, { id:id });
 	}
 
+	// Creates a holding.
 	async function createHolding(holdingAssetAmount: number, holdingAssetType: string, args: any) {
 		try {
 			setLoading(true);
@@ -312,6 +318,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Deletes a holding.
 	async function deleteHolding(holdingID: number) {
 		try {
 			setLoading(true);
@@ -334,6 +341,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Updates a holding.
 	async function updateHolding(holdingID: number, holdingAssetID: string, holdingAssetSymbol: string, holdingAssetAmount: number, holdingAssetType: string) {
 		try {
 			setLoading(true);
@@ -371,6 +379,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Shows the holding popup used to create or update a holding.
 	function showHoldingPopup(assetType: string, action: string, info: any = {}) {
 		let settings: any = store.getState().settings.settings;
 
@@ -442,6 +451,7 @@ export default function Holdings({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Processes a desired action passed by a popup component.
 	function processAction(action: string) {
 		try {
 			let data = popupRef.current;
@@ -465,6 +475,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Shows a confirmation popup to avoid the user accidentally performing a "destructive" action.
 	function showConfirmationPopup(action: string, args: any) {
 		Keyboard.dismiss();
 		setPopup(true);
@@ -502,6 +513,7 @@ export default function Holdings({ navigation }: any) {
 		setPopupContent(null);
 	}
 
+	// Shows a popup with the performance of the user's entire portfolio.
 	async function showPortfolioChart() {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -555,6 +567,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Shows a popup with the performance of a single holding.
 	async function showHoldingChart(info: any) {
 		try {
 			let days = Utils.dayRangeArray(Utils.previousYear(new Date()), new Date());
@@ -581,6 +594,7 @@ export default function Holdings({ navigation }: any) {
 			Utils.notify(theme, "Something went wrong... - EM56");
 		}
 	}
+
 	function showModal(dates: any, args: any) {
 		Keyboard.dismiss();
 
@@ -627,6 +641,7 @@ export default function Holdings({ navigation }: any) {
 		setModal(false);
 	}
 
+	// Shows the profit and loss performance of the user's portfolio (or a single holding) in multiple timeframes.
 	function getModalStats(values: any) {
 		let settings: any = store.getState().settings.settings;
 
@@ -708,6 +723,7 @@ export default function Holdings({ navigation }: any) {
 		setModalStats(stats);
 	}
 
+	// Populates the holdings "FlatList".
 	async function populateHoldingsList() {
 		// Used to tell the user their stock API key doesn't work.
 		let errorRow = false;
@@ -802,6 +818,7 @@ export default function Holdings({ navigation }: any) {
 		}
 	}
 
+	// Generates rows to be rendered by the holdings "FlatList".
 	function createHoldingsListRows(marketCryptoData: any, marketStocksData: any, sortedData: any, sortedOrder: any, currency: string) {
 		let output: any = { rows:[], totalValue:0 };
 
@@ -872,6 +889,7 @@ export default function Holdings({ navigation }: any) {
 		return output;
 	}
 
+	// Filters holdings by the asset type (crypto or stock).
 	function filterHoldingsByType(holdingsData: any) {
 		let holdingsCrypto: any = {};
 		let holdingsStocks: any = {};
@@ -889,6 +907,7 @@ export default function Holdings({ navigation }: any) {
 		return { crypto:holdingsCrypto, stocks:holdingsStocks };
 	}
 
+	// Returns the symbol of every holding.
 	function getHoldingSymbols(holdings: any) {
 		let symbols: any = [];
 
@@ -899,6 +918,7 @@ export default function Holdings({ navigation }: any) {
 		return symbols;
 	}
 
+	// Sorts holdings by their value (price multiplied by amount).
 	function sortHoldingsDataByValue(holdingsCryptoData: any, holdingsStocksData: any, marketCryptoData: any, marketStocksData: any) {
 		let combined = { ...holdingsCryptoData, ...holdingsStocksData };
 		let sorted: any = {};
@@ -936,6 +956,7 @@ export default function Holdings({ navigation }: any) {
 		return { holdingsData:sorted, order:order };
 	}
 
+	// Converts activity data to holdings.
 	function parseActivityAsHoldings() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1004,6 +1025,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
+	// Loops over the user's stock holdings and fetches their historical market data.
 	function fetchHoldingsStocksHistoricalData(days: any, ids: any = null, symbols: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1073,6 +1095,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
+	// Loops over the user's crypto holdings and fetches their historical market data.
 	function fetchHoldingsCryptoHistoricalData(ids: any = null) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1125,6 +1148,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
+	// Gets the user's holding data on the earliest activity date.
 	function getInitialDatedValue(activities: any, futureDays: any) {
 		let transactionIDs = Object.keys(activities);
 
@@ -1193,6 +1217,7 @@ export default function Holdings({ navigation }: any) {
 		return last;
 	}
 
+	// Loops over every day of the past year (or since the first activity's date), and determines which assets the user had on each day, and how much they were worth on said day.
 	function parseActivityAsDatedValue(days: any, prices: any, activities: any) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -1371,6 +1396,7 @@ export default function Holdings({ navigation }: any) {
 		});
 	}
 
+	// Initially, when the days of the past year (or since the first activity's date) are generated, they have a property called "modified" that is set to false. When the data of each day is updated, their "modified" property is set to true. Days with no data would not be modified, and are therefore removed from the chart data to avoid missing data.
 	function filterHoldingsPerformanceData(dates: any) {
 		Object.keys(dates).map(date => {
 			let day = dates[date];
@@ -1382,6 +1408,7 @@ export default function Holdings({ navigation }: any) {
 		return dates;
 	}
 
+	// Generates holdings chart data.
 	function parseHoldingsDateData(data: any) {
 		let monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -1421,6 +1448,7 @@ export default function Holdings({ navigation }: any) {
 		return { labels:labels, tooltips:tooltips, values:values, months:months };
 	}
 
+	// Returns all activities with a given asset ID.
 	function filterActivitiesByAssetID(activities: any, assetID: any) {
 		Object.keys(activities).map(txID => {
 			if(activities[txID].activityAssetID !== assetID) {
@@ -1432,6 +1460,7 @@ export default function Holdings({ navigation }: any) {
 	}
 }
 
+// The crypto market data is initially indexed using numbers. This function indexes each coin's data using its symbol.
 export function sortMarketDataByCoinID(marketData: any) {
 	let prices: any = {};
 
@@ -1443,6 +1472,7 @@ export function sortMarketDataByCoinID(marketData: any) {
 	return prices;
 }
 
+// Checks whether or not an asset is in the user's holdings.
 export async function assetHoldingExists(id: string) {
 	let userID = await AsyncStorage.getItem("userID");
 	let token = await AsyncStorage.getItem("token");

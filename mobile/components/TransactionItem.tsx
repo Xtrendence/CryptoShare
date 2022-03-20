@@ -3,6 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors, GlobalStyle } from "../styles/Global";
 import Utils from "../utils/Utils";
 
+// Component used for each row on the "Dashboard" page's transactions "FlatList".
 export default function Item({ info, theme, settings, showTransactionPopup }: any) {	
 	let hasNote = (!Utils.empty(info.transactionNotes) && info.transactionNotes !== "-");
 

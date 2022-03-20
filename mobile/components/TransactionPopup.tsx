@@ -6,6 +6,7 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "../styles/Dashboard";
 import { Colors } from "../styles/Global";
 
+// Component used to add and update transactions.
 export default function TransactionPopup({ popupRef, changeContent, theme, setDate, action, showConfirmationPopup, hidePopup, updateTransaction, createTransaction }: any) {
 	return (
 		<View style={styles.popupContent}>

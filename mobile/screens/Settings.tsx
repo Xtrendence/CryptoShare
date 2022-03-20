@@ -24,6 +24,7 @@ import { fetchBudget, fetchTransaction, fetchWatchlist, setDefaultBudgetData, wa
 import { fetchActivity } from "./Activity";
 import { assetHoldingExists } from "./Holdings";
 
+// The "Settings" page of the app.
 export default function Settings({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -36,6 +37,7 @@ export default function Settings({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
+	// Stores the "Settings" page's popup data.
 	const popupRef = useRef<any>({
 		currentPassword: "",
 		newPassword: "",
@@ -45,6 +47,7 @@ export default function Settings({ navigation }: any) {
 
 	const [search, setSearch] = useState<string>("");
 	
+	// Used to handle back button events.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
@@ -380,6 +383,7 @@ export default function Settings({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Opens a link with the user's default browser.
 	function openURL(url: string) {
 		Linking.openURL(url).catch(error => {
 			console.log(error);
@@ -387,6 +391,7 @@ export default function Settings({ navigation }: any) {
 		});
 	}
 
+	// Prompts the user to pick a CSV or JSON file.
 	function pickFile() {
 		return new Promise((resolve, reject) => {
 			try {
@@ -408,6 +413,7 @@ export default function Settings({ navigation }: any) {
 		});
 	}
 
+	// Resets the user's data for a given category.
 	async function resetData(type: string, showConfirmation: boolean) {
 		if(showConfirmation) {
 			showConfirmationPopup("resetData", { type:type });
@@ -458,6 +464,7 @@ export default function Settings({ navigation }: any) {
 		}
 	}
 
+	// Parses the content of a CSV or JSON file, and imports the relevant data.
 	async function importData(type: string) {
 		try {
 			let file: any = await pickFile() || {};
@@ -683,6 +690,7 @@ export default function Settings({ navigation }: any) {
 		}
 	}
 
+	// Fetches the user's data for a given category, and exports it as a CSV or JSON file.
 	async function exportData(type: string) {
 		try {
 			setLoading(true);
@@ -845,6 +853,7 @@ export default function Settings({ navigation }: any) {
 		setPopupContent(null);
 	}
 
+	// Shows a confirmation popup to avoid the user accidentally performing a "destructive" action.
 	function showConfirmationPopup(action: string, args: any) {
 		Keyboard.dismiss();
 		setPopup(true);
@@ -870,6 +879,7 @@ export default function Settings({ navigation }: any) {
 		setPopupContent(content);
 	}
 
+	// Processes a desired action, usually passed by a popup component.
 	async function processAction(action: string, args: any) {
 		try {
 			hidePopup();
@@ -899,6 +909,7 @@ export default function Settings({ navigation }: any) {
 		}
 	}
 
+	// Shows a popup to make sure the user actually wants to delete their account.
 	function showDeleteAccountPopup(popupNumber: number) {
 		Keyboard.dismiss();
 		setPopup(true);
@@ -923,6 +934,7 @@ export default function Settings({ navigation }: any) {
 			);
 		};
 
+		// Processes the user's intent to delete their account. On the first try, it shows a confirmation popup, on the second, it deletes their account.
 		async function processAccountPopupAction(popupNumber: number) {
 			if(popupNumber === 1) {
 				showDeleteAccountPopup(2);
@@ -953,6 +965,7 @@ export default function Settings({ navigation }: any) {
 		setPopupContent(content);
 	}
 
+	// Shows a popup the user can change their password through.
 	async function showPasswordPopup() {
 		popupRef.current.currentPassword = "";
 		popupRef.current.newPassword = "";
@@ -1011,6 +1024,7 @@ export default function Settings({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Copies a crypto address to the user's clipboard.
 	function copyAddress(symbol: string) {
 		let addresses: any = {
 			ADA: "addr1qyh9ejp2z7drzy8vzpyfeuvzuej5t5tnmjyfpfjn0vt722zqupdg44rqfw9fd8jruaez30fg9fxl34vdnncc33zqwhlqn37lz4",
@@ -1028,6 +1042,7 @@ export default function Settings({ navigation }: any) {
 		ToastAndroid.show("Copied " + symbol + " address to clipboard.", 5000);
 	}
 
+	// Changes the user's password.
 	async function changePassword() {
 		try {
 			let currentPassword = popupRef.current.currentPassword;
@@ -1077,6 +1092,7 @@ export default function Settings({ navigation }: any) {
 		}
 	}
 
+	// Shows a popup that allows the user to set their stock API key.
 	async function showStockAPIPopup() {
 		popupRef.current.stockAPIKey = await AsyncStorage.getItem("keyAPI") || "";
 
@@ -1113,6 +1129,7 @@ export default function Settings({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Updates the user's stock API key.
 	async function setStockAPIKey(keyAPI: string) {
 		hidePopup();
 
@@ -1126,6 +1143,7 @@ export default function Settings({ navigation }: any) {
 		Utils.notify(theme, "Stock API key has been removed.");
 	}
 
+	// Logs the user out of their account.
 	async function logout() {
 		let api = await AsyncStorage.getItem("api");
 		let userID = await AsyncStorage.getItem("userID");
@@ -1144,6 +1162,7 @@ export default function Settings({ navigation }: any) {
 		});
 	}
 
+	// Finishes the logout procedure by removing the user's credentials, and navigating to the "Login" page.
 	async function finishLogout() {
 		await Utils.removeAccountInfo();
 		navigation.navigate("Login");

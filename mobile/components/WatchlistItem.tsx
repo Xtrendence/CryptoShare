@@ -4,6 +4,7 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
+// Component used for each row of the "Dashboard" page's watchlist "FlatList" and "Market" page's stock "FlatList".
 export default function Item({ info, theme, settings, page, onPress }: any) {
 	return (
 		<TouchableOpacity

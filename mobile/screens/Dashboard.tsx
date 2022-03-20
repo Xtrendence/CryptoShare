@@ -22,6 +22,7 @@ import { sortMarketDataByCoinID } from "./Holdings";
 import { parseMarketData } from "./Market";
 import { actionBarHeight, barHeight, screenHeight, statusBarHeight } from "../styles/NavigationBar";
 
+// The app's "Dashboard" page.
 export default function Dashboard({ navigation }: any) {
 	const dispatch = useDispatch();
 	const { theme } = useSelector((state: any) => state.theme);
@@ -35,6 +36,7 @@ export default function Dashboard({ navigation }: any) {
 	const [popup, setPopup] = useState<boolean>(false);
 	const [popupContent, setPopupContent] = useState<any>(null);
 
+	// Used to store the popup data.
 	const popupRef = useRef<any>({
 		budget: {
 			food: "",
@@ -60,6 +62,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	});
 
+	// Used to determine which month's budget data is displayed.
 	const dateRef = useRef<any>({
 		month: new Date().getMonth(),
 		year: new Date().getFullYear()
@@ -96,6 +99,7 @@ export default function Dashboard({ navigation }: any) {
 	const [chartData, setChartData] = useState<any>();
 	const [chartSegments, setChartSegments] = useState<any>(1);
 
+	// Component rendered by the transaction "FlatList".
 	const renderItemTransaction = ({ item }: any) => {
 		let info = transactionRows[item];
 		info.showDatePicker = popupRef.current.transaction.showDatePicker;
@@ -105,6 +109,7 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 
+	// Component rendered by the watchlist "FlatList".
 	const renderItemWatchlist = ({ item }: any) => {
 		let info = watchlistRows[item];
 
@@ -113,6 +118,7 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 	
+	// Used to handle back button events.
 	useFocusEffect(Utils.backHandler(navigation));
 
 	useEffect(() => {
@@ -147,6 +153,7 @@ export default function Dashboard({ navigation }: any) {
 		};
 	}, []);
 
+	// When the "query" variable's value is changed, the transactions are automatically searched through if there are less than 100 of them.
 	useEffect(() => {
 		if(Object.keys(transactionRows).length < 100 || Utils.empty(query)) {
 			searchTransactions(query);
@@ -248,6 +255,7 @@ export default function Dashboard({ navigation }: any) {
 		</ImageBackground>
 	);
 
+	// Shows the price chart of an asset.
 	async function showMarketModal(assetID: string, assetSymbol: string, currentPrice: number, info: any, type: string) {
 		Keyboard.dismiss();
 
@@ -343,7 +351,8 @@ export default function Dashboard({ navigation }: any) {
 		populateWatchlist();
 	}
 
-	function getRows(filteredRows: any, activityRows: any, query: any) {
+	// Determines whether to show all transaction rows or only ones the user has searched for.
+	function getRows(filteredRows: any, transactionRows: any, query: any) {
 		if(!Utils.empty(query) && Utils.empty(filteredRows)) {
 			return null;
 		}
@@ -352,9 +361,10 @@ export default function Dashboard({ navigation }: any) {
 			return Object.keys(filteredRows);
 		}
 		
-		return Object.keys(activityRows);
+		return Object.keys(transactionRows);
 	}
 
+	// Given a search query, searches through the user's transaction data.
 	function searchTransactions(query: string) {
 		let settings: any = store.getState().settings.settings;
 
@@ -382,6 +392,7 @@ export default function Dashboard({ navigation }: any) {
 		setFilteredRows(filtered);
 	}
 
+	// Populates the budget "ScrollView".
 	async function populateBudgetList(recreate: boolean) {
 		try {
 			if(recreate) {
@@ -421,6 +432,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Populates the watchlist "FlatList".
 	async function populateWatchlist() {
 		try {
 			let settings: any = store.getState().settings.settings;
@@ -464,6 +476,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Populates the transaction "FlatList".
 	async function listTransactions() {
 		try {
 			let transactions: any = await fetchTransaction() || {};
@@ -525,6 +538,7 @@ export default function Dashboard({ navigation }: any) {
 		setTransactionRows({});
 	}
 
+	// Shows the popup used to create a transaction.
 	function showAddPopup() {
 		let info = {
 			transactionID: "",
@@ -540,6 +554,7 @@ export default function Dashboard({ navigation }: any) {
 		showTransactionPopup(info, "create");
 	}
 
+	// Shows the popup used to edit the budget data.
 	function showEditPopup() {
 		let content = () => {
 			return (
@@ -565,6 +580,7 @@ export default function Dashboard({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Shows the popup used to modify the budget percentages for each category.
 	async function showBudgetPopup() {
 		try {
 			setLoading(true);
@@ -699,6 +715,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Shows the popup used to modify the user's income.
 	async function showIncomePopup() {
 		try {
 			setLoading(true);
@@ -753,6 +770,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Updates the user's income.
 	async function updateIncome() {
 		try {
 			setLoading(true);
@@ -798,6 +816,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Updates the user's budget data.
 	async function updateBudget() {
 		try {
 			setLoading(true);
@@ -854,6 +873,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Validates budget popup data.
 	function parseBudgetPopupData(food: any, housing: any, transport: any, entertainment: any, insurance: any, savings: any, other: any) {
 		if(isNaN(food) || parseFloat(food) < 0) {
 			return { error:"Budget for food has to be zero or greater." };
@@ -898,6 +918,7 @@ export default function Dashboard({ navigation }: any) {
 		return { food:food, housing:housing, transport:transport, entertainment:entertainment, insurance:insurance, savings:savings, other:other };
 	}
 
+	// Generates a pie chart to visualize the user's budget allocation.
 	function generatePieChart(theme: string, budgetData: any, backgroundColors: any) {
 		let settings: any = store.getState().settings.settings;
 
@@ -964,6 +985,7 @@ export default function Dashboard({ navigation }: any) {
 		);
 	}
 
+	// Shows a popup to let the user choose which month's budget data they want to see.
 	function showMonthPopup() {
 		let content = () => {
 			return (
@@ -994,6 +1016,7 @@ export default function Dashboard({ navigation }: any) {
 		showPopup(content);
 	}
 
+	// Shows a popup to let the user choose which year's budget data they want to see.
 	function showYearPopup() {
 		let currentYear = new Date().getFullYear();
 		let years = [currentYear, currentYear - 1, currentYear - 2, currentYear - 3, currentYear - 4, currentYear - 5];
@@ -1039,6 +1062,7 @@ export default function Dashboard({ navigation }: any) {
 		populateBudgetList(false);
 	}
 
+	// Calculates and shows the user how much of their budget they've used for each category.
 	function generateBudgetStats(theme: string, budgetData: any, transactionData: any, backgroundColors: any) {
 		transactionData = filterTransactionsByMonth(transactionData, dateRef.current.month, dateRef.current.year);
 
@@ -1090,6 +1114,7 @@ export default function Dashboard({ navigation }: any) {
 		setList(list);
 	}
 
+	// Shows the popup used to create and update transactions.
 	function showTransactionPopup(info: any, action: string) {
 		try {
 			setLoading(true);
@@ -1123,6 +1148,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Shows a confirmation popup so the user doesn't accidentally perform "destructive" actions.
 	function showConfirmationPopup() {
 		Keyboard.dismiss();
 		hidePopup();
@@ -1154,6 +1180,7 @@ export default function Dashboard({ navigation }: any) {
 		changeContent();
 	}
 	
+	// Updates the transaction popup's components.
 	function changeContent() {
 		let info = {
 			transactionID: popupRef.current.transaction.transactionID,
@@ -1169,6 +1196,7 @@ export default function Dashboard({ navigation }: any) {
 		showTransactionPopup(info, info.action);
 	}
 
+	// Deletes a transaction.
 	async function deleteTransaction() {
 		try {
 			setLoading(true);
@@ -1193,6 +1221,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Updates a transaction.
 	async function updateTransaction() {
 		try {
 			setLoading(true);
@@ -1229,6 +1258,7 @@ export default function Dashboard({ navigation }: any) {
 		}
 	}
 
+	// Creates a transaction.
 	async function createTransaction() {
 		try {
 			setLoading(true);
@@ -1266,6 +1296,7 @@ export default function Dashboard({ navigation }: any) {
 	}
 }
 
+// Calculates how much money the user has earned or spent based on their transactions.
 export function parseTransactionData(transactionData: any) {
 	let categories = Object.keys(Utils.defaultBudgetData.categories);
 	let parsed: any = {};
@@ -1302,6 +1333,7 @@ export function parseTransactionData(transactionData: any) {
 	return parsed;
 }
 
+// Filters transactions based on the year and month the user has chosen.
 export function filterTransactionsByMonth(transactionData: any, month: any, year: any) {
 	let filtered: any = {};
 
@@ -1322,28 +1354,30 @@ export function filterTransactionsByMonth(transactionData: any, month: any, year
 	return filtered;
 }
 
+// Resets the user's budget data.
 export function setDefaultBudgetData() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				let userID = await AsyncStorage.getItem("userID");
-				let token = await AsyncStorage.getItem("token");
-				let key = await AsyncStorage.getItem("key") || "";
-				let api = await AsyncStorage.getItem("api");
+	return new Promise(async (resolve, reject) => {
+		try {
+			let userID = await AsyncStorage.getItem("userID");
+			let token = await AsyncStorage.getItem("token");
+			let key = await AsyncStorage.getItem("key") || "";
+			let api = await AsyncStorage.getItem("api");
 
-				let requests = new Requests(api);
+			let requests = new Requests(api);
 
-				let encrypted = CryptoFN.encryptAES(JSON.stringify(Utils.defaultBudgetData), key);
+			let encrypted = CryptoFN.encryptAES(JSON.stringify(Utils.defaultBudgetData), key);
 
-				await requests.updateBudget(token, userID, encrypted);
+			await requests.updateBudget(token, userID, encrypted);
 
-				resolve(null);
-			} catch(error) {
-				console.log(error);
-				reject(error);
-			}
-		});
-	}
+			resolve(null);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
 
+// Searches through the user's watchlist data based on a provided symbol and asset type, and returns the "watchlistID".
 export function getWatchlistIDBySymbol(watchlist: any, symbol: string, type: string) {
 	try {
 		let result = { exists:false, id:null };
@@ -1363,6 +1397,7 @@ export function getWatchlistIDBySymbol(watchlist: any, symbol: string, type: str
 	}
 }
 
+// Validates transaction data.
 export function validateTransactionData(amount: any, type: any, category: any, date: any, notes: any) {
 	try {
 		type = type.toLowerCase();
@@ -1397,6 +1432,7 @@ export function validateTransactionData(amount: any, type: any, category: any, d
 	}
 }
 
+// Fetches, decrypts, and returns the user's budget data.
 export function fetchBudget() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1436,6 +1472,7 @@ export function fetchBudget() {
 	});
 }
 
+// Fetches, decrypts, and returns the user's transaction data.
 export function fetchTransaction() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1471,6 +1508,7 @@ export function fetchTransaction() {
 	});
 }
 
+// Sorts transaction data by date.
 function sortTransactionDataByDate(transactionData: any) {
 	let sorted: any = {};
 	let sortedKeys: any = [];
@@ -1492,6 +1530,7 @@ function sortTransactionDataByDate(transactionData: any) {
 	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
 }
 
+// Returns the watchlist IDs of every watchlist row.
 export function getWatchlistIDs(watchlist: any) {
 	let ids: any = [];
 
@@ -1502,6 +1541,7 @@ export function getWatchlistIDs(watchlist: any) {
 	return ids;
 }
 
+// Returns the asset symbols of every watchlist row.
 export function getWatchlistSymbols(watchlist: any) {
 	let symbols: any = [];
 
@@ -1512,6 +1552,7 @@ export function getWatchlistSymbols(watchlist: any) {
 	return symbols;
 }
 
+// Filters watchlist data by asset type (crypto or stock).
 export function filterWatchlistByType(watchlistData: any) {
 	let watchlistCrypto: any = {};
 	let watchlistStocks: any = {};
@@ -1529,6 +1570,7 @@ export function filterWatchlistByType(watchlistData: any) {
 	return { crypto:watchlistCrypto, stocks:watchlistStocks };
 }
 
+// Checks whether an asset is in the user's watchlist based on the asset ID.
 export function watchlistExists(watchlist: any, id: string) {
 	try {
 		if(Utils.empty(id)) {
@@ -1551,6 +1593,7 @@ export function watchlistExists(watchlist: any, id: string) {
 	}
 }
 
+// Returns the "watchlistID" of a particular asset in the user's watchlist data.
 export function getWatchlistID(watchlist: any, assetID: string) {
 	try {
 		if(Utils.empty(assetID)) {
@@ -1573,6 +1616,7 @@ export function getWatchlistID(watchlist: any, assetID: string) {
 	}
 }
 
+// Generates watchlist "FlatList" rows.
 export function createWatchlistListRows(marketCryptoData: any, marketStocksData: any, watchlistData: any, currency: string) {
 	let rows: any = {};
 
@@ -1633,6 +1677,7 @@ export function createWatchlistListRows(marketCryptoData: any, marketStocksData:
 	return rows;
 }
 
+// Fetches, decrypts, and returns the user's watchlist data.
 export function fetchWatchlist() {
 	return new Promise(async (resolve, reject) => {
 		try {

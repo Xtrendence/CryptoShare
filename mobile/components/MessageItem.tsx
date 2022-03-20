@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Colors, GlobalStyle } from "../styles/Global";
 import Utils from "../utils/Utils";
 
+// Component used for each chat bubble on the "Chat Bot" page's "FlatList".
 export default function Item({ theme, message }: any) {
 	let from = Utils.capitalizeFirstLetter(message.from);
 

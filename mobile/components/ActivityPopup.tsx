@@ -6,6 +6,7 @@ import styles from "../styles/Activity";
 import { Colors } from "../styles/Global";
 import Utils from "../utils/Utils";
 
+// Popup component for creating and updating activities.
 export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
 	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
@@ -209,6 +210,7 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 		setShowDatePicker(false);
 	}
 
+	// Since the input data provided by the user is stored in a "ref", the state of the component needs to be updated when the data is changed so that the UI can be re-rendered.
 	function changeContent() {
 		let info = popupRef.current.activity;
 

@@ -4,6 +4,7 @@ import { createStyle } from "../utils/StyleSheet";
 import { Colors, GlobalStyle } from "./Global";
 import { actionBarHeight, barHeight, screenHeight, screenWidth, statusBarHeight, windowHeight } from "./NavigationBar";
 
+// Gradient used for the market chart.
 export const gradientColor = () => {
 	return (
 		<SVGLinearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">

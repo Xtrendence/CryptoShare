@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createSlice } from "@reduxjs/toolkit";
 import Utils from "../../utils/Utils";
 
+// Redux "slice" for storing user settings.
 export const settingsSlice = createSlice({
 	name: "settings",
 	initialState: {

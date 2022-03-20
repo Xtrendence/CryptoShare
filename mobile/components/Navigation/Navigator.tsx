@@ -12,8 +12,10 @@ import Market from "../../screens/Market";
 import Settings from "../../screens/Settings";
 import NavigationBar from "./NavigationBar";
 
+// The "Stack" navigator is used instead of a bottom tab one so that a custom bottom navbar can be used.
 const Stack = createStackNavigator();
 
+// Adds a fade transition effect when switching between pages.
 const screenOptions = {
 	headerShown:false, 
 	cardStyleInterpolator: ({ current }: any) => ({
@@ -27,6 +29,7 @@ export default function Navigator() {
 	const { theme } = useSelector((state: any) => state.theme);
 	const { settings } = useSelector((state: any) => state.settings);
 	
+	// Used to keep track of the user's navigation history in the app, and which page is active.
 	const navigationRef = React.useRef<any>();
 	const routeNameRef = React.useRef<any>();
 
@@ -50,6 +53,7 @@ export default function Navigator() {
 		</NavigationContainer>
 	);
 
+	// Updates the app's state to set the currently active page. When the theme is changed, navigating to a different page can result in the status bar icons and text not being updated, so this is done each time the user navigates to a different page.
 	async function checkState() {
 		TransparentStatusAndNavigationBar.init();
 

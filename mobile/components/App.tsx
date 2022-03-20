@@ -10,6 +10,7 @@ import Navigator from "./Navigation/Navigator";
 TransparentStatusAndNavigationBar.init();
 TransparentStatusAndNavigationBar.setBarsStyle(true, "light-content");
 
+// The entry point of the app. The "Provider" component of React Redux is used to pass down the state of the app to all other components. The state contains data such as the theme of the app, and other user settings.
 export default function App() {
 	return (
 		<Provider store={store}>

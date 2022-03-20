@@ -4,6 +4,7 @@ import { Colors, GlobalStyle } from "../styles/Global";
 import { screenWidth } from "../styles/NavigationBar";
 import Utils from "../utils/Utils";
 
+// Component used for each row of the "Market" page's "FlatList".
 export default function Item({ info, showModal, theme, settings }: any) {
 	return (
 		<TouchableOpacity onPress={() => showModal(info.coinID, info.symbol, info.price, info, "crypto")} style={[styles.itemCard, styles[`itemCard${theme}`]]}>

@@ -3,6 +3,7 @@ import Requests, { cryptoAPI } from "./Requests";
 import Utils from "./Utils";
 
 export default class Stock {
+	// Fetches the market data of one or more stock assets.
 	static async fetchStockPrice(currency: string, symbols: any) {
 		try {
 			let userID = await AsyncStorage.getItem("userID");
@@ -46,6 +47,7 @@ export default class Stock {
 		}
 	}
 
+	// Fetches the historical stock market data of an asset.
 	static async fetchStockHistorical(currency: string, assetSymbol: string) {
 		try {
 			let userID = await AsyncStorage.getItem("userID");
@@ -81,6 +83,7 @@ export default class Stock {
 		}
 	}
 
+	// Generates chart data for a stock asset.
 	static parseHistoricalStockData(timestamps: any, prices: any) {
 		let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -118,6 +121,7 @@ export default class Stock {
 		return parsed;
 	}
 
+	// Fetches currency exchange rates.
 	static async fetchExchangeRates() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -146,6 +150,7 @@ export default class Stock {
 		});
 	}
 
+	// Converts the value of one currency to another (for example, GBP to USD).
 	static async convertCurrency(from: string, to: string, value: number, exchangeRates = null) {
 		try {
 			if(from === to) {
@@ -178,6 +183,7 @@ export default class Stock {
 		}
 	}
 
+	// Converts the price of a stock from one currency to another.
 	static async convertStockPrice(currency: string, data: any) {
 		let exchangeRates: any = await this.fetchExchangeRates();
 
@@ -195,6 +201,7 @@ export default class Stock {
 		return data;
 	}
 
+	// Converts the historical prices of a stock from one currency to another.
 	static async convertStockHistorical(currency: string, data: any) {
 		let exchangeRates: any = await this.fetchExchangeRates();
 
@@ -212,6 +219,7 @@ export default class Stock {
 		return data;
 	}
 
+	// Converts historical stock market data to match the format of historical crypto market data (for example, stocks aren't traded on weekends, so there's only 5 data points per week).
 	static parseStockHistoricalDataAsCrypto(days: any, historicalData: any) {
 		let parsed = [];
 		let parsedObject: any = {};

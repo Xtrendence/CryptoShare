@@ -3,6 +3,7 @@ import { cryptoAPI } from "./Requests";
 import Utils from "./Utils";
 
 export default class CryptoFinder {
+	// Returns a crypto asset's ID or a list of matching assets.
 	static async getCoin(args: any) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -27,6 +28,7 @@ export default class CryptoFinder {
 		});
 	}
 
+	// Fetches every crypto's symbol and ID.
 	static async fetchCoinList() {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -61,6 +63,7 @@ export default class CryptoFinder {
 		});
 	}
 
+	// Finds a crypto asset using its symbol.
 	static findCryptoBySymbol(coins: any, symbol: string, retry: boolean): any {
 		let matches: any = [];
 
@@ -83,6 +86,7 @@ export default class CryptoFinder {
 		}
 	}
 
+	// Finds a crypto asset using its ID.
 	static findCryptoByID(coins: any, id: string, retry: boolean): any {
 		let values = Object.values(coins);
 		let symbols: any = {};
