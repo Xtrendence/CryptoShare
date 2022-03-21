@@ -10,6 +10,10 @@
 
 This is a piece of university coursework as part of my final year project.
 
+### Set Up Instructions
+
+Please see the [following file](./SETUP.md) for set up instructions.
+
 ### Project Supervisor
 
 The supervisor for this project is [Shirley Atkinson](https://www.github.com/shirleyatkinson).
