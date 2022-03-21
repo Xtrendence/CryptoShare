@@ -3,6 +3,18 @@ let port = getPort();
 let urlAPI = `${getProtocol()}//${ip}:${port}/graphql`;
 let urlBot = urlAPI.replace("graphql", "");
 
+function getPublicKey() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			let keyRSA = await request("GET", urlAPI.replace("graphql", "keyRSA"), null, null);
+			resolve(keyRSA.publicKey);
+		} catch(error) {
+			console.log(error);
+			reject(error);
+		}
+	});
+}
+
 function userExists(username) {
 	let query = {
 		query: `{ 
@@ -13,14 +25,17 @@ function userExists(username) {
 	return request("POST", urlAPI, query, null);
 }
 
-function createAccount(username, password, key) {
+async function createAccount(username, password, key) {
+	let publicKey = await getPublicKey();
+	let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
+
 	let query = {
 		query: `mutation createUser($username: String!, $password: String!, $key: String!) {
 			createUser(username: $username, password: $password, key: $key)
 		}`,
 		variables: {
 			username: username,
-			password: password,
+			password: encryptedPassword,
 			key: key
 		}
 	};
@@ -28,10 +43,13 @@ function createAccount(username, password, key) {
 	return request("POST", urlAPI, query, null);
 }
 
-function login(username, password) {
+async function login(username, password) {
+	let publicKey = await getPublicKey();
+	let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
+
 	let body = {
 		username: username,
-		password: password
+		password: encryptedPassword
 	};
 
 	return request("POST", urlAPI.replace("graphql", "login"), body, null);
@@ -64,13 +82,17 @@ function verifyToken(userID, token) {
 	return request("POST", urlAPI.replace("graphql", "verifyToken"), body, null);
 }
 
-function changePassword(userID, token, key, currentPassword, newPassword) {
+async function changePassword(userID, token, key, currentPassword, newPassword) {
+	let publicKey = await getPublicKey();
+	let encryptedCurrentPassword = await CryptoFN.encryptRSA(currentPassword, publicKey);
+	let encryptedNewPassword = await CryptoFN.encryptRSA(newPassword, publicKey);
+
 	let body = {
 		userID: userID,
 		token: token,
 		key: key,
-		currentPassword: currentPassword,
-		newPassword: newPassword
+		currentPassword: encryptedCurrentPassword,
+		newPassword: encryptedNewPassword
 	};
 
 	return request("POST", urlAPI.replace("graphql", "changePassword"), body, null);

@@ -75,6 +75,18 @@ export default class Requests {
 		this.urlAPI = urlAPI;
 	}
 
+	getPublicKey() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let keyRSA = await request("GET", this.urlAPI.replace("graphql", "keyRSA"), null, null);
+				resolve(keyRSA.publicKey);
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
 	userExists(username) {
 		let query = {
 			query: `{ 
@@ -85,14 +97,17 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
-	createAccount(username, password, key) {
+	async createAccount(username, password, key) {
+		let publicKey = await getPublicKey();
+		let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
+
 		let query = {
 			query: `mutation createUser($username: String!, $password: String!, $key: String!) {
 				createUser(username: $username, password: $password, key: $key)
 			}`,
 			variables: {
 				username: username,
-				password: password,
+				password: encryptedPassword,
 				key: key
 			}
 		};
@@ -100,10 +115,13 @@ export default class Requests {
 		return request("POST", this.urlAPI, query, null);
 	}
 
-	login(username, password) {
+	async login(username, password) {
+		let publicKey = await getPublicKey();
+		let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
+
 		let body = {
 			username: username,
-			password: password
+			password: encryptedPassword
 		};
 
 		return request("POST", this.urlAPI.replace("graphql", "login"), body, null);
@@ -136,13 +154,17 @@ export default class Requests {
 		return request("POST", this.urlAPI.replace("graphql", "verifyToken"), body, null);
 	}
 
-	changePassword(userID, token, key, currentPassword, newPassword) {
+	async changePassword(userID, token, key, currentPassword, newPassword) {
+		let publicKey = await getPublicKey();
+		let encryptedCurrentPassword = await CryptoFN.encryptRSA(currentPassword, publicKey);
+		let encryptedNewPassword = await CryptoFN.encryptRSA(newPassword, publicKey);
+
 		let body = {
 			userID: userID,
 			token: token,
 			key: key,
-			currentPassword: currentPassword,
-			newPassword: newPassword
+			currentPassword: encryptedCurrentPassword,
+			newPassword: encryptedNewPassword
 		};
 
 		return request("POST", this.urlAPI.replace("graphql", "changePassword"), body, null);
