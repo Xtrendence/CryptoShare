@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Dimensions, FlatList, ImageBackground, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { Dimensions, FlatList, ImageBackground, Keyboard, KeyboardAvoidingView, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -194,7 +194,7 @@ export default function ChatBot({ navigation }: any) {
 			</SafeAreaView>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
-					<TouchableWithoutFeedback onPress={() => hidePopup()} style={styles.popupBackground}></TouchableWithoutFeedback>
+					<TouchableOpacity activeOpacity={1} onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
 						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], { padding:0 }]}>{popupContent}</View>
 					</View>
@@ -376,8 +376,12 @@ export default function ChatBot({ navigation }: any) {
 
 				await addMessage("user", message);
 
-				setTimeout(() => {
-					socket.emit("message", { userID:userID, token:token, message:message });
+				setTimeout(async () => {
+					let api = await AsyncStorage.getItem("api");
+					let requests = new Requests(api);
+					let publicKey = await requests.getPublicKey();
+					let encryptedMessage = await CryptoFN.encryptRSA(message, publicKey);
+					socket.emit("message", { userID:userID, token:token, message:encryptedMessage });
 				}, 500);
 			} catch(error) {
 				Utils.notify(theme, "Something went wrong... - EM15");

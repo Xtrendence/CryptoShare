@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { ImageBackground, Keyboard, Linking, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { ImageBackground, Keyboard, Linking, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toggle from "react-native-toggle-element";
@@ -373,7 +373,7 @@ export default function Settings({ navigation }: any) {
 			</ScrollView>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
-					<TouchableWithoutFeedback onPress={() => hidePopup()} style={styles.popupBackground}></TouchableWithoutFeedback>
+					<TouchableOpacity activeOpacity={1} onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
 						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`]]}>{popupContent}</View>
 					</View>

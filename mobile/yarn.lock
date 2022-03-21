@@ -8215,11 +8215,6 @@ node-fetch@^2.2.0, node-fetch@^2.6.0:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-forge@^0.10.0:
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/node-forge/-/node-forge-0.10.0.tgz#32dea2afb3e9926f02ee5ce8794902691a676bf3"
-  integrity sha512-PPmu8eEeG9saEUvI97fm4OYxXVB6bFvyNTyiUOBichBpFG8A1Ljw3bY62+5oOjDEMHRnd0Y7HQ+x7uzxOzC6JA==
-
 node-int64@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/node-int64/-/node-int64-0.4.0.tgz#87a9065cdb355d3182d8f94ce11188b825c68a3b"
@@ -9259,6 +9254,11 @@ react-native-restart@^0.0.22:
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/react-native-restart/-/react-native-restart-0.0.22.tgz#81fcb7f31e35951d85410c68b9556acf3ab88705"
   integrity sha512-XwCqAMAKsO8yCM3xACPFKvkDQZe41lcavOuO0gUEu803IuTLtciualCq/qs83ryRDCDh1jkXYRqFjsGjLMCN3Q==
+
+react-native-rsa-native@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-native-rsa-native/-/react-native-rsa-native-2.0.5.tgz#7db4aef49405bb5b5bcaea12b9dfd1b251c690ab"
+  integrity sha512-gwwvFSwGW5WKrpDyBQ/eTf1UrVABeAvMcT4YWemzPSUo6aHZs1kbBm2rXmwN5okhUzJsry5zjjz/qdx5GXRugQ==
 
 react-native-safe-area-context@3.1.9:
   version "3.1.9"

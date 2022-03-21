@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
-import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from "react-native";
+import { FlatList, ImageBackground, Keyboard, Modal, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from "react-native";
 import Pie from "react-native-pie";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
@@ -209,7 +209,7 @@ export default function Dashboard({ navigation }: any) {
 			<MarketPopup modal={marketModal} hideModal={hideMarketModal} loading={loading} setLoading={setLoading} theme={theme} settings={settings} chartVerticalLabels={chartVerticalLabels} chartData={chartData} chartLabels={chartLabels} chartSegments={chartSegments} labelsRef={labelsRef} modalInfo={modalInfo} modalType={modalType} modalDescription={modalDescription} page="Dashboard" watchlistData={modalData} populateList={populateWatchlist}/>
 			<Modal visible={popup} onRequestClose={hidePopup} transparent={true}>
 				<View style={styles.popup}>
-					<TouchableWithoutFeedback onPress={() => hidePopup()} style={styles.popupBackground}></TouchableWithoutFeedback>
+					<TouchableOpacity activeOpacity={1} onPress={() => hidePopup()} style={styles.popupBackground}></TouchableOpacity>
 					<View style={styles.popupForeground}>
 						<View style={[styles.popupWrapper, styles[`popupWrapper${theme}`], { padding:0 }]}>{popupContent}</View>
 					</View>

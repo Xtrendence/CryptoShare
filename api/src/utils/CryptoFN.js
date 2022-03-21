@@ -63,7 +63,12 @@ module.exports = class CryptoFN {
 	static decryptRSA(ciphertext, privateKey) {
 		return new Promise((resolve) => {
 			privateKey = forge.pki.privateKeyFromPem(privateKey);
-			resolve(privateKey.decrypt(atob(ciphertext), "RSA-OAEP"));
+			
+			try {
+				resolve(privateKey.decrypt(atob(ciphertext), "RSA-OAEP"));
+			} catch(error) {
+				resolve(privateKey.decrypt(atob(ciphertext)));
+			}
 		});
 	}
 

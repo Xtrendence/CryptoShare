@@ -1,8 +1,8 @@
 const CryptoJS = require("react-native-crypto-js");
-const forge = require("node-forge");
 const atob = require("atob");
 const btoa = require("btoa");
 
+import { RSA } from "react-native-rsa-native";
 import Aes from "react-native-aes-crypto";
 
 /**
@@ -43,10 +43,7 @@ export default class CryptoFN {
 	 * @returns {Promise} - A Base64 encoded version of the ciphertext.
 	 */
 	static encryptRSA(plaintext, publicKey) {
-		return new Promise((resolve) => {
-			publicKey = forge.pki.publicKeyFromPem(publicKey);
-			resolve(btoa(publicKey.encrypt(plaintext, "RSA-OAEP")));
-		});
+		return RSA.encrypt(plaintext, publicKey);
 	}
 
 	/**
@@ -55,10 +52,7 @@ export default class CryptoFN {
 	 * @returns {Promise} - The plaintext.
 	 */
 	static decryptRSA(ciphertext, privateKey) {
-		return new Promise((resolve) => {
-			privateKey = forge.pki.privateKeyFromPem(privateKey);
-			resolve(privateKey.decrypt(atob(ciphertext), "RSA-OAEP"));
-		});
+		return RSA.decrypt(ciphertext, privateKey);
 	}
 
 	/**
@@ -86,24 +80,6 @@ export default class CryptoFN {
 			} catch(error) {
 				reject(error);
 			}
-		});
-	}
-
-	/**
-	 * Generate a public and private RSA key pair.
-	 * @returns {Promise} - An object containing both the public and private key.
-	 */
-	static generateRSAKeys() {
-		let rsa = forge.pki.rsa;
-
-		return new Promise((resolve, reject) => {
-			rsa.generateKeyPair({ bits:2048, workers:-1 }, (error, keys) => {
-				if(error) {
-					reject(error);
-				} else {
-					resolve({ publicKey:forge.pki.publicKeyToPem(keys.publicKey), privateKey:forge.pki.privateKeyToPem(keys.privateKey) });
-				}
-			});
 		});
 	}
 }
