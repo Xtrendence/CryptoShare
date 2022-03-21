@@ -1,3 +1,4 @@
+// Returns a crypto asset's ID or a list of matching assets.
 async function getCoin(args) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -22,6 +23,7 @@ async function getCoin(args) {
 	});
 }
 
+// Fetches every crypto's symbol and ID.
 async function fetchCoinList() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -56,6 +58,7 @@ async function fetchCoinList() {
 	});
 }
 
+// Finds a crypto asset using its symbol.
 function findCryptoBySymbol(coins, symbol, retry) {
 	let matches = [];
 
@@ -78,6 +81,7 @@ function findCryptoBySymbol(coins, symbol, retry) {
 	}
 }
 
+// Finds a crypto asset using its ID.
 function findCryptoByID(coins, id, retry) {
 	let values = Object.values(coins);
 	let symbols = {};
@@ -99,6 +103,7 @@ function findCryptoByID(coins, id, retry) {
 	}
 }
 
+// The crypto market data is initially indexed using numbers. This function indexes each coin's data using its symbol.
 function sortMarketDataByCoinID(marketData) {
 	let prices = {};
 
@@ -110,6 +115,7 @@ function sortMarketDataByCoinID(marketData) {
 	return prices;
 }
 
+// Generate crypto chart data.
 function parseHistoricalCryptoData(data) {
 	let labels = [];
 	let tooltips = [];

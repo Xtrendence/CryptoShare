@@ -1,3 +1,4 @@
+// Populate holdings list (on both the "Holdings" page, and the "Dashboard" page).
 async function populateHoldingsList(recreate, callback = null) {
 	if(getActivePage().id === "holdings-page" || getActivePage().id === "dashboard-page") {
 		let firstFetchHoldings = firstFetch.holdings;
@@ -136,6 +137,7 @@ async function populateHoldingsList(recreate, callback = null) {
 	}
 }
 
+// Removes the error row that is shown on the "Holdings" page when the user's stock API key isn't working.
 function removeHoldingsListErrorRow() {
 	let divError = divHoldingsList.getElementsByClassName("holdings-list-row error");
 	for(let i = 0; i < divError.length; i++) {
@@ -143,6 +145,7 @@ function removeHoldingsListErrorRow() {
 	}
 }
 
+// Creates the error row that is shown on the "Holdings" page when the user's stock API key isn't working.
 async function createHoldingsListErrorRow() {
 	let div = document.createElement("div");
 	div.id = "holdings-list-error-row";
@@ -189,6 +192,7 @@ async function createHoldingsListErrorRow() {
 	return div;
 }
 
+// Sorts holdings by value (price multiplied by amount).
 function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketCryptoData, marketStocksData) {
 	let combined = { ...holdingsCryptoData, ...holdingsStocksData };
 	let sorted = {};
@@ -236,6 +240,7 @@ function sortHoldingsDataByValue(holdingsCryptoData, holdingsStocksData, marketC
 	return { holdingsData:sorted, order:order };
 }
 
+// Returns the symbols of assets in the user's holdings.
 function getHoldingSymbols(holdings) {
 	let symbols = [];
 
@@ -246,6 +251,7 @@ function getHoldingSymbols(holdings) {
 	return symbols;
 }
 
+// Separates holdings by asset type ("crypto" or "stock").
 function filterHoldingsByType(holdingsData) {
 	let holdingsCrypto = {};
 	let holdingsStocks = {};
@@ -263,6 +269,7 @@ function filterHoldingsByType(holdingsData) {
 	return { crypto:holdingsCrypto, stocks:holdingsStocks };
 }
 
+// Creates holding list row elements.
 function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, sortedOrder, currency) {
 	let output = { rows:[], totalValue:0 };
 
@@ -393,6 +400,7 @@ function createHoldingsListRows(marketCryptoData, marketStocksData, sortedData, 
 	return output;
 }
 
+// Add event to holding list rows to show the individual holding's performance chart.
 function addHoldingListChartRowEvent(div, id, symbol, type) {
 	div.addEventListener("click", async () => {
 		try {
@@ -424,6 +432,7 @@ function addHoldingListChartRowEvent(div, id, symbol, type) {
 	});
 }
 
+// Add event to holding list rows to show popup through which users can modify the holding amount.
 function addHoldingListRowEvent(div, holdingID, holdingAssetID, holdingAssetSymbol, amount, holdingAssetType) {
 	div.addEventListener("click", () => {
 		try {
@@ -512,6 +521,7 @@ async function setHoldingsUsername() {
 	spanHoldingsUsername.textContent = username;
 }
 
+// Convert activities to holding data.
 function parseActivityAsHoldings() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -580,6 +590,7 @@ function parseActivityAsHoldings() {
 	});
 }
 
+// Fetch the historical market data of one or more crypto assets.
 async function fetchHoldingsCryptoHistoricalData(ids = null) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -625,6 +636,7 @@ async function fetchHoldingsCryptoHistoricalData(ids = null) {
 	});
 }
 
+// Fetch the historical market data of one or more stock assets.
 function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -691,6 +703,7 @@ function fetchHoldingsStocksHistoricalData(days, ids = null, symbols = null) {
 	});
 }
 
+// Gets the user's holding data on the earliest activity date.
 function getInitialDatedValue(activities, futureDays) {
 	let transactionIDs = Object.keys(activities);
 
@@ -759,6 +772,7 @@ function getInitialDatedValue(activities, futureDays) {
 	return last;
 }
 
+// Loops over every day of the past year (or since the first activity's date), and determines which assets the user had on each day, and how much they were worth on said day.
 function parseActivityAsDatedValue(days, prices, activities) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -935,6 +949,7 @@ function parseActivityAsDatedValue(days, prices, activities) {
 	});
 }
 
+// Shows the holding performance chart of one or more assets.
 async function showHoldingsPerformanceChart(dates, args = {}) {
 	let currency = await getCurrency();
 
@@ -968,6 +983,7 @@ async function showHoldingsPerformanceChart(dates, args = {}) {
 	insertAfter(divStats, divChart);
 }
 
+// Calculates and returns the holding performance stats.
 function getHoldingsPerformanceData(currency, values) {
 	let value0d = values.length >= 1 ? values[values.length - 1] : "-";
 	let value1d = values.length >= 2 ? values[values.length - 2] : "-";
@@ -1037,6 +1053,7 @@ function getHoldingsPerformanceData(currency, values) {
 	return stats;
 }
 
+// Initially, when the days of the past year (or since the first activity's date) are generated, they have a property called "modified" that is set to false. When the data of each day is updated, their "modified" property is set to true. Days with no data would not be modified, and are therefore removed from the chart data to avoid missing data.
 function filterHoldingsPerformanceData(dates) {
 	Object.keys(dates).map(date => {
 		let day = dates[date];
@@ -1048,6 +1065,7 @@ function filterHoldingsPerformanceData(dates) {
 	return dates;
 }
 
+// Generate holdings chart data.
 function parseHoldingsDateData(data) {
 	let labels = [];
 	let tooltips = [];
@@ -1064,6 +1082,7 @@ function parseHoldingsDateData(data) {
 	return { labels:labels, tooltips:tooltips, values:values };
 }
 
+// Returns all activities with a given asset ID.
 function filterActivitiesByAssetID(activities, assetID) {
 	Object.keys(activities).map(txID => {
 		if(activities[txID].activityAssetID !== assetID) {

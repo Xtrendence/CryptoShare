@@ -1,3 +1,4 @@
+// Returns the active market page ("crypto" or "stock").
 function getActiveMarketPage() {
 	return {
 		type: buttonMarketCrypto.classList.contains("active") ? "crypto" : "stocks", 
@@ -6,6 +7,7 @@ function getActiveMarketPage() {
 	};
 }
 
+// Tries to populate both market lists.
 async function populateMarketList(cryptoPage, stocksPage, recreate) {
 	if(getActivePage().id === "market-page") {
 		divMarketListCrypto.setAttribute("data-page", cryptoPage);
@@ -32,6 +34,7 @@ async function populateMarketList(cryptoPage, stocksPage, recreate) {
 	}
 }
 
+// Populates the crypto market list.
 async function populateMarketListCrypto(page, currency) {
 	try {
 		let marketData = await cryptoAPI.getMarket(currency, 100, page);
@@ -66,6 +69,7 @@ async function populateMarketListCrypto(page, currency) {
 	}
 }
 
+// Populates the stock market list.
 async function populateMarketListStocks(page, currency) {		
 	try {
 		let watchlistData = await fetchWatchlist();
@@ -119,6 +123,7 @@ async function populateMarketListStocks(page, currency) {
 	}
 }
 
+// Creates the crypto market list rows.
 function createMarketListCryptoRows(marketData, page, currency) {
 	let rows = [];
 
@@ -193,6 +198,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 	return rows;
 }
 
+// Adds crypto asset data to the row.
 function addMarketCryptoData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
@@ -217,6 +223,7 @@ function addMarketCryptoData(previousElement, info) {
 	insertAfter(div, previousElement);
 }
 
+// Adds stock asset data to the row.
 function addMarketStockData(previousElement, info) {
 	let div = document.createElement("div");
 	div.setAttribute("class", "info-wrapper noselect");
@@ -236,6 +243,7 @@ function addMarketStockData(previousElement, info) {
 	insertAfter(div, previousElement);
 }
 
+// Formats and returns crypto market data.
 function parseCryptoMarketData(currency, coin) {
 	let coinID = coin.id;
 	let price = coin.current_price;
@@ -255,6 +263,7 @@ function parseCryptoMarketData(currency, coin) {
 	return { coinID:coinID, currency:currency, price:price, icon:icon, marketCap:marketCap, price:price, ath:ath, priceChangeDay:priceChangeDay, athChange:athChange, high24h:high24h, low24h:low24h, volume:volume, supply:supply, name:name, symbol:symbol, rank:rank };
 }
 
+// Shows popup with a crypto asset's market data.
 async function showCryptoMarketData(info) {
 	try {
 		showLoading(2500, "Fetching Market Data...");
@@ -308,6 +317,7 @@ async function showCryptoMarketData(info) {
 	}
 }
 
+// Shows popup with a stock asset's market data.
 function showStockMarketData(infoPrice, infoHistorical) {
 	try {
 		showLoading(2500, "Parsing Market Data...");
@@ -351,6 +361,7 @@ function showStockMarketData(infoPrice, infoHistorical) {
 	}
 }
 
+// Shows market data for an asset the user searched for.
 async function showMarketSearchResult(popup, inputSearch, symbol, currency, type) {
 	if(type === "crypto") {
 		showLoading(5000, "Loading...");

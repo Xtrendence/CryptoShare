@@ -1,3 +1,4 @@
+// Creates an anchor element with an attached file.
 function createLink(url, filename) {
 	let link = document.createElement("a");
 
@@ -8,6 +9,7 @@ function createLink(url, filename) {
 	return link;
 }
 
+// Shows a file picker so the user can upload a file.
 function upload() {
 	return new Promise((resolve, reject) => {
 		try {
@@ -38,6 +40,7 @@ function upload() {
 	});
 }
 
+// Downloads a file. Used to export user data.
 function download(data, filename, type) {
 	if(typeof data === "string") {
 		data = [data];
@@ -59,6 +62,7 @@ function download(data, filename, type) {
 	}, 1000);
 }
 
+// Adds a hide/show button to password input fields.
 function updatePasswordFields() {
 	let wrappers = document.getElementsByClassName("input-password-wrapper");
 	for(let i = 0; i < wrappers.length; i++) {
@@ -86,6 +90,7 @@ function updatePasswordFields() {
 	}
 }
 
+// Add events to navbar elements.
 function addNavbarEvents() {
 	let items = divNavbar.getElementsByClassName("item");
 	
@@ -141,6 +146,7 @@ function hideSideMenu() {
 	}, 10);
 }
 
+// Returns the currently active page.
 function getActivePage() {
 	if(!divPageLogin.classList.contains("hidden")) {
 		return divPageLogin.id;
@@ -154,6 +160,7 @@ function getActivePage() {
 	}
 }
 
+// Clear the "active" status of all navbar elements.
 function clearActiveNavbarItem() {
 	let items = divNavbar.getElementsByClassName("item");
 	for(let i = 0; i < items.length; i++) {
@@ -161,6 +168,7 @@ function clearActiveNavbarItem() {
 	}
 }
 
+// Clear the "active" status of all app pages.
 function clearActivePage() {
 	let pages = divPageApp.getElementsByClassName("page");
 	for(let i = 0; i < pages.length; i++) {
@@ -168,6 +176,7 @@ function clearActivePage() {
 	}
 }
 
+// Set active app page.
 function setPage(page) {
 	page = empty(page) ? defaultChoices.defaultPage.toLowerCase() : page.toLowerCase().replace(" ", "");
 
@@ -209,6 +218,7 @@ function setPage(page) {
 	}
 }
 
+// Determines whether or not the "assetIconBackdrop" settings choice is enabled.
 async function checkBackdrop() {
 	let choices = await getSettingsChoices();
 
@@ -223,6 +233,7 @@ async function checkBackdrop() {
 	}
 }
 
+// Determines whether or not the "holdingsOnDashboard" settings choice is enabled.
 async function checkHoldingsOnDashboard() {
 	let choices = await getSettingsChoices();
 
@@ -233,6 +244,7 @@ async function checkHoldingsOnDashboard() {
 	}
 }
 
+// Checks whether or not an asset is in the user's holdings.
 async function assetHoldingExists(id) {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -265,6 +277,7 @@ async function assetHoldingExists(id) {
 	});
 }
 
+// Show a list of matching crypto assets.
 function showAssetMatches(referenceNode, list, marginBottom) {
 	if("matches" in list && Object.keys(list.matches).length > 1) {
 		let current = document.getElementsByClassName("popup-list asset-matches");
@@ -303,6 +316,7 @@ function showAssetMatches(referenceNode, list, marginBottom) {
 	}
 }
 
+// Returns the user's chosen fiat currency.
 async function getCurrency() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -320,6 +334,7 @@ async function getCurrency() {
 	});
 }
 
+// Add tooltips to app elements.
 function addTooltips() {
 	tippy(".button-hide-password", { content:"Show/Hide Password", placement:"right" });
 	tippy(divChatStatus, { content:"Connection Status", placement:"right" });
@@ -360,6 +375,7 @@ function hideLoading() {
 	}
 }
 
+// Returns whether or not an element plays a sound effect when clicked on, and which sound effect it plays.
 function audibleElement(element) {
 	try {
 		let tags = ["svg", "path", "button"];
@@ -390,12 +406,14 @@ function audibleElement(element) {
 	}
 }
 
+// Ignores an error in the future.
 function ignoreError(description) {
 	if(!ignoredErrors.includes(description)) {
 		ignoredErrors.push(description);
 	}
 }
 
+// Shows an error notification.
 function errorNotification(description) {
 	if(!ignoredErrors.includes(description)) {
 		Notify.error({
@@ -408,6 +426,7 @@ function errorNotification(description) {
 	}
 }
 
+// Shows a success notification.
 function successNotification(title, description) {
 	Notify.success({
 		title: title,
@@ -418,6 +437,7 @@ function successNotification(title, description) {
 	});
 }
 
+// Add background pattern to navbar elements.
 function addPattern() {
 	let items = divNavbarWrapper.getElementsByClassName("item");
 
@@ -426,6 +446,7 @@ function addPattern() {
 	}
 }
 
+// Generate line chart.
 async function generateChart(element, title, labels, tooltips, currency, data, colors) {
 	let canvas = document.createElement("canvas");
 	canvas.id = "chart-canvas";

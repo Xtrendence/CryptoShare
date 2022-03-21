@@ -1,3 +1,4 @@
+// Toggle app theme.
 settingsToggleTheme.addEventListener("click", async () => {
 	if(settingsToggleTheme.classList.contains("active")) {
 		await setTheme("dark");
@@ -8,6 +9,7 @@ settingsToggleTheme.addEventListener("click", async () => {
 	syncSettings(true);
 });
 
+// Toggle app sounds.
 settingsToggleSounds.addEventListener("click", async () => {
 	if(settingsToggleSounds.classList.contains("active")) {
 		setTimeout(async () => {
@@ -20,6 +22,7 @@ settingsToggleSounds.addEventListener("click", async () => {
 	}
 });
 
+// Log user out.
 buttonSettingsLogout.addEventListener("click", async () => {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -35,6 +38,7 @@ buttonSettingsLogout.addEventListener("click", async () => {
 	});
 });
 
+// Log user out on every device.
 buttonSettingsLogoutEverywhere.addEventListener("click", async () => {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -57,6 +61,7 @@ buttonSettingsLogoutEverywhere.addEventListener("click", async () => {
 	});
 });
 
+// Show popup used to change the user's password.
 buttonSettingsPassword.addEventListener("click", () => {
 	let html = `
 		<span class="popup-input-span">Current Password</span>
@@ -121,6 +126,7 @@ buttonSettingsPassword.addEventListener("click", () => {
 	});
 });
 
+// Delete the user's account.
 buttonSettingsDeleteAccount.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Delete Account", `<span>Are you sure you want to delete your account?</span>`, { confirmText:"Delete", page:"settings" });
 	popup.show();
@@ -156,6 +162,7 @@ buttonSettingsDeleteAccount.addEventListener("click", () => {
 	});
 });
 
+// Toggle user registration (admin only).
 buttonSettingsUserRegistration.addEventListener("click", async () => {
 	try {
 		let token = await appStorage.getItem("token");
@@ -179,6 +186,7 @@ buttonSettingsUserRegistration.addEventListener("click", async () => {
 	}
 });
 
+// Show popup used to set stock API key.
 buttonSettingsStockAPIKey.addEventListener("click", async () => {
 	let popup = new Popup(300, "auto", "Set Stock API Key", `<span class="margin-bottom">If internal stock API is being used, set the API key to "-" or anything besides leaving it empty.</span><input spellcheck="false" type="text" id="popup-input-stock-api-key" placeholder="API Key...">`, { page:"settings" });
 	popup.show();
@@ -204,6 +212,7 @@ buttonSettingsStockAPIKey.addEventListener("click", async () => {
 	});
 });
 
+// Switch between using the "internal" and "external" stock API (admin only).
 buttonSettingsStockAPIType.addEventListener("click", async () => {
 	try {
 		let token = await appStorage.getItem("token");
@@ -227,6 +236,7 @@ buttonSettingsStockAPIType.addEventListener("click", async () => {
 	}
 });
 
+// Generate login QR code.
 buttonSettingsQRCode.addEventListener("click", () => {
 	if(urlAPI.includes("localhost") || urlAPI.includes("127.0.0.1")) {
 		errorNotification(`You can't generate a QR login code when accessing the web app as "localhost".`);
@@ -274,6 +284,7 @@ buttonSettingsQRCode.addEventListener("click", () => {
 	});
 });
 
+// Reset user settings.
 buttonSettingsReset.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Settings", `<span>Are you sure you want to reset your settings?</span>`, { page:"settings" });
 	popup.show();
@@ -284,6 +295,7 @@ buttonSettingsReset.addEventListener("click", () => {
 	});
 });
 
+// Reset budget data.
 buttonSettingsResetBudget.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Budget", `<span>Are you sure you want to reset your budget data?</span>`, { page:"settings" });
 	popup.show();
@@ -305,6 +317,7 @@ buttonSettingsResetBudget.addEventListener("click", () => {
 	});
 });
 
+// Reset transactions data.
 buttonSettingsResetTransactions.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Transactions", `<span>Are you sure you want to reset your transaction data?</span>`, { page:"settings" });
 	popup.show();
@@ -329,6 +342,7 @@ buttonSettingsResetTransactions.addEventListener("click", () => {
 	});
 });
 
+// Reset watchlist data.
 buttonSettingsResetWatchlist.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Watchlist", `<span>Are you sure you want to reset your watchlist data?</span>`, { page:"settings" });
 	popup.show();
@@ -353,6 +367,7 @@ buttonSettingsResetWatchlist.addEventListener("click", () => {
 	});
 });
 
+// Reset holdings data.
 buttonSettingsResetHoldings.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Holdings", `<span>Are you sure you want to reset your holdings data?</span>`, { page:"settings" });
 	popup.show();
@@ -377,6 +392,7 @@ buttonSettingsResetHoldings.addEventListener("click", () => {
 	});
 });
 
+// Reset activity data.
 buttonSettingsResetActivities.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Activities", `<span>Are you sure you want to reset your activities data?</span>`, { page:"settings" });
 	popup.show();
@@ -401,6 +417,7 @@ buttonSettingsResetActivities.addEventListener("click", () => {
 	});
 });
 
+// Reset chat bot messages.
 buttonSettingsResetChatBot.addEventListener("click", () => {
 	let popup = new Popup(300, "auto", "Reset Chat Bot", `<span>Are you sure you want to reset your chat bot data?</span>`, { page:"settings" });
 	popup.show();
@@ -425,6 +442,7 @@ buttonSettingsResetChatBot.addEventListener("click", () => {
 	});
 });
 
+// Import user settings.
 buttonSettingsImportSettings.addEventListener("click", async () => {
 	try {
 		let json = await upload();
@@ -452,6 +470,7 @@ buttonSettingsImportSettings.addEventListener("click", async () => {
 	}
 });
 
+// Import budget data.
 buttonSettingsImportBudget.addEventListener("click", async () => {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -482,6 +501,7 @@ buttonSettingsImportBudget.addEventListener("click", async () => {
 	}
 });
 
+// Import transactions.
 buttonSettingsImportTransactions.addEventListener("click", async () => {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -533,6 +553,7 @@ buttonSettingsImportTransactions.addEventListener("click", async () => {
 	}
 });
 
+// Import watchlist data.
 buttonSettingsImportWatchlist.addEventListener("click", async () => {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -580,6 +601,7 @@ buttonSettingsImportWatchlist.addEventListener("click", async () => {
 	}
 });
 
+// Import holdings.
 buttonSettingsImportHoldings.addEventListener("click", async () => {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -630,6 +652,7 @@ buttonSettingsImportHoldings.addEventListener("click", async () => {
 	}
 });
 
+// Import activities.
 buttonSettingsImportActivities.addEventListener("click", async () => {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -689,6 +712,7 @@ buttonSettingsImportActivities.addEventListener("click", async () => {
 	}
 });
 
+// Export user settings.
 buttonSettingsExportSettings.addEventListener("click", async () => {
 	let currentSettings = await getSettings();
 	let currentChoices = await getSettingsChoices();
@@ -701,6 +725,7 @@ buttonSettingsExportSettings.addEventListener("click", async () => {
 	download(json, `${date}-CryptoShare-Settings.json`, "text/plain");
 });
 
+// Export budget data.
 buttonSettingsExportBudget.addEventListener("click", async () => {
 	let budget = await fetchBudget() || {};
 
@@ -716,6 +741,7 @@ buttonSettingsExportBudget.addEventListener("click", async () => {
 	download(json, `${date}-CryptoShare-Budget.json`, "text/plain");
 });
 
+// Export transactions.
 buttonSettingsExportTransactions.addEventListener("click", async () => {
 	let transactions = await fetchTransaction() || {};
 
@@ -737,6 +763,7 @@ buttonSettingsExportTransactions.addEventListener("click", async () => {
 	download(csv, `${date}-CryptoShare-Transactions.csv`, "text/plain");
 });
 
+// Export watchlist data.
 buttonSettingsExportWatchlist.addEventListener("click", async () => {
 	let watchlist = await fetchWatchlist() || {};
 
@@ -758,6 +785,7 @@ buttonSettingsExportWatchlist.addEventListener("click", async () => {
 	download(csv, `${date}-CryptoShare-Watchlist.csv`, "text/plain");
 });
 
+// Export holdings.
 buttonSettingsExportHoldings.addEventListener("click", async () => {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -793,6 +821,7 @@ buttonSettingsExportHoldings.addEventListener("click", async () => {
 	download(csv, `${date}-CryptoShare-Holdings.csv`, "text/plain");
 });
 
+// Export activities.
 buttonSettingsExportActivities.addEventListener("click", async () => {
 	let activities = await fetchActivity() || {};
 
@@ -814,6 +843,7 @@ buttonSettingsExportActivities.addEventListener("click", async () => {
 	download(csv, `${date}-CryptoShare-Activities.csv`, "text/plain");
 });
 
+// Manage watchlist data.
 buttonSettingsDataWatchlist.addEventListener("click", async () => {
 	let watchlist = await fetchWatchlist() || {};
 
@@ -860,6 +890,7 @@ buttonSettingsDataWatchlist.addEventListener("click", async () => {
 	popup.updateHeight();
 });
 
+// Manage holdings data.
 buttonSettingsDataHolding.addEventListener("click", async () => {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -917,6 +948,7 @@ buttonSettingsDataHolding.addEventListener("click", async () => {
 	popup.updateHeight();
 });
 
+// Manage activity data.
 buttonSettingsDataActivity.addEventListener("click", async () => {
 	let activities = await fetchActivity() || {};
 
@@ -1011,6 +1043,7 @@ buttonSettingsDataActivity.addEventListener("click", async () => {
 	popup.updateHeight();
 });
 
+// Add donation button events.
 for(let i = 0; i < buttonsDonate.length; i++) {
 	buttonsDonate[i].addEventListener("click", () => {
 		showDonationAddress(buttonsDonate[i].textContent);

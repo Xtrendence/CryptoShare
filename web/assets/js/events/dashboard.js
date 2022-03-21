@@ -1,8 +1,10 @@
+// Show transactions.
 buttonDashboardBudgetTransactions.addEventListener("click", () => {
 	showSideMenu();
 	listTransactions();
 });
 
+// Show budget edit menu.
 buttonDashboardBudgetEdit.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-budget">Set Monthly Budget</button>
@@ -24,6 +26,7 @@ buttonDashboardBudgetEdit.addEventListener("click", () => {
 	});
 });
 
+// Show popup used to add assets to the user's watchlist.
 buttonDashboardWatchlistAdd.addEventListener("click", () => {
 	try {
 		let html = `

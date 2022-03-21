@@ -1,3 +1,4 @@
+// Fetches the stock price of one or more assets.
 async function fetchStockPrice(currency, symbols, showError) {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -41,6 +42,7 @@ async function fetchStockPrice(currency, symbols, showError) {
 	}
 }
 
+// Fetches the historical market data of an asset.
 async function fetchStockHistorical(currency, assetSymbol, showError) {
 	try {
 		let userID = await appStorage.getItem("userID");
@@ -76,6 +78,7 @@ async function fetchStockHistorical(currency, assetSymbol, showError) {
 	}
 }
 
+// Generate stock market chart.
 function parseHistoricalStockData(timestamps, prices) {
 	let labels = [];
 	let tooltips = [];
@@ -94,6 +97,7 @@ function parseHistoricalStockData(timestamps, prices) {
 	return { labels:labels, tooltips:tooltips, prices:prices };
 }
 
+// Fetch currency exchange rates.
 async function fetchExchangeRates() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -122,6 +126,7 @@ async function fetchExchangeRates() {
 	});
 }
 
+// Convert the value of one currency to another (for example, GBP to USD).
 async function convertCurrency(from, to, value, exchangeRates = null) {
 	try {
 		if(from === to) {
@@ -154,6 +159,7 @@ async function convertCurrency(from, to, value, exchangeRates = null) {
 	}
 }
 
+// Convert the price of a stock from one currency to another.
 async function convertStockPrice(currency, data) {
 	let exchangeRates = await fetchExchangeRates();
 
@@ -171,6 +177,7 @@ async function convertStockPrice(currency, data) {
 	return data;
 }
 
+// Convert the historical prices of an asset from one currency to another.
 async function convertStockHistorical(currency, data) {
 	let exchangeRates = await fetchExchangeRates();
 
@@ -188,6 +195,7 @@ async function convertStockHistorical(currency, data) {
 	return data;
 }
 
+// Converts historical stock market data to match the format of historical crypto market data (for example, stocks aren't traded on weekends, so there's only 5 data points per week).
 function parseStockHistoricalDataAsCrypto(days, historicalData) {
 	let parsed = [];
 	let parsedObject = {};

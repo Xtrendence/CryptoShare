@@ -1,3 +1,4 @@
+// Show global crypto market data.
 buttonMarketInfo.addEventListener("click", async () => {
 	try {
 		showLoading(2000, "Fetching Global Crypto Market Data...");
@@ -34,6 +35,7 @@ buttonMarketInfo.addEventListener("click", async () => {
 	}
 });
 
+// Show popup used to search for a crypto or stock.
 buttonMarketSearch.addEventListener("click", () => {
 	try {
 		let html = `
@@ -84,6 +86,7 @@ buttonMarketSearch.addEventListener("click", () => {
 	}
 });
 
+// Switch to the crypto market page.
 buttonMarketCrypto.addEventListener("click", () => {
 	if(!buttonMarketCrypto.classList.contains("active")) {
 		buttonMarketCrypto.classList.add("active");
@@ -97,6 +100,7 @@ buttonMarketCrypto.addEventListener("click", () => {
 	}
 });
 
+// Switch to the stock market page.
 buttonMarketStocks.addEventListener("click", () => {
 	if(!buttonMarketStocks.classList.contains("active")) {
 		buttonMarketCrypto.classList.remove("active");
@@ -110,6 +114,7 @@ buttonMarketStocks.addEventListener("click", () => {
 	}
 });
 
+// Display previous 100 cryptos.
 buttonMarketPrevious.addEventListener("click", () => {
 	let active = getActiveMarketPage();
 	let previous = active.type === "crypto" ? active.cryptoPage - 1 : active.stocksPage - 1;
@@ -125,6 +130,7 @@ buttonMarketPrevious.addEventListener("click", () => {
 	}
 });
 
+// Display next 100 cryptos. 
 buttonMarketNext.addEventListener("click", () => {
 	let active = getActiveMarketPage();
 	let next = active.type === "crypto" ? active.cryptoPage + 1 : active.stocksPage + 1;

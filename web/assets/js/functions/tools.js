@@ -1,3 +1,4 @@
+// Calculates staking rewards.
 function calculateStakingRewards(currency, symbol, amount, apy, price) {
 	let currencySymbol = currencySymbols[currency];
 
@@ -26,6 +27,7 @@ function calculateStakingRewards(currency, symbol, amount, apy, price) {
 	`;
 }
 
+// Calculates mining rewards.
 function calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmount, dailyPowerCost) {
 	let currencySymbol = currencySymbols[currency];
 
@@ -56,6 +58,7 @@ function calculateMiningRewards(currency, symbol, price, equipmentCost, dailyAmo
 	`;
 }
 
+// Calculates dividend rewards.
 function calculateDividendRewards(currency, amount, dividend) {
 	let currencySymbol = currencySymbols[currency];
 
@@ -75,6 +78,7 @@ function calculateDividendRewards(currency, amount, dividend) {
 	`;
 }
 
+// Calculates mortgage payments.
 function calculateMortgage(currency, price, deposit, term, interest) {
 	let currencySymbol = currencySymbols[currency];
 
@@ -94,6 +98,7 @@ function calculateMortgage(currency, price, deposit, term, interest) {
 	`;
 }
 
+// Calculates taxes.
 function calculateTax(currency, income) {
 	let currencySymbol = currencySymbols[currency];
 

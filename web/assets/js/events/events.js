@@ -1,21 +1,25 @@
+// Close window (desktop app only).
 buttonWindowClose.addEventListener("click", () => {
 	if(!empty(ipcRenderer)) {
 		ipcRenderer.send("set-window-state", "closed");
 	}
 });
 
+// Minimize window (desktop app only).
 buttonWindowMinimize.addEventListener("click", () => {
 	if(!empty(ipcRenderer)) {
 		ipcRenderer.send("set-window-state", "minimized");
 	}
 });
 
+// Maximize window (desktop app only).
 buttonWindowMaximize.addEventListener("click", () => {
 	if(!empty(ipcRenderer)) {
 		ipcRenderer.send("set-window-state", "maximized");
 	}
 });
 
+// Used to enable "desktop" mode, and play sounds when buttons are clicked on.
 document.addEventListener("click", (event) => {
 	clickTargets.push(event.target.id);
 	clickTargets = clickTargets.slice(-3);
@@ -37,6 +41,7 @@ document.addEventListener("click", (event) => {
 	}
 });
 
+// Handle "Enter" and "Escape" key presses.
 document.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		if(document.getElementById("popup-button-confirm")) {
@@ -58,14 +63,17 @@ document.addEventListener("keydown", (event) => {
 	}
 });
 
+// Check if audio file can be played.
 audioPop.addEventListener("canplay", () => {
 	audioPlayable = true;
 });
 
+// Close the side menu when the empty area outside it is clicked.
 divSideMenuOverlay.addEventListener("click", () => {
 	buttonSideMenuClose.click();
 });
 
+// Close side menu.
 buttonSideMenuClose.addEventListener("click", () => {
 	hideSideMenu();
 });

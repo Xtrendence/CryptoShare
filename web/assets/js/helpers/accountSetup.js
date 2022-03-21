@@ -1,3 +1,4 @@
+// Account registration process.
 async function accountSetup() {
 	try {
 		let username = inputCreateUsername.value;

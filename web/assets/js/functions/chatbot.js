@@ -1,3 +1,4 @@
+// Populates chat list with messages.
 async function populateChatList(recreate) {
 	if(getActivePage().id === "chatbot-page") {
 		if(recreate) {
@@ -39,6 +40,7 @@ async function populateChatList(recreate) {
 	}
 }
 
+// Sorts messages by date.
 function sortMessages(messages) {
 	let sorted = {};
 	let sortedKeys = [];
@@ -60,6 +62,7 @@ function sortMessages(messages) {
 	return { messages:sorted, keys:sortedKeys };
 }
 
+// Sends a message to the chat bot.
 async function sendMessage(message) {
 	if(empty(message)) {
 		return;
@@ -84,6 +87,7 @@ async function sendMessage(message) {
 	}
 }
 
+// Adds chat bubble to the chat list.
 function listMessage(from, message) {
 	message = stripHTMLCharacters(message);
 	
@@ -95,6 +99,7 @@ function listMessage(from, message) {
 	divChatList.appendChild(div);
 }
 
+// Creates a message.
 async function addMessage(from, message) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -122,6 +127,7 @@ async function addMessage(from, message) {
 	});
 }
 
+// Determines what the user intends to do.
 function determineIntent(processed) {
 	try {
 		let utterance = processed.utterance.toLowerCase();
@@ -174,6 +180,7 @@ function determineIntent(processed) {
 	}
 }
 
+// Processes the user's request based on what their intent is.
 function processRequest(processedIntent) {
 	try {
 		switch(processedIntent.category) {
@@ -202,6 +209,7 @@ function processRequest(processedIntent) {
 	}
 }
 
+// Since the bot needs to extract data from user messages, it requires modified versions of each function it can perform. The "botFunctions" object contains functions that expect the output of a processed intent (for example, from the "processTransaction" function). So once the user has sent a message, the "process" event of the socket is triggered, which calls the "determineIntent" function. Once the user's initial intention has been determined, their intent is processed using the "processIntent" function, which, depending on the intent, calls different functions (such as "processTransaction" or "processOther"). Finally, these circumstantial functions call the "processRequest" function, which calls a function in the "botFunctions" object.
 let botFunctions = {
 	async createTransaction(details) {
 		try {
@@ -595,6 +603,7 @@ let botFunctions = {
 	}
 };
 
+// Narrows down the user's intent based on its category.
 async function processIntent(entities, intent) {
 	try {
 		clearChatOptions();
@@ -672,6 +681,7 @@ async function processOther(entities, intent, details) {
 	}
 }
 
+// Extract transaction data.
 function processTransaction(entities, intent, details) {
 	try {
 		if(intent.utterance.match("(rent|gas|fuel|mortgage)")) {
@@ -809,6 +819,7 @@ function processTransaction(entities, intent, details) {
 	}
 }
 
+// Extract income data.
 function processIncome(entities, intent, details) {
 	try {
 		let income = entities[0]?.resolution?.value;
@@ -820,6 +831,7 @@ function processIncome(entities, intent, details) {
 	}
 }
 
+// Extract affordability data.
 function processAfford(entities, intent, details) {
 	try {
 		let price = entities[0]?.resolution?.value;
@@ -916,6 +928,7 @@ function processAfford(entities, intent, details) {
 	}
 }
 
+// Extract activity data.
 function processActivity(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
@@ -1020,6 +1033,7 @@ function processActivity(entities, intent, details) {
 	}
 }
 
+// Extract holding data.
 function processHolding(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
@@ -1072,6 +1086,7 @@ function processHolding(entities, intent, details) {
 	}
 }
 
+// Extract watchlist data.
 function processWatchlist(entities, intent, details) {
 	try {
 		if(empty(details?.type)) {
@@ -1119,6 +1134,7 @@ function processWatchlist(entities, intent, details) {
 	}
 }
 
+// Used when the chat bot requires clarification on something, such as the asset type when creating a transaction.
 async function requireClarification(message, options) {
 	try {
 		await addMessage("bot", message);
@@ -1215,6 +1231,7 @@ function attachSocketEvents(socket) {
 		addMessage("bot", message);
 	});
 
+	// Once the server has processed the user's message using NLP, it is further processed on the client side.
 	socket.on("process", (data) => {
 		let entities = data.processed.sourceEntities;
 		let intent = determineIntent(data.processed);
@@ -1250,6 +1267,7 @@ function attachSocketEvents(socket) {
 	});
 }
 
+// Fetches, decrypts, and returns messages.
 function fetchMessage() {
 	return new Promise(async (resolve, reject) => {
 		try {

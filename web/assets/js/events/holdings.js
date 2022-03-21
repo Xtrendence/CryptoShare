@@ -1,12 +1,15 @@
+// Navigate to the "Account" section of the "Settings" page when the user clicks on their username on the "Holdings" page.
 divHoldingsCardUsername.addEventListener("click", () => {
 	setSettingsPage("account");
 	setPage("settings");
 });
 
+// Show holdings performance chart when the user clicks on their portfolio's total value.
 divHoldingsCardValue.addEventListener("click", () => {
 	buttonHoldingsPerformance.click();
 });
 
+// Show holdings performance chart.
 buttonHoldingsPerformance.addEventListener("click", async () => {
 	let choices = await getSettingsChoices();
 	if(choices.activitiesAffectHoldings === "enabled") {
@@ -58,6 +61,7 @@ buttonHoldingsPerformance.addEventListener("click", async () => {
 	}
 });
 
+// Show popup to add a crypto holding.
 buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 	try {
 		let choices = await getSettingsChoices();
@@ -167,6 +171,7 @@ buttonHoldingsAddCryptoAsset.addEventListener("click", async () => {
 	}
 });
 
+// Show popup to add a stock holding.
 buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 	try {
 		let choices = await getSettingsChoices();
@@ -252,14 +257,17 @@ buttonHoldingsAddStockAsset.addEventListener("click", async () => {
 	}
 });
 
+// Used when the window size is small.
 buttonHoldingsPerformanceSmall.addEventListener("click", () => {
 	buttonHoldingsPerformance.click();
 });
 
+// Used when the window size is small.
 buttonHoldingsAddCryptoAssetSmall.addEventListener("click", () => {
 	buttonHoldingsAddCryptoAsset.click();
 });
 
+// Used when the window size is small.
 buttonHoldingsAddStockAssetSmall.addEventListener("click", () => {
 	buttonHoldingsAddStockAsset.click();
 });
