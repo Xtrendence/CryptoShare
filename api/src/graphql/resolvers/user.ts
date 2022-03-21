@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import User from "../../models/User";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";
+// @ts-ignore
+import CryptoFN from "../../utils/CryptoFN";
 
 const db = new DB();
 
@@ -41,10 +43,12 @@ export async function createUser({ username, password, key }: any) {
 		let settings = await Utils.getAdminSettings();
 
 		if(settings.userRegistration === "enabled") {
-			return userExists({ username:username }).then((result) => {
+			return userExists({ username:username }).then(async (result) => {
 				if(result === "Not found.") {
 					if(Utils.validUsername(username) && Utils.xssValid(username)) {
-						let hashedPassword = bcrypt.hashSync(password, 10);
+						let keys: any = await Utils.checkKeys();
+						let decryptedPassword = CryptoFN.decryptRSA(password, keys.privateKey);
+						let hashedPassword = bcrypt.hashSync(decryptedPassword, 10);
 						db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [username, hashedPassword, key]);
 						return "Done";
 					} else {

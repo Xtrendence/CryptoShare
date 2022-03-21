@@ -5,13 +5,15 @@ import * as http from "http";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import { Server } from "socket.io";
+// @ts-ignore
+import CryptoFN from "../utils/CryptoFN";
 import { io as client } from "socket.io-client";
 import Message from "../models/Message";
 import addSocketEvents from "../bot/events";
 import resolvers from "../graphql/resolvers/resolvers";
 import DB from "./DB";
 import Utils from "./Utils";
-import express from "express";
+import express, { response } from "express";
 import addStockAPIRoutes from "./StockAPI";
 
 // A class for starting and stopping the GraphQL API and Socket.IO server.
@@ -40,6 +42,9 @@ export default class API {
 
 				// Ensures the necessary files, such as the database file, admin settings, and the relevant directories exist.
 				Utils.checkFiles();
+
+				// Ensures the API has a public and private key pair for encrypted communication with clients.
+				await Utils.checkKeys();
 
 				// Builds the GraphQL API schema.
 				const schema = buildSchema(Utils.getSchema());
@@ -89,11 +94,23 @@ export default class API {
 					response.json({ status:"online" });
 				});
 
-				app.post("/login", async (request, response) => {
-					let username = request.body.username;
-					let password = request.body.password;
-
+				app.get("/keyRSA", async (request, response) => {
 					try {
+						let keys: any = await Utils.checkKeys();
+						response.json({ publicKey:keys.publicKey });
+					} catch(error) {
+						response.send({ error:error });
+					}
+				});
+
+				app.post("/login", async (request, response) => {
+					try {
+						let keys: any = await Utils.checkKeys();
+
+						let username = request.body.username;
+						let encryptedPassword = request.body.password;
+						let password = await CryptoFN.decryptRSA(encryptedPassword, keys.privateKey);
+
 						response.send(await Utils.login(username, password));
 					} catch(error) {
 						response.send({ error:error });
@@ -101,10 +118,9 @@ export default class API {
 				});
 
 				app.post("/logout", async (request, response) => {
-					let userID = request.body.userID;
-					let token = request.body.token;
-
 					try {
+						let userID = request.body.userID;
+						let token = request.body.token;
 						response.send({ response:await Utils.logout(userID, token) });
 					} catch(error) {
 						response.send({ error:error });
@@ -112,10 +128,9 @@ export default class API {
 				});
 
 				app.post("/logoutEverywhere", async (request, response) => {
-					let userID = request.body.userID;
-					let token = request.body.token;
-
 					try {
+						let userID = request.body.userID;
+						let token = request.body.token;
 						response.send({ response:await Utils.logoutEverywhere(userID, token) });
 					} catch(error) {
 						response.send({ error:error });
@@ -123,13 +138,19 @@ export default class API {
 				});
 
 				app.post("/changePassword", async (request, response) => {
-					let userID = request.body.userID;
-					let token = request.body.token;
-					let key = request.body.key;
-					let currentPassword = request.body.currentPassword;
-					let newPassword = request.body.newPassword;
-
 					try {
+						let keys: any = await Utils.checkKeys();
+
+						let userID = request.body.userID;
+						let token = request.body.token;
+						let key = request.body.key;
+						
+						let encryptedCurrentPassword = request.body.currentPassword;
+						let encryptedNewPassword = request.body.newPassword;
+
+						let currentPassword = await CryptoFN.decryptRSA(encryptedCurrentPassword, keys.privateKey);
+						let newPassword = await CryptoFN.decryptRSA(encryptedNewPassword, keys.privateKey);
+
 						response.send(await Utils.changePassword(userID, token, key, currentPassword, newPassword));
 					} catch(error) {
 						response.send({ error:error });
@@ -137,10 +158,9 @@ export default class API {
 				});
 
 				app.post("/verifyToken", async (request, response) => {
-					let userID = request.body.userID;
-					let token = request.body.token;
-
 					try {
+						let userID = request.body.userID;
+						let token = request.body.token;
 						response.send(await Utils.verifyToken(userID, token));
 					} catch(error) {
 						response.send({ error:error });
@@ -148,12 +168,11 @@ export default class API {
 				});
 
 				app.post("/adminAction", async (request, response) => {
-					let userID = request.body.userID;
-					let username = request.body.username;
-					let token = request.body.token;
-					let action = request.body.action;
-
 					try {
+						let userID = request.body.userID;
+						let username = request.body.username;
+						let token = request.body.token;
+						let action = request.body.action;
 						response.send(await Utils.processAdminAction(userID, username, token, action));
 					} catch(error) {
 						response.send({ error:error });

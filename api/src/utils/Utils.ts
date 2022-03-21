@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
 import crypto from "crypto";
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
+// @ts-ignore
+import CryptoFN from "./CryptoFN";
 import path from "path";
 import DB from "./DB";
 
@@ -15,12 +17,15 @@ export default class Utils {
 	static dataFolder: string = "./data/";
 	static dbFile: string = path.join(this.dataFolder, "data.db");
 	static adminFile: string = path.join(this.dataFolder, "adminSettings.txt");
+	static publicKeyFile: string = path.join(this.dataFolder, "public.key");
+	static privateKeyFile: string = path.join(this.dataFolder, "private.key");
 
 	static defaultAdminSettings: any = {
 		stockAPIType: "internal",
 		userRegistration: "enabled"
 	};
 
+	// Returns host's local IP address.
 	static getIP() {
 		try {
 			const { networkInterfaces } = require("os");
@@ -51,6 +56,7 @@ export default class Utils {
 		}
 	}
 
+	// Verifies a login token.
 	static async verifyToken(userID: number, token: string) {
 		return new Promise((resolve, reject) => {
 			if(!this.verifyTokenTime(token)) {
@@ -116,6 +122,7 @@ export default class Utils {
 		});
 	}
 
+	// Changes a user's password.
 	static async changePassword(userID: number, token: string, key: string, currentPassword: string, newPassword: string) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -157,6 +164,7 @@ export default class Utils {
 		});
 	}
 
+	// Verifies that a token isn't expired.
 	static verifyTokenTime(token: string) {
 		let now = Math.floor(new Date().getTime() / 1000);
 		let time = parseInt(token.split("-")[0]);
@@ -168,6 +176,7 @@ export default class Utils {
 		return true;
 	}
 
+	// Verifies if the user owns the data they're trying to modify.
 	static verifyDataOwnership(userID: number, table: string, column: string, rowID: number) {
 		return new Promise((resolve, reject) => {
 			this.db?.db?.get(`SELECT * FROM ${table} WHERE ${column} = ?`, [rowID], (error, row) => {
@@ -190,6 +199,7 @@ export default class Utils {
 		});
 	}
 
+	// Logs the user in.
 	static async login(username: string, password: string) {
 		return new Promise(async (resolve, reject) => {
 			this.db?.db?.get("SELECT * FROM User WHERE username = ? COLLATE NOCASE", [username], async (error, row) => {
@@ -246,6 +256,7 @@ export default class Utils {
 		});
 	}
 
+	// Logs the user out.
 	static async logout(userID: number, token: string) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -260,6 +271,7 @@ export default class Utils {
 		});
 	}
 
+	// Logs the user out on all devices.
 	static async logoutEverywhere(userID: number, token: string) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -274,6 +286,7 @@ export default class Utils {
 		});
 	}
 
+	// Performs an admin-only action.
 	static async processAdminAction(userID: number, username: string, token: string, action: string) {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -319,6 +332,7 @@ export default class Utils {
 		});
 	}
 
+	// Returns admin settings.
 	static async getAdminSettings() {
 		try {
 			let current = readFileSync(this.adminFile, { encoding:"utf-8" });
@@ -329,6 +343,7 @@ export default class Utils {
 		}
 	}
 
+	// Generates a cryptographically random string.
 	static async generateToken() {
 		return new Promise((resolve, reject) => {
 			crypto.randomBytes(32, (error, buffer) => {
@@ -341,6 +356,7 @@ export default class Utils {
 		});
 	}
 
+	// Validates a username.
 	static validUsername(username: string) {
 		try {
 			if(username.length > 16) {
@@ -354,11 +370,13 @@ export default class Utils {
 		}
 	}
 
+	// Determines if a UNIX timestamp is older than a predefined number of seconds.
 	static refetchRequired(time: string) {
 		let refetchTime = this.marketRefetchTime;
 		return (Math.floor(new Date().getTime() / 1000)) - refetchTime > parseInt(time);
 	}
 
+	// Determines if a string is valid JSON.
 	static validJSON(json: string) {
 		try {
 			let object = JSON.parse(json);
@@ -370,6 +388,7 @@ export default class Utils {
 		return false;
 	}
 
+	// Splits an array into smaller arrays.
 	static chunkArray(array: any, size: number) {
 		let chunks = [];
 		for(let i = 0; i < array.length; i += size) {
@@ -378,6 +397,7 @@ export default class Utils {
 		return chunks;
 	}
 
+	// Returns whether or not a string contains HTML tags.
 	static xssValid(string: string) {
 		try {
 			if(string.includes("<") || string.includes(">")) {
@@ -389,6 +409,7 @@ export default class Utils {
 		}
 	}
 
+	// Ensures required API folders and files exist.
 	static checkFiles() {
 		if(!existsSync(this.dataFolder)) {
 			mkdirSync(this.dataFolder);
@@ -401,12 +422,43 @@ export default class Utils {
 		if(!existsSync(this.adminFile)) {
 			writeFileSync(this.adminFile, JSON.stringify(this.defaultAdminSettings));
 		}
+
+		if(!existsSync(this.publicKeyFile)) {
+			writeFileSync(this.publicKeyFile, "");
+		}
+
+		if(!existsSync(this.privateKeyFile)) {
+			writeFileSync(this.privateKeyFile, "");
+		}
 	}
 
+	// Ensures the API has a public and private RSA key pair.
+	static checkKeys() {
+		return new Promise(async (resolve, reject) => {
+			try {
+				if(this.empty(readFileSync(this.publicKeyFile, { encoding:"utf-8" })) || this.empty(readFileSync(this.privateKeyFile, { encoding:"utf-8" }))) {
+					let keys = await CryptoFN.generateRSAKeys();
+					writeFileSync(this.publicKeyFile, keys.publicKey);
+					writeFileSync(this.privateKeyFile, keys.privateKey);
+					resolve(keys);
+				} else {
+					let publicKey = readFileSync(this.publicKeyFile, { encoding:"utf-8" });
+					let privateKey = readFileSync(this.privateKeyFile, { encoding:"utf-8" });
+					resolve({ publicKey:publicKey, privateKey:privateKey });
+				}
+			} catch(error) {
+				console.log(error);
+				reject(error);
+			}
+		});
+	}
+
+	// Returns the GraphQL API schema.
 	static getSchema() {
 		return readFileSync(path.join(__dirname, "../graphql/schema.graphql"), { encoding:"utf-8" });
 	}
 
+	// Simplifies making an HTTP request.
 	static request(method: string, url: string, body: any, headers: any) {
 		console.log(new Date().toLocaleTimeString(), "Request", url);
 
@@ -453,6 +505,7 @@ export default class Utils {
 		});
 	}
 
+	// Returns the date a year before a given date.
 	static previousYear(date: Date) {
 		let day = date.getDate();
 		let month = date.getMonth() + 1;
@@ -460,10 +513,12 @@ export default class Utils {
 		return new Date(Date.parse(year + "-" + month + "-" + day));
 	}
 
+	// Capitalizes the first letter of a string.
 	static capitalizeFirstLetter(string: string) {
 		return string.charAt(0).toUpperCase() + string.slice(1);
 	}
 
+	// Determines if a variable is empty.
 	static empty(value: any) {
 		if(typeof value === "object" && value !== null && Object.keys(value).length === 0) {
 			return true;
@@ -476,6 +531,7 @@ export default class Utils {
 		return false;
 	}
 
+	// Waits for a set duration.
 	static wait(duration: number) {
 		return new Promise((resolve: any) => {
 			setTimeout(() => {
@@ -484,6 +540,7 @@ export default class Utils {
 		});
 	}
 
+	// Console styling.
 	static console = {
 		underline: `\x1b[4m`,
 		reset: `\x1b[0m`,
