@@ -75,8 +75,10 @@ async function sendMessage(message) {
 
 			await addMessage("user", message);
 
-			setTimeout(() => {
-				socket.emit("message", { userID:userID, token:token, message:message });
+			setTimeout(async () => {
+				let publicKey = await getPublicKey();
+				let encryptedMessage = await CryptoFN.encryptRSA(message, publicKey);
+				socket.emit("message", { userID:userID, token:token, message:encryptedMessage });
 			}, 500);
 		} catch(error) {
 			errorNotification("Something went wrong... - EW23");
