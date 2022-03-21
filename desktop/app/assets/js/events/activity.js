@@ -1,3 +1,4 @@
+// Search for an activity automatically when the input field's value changes (if there are less than 100 activities).
 inputActivitySearch.addEventListener("keydown", (event) => {
 	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
 		filterActivityList(inputActivitySearch.value);
@@ -8,6 +9,7 @@ inputActivitySearch.addEventListener("keydown", (event) => {
 	}
 });
 
+// Search for an activity automatically when the input field's value changes (if there are less than 100 activities).
 inputActivitySearch.addEventListener("keyup", (event) => {
 	if(divActivityList.childElementCount < 100 || empty(inputActivitySearch.value)) {
 		filterActivityList(inputActivitySearch.value);
@@ -18,10 +20,12 @@ inputActivitySearch.addEventListener("keyup", (event) => {
 	}
 });
 
+// Search for an activity.
 buttonActivitySearch.addEventListener("click", () => {
 	filterActivityList(inputActivitySearch.value);
 });
 
+// Show activity help popup.
 buttonActivityHelp.addEventListener("click", () => {
 	let html = `
 		<span>An activity represents an event where a crypto or stock asset was bought, sold, or transferred. The settings page includes an option where activities can be set to affect holdings, which means your portfolio would be based on activities you record. For users who simply wish to track their assets without having to record each trade, the aforementioned option can be turned off, and holdings can be added directly through the holdings page.</span>
@@ -35,6 +39,7 @@ buttonActivityHelp.addEventListener("click", () => {
 	popup.updateHeight();
 });
 
+// Show tools menu.
 buttonActivityTools.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-staking">Staking Calculator</button>
@@ -74,6 +79,7 @@ buttonActivityTools.addEventListener("click", () => {
 	});
 });
 
+// Show popup used to create activities.
 buttonActivityAdd.addEventListener("click", () => {
 	try {
 		let html = `

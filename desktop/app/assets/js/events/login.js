@@ -1,8 +1,10 @@
+// Show user registration form.
 buttonNewAccount.addEventListener("click", () => {
 	divPageLogin.classList.remove("login");
 	divPageLogin.classList.add("create");
 });
 
+// Log the user in.
 buttonLoginAccount.addEventListener("click", async () => {
 	try {
 		if(empty(inputLoginUsername.value) || empty(inputLoginPassword.value)) {
@@ -15,6 +17,7 @@ buttonLoginAccount.addEventListener("click", async () => {
 			return;
 		}
 
+		// If the user is logging in on the desktop app, the API URL is required.
 		if(appPlatform === "app" || appBypass()) {
 			urlAPI = inputLoginAPI.value;
 
@@ -44,6 +47,7 @@ buttonLoginAccount.addEventListener("click", async () => {
 				let decrypted = CryptoFN.decryptAES(result.key, inputLoginPassword.value);
 				result.key = decrypted;
 
+				// Used to apply user settings chosen during registration.
 				let firstLogin = await appStorage.getItem("firstLogin");
 
 				let settings = { ...defaultSettings, choices:JSON.stringify(defaultChoices) };
@@ -93,15 +97,18 @@ buttonLoginAccount.addEventListener("click", async () => {
 	}
 });
 
+// Show login form.
 buttonExistingAccount.addEventListener("click", () => {
 	divPageLogin.classList.add("login");
 	divPageLogin.classList.remove("create");
 });
 
+// Start the registration process.
 buttonCreateAccount.addEventListener("click", () => {
 	accountSetup();
 });
 
+// Toggle app theme.
 loginToggleTheme.addEventListener("click", async () => {
 	if(loginToggleTheme.classList.contains("active")) {
 		await setTheme("dark");
@@ -110,12 +117,14 @@ loginToggleTheme.addEventListener("click", async () => {
 	}
 });
 
+// Log in when the "Enter" key is pressed.
 inputLoginPassword.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		buttonLoginAccount.click();
 	}
 });
 
+// Start registration process when the "Enter" key is pressed.
 inputCreateRepeatPassword.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		buttonCreateAccount.click();

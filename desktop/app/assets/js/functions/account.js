@@ -1,3 +1,4 @@
+// Attempts to log the user in.
 async function attemptLogin() {
 	if(appPlatform === "app" || appBypass()) {
 		urlAPI = await appStorage.getItem("api");
@@ -95,6 +96,7 @@ async function attemptLogin() {
 	}
 }
 
+// Finish the logout process by resetting elements that contain user data, removing user credentials, and showing the "Login" page.
 function finishLogout() {
 	clearLogin();
 	clearApp();
@@ -106,6 +108,7 @@ function finishLogout() {
 	successNotification("Logged Out", "You've been logged out of your account.");
 }
 
+// Set user credentials.
 function setAccountInfo(info, updateKey) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -132,6 +135,7 @@ function setAccountInfo(info, updateKey) {
 	});
 }
 
+// Remove user credentials.
 async function removeAccountInfo() {
 	await appStorage.removeItem("userID");
 	await appStorage.removeItem("username");
@@ -140,6 +144,7 @@ async function removeAccountInfo() {
 	await appStorage.removeItem("keyAPI");
 }
 
+// Clear "Login" page data.
 function clearLogin() {
 	inputLoginUsername.value = "";
 	inputLoginPassword.value = "";
@@ -149,6 +154,7 @@ function clearLogin() {
 	buttonExistingAccount.click();
 }
 
+// Show "Login" page.
 function showLogin() {
 	clearLogin();
 	clearApp();
@@ -156,6 +162,7 @@ function showLogin() {
 	divPageApp.classList.add("hidden");
 }
 
+// Clear app data.
 function clearApp() {
 	// Clear Popups.
 	let popupOverlays = document.getElementsByClassName("popup-overlay");
@@ -208,6 +215,7 @@ function clearApp() {
 	divActivityList.innerHTML = "";
 }
 
+// Show app.
 function showApp() {
 	clearLogin();
 	clearApp();

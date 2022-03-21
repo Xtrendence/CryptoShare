@@ -1,3 +1,4 @@
+// Populate dashboard budget list.
 async function populateDashboardBudget(recreate) {
 	if(getActivePage().id === "dashboard-page") {
 		if(recreate) {
@@ -124,6 +125,7 @@ async function populateDashboardBudget(recreate) {
 	}
 }
 
+// Populate dashboard watchlist.
 async function populateDashboardWatchlist(recreate) {
 	if(getActivePage().id === "dashboard-page") {
 		if(recreate) {
@@ -181,6 +183,7 @@ async function populateDashboardWatchlist(recreate) {
 	}
 }
 
+// Generate budget pie chart.
 async function generatePieChart(budgetData) {
 	let canvas = document.getElementById("pie-chart-canvas");
 
@@ -250,6 +253,7 @@ async function generatePieChart(budgetData) {
 	});
 }
 
+// Generate budget stats, which show progress bars to indicate how much money the user has spent each month on each budget category.
 async function generateBudgetStats(budgetData, transactionData, recreate) {
 	let spanIncome = document.getElementById("span-income");
 	let spanStats = divDashboardBudgetList.getElementsByClassName("span-stats");
@@ -321,6 +325,7 @@ async function generateBudgetStats(budgetData, transactionData, recreate) {
 	});
 }
 
+// Add event listeners to date buttons (month and year).
 function addBudgetDateEvents(buttonMonth, buttonYear) {
 	buttonMonth.addEventListener("click", () => {
 		let html = `
@@ -406,6 +411,7 @@ function addBudgetDateEvents(buttonMonth, buttonYear) {
 	});
 }
 
+// Filter transactions by month.
 function filterTransactionsByMonth(transactionData, month, year) {
 	let filtered = {};
 
@@ -426,6 +432,7 @@ function filterTransactionsByMonth(transactionData, month, year) {
 	return filtered;
 }
 
+// Calculate how much money the user has spent for each budget category.
 function parseTransactionData(transactionData) {
 	let categories = Object.keys(defaultBudgetData.categories);
 	let parsed = {};
@@ -462,6 +469,7 @@ function parseTransactionData(transactionData) {
 	return parsed;
 }
 
+// Populate transaction list.
 async function listTransactions() {
 	try {
 		let transactions = await fetchTransaction() || {};
@@ -527,6 +535,7 @@ async function listTransactions() {
 	}
 }
 
+// Add event to each transaction row.
 function addTransactionListRowEvent(transaction, div) {
 	try {
 		div.addEventListener("click", () => {
@@ -646,6 +655,7 @@ function addTransactionPopupDeleteEvent(previousPopup, buttonDelete, transaction
 	});
 }
 
+// Sort transactions by date.
 function sortTransactionDataByDate(transactionData) {
 	let sorted = {};
 	let sortedKeys = [];
@@ -667,6 +677,7 @@ function sortTransactionDataByDate(transactionData) {
 	return { sorted:sorted, sortedKeys:sortedKeys.reverse() };
 }
 
+// Add event to transaction search input field.
 function addTransactionSearchEvent(input, button) {
 	input.addEventListener("keydown", (event) => {
 		if(divSideMenuContainer.childElementCount < 100 || empty(input.value)) {
@@ -693,6 +704,7 @@ function addTransactionSearchEvent(input, button) {
 	});
 }
 
+// Filters transaction list by a given search query.
 function filterTransactionList(query) {
 	let rows = divSideMenuContainer.getElementsByClassName("transaction-row");
 
@@ -734,6 +746,7 @@ function filterTransactionList(query) {
 	}
 }
 
+// Add event to the "Add Transaction" button.
 function addTransactionButtonEvent(button) {
 	button.addEventListener("click", () => {
 		try {
@@ -818,6 +831,7 @@ function addTransactionButtonEvent(button) {
 	});
 }
 
+// Validate transaction popup data.
 function validateTransactionData(amount, type, category, date, notes) {
 	try {
 		if(empty(amount) || isNaN(amount) || parseFloat(amount) <= 0) {
@@ -848,6 +862,7 @@ function validateTransactionData(amount, type, category, date, notes) {
 	}
 }
 
+// Parse transaction popup data.
 function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInputCategory, popupInputDate, popupInputNotes) {
 	try {
 		let amount = popupInputAmount.value;
@@ -863,6 +878,7 @@ function parseTransactionPopupData(popupInputAmount, popupChoiceEarned, popupInp
 	}
 }
 
+// Add event to transaction category choice buttons on the popup.
 function addTransactionCategoryEvent(previousPopup, input) {
 	input.addEventListener("focus", () => {
 		input.click();
@@ -923,6 +939,7 @@ function addTransactionCategoryEvent(previousPopup, input) {
 	});
 }
 
+// Create watchlist row elements.
 async function createWatchlistListRows(marketCryptoData, marketStocksData, watchlistData) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1071,6 +1088,7 @@ function addWatchlistDeleteEvent(div, asset) {
 	});
 }
 
+// Add event to watchlist rows.
 async function addWatchlistRowEvent(div, asset) {
 	div.addEventListener("click", async (event) => {
 		if(!event.target.classList.contains("delete")) {
@@ -1109,6 +1127,7 @@ async function addWatchlistRowEvent(div, asset) {
 	});
 }
 
+// Returns the asset ID of each watchlist item.
 function getWatchlistIDs(watchlist) {
 	let ids = [];
 
@@ -1119,6 +1138,7 @@ function getWatchlistIDs(watchlist) {
 	return ids;
 }
 
+// Returns the symbols of assets in the user's watchlist.
 function getWatchlistSymbols(watchlist) {
 	let symbols = [];
 
@@ -1129,6 +1149,7 @@ function getWatchlistSymbols(watchlist) {
 	return symbols;
 }
 
+// Separates watchlist data based on the asset type ("crypto" or "stock").
 function filterWatchlistByType(watchlistData) {
 	let watchlistCrypto = {};
 	let watchlistStocks = {};
@@ -1146,6 +1167,7 @@ function filterWatchlistByType(watchlistData) {
 	return { crypto:watchlistCrypto, stocks:watchlistStocks };
 }
 
+// Checks if an asset is in the user's watchlist.
 function watchlistExists(watchlist, id) {
 	try {
 		let exists = false;
@@ -1164,6 +1186,7 @@ function watchlistExists(watchlist, id) {
 	}
 }
 
+// Returns the "watchlistID" of an item based on the asset symbol and type.
 function getWatchlistIDBySymbol(watchlist, symbol, type) {
 	try {
 		let result = { exists:false, id:null };
@@ -1183,6 +1206,7 @@ function getWatchlistIDBySymbol(watchlist, symbol, type) {
 	}
 }
 
+// Fetches, decrypts, and returns watchlist data.
 function fetchWatchlist() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1215,6 +1239,7 @@ function fetchWatchlist() {
 	});
 }
 
+// Fetches, decrypts, and returns budget data.
 function fetchBudget() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1255,6 +1280,7 @@ function fetchBudget() {
 	});
 }
 
+// Fetches, decrypts, and returns transactions.
 function fetchTransaction() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1287,6 +1313,7 @@ function fetchTransaction() {
 	});
 }
 
+// Resets budget data.
 function setDefaultBudgetData() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -1306,6 +1333,7 @@ function setDefaultBudgetData() {
 	});
 }
 
+// Show popup to modify budget data.
 async function showBudgetPopup() {
 	let html = `
 		<span class="popup-input-span">Food</span>
@@ -1397,6 +1425,7 @@ async function showBudgetPopup() {
 	});
 }
 
+// Validate and parse budget popup data.
 function parseBudgetPopupData(popupInputFood, popupInputHousing, popupInputTransport, popupInputEntertainment, popupInputInsurance, popupInputSavings, popupInputOther) {
 	let food = popupInputFood.value;
 	let housing = popupInputHousing.value;
@@ -1449,6 +1478,7 @@ function parseBudgetPopupData(popupInputFood, popupInputHousing, popupInputTrans
 	return { food:food, housing:housing, transport:transport, entertainment:entertainment, insurance:insurance, savings:savings, other:other };
 }
 
+// Show popup to modify income.
 async function showIncomePopup() {
 	let html = `
 		<input type="number" id="popup-input-income" placeholder="Yearly Income..." spellcheck="false" autocomplete="off">

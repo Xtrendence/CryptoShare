@@ -1,3 +1,4 @@
+// Set the theme of the app.
 function setTheme(theme) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -54,6 +55,7 @@ function setTheme(theme) {
 	});
 }
 
+// Set the background image of the app.
 function setBackground(theme, alternate) {
 	if(alternate) {
 		document.documentElement.classList.add("alternate-background");
@@ -64,6 +66,7 @@ function setBackground(theme, alternate) {
 	}
 }
 
+// Enable/disable the app's sounds.
 function setSounds(sounds) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -95,6 +98,7 @@ function setSounds(sounds) {
 	});
 }
 
+// Add events to the "Settings" page's navbar.
 function addSettingsNavbarEvents() {
 	let items = divSettingsNavbar.getElementsByClassName("item");
 	
@@ -108,6 +112,7 @@ function addSettingsNavbarEvents() {
 	}
 }
 
+// Clear the "active" status of all settings navbar items.
 function clearActiveSettingsNavbarItem() {
 	let items = divSettingsNavbar.getElementsByClassName("item");
 	for(let i = 0; i < items.length; i++) {
@@ -115,6 +120,7 @@ function clearActiveSettingsNavbarItem() {
 	}
 }
 
+// Clear the "active" status of all settings pages.
 function clearActiveSettingsPage() {
 	let pages = divPageSettings.getElementsByClassName("settings-page");
 	for(let i = 0; i < pages.length; i++) {
@@ -122,6 +128,7 @@ function clearActiveSettingsPage() {
 	}
 }
 
+// Add events to the "Settings" page's choice buttons.
 function addSettingsChoiceEvents() {
 	let buttons = divPageSettings.getElementsByClassName("choice-button");
 	for(let i = 0; i < buttons.length; i++) {
@@ -138,6 +145,7 @@ function addSettingsChoiceEvents() {
 	}
 }
 
+// Set the value of a settings choice.
 async function setChoice(key, value) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -165,6 +173,7 @@ async function setChoice(key, value) {
 	});
 }
 
+// Fetch and return user settings.
 async function fetchSettings() {
 	let userID = await appStorage.getItem("userID");
 	let token = await appStorage.getItem("token");
@@ -192,6 +201,7 @@ async function fetchSettings() {
 	});
 }
 
+// Return user settings.
 async function getSettings() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -211,6 +221,7 @@ async function getSettings() {
 	});
 }
 
+// Return settings choices.
 async function getSettingsChoices() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -228,6 +239,7 @@ async function getSettingsChoices() {
 	});
 }
 
+// Set settings choices.
 function setSettingsChoices(choices) {
 	let sections = divPageSettings.getElementsByClassName("settings-section");
 
@@ -250,6 +262,7 @@ function setSettingsChoices(choices) {
 	}
 }
 
+// Process choice change for some settings.
 async function processChoice(key, value) {
 	switch(key) {
 		case "settingsSync":
@@ -276,6 +289,7 @@ async function processChoice(key, value) {
 	}
 }
 
+// Set user settings.
 function setSettings(settings) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -304,6 +318,7 @@ function setSettings(settings) {
 	});
 }
 
+// Set settings page.
 function setSettingsPage(page) {
 	page = empty(page) ? defaultChoices.defaultSettingsPage : page.toLowerCase();
 
@@ -314,6 +329,7 @@ function setSettingsPage(page) {
 	document.getElementById(`settings-page-${page}`).classList.remove("hidden");
 }
 
+// Reset user settings.
 async function resetSettings() {
 	try {
 		let token = await appStorage.getItem("token");
@@ -340,6 +356,7 @@ async function resetSettings() {
 	}
 }
 
+// Update user settings.
 function syncSettings(update) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -410,6 +427,7 @@ function syncSettings(update) {
 	});
 }
 
+// Determines whether or not the user is the admin.
 async function adminCheck() {
 	let username = await appStorage.getItem("username");
 
@@ -425,6 +443,7 @@ async function adminCheck() {
 	}
 }
 
+// Returns admin settings.
 async function getAdminSettings() {
 	try {
 		let token = await appStorage.getItem("token");
@@ -453,6 +472,7 @@ async function getAdminSettings() {
 	}
 }
 
+// Shows a popup with the appropriate donation address.
 function showDonationAddress(symbol) {
 	let addresses = {
 		ADA: "addr1qyh9ejp2z7drzy8vzpyfeuvzuej5t5tnmjyfpfjn0vt722zqupdg44rqfw9fd8jruaez30fg9fxl34vdnncc33zqwhlqn37lz4",

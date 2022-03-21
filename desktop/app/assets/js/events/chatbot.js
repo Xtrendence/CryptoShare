@@ -1,3 +1,4 @@
+// Show the chat menu popup.
 buttonChatMenu.addEventListener("click", () => {
 	let html = `
 		<button class="action-button block" id="popup-button-clear">Clear Messages</button>
@@ -7,6 +8,7 @@ buttonChatMenu.addEventListener("click", () => {
 	popup.show();
 	popup.updateHeight();
 
+	// Delete all messages.
 	document.getElementById("popup-button-clear").addEventListener("click", async () => {
 		popup.hide();
 
@@ -40,16 +42,19 @@ buttonChatMenu.addEventListener("click", () => {
 	});
 });
 
+// Ask the chat bot for help.
 buttonChatHelp.addEventListener("click", () => {
 	sendMessage("Help.");
 });
 
+// Use the "Enter" key to send a message.
 inputMessage.addEventListener("keydown", (event) => {
 	if(event.key.toLowerCase() === "enter") {
 		buttonMessageSend.click();
 	}
 });
 
+// Send a message.
 buttonMessageSend.addEventListener("click", () => {
 	let message = inputMessage.value;
 

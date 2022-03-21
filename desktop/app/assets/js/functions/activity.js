@@ -1,3 +1,4 @@
+// Populates the activity list.
 async function populateActivityList(recreate) {
 	if(getActivePage().id === "activity-page") {
 		if(recreate) {
@@ -40,6 +41,7 @@ async function populateActivityList(recreate) {
 	}
 }
 
+// Fetches, decrypts, sorts, and returns activity data.
 function fetchActivity() {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -75,6 +77,7 @@ function fetchActivity() {
 	});
 }
 
+// Sorts activity data by date.
 function sortActivityDataByDate(activityData) {
 	let sorted = {};
 	let array = [];
@@ -94,6 +97,7 @@ function sortActivityDataByDate(activityData) {
 	return sorted;
 }
 
+// Separates activities by type ("crypto" or "stock").
 function filterActivitiesByType(activityData) {
 	let activitiesCrypto = {};
 	let activitiesStocks = {};
@@ -111,6 +115,7 @@ function filterActivitiesByType(activityData) {
 	return { crypto:activitiesCrypto, stocks:activitiesStocks };
 }
 
+// Filters activities by a given search query.
 function filterActivityList(query) {
 	let rows = divActivityList.getElementsByClassName("activity-list-row");
 
@@ -152,6 +157,7 @@ function filterActivityList(query) {
 	}
 }
 
+// Creates activity list rows.
 async function createActivityListRows(activityData) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -201,6 +207,7 @@ async function createActivityListRows(activityData) {
 	});
 }
 
+// Add event to each activity row.
 function addActivityListRowEvent(div, activity) {
 	div.addEventListener("click", () => {
 		try {
@@ -356,6 +363,7 @@ function addActivityPopupDeleteEvent(previousPopup, buttonDelete, activityID) {
 	});
 }
 
+// Prefills activity popup data.
 function fillActivityPopupElements(elements, activity) {
 	elements.popupInputSymbol.value = activity.activityAssetSymbol;
 	elements.popupInputDate.value = activity.activityDate;
@@ -379,6 +387,7 @@ function fillActivityPopupElements(elements, activity) {
 	}
 }
 
+// Returns the asset ID of a crypto or stock.
 async function getActivityPopupAssetID(type, symbol) {
 	return new Promise(async (resolve, reject) => {
 		try {
@@ -412,6 +421,7 @@ async function getActivityPopupAssetID(type, symbol) {
 	});
 }
 
+// Returns the activity popup elements.
 function getActivityPopupElements() {
 	return {
 		popupInputSymbol: document.getElementById("popup-input-symbol"),
@@ -434,6 +444,7 @@ function getActivityPopupElements() {
 	};
 }
 
+// Validate activity popup data.
 function validateActivityData(values) {
 	try {
 		if(isNaN(values.activityAssetAmount) || isNaN(values.activityFee) || isNaN(values.activityPrice)) {
