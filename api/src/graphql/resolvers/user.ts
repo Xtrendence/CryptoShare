@@ -47,7 +47,7 @@ export async function createUser({ username, password, key }: any) {
 				if(result === "Not found.") {
 					if(Utils.validUsername(username) && Utils.xssValid(username)) {
 						let keys: any = await Utils.checkKeys();
-						let decryptedPassword = CryptoFN.decryptRSA(password, keys.privateKey);
+						let decryptedPassword = await CryptoFN.decryptRSA(password, keys.privateKey);
 						let hashedPassword = bcrypt.hashSync(decryptedPassword, 10);
 						db.runQuery("INSERT INTO User (username, password, key) VALUES (?, ?, ?)", [username, hashedPassword, key]);
 						return "Done";
