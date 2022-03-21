@@ -37,6 +37,10 @@ class CryptoFN {
 	 */
 	static encryptRSA(plaintext, publicKey) {
 		return new Promise((resolve) => {
+			if(appPlatform === "app") {
+				forge = require("node-forge");
+			}
+
 			publicKey = forge.pki.publicKeyFromPem(publicKey);
 			resolve(btoa(publicKey.encrypt(plaintext, "RSA-OAEP")));
 		});
@@ -49,6 +53,10 @@ class CryptoFN {
 	 */
 	static decryptRSA(ciphertext, privateKey) {
 		return new Promise((resolve) => {
+			if(appPlatform === "app") {
+				forge = require("node-forge");
+			}
+			
 			privateKey = forge.pki.privateKeyFromPem(privateKey);
 			resolve(privateKey.decrypt(atob(ciphertext), "RSA-OAEP"));
 		});
