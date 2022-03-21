@@ -1,3 +1,5 @@
+import CryptoFN from "./CryptoFN";
+
 function request(method, url, body, headers) {
 	console.log(new Date().toLocaleTimeString(), "Request", url);
 
@@ -98,7 +100,7 @@ export default class Requests {
 	}
 
 	async createAccount(username, password, key) {
-		let publicKey = await getPublicKey();
+		let publicKey = await this.getPublicKey();
 		let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
 
 		let query = {
@@ -116,7 +118,7 @@ export default class Requests {
 	}
 
 	async login(username, password) {
-		let publicKey = await getPublicKey();
+		let publicKey = await this.getPublicKey();
 		let encryptedPassword = await CryptoFN.encryptRSA(password, publicKey);
 
 		let body = {
@@ -155,7 +157,7 @@ export default class Requests {
 	}
 
 	async changePassword(userID, token, key, currentPassword, newPassword) {
-		let publicKey = await getPublicKey();
+		let publicKey = await this.getPublicKey();
 		let encryptedCurrentPassword = await CryptoFN.encryptRSA(currentPassword, publicKey);
 		let encryptedNewPassword = await CryptoFN.encryptRSA(newPassword, publicKey);
 
