@@ -1,6 +1,8 @@
 import { Server } from "socket.io";
 import { NlpManager } from "node-nlp";
 import Message from "../models/Message";
+// @ts-ignore
+import CryptoFN from "../utils/CryptoFN";
 import Utils from "../utils/Utils";
 
 // A function used to add the relevant event listeners to the Socket.IO server and any connected sockets.
@@ -14,8 +16,11 @@ export default async function addSocketEvents(io: Server) {
 				let valid = await Utils.verifyToken(data.userID, data.token);
 
 				if(valid) {
-					let processed = await manager.process(data.message);
-					socket.emit("process", { processed:processed, message:data.message });
+					let keys: any = await Utils.checkKeys();
+					let keyAES = await CryptoFN.decryptRSA(data.keyAES, keys.privateKey);
+					let message = await CryptoFN.decryptAES(data.message, keyAES);
+					let processed = await manager.process(message);
+					socket.emit("process", { processed:processed, message:message });
 				} else {
 					socket.emit("response", { message:"Invalid credentials." });
 				}
