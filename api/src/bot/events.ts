@@ -17,8 +17,7 @@ export default async function addSocketEvents(io: Server) {
 
 				if(valid) {
 					let keys: any = await Utils.checkKeys();
-					let keyAES = await CryptoFN.decryptRSA(data.keyAES, keys.privateKey);
-					let message = await CryptoFN.decryptAES(data.message, keyAES);
+					let message = await CryptoFN.decryptRSA(data.message, keys.privateKey);
 					let processed = await manager.process(message);
 					socket.emit("process", { processed:processed, message:message });
 				} else {
