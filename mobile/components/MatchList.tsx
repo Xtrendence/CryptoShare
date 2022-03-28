@@ -22,7 +22,7 @@ export default function MatchList(props: any) {
 
 						return (
 							<TouchableOpacity onPress={() => props.onPress(id)} key={index} style={[styles.row, Utils.isEven(index) ? styles[`rowEven${theme}`] : styles[`rowOdd${theme}`]]}>
-								<Text style={[styles.text, styles[`text${theme}`]]}>{symbol}</Text>
+								<Text style={[styles.text, styles[`text${theme}`], { marginRight:10 }]}>{symbol.toUpperCase()}</Text>
 								<Text style={[styles.text, styles[`text${theme}`]]}>{id}</Text>
 							</TouchableOpacity>
 						);

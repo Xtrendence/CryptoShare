@@ -369,7 +369,7 @@ export default function Activity({ navigation }: any) {
 				if("matches" in asset) {
 					let content = () => {
 						return (
-							<View style={styles.popupContent}>
+							<View style={[styles.popupContent, { padding:20 }]}>
 								<MatchList onPress={selectMatchCreate} theme={theme} matches={asset.matches}/>
 								<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
 									<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>
@@ -453,7 +453,7 @@ export default function Activity({ navigation }: any) {
 			if("matches" in asset) {
 				let content = () => {
 					return (
-						<View style={styles.popupContent}>
+						<View style={[styles.popupContent, { padding:20 }]}>
 							<MatchList onPress={selectMatchUpdate} theme={theme} matches={asset.matches}/>
 							<TouchableOpacity onPress={() => hidePopup()} style={[styles.button, styles.choiceButton, styles[`choiceButton${theme}`], { marginTop:20 }]}>
 								<Text style={[styles.choiceText, styles[`choiceText${theme}`]]}>Cancel</Text>

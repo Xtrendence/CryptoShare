@@ -388,7 +388,7 @@ export default function Holdings({ navigation }: any) {
 			return;
 		}
 
-		popupRef.current.assetID = info.coinID;
+		popupRef.current.assetID = info?.holding?.holdingAssetID;
 		popupRef.current.assetSymbol = info.symbol;
 		popupRef.current.assetAmount = info.amount;
 		popupRef.current.assetType = assetType;
@@ -461,7 +461,7 @@ export default function Holdings({ navigation }: any) {
 					createHolding(parseFloat(data.assetAmount), data.assetType, { symbol:data.assetSymbol });
 					break;
 				case "updateHolding":
-					updateHolding(data.holdingID, data.assetID, data.assetSymbol, data.assetAmount, data.assetType);
+					updateHolding(data.holdingID, data.assetID, data.assetSymbol, parseFloat(data.assetAmount), data.assetType);
 					break;
 				case "deleteHolding":
 					deleteHolding(data.holdingID);

@@ -1214,6 +1214,8 @@ export default function Dashboard({ navigation }: any) {
 			hidePopup();
 
 			listTransactions();
+
+			populateBudgetList(true);
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
@@ -1251,6 +1253,8 @@ export default function Dashboard({ navigation }: any) {
 			hidePopup();
 
 			listTransactions();
+
+			populateBudgetList(true);
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
@@ -1288,6 +1292,8 @@ export default function Dashboard({ navigation }: any) {
 			hidePopup();
 
 			listTransactions();
+
+			populateBudgetList(true);
 		} catch(error) {
 			console.log(error);
 			setLoading(false);
