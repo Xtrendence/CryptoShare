@@ -10,9 +10,9 @@
 
 This is a piece of university coursework as part of my final year project.
 
-### Set Up Instructions
+### Setup Instructions
 
-Please see the [following file](./SETUP.md) for set up instructions.
+Please see the [following file](./SETUP.md) for setup instructions.
 
 ### Project Supervisor
 
@@ -25,6 +25,12 @@ Contrived for investors and the financially diligent, who lack the ability to ma
 Users can utilize the app to budget their monthly income, record everyday transactions, track their stock and cryptocurrency investments, record their trading activity, and easily manage or backup their data through intuitive import and export functionalities. Furthermore, users can discover new assets they may want to invest in, and keep track of ones they’re interested in.
 
 ![Poster](./docs/Showcase/Poster.jpg)
+
+### Security
+
+One of CryptoShare's main priorities is data protection and security. While most software encrypts data on the server-side, CryptoShare does it on the client-side no matter what. When you register an account, an encryption key is locally generated for you before being encrypted using your password. The encrypted key is then sent to the server, along with an RSA encrypted version of your password. The server then stores the encrypted key, and hashes your password. This means that even if the data stored on the server is stolen, the hackers cannot access any of your data unless they were to modify the API's code to decrypt your password **during** login, and use it to access your encryption key and subsequently your data.
+
+User data such as activities, holdings, transactions, budget data, settings etc. are all encrypted with `AES-256`. Passwords are hashed using `bcrypt`. When logging in or creating an account, user details are encrypted using `RSA`, so even if the API doesn't support SSL/HTTPS, data is still encrypted when being sent.
 
 ### Tech Stack
 
@@ -223,7 +229,6 @@ Click on the collapsible items in the list below to view the corresponding donat
 | btoa                                               | [NPM](https://npmjs.com/package/btoa)                                               |
 | metro-config                                       | [NPM](https://npmjs.com/package/metro-config)                                       |
 | moment                                             | [NPM](https://npmjs.com/package/moment)                                             |
-| node-forge                                         | [NPM](https://npmjs.com/package/node-forge)                                         |
 | react                                              | [NPM](https://npmjs.com/package/react)                                              |
 | react-content-loader                               | [NPM](https://npmjs.com/package/react-content-loader)                               |
 | react-dom                                          | [NPM](https://npmjs.com/package/react-dom)                                          |
@@ -255,6 +260,7 @@ Click on the collapsible items in the list below to view the corresponding donat
 | react-native-reanimated                            | [NPM](https://npmjs.com/package/react-native-reanimated)                            |
 | react-native-render-html                           | [NPM](https://npmjs.com/package/react-native-render-html)                           |
 | react-native-restart                               | [NPM](https://npmjs.com/package/react-native-restart)                               |
+| react-native-rsa-native                            | [NPM](https://npmjs.com/package/react-native-rsa-native)                            |
 | react-native-safe-area-context                     | [NPM](https://npmjs.com/package/react-native-safe-area-context)                     |
 | react-native-screens                               | [NPM](https://npmjs.com/package/react-native-screens)                               |
 | react-native-sha256                                | [NPM](https://npmjs.com/package/react-native-sha256)                                |
