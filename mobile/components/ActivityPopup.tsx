@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import DatePicker from "react-native-modern-datepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
@@ -8,13 +8,22 @@ import Utils from "../utils/Utils";
 
 // Popup component for creating and updating activities.
 export default function ActivityPopup({ action, theme, popupRef, data, hidePopup, showActivityPopup, showConfirmationPopup, processAction }: any) {
+	const [initialSelect, setInitialSelect] = useState<boolean>(true);
 	const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
+	useEffect(() => {
+		setInitialSelect(true);
+	}, [showDatePicker]);
+
+	let formattedDate = Utils.empty(data?.activityDate) ? Utils.formatDateHyphenated(new Date()) : Utils.formatDateHyphenated(new Date(Date.parse(Utils.replaceAll("/", "-", data?.activityDate))));
 
 	return (
 		<View style={styles.popupContent}>
 			<Modal animationType="fade" visible={showDatePicker} onRequestClose={() => setShowDatePicker(false)} transparent={true}>
 				<ScrollView style={[styles.modalScroll, styles[`modalScroll${theme}`]]}>
 					<DatePicker 
+						mode="calendar"
+						selected={formattedDate}
 						onSelectedChange={(value: any) => setDate(value)} 
 						style={styles.calendar}
 						options={{
@@ -206,6 +215,11 @@ export default function ActivityPopup({ action, theme, popupRef, data, hidePopup
 	);
 
 	function setDate(value: any) {
+		if(initialSelect) {
+			setInitialSelect(false);
+			return;
+		}
+
 		popupRef.current.activity.activityDate = Utils.replaceAll("/", "-", value);
 		setShowDatePicker(false);
 	}

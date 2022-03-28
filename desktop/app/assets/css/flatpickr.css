@@ -257,7 +257,7 @@
 	padding:0;
 }
 .flatpickr-current-month span.cur-month:hover {
-	background:var(--main-third-transparent);
+	background:var(--main-third);
 }
 .flatpickr-current-month .numInputWrapper {
 	width:6ch;
@@ -471,13 +471,13 @@ span.flatpickr-weekday {
 	border-color:var(--accent-second);
 }
 .flatpickr-day.today {
-	border-color:#eee;
+	border-color:var(--main-contrast);
 }
 .flatpickr-day.today:hover,
 .flatpickr-day.today:focus {
-	border-color:#eee;
-	background:#eee;
-	color:#3f4458;
+	border-color:var(--main-contrast);
+	background:var(--main-contrast);
+	color:var(--main-first);
 }
 .flatpickr-day.selected,
 .flatpickr-day.startRange,

@@ -274,7 +274,7 @@ export default function Activity({ navigation }: any) {
 				activityAssetID: info.activityAssetID || "", 
 				activityAssetSymbol: Utils.empty(info.activityAssetSymbol) ? "" : info.activityAssetSymbol.toUpperCase(), 
 				activityAssetType: info.activityAssetType || "crypto", 
-				activityDate: info.activityDate || "", 
+				activityDate: info.activityDate || Utils.formatDateHyphenated(new Date()), 
 				activityType: info.activityType || "buy", 
 				activityAssetAmount: info.activityAssetAmount || "", 
 				activityFee: info.activityFee || "", 

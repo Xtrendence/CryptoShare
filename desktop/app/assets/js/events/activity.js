@@ -127,8 +127,8 @@ buttonActivityAdd.addEventListener("click", () => {
 		popupElements.popupInputSymbol.focus();
 
 		flatpickr(popupElements.popupInputDate, {
-			enableTime: true,
-			dateFormat: "Y-m-d H:i",
+			enableTime: false,
+			dateFormat: "Y-m-d",
 			allowInput: true
 		});
 

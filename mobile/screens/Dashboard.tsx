@@ -545,7 +545,7 @@ export default function Dashboard({ navigation }: any) {
 			transactionAmount: "",
 			transactionType: "spent",
 			transactionCategory: "Food",
-			transactionDate: "",
+			transactionDate: Utils.formatDateHyphenated(new Date()),
 			transactionNotes: "",
 			showDatePicker: false,
 			action: "create"

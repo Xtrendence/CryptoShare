@@ -1,19 +1,30 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Picker } from "@react-native-picker/picker";
 import { Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import DatePicker from "react-native-modern-datepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "../styles/Dashboard";
 import { Colors } from "../styles/Global";
+import Utils from "../utils/Utils";
 
 // Component used to add and update transactions.
 export default function TransactionPopup({ popupRef, changeContent, theme, setDate, action, showConfirmationPopup, hidePopup, updateTransaction, createTransaction }: any) {
+	const [initialSelect, setInitialSelect] = useState<boolean>(true);
+
+	useEffect(() => {
+		setInitialSelect(true);
+	}, [popupRef.current.transaction.showDatePicker]);
+
+	let formattedDate = Utils.empty(popupRef.current.transaction.date) ? Utils.formatDateHyphenated(new Date()) : Utils.formatDateHyphenated(new Date(Date.parse(Utils.replaceAll("/", "-", popupRef.current.transaction.date))));
+	
 	return (
 		<View style={styles.popupContent}>
 			<Modal animationType="fade" visible={popupRef.current.transaction.showDatePicker} onRequestClose={() => { popupRef.current.transaction.showDatePicker = false; changeContent() }} transparent={true}>
 				<ScrollView style={[styles.modalScroll, styles[`modalScroll${theme}`]]}>
 					<DatePicker 
-						onSelectedChange={(value: any) => setDate(value)} 
+						mode="calendar"
+						selected={formattedDate}
+						onSelectedChange={(value: any) => changeDate(value)} 
 						style={styles.calendar}
 						options={{
 							backgroundColor: Colors[theme].mainFirst,
@@ -122,4 +133,13 @@ export default function TransactionPopup({ popupRef, changeContent, theme, setDa
 			</ScrollView>
 		</View>
 	);
+
+	function changeDate(value: any) {
+		if(initialSelect) {
+			setInitialSelect(false);
+			return;
+		}
+
+		setDate(value);
+	}
 }

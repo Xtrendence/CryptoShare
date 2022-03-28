@@ -585,8 +585,8 @@ function addTransactionListRowEvent(transaction, div) {
 			popupInputAmount.focus();
 	
 			flatpickr(popupInputDate, {
-				enableTime: true,
-				dateFormat: "Y-m-d H:i",
+				enableTime: false,
+				dateFormat: "Y-m-d",
 				allowInput: true
 			});
 	
@@ -793,8 +793,8 @@ function addTransactionButtonEvent(button) {
 			popupInputAmount.focus();
 	
 			flatpickr(popupInputDate, {
-				enableTime: true,
-				dateFormat: "Y-m-d H:i",
+				enableTime: false,
+				dateFormat: "Y-m-d",
 				allowInput: true
 			});
 	
