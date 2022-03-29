@@ -184,7 +184,12 @@ function setPage(page) {
 	clearActivePage();
 
 	document.getElementById(`navbar-${page}`).classList.add("active");
+	document.getElementById(`navbar-${page}`).classList.add("animate");
 	document.getElementById(`${page}-page`).classList.remove("hidden");
+
+	setTimeout(() => {
+		document.getElementById(`navbar-${page}`).classList.remove("animate");
+	}, 1000);
 
 	switch(page) {
 		case "chatbot":

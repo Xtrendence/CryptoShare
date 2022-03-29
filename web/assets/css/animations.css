@@ -1,0 +1,106 @@
+.navbar .item.animate .content svg {
+	transition:all 1s;
+}
+.navbar .item#navbar-chatbot.animate .content svg {
+	animation:chat-icon 1s infinite;
+}
+@keyframes chat-icon {
+	0% {
+		transform:translateY(0);
+	}
+	20% {
+		transform:translateY(-3px);
+	}
+	40% {
+		transform:translateY(3px);
+	}
+	60% {
+		transform:translateY(-3px);
+	}
+	80% {
+		transform:translateY(3px);
+	}
+	100% {
+		transform:translateY(0);
+	}
+}
+.navbar .item#navbar-dashboard.animate .content svg {
+	animation:dashboard-icon 1s infinite;
+}
+@keyframes dashboard-icon {
+	0% {
+		transform:translateY(0);
+	}
+	50% {
+		transform:translateY(-50px);
+	}
+	100% {
+		transform:translateY(0);
+	}
+}
+.navbar .item#navbar-market.animate .content svg {
+	animation:market-icon 1s infinite;
+}
+@keyframes market-icon {
+	0% {
+		transform:rotate(0deg);
+	}
+	15% {
+		transform:rotate(10deg);
+	}
+	30% {
+		transform:rotate(-10deg);
+	}
+	45% {
+		transform:rotate(10deg);
+	}
+	60% {
+		transform:rotate(-10deg);
+	}
+	75% {
+		transform:rotate(10deg);
+	}
+	90% {
+		transform:rotate(-10deg);
+	}
+	100% {
+		transform:rotate(0deg);
+	}
+}
+.navbar .item#navbar-holdings.animate .content svg {
+	animation:holdings-icon 1s infinite;
+}
+@keyframes holdings-icon {
+	0% {
+		transform:scale(1);
+	}
+	40% {
+		transform:scale(1.1);
+	}
+	80% {
+		transform:scale(0.8);
+	}
+	100% {
+		transform:scale(1);
+	}
+}
+.navbar .item#navbar-activity.animate .content svg {
+	animation:activity-icon 1s infinite;
+}
+@keyframes activity-icon {
+	0% {
+		margin-left:0;
+	}
+	35% {
+		margin-left:15px;
+	}
+	70% {
+		margin-left:-15px;
+	}
+	100% {
+		margin-left:0;
+	}
+}
+.navbar .item#navbar-settings.animate .content svg {
+	transform:rotate(360deg);
+}
