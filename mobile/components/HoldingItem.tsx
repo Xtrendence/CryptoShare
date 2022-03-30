@@ -15,7 +15,7 @@ export default function Item({ info, showHoldingChart, showHoldingPopup, theme, 
 					if(settings.activitiesAffectHoldings === "enabled") {
 						showHoldingChart(info);
 					} else {
-						showHoldingPopup("crypto", "updateHolding", info);
+						showHoldingPopup(info.type, "updateHolding", info);
 					}
 				}}
 				style={[styles.itemCard, styles[`itemCard${theme}`]]}

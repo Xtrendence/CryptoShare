@@ -389,6 +389,11 @@ export default function Holdings({ navigation }: any) {
 		}
 
 		popupRef.current.assetID = info?.holding?.holdingAssetID;
+
+		if(!("holding" in info)) {
+			popupRef.current.assetID = info?.assetID;
+		}
+
 		popupRef.current.assetSymbol = info.symbol;
 		popupRef.current.assetAmount = info.amount;
 		popupRef.current.assetType = assetType;
