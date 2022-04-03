@@ -95,6 +95,8 @@ Click on the collapsible items in the list below to view the corresponding donat
 
 ### Screenshots
 
+Please note that the screenshots below were taken when development was initially finished; as such, they may differ from the current app as the UI could have changed since then. The screenshots also show the app's regular backgrounds rather than the alternate colorful one (which is enabled by default and can be disabled through the "Settings" page).
+
 #### Web App & Desktop App
 
 <details>
