@@ -10,6 +10,12 @@ Please note that you must create a user called "Admin" in order to access and mo
 
 The admin can switch between two stock API modes: Internal and External. Internal tells the CryptoShare API to directly fetch data from the Yahoo Finance API. This is useful when the admin is the only user, or if they're hosting CryptoShare for a few friends at most. However, since the host device is sending requests to the Yahoo Finance API from the admin's IP, eventually Yahoo Finance might block the IP if there are too many requests. As such, it is recommended that admins swtich to the "External" option, which uses a third-party API that also fetches data from Yahoo Finance. In this case, however, each CryptoShare user would have to provide an API key, and the admin's IP wouldn't get blocked. **Stock market data is cached for 24 hours**, and is shared between users. So if one user views the market data of AAPL for example, other users who view the data on the same day won't be triggering the CryptoShare API to make a request to the third-party API or even Yahoo Finance directly. You can imagine it as crowdsourcing market data basically. This was the best compromise as free stock market APIs don't really exist.
 
+### Docker
+
+If you use Docker, then simply follow the instructions on the [Docker Hub repository](https://hub.docker.com/r/xtrendence/cryptoshare).
+
+Use `docker pull xtrendence/cryptoshare:latest` to quickly pull the latest image.
+
 ### API
 
 Before you can set up the API, you will need to download and install [Node.js](https://nodejs.org/en/download/) (LTS). In order to set up the API, download the `API-And-Website.zip` file from the latest [release](https://github.com/Xtrendence/CryptoShare/releases). Once downloaded, extract the content, and place the `CryptoShare` folder wherever you want. Using a CLI such as Git Bash, Terminal or Powershell, `cd` into the `CryptoShare/api/` directory and run the `npm install` command to install the Node modules that CryptoShare's API uses. Once done, run the `npm start` command to start the server. The API will try to get the local IP of your device and output it, but if it fails to do so, you might have to find the IP address on your own in order to use CryptoShare on other devices.
