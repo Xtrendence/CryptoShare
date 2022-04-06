@@ -29,17 +29,25 @@
 		"appId": "com.xtrendence.CryptoShare",
 		"asar": true,
 		"mac": {
-			"category": "public.app-category.finance"
+			"category": "public.app-category.finance",
+			"target": [
+				"dmg"
+			],
+			"artifactName": "CryptoShare.${version}.macOS.${arch}.${ext}"
+		},
+		"win": {
+			"target": [
+				"nsis"
+			],
+			"artifactName": "CryptoShare.${version}.Windows.${ext}",
+			"icon": "build/icon.ico"
 		},
 		"linux": {
 			"target": [
 				"AppImage",
 				"deb"
-			]
-		},
-		"win": {
-			"target": "NSIS",
-			"icon": "build/icon.ico"
+			],
+			"artifactName": "CryptoShare.${version}.Linux.${ext}"
 		}
 	},
 	"devDependencies": {
