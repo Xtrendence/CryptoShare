@@ -1,0 +1,11 @@
+version: "3"
+
+services:
+    cryptofolio:
+        build: .
+        container_name: cryptoshare
+        restart: unless-stopped
+        ports:
+            - 3190:3190
+        volumes:
+            - ./data:/usr/cryptoshare/api/data/
