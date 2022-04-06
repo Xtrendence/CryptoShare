@@ -10,6 +10,8 @@
 		"pack": "build --dir",
 		"dist": "sudo electron-builder -mwl",
 		"dist-macos": "sudo electron-builder -m --x64 --arm64",
+		"dist-macos-x64": "sudo electron-builder -m --x64",
+		"dist-macos-arm64": "sudo electron-builder -m --arm64",
 		"dist-windows": "electron-builder -w",
 		"dist-linux": "sudo electron-builder -l"
 	},
