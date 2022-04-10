@@ -185,6 +185,12 @@ Please note that the screenshots below were taken when development was initially
 
 ### Attributions
 
+#### APIs
+
+Cryptocurrency Market Data: CoinGecko
+
+Stock Market Data: Yahoo Finance
+
 #### Web App & Desktop App
 
 | Resource         | URL                                                                             |
