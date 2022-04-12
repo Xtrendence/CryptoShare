@@ -159,7 +159,7 @@ function createMarketListCryptoRows(marketData, page, currency) {
 
 			div.innerHTML = `
 				<div class="icon-wrapper audible-pop">
-					<img class="icon" src="${icon}" draggable="false">
+					<img class="icon" src="${icon}" draggable="false" alt="${name} Icon">
 				</div>
 				<div class="info-wrapper audible-pop">
 					<span class="name">${name}</span>

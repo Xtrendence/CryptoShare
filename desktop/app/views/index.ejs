@@ -39,9 +39,9 @@
 	<body>
 		<div class="titlebar" id="titlebar" style="background:rgb(20,20,20); box-shadow:none;">
 			<div class="window-buttons">
-				<button id="button-window-close" class="close-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg></button>
-				<button id="button-window-minimize" class="minimize-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></button>
-				<button id="button-window-maximize" class="maximize-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M212.686 315.314L120 408l32.922 31.029c15.12 15.12 4.412 40.971-16.97 40.971h-112C10.697 480 0 469.255 0 456V344c0-21.382 25.803-32.09 40.922-16.971L72 360l92.686-92.686c6.248-6.248 16.379-6.248 22.627 0l25.373 25.373c6.249 6.248 6.249 16.378 0 22.627zm22.628-118.628L328 104l-32.922-31.029C279.958 57.851 290.666 32 312.048 32h112C437.303 32 448 42.745 448 56v112c0 21.382-25.803 32.09-40.922 16.971L376 152l-92.686 92.686c-6.248 6.248-16.379 6.248-22.627 0l-25.373-25.373c-6.249-6.248-6.249-16.378 0-22.627z"/></svg></button>
+				<button id="button-window-close" class="close-button" title="Close Window"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/></svg></button>
+				<button id="button-window-minimize" class="minimize-button" title="Minimize Window"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 208H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h384c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z"/></svg></button>
+				<button id="button-window-maximize" class="maximize-button" title="Maximize Window"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M212.686 315.314L120 408l32.922 31.029c15.12 15.12 4.412 40.971-16.97 40.971h-112C10.697 480 0 469.255 0 456V344c0-21.382 25.803-32.09 40.922-16.971L72 360l92.686-92.686c6.248-6.248 16.379-6.248 22.627 0l25.373 25.373c6.249 6.248 6.249 16.378 0 22.627zm22.628-118.628L328 104l-32.922-31.029C279.958 57.851 290.666 32 312.048 32h112C437.303 32 448 42.745 448 56v112c0 21.382-25.803 32.09-40.922 16.971L376 152l-92.686 92.686c-6.248 6.248-16.379 6.248-22.627 0l-25.373-25.373c-6.249-6.248-6.249-16.378 0-22.627z"/></svg></button>
 			</div>
 		</div>
 		<div class="app-content" id="app-content">
@@ -52,9 +52,12 @@
 					<span id="span-login-title">CryptoShare</span>
 				</div>
 				<div class="login-wrapper">
+					<label class="hidden" for="input-login-api">API URL</label>
 					<input class="app-only" id="input-login-api" placeholder="API URL..." type="text" spellcheck="false">
 					<div class="login-container">
+						<label class="hidden" for="input-login-username">Username</label>
 						<input id="input-login-username" placeholder="Username..." type="text" spellcheck="false">
+						<label class="hidden" for="input-login-password">Password</label>
 						<div class="input-password-wrapper">
 							<input id="input-login-password" placeholder="Password..." type="password" spellcheck="false">
 						</div>
@@ -62,10 +65,13 @@
 						<button class="action" id="button-login-account">Login</button>
 					</div>
 					<div class="create-container">
+						<label class="hidden" for="input-create-username">Username</label>
 						<input id="input-create-username" placeholder="Username..." type="text" spellcheck="false">
+						<label class="hidden" for="input-create-password">Password</label>
 						<div class="input-password-wrapper">
 							<input id="input-create-password" placeholder="Password..." type="password" spellcheck="false">
 						</div>
+						<label class="hidden" for="input-create-repeat-password">Confirm Password</label>
 						<div class="input-password-wrapper">
 							<input id="input-create-repeat-password" placeholder="Confirm Password..." type="password" spellcheck="false">
 						</div>
@@ -128,7 +134,7 @@
 					</div>
 				</div>
 				<div class="side-menu-overlay hidden" id="side-menu-overlay"></div>
-				<button class="side-menu-close hidden" id="button-side-menu-close">
+				<button class="side-menu-close hidden" id="button-side-menu-close" title="Close Side Menu">
 					<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/></svg>
 				</button>
 				<div class="side-menu-wrapper hidden" id="side-menu-wrapper">
@@ -148,10 +154,10 @@
 								<span>Plutus</span>
 								<div class="chat-status" id="chat-status"></div>
 							</div>
-							<button class="action-button first" id="button-chat-help">
+							<button class="action-button first" id="button-chat-help" title="Chat Bot Help">
 								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1088 1256v240q0 16-12 28t-28 12h-240q-16 0-28-12t-12-28v-240q0-16 12-28t28-12h240q16 0 28 12t12 28zm316-600q0 54-15.5 101t-35 76.5-55 59.5-57.5 43.5-61 35.5q-41 23-68.5 65t-27.5 67q0 17-12 32.5t-28 15.5h-240q-15 0-25.5-18.5t-10.5-37.5v-45q0-83 65-156.5t143-108.5q59-27 84-56t25-76q0-42-46.5-74t-107.5-32q-65 0-108 29-35 25-107 115-13 16-31 16-12 0-25-8l-164-125q-13-10-15.5-25t5.5-28q160-266 464-266 80 0 161 31t146 83 106 127.5 41 158.5z"/></svg>
 							</button>
-							<button class="action-button second" id="button-chat-menu">
+							<button class="action-button second" id="button-chat-menu" title="Chat Menu">
 								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M576 736v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68zm512 0v192q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h192q40 0 68 28t28 68z"/></svg>
 							</button>
 						</div>
@@ -160,6 +166,7 @@
 						</div>
 						<div class="chat-options-wrapper noselect hidden" id="chat-options"></div>
 						<div class="chat-bottom">
+							<label class="hidden" for="input-message">Message</label>
 							<input id="input-message" placeholder="Say Something..." type="text" spellcheck="true" autocomplete="off">
 							<button class="action-button" id="button-message-send">Send</button>
 						</div>
@@ -170,7 +177,7 @@
 						<div class="page-container-toolbar noselect">
 							<span class="title">Monthly Budget</span>
 							<button class="action-button first" id="button-dashboard-budget-transactions">Transactions</button>
-							<button class="action-button" id="button-dashboard-budget-edit">
+							<button class="action-button" id="button-dashboard-budget-edit" title="Edit Budget">
 								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M491 1536l91-91-235-235-91 91v107h128v128h107zm523-928q0-22-22-22-10 0-17 7l-542 542q-7 7-7 17 0 22 22 22 10 0 17-7l542-542q7-7 7-17zm-54-192l416 416-832 832h-416v-416zm683 96q0 53-37 90l-166 166-416-416 166-165q36-38 90-38 53 0 91 38l235 234q37 39 37 91z"/></svg>
 							</button>
 						</div>
@@ -188,7 +195,7 @@
 					<div class="page-container half bottom-right dashboard">
 						<div class="page-container-toolbar noselect">
 							<span class="title">Watchlist</span>
-							<button class="action-button" id="button-dashboard-watchlist-add">
+							<button class="action-button" id="button-dashboard-watchlist-add" title="Add to Watchlist">
 								<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z"/></svg>
 							</button>
 						</div>
@@ -199,10 +206,10 @@
 					<div class="page-container full market">
 						<div class="page-container-toolbar">
 							<div class="page-actions-wrapper">
-								<button class="action-button" id="button-market-info">
+								<button class="action-button" id="button-market-info" title="Market Info">
 									<svg width="2048" height="1792" viewBox="0 0 2048 1792" xmlns="http://www.w3.org/2000/svg"><path d="M2048 1536v128h-2048v-1536h128v1408h1920zm-128-1248v435q0 21-19.5 29.5t-35.5-7.5l-121-121-633 633q-10 10-23 10t-23-10l-233-233-416 416-192-192 585-585q10-10 23-10t23 10l233 233 464-464-121-121q-16-16-7.5-35.5t29.5-19.5h435q14 0 23 9t9 23z"/></svg>
 								</button>
-								<button class="action-button" id="button-market-search">
+								<button class="action-button" id="button-market-search" title="Market Search">
 									<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1216 832q0-185-131.5-316.5t-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5 316.5-131.5 131.5-316.5zm512 832q0 52-38 90t-90 38q-54 0-90-38l-343-342q-179 124-399 124-143 0-273.5-55.5t-225-150-150-225-55.5-273.5 55.5-273.5 150-225 225-150 273.5-55.5 273.5 55.5 225 150 150 225 55.5 273.5q0 220-124 399l343 343q37 37 37 90z"/></svg>
 								</button>
 							</div>
@@ -211,11 +218,11 @@
 								<button class="choice-button" id="button-market-stocks">Stocks</button>
 							</div>
 							<div class="page-navigation-wrapper" id="market-page-navigation-wrapper">
-								<button class="action-button" id="button-market-previous">
+								<button class="action-button" id="button-market-previous" title="Previous">
 									<svg class="left" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1427 301l-531 531 531 531q19 19 19 45t-19 45l-166 166q-19 19-45 19t-45-19l-742-742q-19-19-19-45t19-45l742-742q19-19 45-19t45 19l166 166q19 19 19 45t-19 45z"/></svg>
 								</button>
 								<span class="noselect" id="span-market-page">Page 1</span>
-								<button class="action-button" id="button-market-next">
+								<button class="action-button" id="button-market-next" title="Next">
 									<svg class="right" width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"/></svg>
 								</button>
 							</div>
@@ -259,10 +266,11 @@
 							<div class="loading-icon"><div></div><div></div></div>
 						</div>
 						<div class="page-container-toolbar">
+							<label class="hidden" for="input-activity-search">Search Activities</label>
 							<input type="text" placeholder="Search..." id="input-activity-search" spellcheck="false">
 							<button class="action-button search" id="button-activity-search">Search</button>
 							<div class="page-actions-wrapper">
-								<button class="action-button" id="button-activity-help">
+								<button class="action-button" id="button-activity-help" title="Help">
 									<svg width="1792" height="1792" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg"><path d="M1088 1256v240q0 16-12 28t-28 12h-240q-16 0-28-12t-12-28v-240q0-16 12-28t28-12h240q16 0 28 12t12 28zm316-600q0 54-15.5 101t-35 76.5-55 59.5-57.5 43.5-61 35.5q-41 23-68.5 65t-27.5 67q0 17-12 32.5t-28 15.5h-240q-15 0-25.5-18.5t-10.5-37.5v-45q0-83 65-156.5t143-108.5q59-27 84-56t25-76q0-42-46.5-74t-107.5-32q-65 0-108 29-35 25-107 115-13 16-31 16-12 0-25-8l-164-125q-13-10-15.5-25t5.5-28q160-266 464-266 80 0 161 31t146 83 106 127.5 41 158.5z"/></svg>
 								</button>
 								<button class="action-button" id="button-activity-tools">Tools</button>
