@@ -10,6 +10,10 @@
 
 This is a piece of university coursework as part of my final year project.
 
+### Brief Demo
+
+A brief video has been recorded to [show the application running](https://www.youtube.com/watch?v=nyzBvKHnYas).
+
 ### Setup Instructions
 
 Please see the [following file](./SETUP.md) for setup instructions.
