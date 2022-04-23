@@ -104,7 +104,27 @@ buttonExistingAccount.addEventListener("click", () => {
 });
 
 // Start the registration process.
-buttonCreateAccount.addEventListener("click", () => {
+buttonCreateAccount.addEventListener("click", async () => {
+	// If the user is logging in on the desktop app, the API URL is required.
+	if(appPlatform === "app" || appBypass()) {
+		urlAPI = inputLoginAPI.value;
+
+		try {
+			if(!urlAPI.includes("http://") && !urlAPI.includes("https://")) {
+				urlAPI = `http://${urlAPI}`;
+			}
+				
+			let url = new URL(urlAPI);
+			urlBot = url.toString().replace("graphql", "");
+
+			await appStorage.setItem("api", url.toString());
+		} catch(error) {
+			console.log(error);
+			errorNotification("Invalid API URL format.");
+			return;
+		}
+	}
+
 	accountSetup();
 });
 
