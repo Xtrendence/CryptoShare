@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "../../models/User";
 import DB from "../../utils/DB";
 import Utils from "../../utils/Utils";

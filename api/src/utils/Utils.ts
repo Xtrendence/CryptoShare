@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from "fs";
 // @ts-ignore
