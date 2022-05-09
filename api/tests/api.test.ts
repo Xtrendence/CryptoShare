@@ -1,7 +1,7 @@
 
 import API from "../src/utils/API";
 import { io, Socket } from "socket.io-client";
-import sqlite3, { Database } from "@louislam/sqlite3";
+import sqlite3, { Database } from "sqlite3";
 import utils from "./utils";
 import fs from "fs";
 import path from "path";

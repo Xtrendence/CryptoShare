@@ -1,4 +1,4 @@
-import sqlite3, { Database } from "@louislam/sqlite3";
+import sqlite3, { Database } from "sqlite3";
 import path from "path";
 import fs from "fs";
 import Utils from "./Utils";
